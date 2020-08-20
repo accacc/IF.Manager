@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.2.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.19" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="IF.Core">
+      <HintPath>..\packages\InFramework\IF.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.Persistence">
+      <HintPath>..\packages\InFramework\IF.Persistence.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.Persistence.EF">
+      <HintPath>..\packages\InFramework\IF.Persistence.EF.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.Persistence.EF.Localization">
+      <HintPath>..\packages\InFramework\IF.Persistence.EF.Localization.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="5.1.2" />
+    <PackageReference Include="Microsoft.Build" Version="16.4.0" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="16.4.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.4.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.4.0" />
+    <PackageReference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform" Version="2.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="System.CodeDom" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IF.Manager.Contracts\IF.Manager.Contracts.csproj" />
+    <ProjectReference Include="..\IF.Manager.Persistence.EF\IF.Manager.Persistence.EF.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="IF.CodeGeneration.Core">
+      <HintPath>..\packages\InFramework\IF.CodeGeneration.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.CodeGeneration.Language.CSharp">
+      <HintPath>..\packages\InFramework\IF.CodeGeneration.Language.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.CodeGeneration.VisualStudio">
+      <HintPath>..\packages\InFramework\IF.CodeGeneration.VisualStudio.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.Configuration">
+      <HintPath>..\packages\InFramework\IF.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.Core">
+      <HintPath>..\packages\InFramework\IF.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.Cqrs">
+      <HintPath>..\packages\InFramework\IF.Cqrs.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.Jwt">
+      <HintPath>..\packages\InFramework\IF.Jwt.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.Persistence">
+      <HintPath>..\packages\InFramework\IF.Persistence.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.Persistence.EF">
+      <HintPath>..\packages\InFramework\IF.Persistence.EF.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

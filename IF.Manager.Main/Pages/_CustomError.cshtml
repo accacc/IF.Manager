@@ -1,0 +1,18 @@
+﻿@model IF.Web.Mvc.Notification.JsonResultModel
+
+
+@{Layout = "_Layout"; }
+
+<div class="container-fluid main">
+    <div class="col-12 text-center">
+        @foreach (var item in Model.Messages)
+        {
+            @:<p>@item<p>
+
+        }
+
+</div>
+</div>
+
+
+

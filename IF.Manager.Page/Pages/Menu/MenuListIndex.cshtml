@@ -1,0 +1,66 @@
+﻿@page
+@model IF.Manager.Page.Pages.Menu.MenuListIndexModel
+
+@{ 
+
+    List<SelectListItem> projects = ViewData["projects"] as List<SelectListItem>;
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <a class="btn btn-success"
+           href="@Url.Page("/Menu/MenuForm","AddMenu")"
+           if-ajax="true"
+           if-ajax-method="get"
+           if-ajax-insertion-mode="replace"
+           if-ajax-show-dialog="true"
+           if-ajax-modal-id="@Guid.NewGuid()">
+            Add
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <hr />
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+            <label for="IFProjectId">Project</label>
+            @Html.DropDownList("IFProjectId", projects, "Select", new { @class = "form-control" })
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div id="MenuListDiv" class="col-md-12">
+        @{await Html.RenderPartialAsync("_MenuListTable", Model.MenuList);}
+    </div>
+</div>
+
+
+@section Scripts
+{
+<script>
+    $('#IFProjectId').on('change', function () {
+
+        //alert(this.value);
+
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Page("/Menu/MenuListIndex", "MenuListPartial")',
+            data: { IFProjectId: this.value },
+            success: function (data) {
+                $("#MenuListDiv").html(data);
+
+            }
+        });
+
+    });
+</script>
+}

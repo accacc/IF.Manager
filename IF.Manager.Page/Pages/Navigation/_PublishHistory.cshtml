@@ -1,0 +1,51 @@
+﻿@page
+@model IF.Manager.Page.Pages.Navigation._PublishHistoryModel
+
+
+@{
+    Layout = "_ModalLayout";
+
+}
+
+
+<table class="table table-striped table-sm">
+    <tr>
+
+        <th>
+            Name
+        </th>
+        <th>
+            Description
+        </th>
+
+
+    </tr>
+    @if (Model.History != null && Model.History.Any())
+    {
+        @foreach (var item in Model.History)
+        {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+
+                </td>
+            </tr>
+
+        }
+    }
+    else
+    {
+        @:Veri bulunamadı, Lütfen Kriter seçiniz
+
+    }
+</table>
+
+
+
+
+

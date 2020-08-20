@@ -1,0 +1,91 @@
+﻿@page
+@model IF.Manager.Query.Pages.QueryFormModel
+
+@{
+    Layout = "_ModalLayout";
+    List<SelectListItem> models = ViewData["models"] as List<SelectListItem>;
+    List<SelectListItem> formmodels = ViewData["formmodels"] as List<SelectListItem>;
+    List<SelectListItem> process = ViewData["process"] as List<SelectListItem>;
+}
+
+
+    <form>
+        @Html.AntiForgeryToken()
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="ModelId">Process</label>
+                    @Html.DropDownList("Form.ProcessId", process, "Select", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="ModelId">Model</label>
+                    @Html.DropDownList("Form.ModelId", models, "Select", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="FormModelId">Form Model</label>
+                    @Html.DropDownList("Form.FormModelId", formmodels, "Select", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="QueryGetType">Query Type</label>
+                    @Html.DropDownList($"Form.QueryGetType", Html.GetEnumSelectList<IF.Manager.Contracts.Enum.QueryGetType>(), "Select", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="Name">Name</label>
+                    @Html.TextBoxFor(m => m.Form.Name, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="Description">Description</label>
+                    @Html.TextBoxFor(m => m.Form.Description, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="PageSize">PageSize</label>
+                    @Html.TextBoxFor(m => m.Form.PageSize, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <button type="submit" class="btn btn-primary"
+                        @{ var handler = "Add"; if (this.Model.Form.Id > 0) { handler = "Update"; } }
+                        if-ajax-action="@Url.Page("/QueryForm",handler)"
+                        if-ajax-form-submit="true"
+                        if-ajax-method="post"
+                        if-ajax-close-modal-on-success="true"
+                        if-ajax-update-id="QueryListDiv">
+                    Save
+                </button>
+            </div>
+        </div>
+        @Html.HiddenFor(model => model.Form.Id)
+    </form>

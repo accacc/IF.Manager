@@ -1,0 +1,85 @@
+﻿@page
+@model IF.Manager.Page.Pages.PageFormModel
+
+@{
+    Layout = "_ModalLayout";
+
+    List<SelectListItem> page_layouts = ViewData["page_layouts"] as List<SelectListItem>;
+    List<SelectListItem> process = ViewData["process"] as List<SelectListItem>;
+    List<SelectListItem> projects = ViewData["projects"] as List<SelectListItem>;
+}
+
+
+    <form>
+        @Html.AntiForgeryToken()
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="ProjectId">Project</label>
+                    @Html.DropDownList("Form.IFProjectId", projects, "Select", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="ProcessId">Process</label>
+                    @Html.DropDownList("Form.ProcessId", process, "Select", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="PageLayoutId">Page Layout</label>
+                    @Html.DropDownList("Form.PageLayoutId", page_layouts, "Select", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="Name">Name</label>
+                    @Html.TextBoxFor(m => m.Form.Name, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="Description">Description</label>
+                    @Html.TextBoxFor(m => m.Form.Description, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <button type="submit" class="btn btn-primary"
+                        @{ var handler = "Add"; if (this.Model.Form.Id > 0) { handler = "Update"; } }
+                        if-ajax-action="@Url.Page("/PageForm",handler)"
+                        if-ajax-form-submit="true"
+                        if-ajax-method="post"
+                        if-ajax-close-modal-on-success="true"
+                        if-ajax-update-id="PageListDiv">
+                    Save
+                </button>
+            </div>
+        </div>
+        @Html.HiddenFor(model => model.Form.Id)
+    </form>
+
+
+<script>
+
+</script>

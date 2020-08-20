@@ -1,0 +1,30 @@
+﻿@using IF.Web.Mvc.FluentHtml.Extension
+
+@{
+
+    Layout = null;
+}
+
+
+
+
+@(Html.IF().BootstrapModal().Content(@<text>
+        <div id="ModalContentContainer">
+            <div class="row">
+                <div class="col-md-12">
+                    @RenderBody()
+                </div>
+            </div>
+        </div></text>)
+.Title(ViewBag.Title).Render())
+
+
+
+
+
+
+
+
+
+
+

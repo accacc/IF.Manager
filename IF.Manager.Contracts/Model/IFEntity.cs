@@ -1,0 +1,49 @@
+﻿using IF.Core.Data;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+
+namespace IF.Manager.Contracts.Model
+{
+    public class IFEntity:Entity
+    {
+        public IFEntity()
+        {
+            this.Properties = new List<IFEntityProperty>();
+            this.Relations = new List<IFEntityRelation>();
+            this.ReverseRelations = new List<IFEntityRelation>();
+            //this.ModelEntities = new List<IFModelEntity>();
+            this.ModelProperties = new List<IFModelProperty>();
+            this.QueryFilterItems = new List<IFQueryFilterItem>();
+            this.CommandFilterItems = new List<IFCommandFilterItem>();
+        }
+
+        [Key]
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+
+        public int? GroupId { get; set; }
+
+        public bool IsAudited { get; set; }
+
+        public IFEntityGroup Group { get; set; }
+
+        public ICollection<IFEntityProperty>    Properties { get; set; }
+
+        public ICollection<IFEntityRelation> Relations { get; set; }
+
+        public ICollection<IFEntityRelation> ReverseRelations { get; set; }
+
+        //public ICollection<IFModelEntity> ModelEntities { get; set; }
+
+        public ICollection<IFModelProperty> ModelProperties { get; set; }
+        public ICollection<IFQueryFilterItem> QueryFilterItems { get; set; }
+
+        public ICollection<IFCommandFilterItem> CommandFilterItems { get; set; }
+
+    }
+}

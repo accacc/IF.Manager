@@ -1,0 +1,53 @@
+﻿@page
+@model IF.Manager.Project.Pages.PublishProcessFormModel
+
+@{
+    Layout = "_ModalLayout";
+    
+}
+
+    <form>
+        @Html.AntiForgeryToken()
+
+
+
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="Name">Name</label>
+                    @Html.TextBoxFor(m => m.Form.Name, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="Description">Description</label>
+                    @Html.TextBoxFor(m => m.Form.Description, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+        <div class="row">
+            <div class="col-md-6">
+                <button type="submit" class="btn btn-primary"
+                        if-ajax-action="@Url.Page("/Publisher/PublishProcessForm")"
+                        if-ajax-form-submit="true"
+                        if-ajax-method="post"
+                        if-ajax-close-modal-on-success="true"
+                        if-ajax-update-id="EntityListDiv">
+                    Save
+
+                </button>
+            </div>
+        </div>
+
+        @Html.HiddenFor(model => model.Form.ProcessId)
+    </form>

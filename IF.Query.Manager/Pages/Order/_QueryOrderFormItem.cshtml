@@ -1,0 +1,59 @@
+﻿@model IF.Manager.Contracts.Model.IFQueryOrder
+
+@{
+    Layout = null;
+
+    var filterOperators = Html.GetEnumSelectList<IF.Manager.Contracts.Enum.QueryOrderOperator>();
+    List<SelectListItem> entities = ViewData["entities"] as List<SelectListItem>;
+    var index = Guid.NewGuid();
+
+    foreach (var entity in entities)
+    {
+        if (entity.Value == Model.EntityPropertyId.ToString())
+        {
+            entity.Selected = true;
+        }
+    }
+
+    foreach (var op in filterOperators)
+    {
+        if (op.Value == ((int)Model.QueryOrderOperator).ToString())
+        {
+            op.Selected = true;
+        }
+    }
+
+
+}
+
+    <tr id="@index">
+        <td>
+            <div class="form-group">
+
+                @Html.DropDownList($"Form[{index}].EntityPropertyId", entities, "Select", new { @class = "form-control" })
+
+            </div>
+        </td>
+
+        <td>
+            <div class="form-group">
+
+                @Html.DropDownList($"Form[{index}].QueryOrderOperator",filterOperators , "Select", new { @class = "form-control" })
+            </div>
+        </td>
+       
+        <td>
+            <input type="hidden" name="Form.Index" value="@index" />
+            <input type="hidden" name="Form[@index].Id" value="@Model.Id" />
+        </td>
+        <td><button onclick="deleteOrder('@index')">-</button></td>
+    </tr>
+
+
+<script>
+    function deleteOrder(index) {
+        var id = "table#EmptyFormItem tr#" + index;
+        $(id).remove();
+        return false;
+    }
+</script>

@@ -1,0 +1,107 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
+    <AspNetCoreModuleName>AspNetCoreModule</AspNetCoreModuleName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\site.js" />
+  </ItemGroup>
+
+
+  <ItemGroup>    
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.4.0" />    
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\IF.Manager.Command\IF.Manager.Command.csproj" />
+    <ProjectReference Include="..\IF.Manager.Entity\IF.Manager.Entity.csproj" />
+    <ProjectReference Include="..\IF.Manager.Model\IF.Manager.Model.csproj" />
+    <ProjectReference Include="..\IF.Manager.Page\IF.Manager.Page.csproj" />
+    <ProjectReference Include="..\IF.Manager.Persistence.EF\IF.Manager.Persistence.EF.csproj" />
+    <ProjectReference Include="..\IF.Manager.Process\IF.Manager.Process.csproj" />
+    <ProjectReference Include="..\IF.Manager.Project\IF.Manager.Project.csproj" />
+    <ProjectReference Include="..\IF.Manager.Service\IF.Manager.Service.csproj" />
+    <ProjectReference Include="..\IF.Query.Manager\IF.Manager.Query.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="5.1.2" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="Autofac.Extras.AggregateService" Version="5.0.0" />
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="FluentValidation" Version="8.6.2" />    
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
+    <PackageReference Include="RestSharp" Version="106.10.1" />
+    <PackageReference Include="System.Runtime.Caching" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="IF.AutoMapper">
+      <HintPath>..\packages\InFramework\IF.AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.CodeGeneration.Core">
+      <HintPath>..\packages\InFramework\IF.CodeGeneration.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.CodeGeneration.Language.CSharp">
+      <HintPath>..\packages\InFramework\IF.CodeGeneration.Language.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.CodeGeneration.VisualStudio">
+      <HintPath>..\packages\InFramework\IF.CodeGeneration.VisualStudio.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.Configuration">
+      <HintPath>..\packages\InFramework\IF.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.Core">
+      <HintPath>..\packages\InFramework\IF.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.Cqrs">
+      <HintPath>..\packages\InFramework\IF.Cqrs.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.Dependency.AutoFac">
+      <HintPath>..\packages\InFramework\IF.Dependency.AutoFac.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.Localization.Integration">
+      <HintPath>..\packages\InFramework\IF.Localization.Integration.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.Module.Dictionary">
+      <HintPath>..\packages\InFramework\IF.Module.Dictionary.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.Module.Dictionary.Views">
+      <HintPath>..\packages\InFramework\IF.Module.Dictionary.Views.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.Persistence">
+      <HintPath>..\packages\InFramework\IF.Persistence.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.Persistence.EF.Core">
+      <HintPath>..\packages\InFramework\IF.Persistence.EF.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.Persistence.EF.Localization">
+      <HintPath>..\packages\InFramework\IF.Persistence.EF.Localization.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.Persistence.EF.SqlServer.Integration">
+      <HintPath>..\packages\InFramework\IF.Persistence.EF.SqlServer.Integration.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.RazorviewEngine">
+      <HintPath>..\packages\InFramework\IF.RazorviewEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.RazorviewEngine.Integration">
+      <HintPath>..\packages\InFramework\IF.RazorviewEngine.Integration.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.Web.Mvc">
+      <HintPath>..\packages\InFramework\IF.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.Web.Mvc.FluentHtml">
+      <HintPath>..\packages\InFramework\IF.Web.Mvc.FluentHtml.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

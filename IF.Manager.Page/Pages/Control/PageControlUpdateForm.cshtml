@@ -1,0 +1,40 @@
+﻿@page
+@model IF.Manager.Page.Pages.PageControlUpdateForm
+
+
+@{
+    Layout = "_ModalLayout";
+    List<SelectListItem> controls = ViewData["controls"] as List<SelectListItem>;
+
+    
+}
+
+
+    <form>
+        @Html.AntiForgeryToken()
+
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="PageControlMapId">Page Control Maps</label>
+                    @Html.DropDownList("PageControlMapId", controls, "Select", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <button type="submit" class="btn btn-primary"                        
+                        if-ajax-action="@Url.Page("/Control/PageControlUpdateForm","UpdateControl")"
+                        if-ajax-form-submit="true"
+                        if-ajax-method="post"
+                        if-ajax-close-modal-on-success="true"
+                        if-ajax-update-id="PageControlTreeListModal">
+                    Save
+                </button>
+            </div>
+        </div>
+        @Html.HiddenFor(model => model.TreeSelectedId)
+        @Html.HiddenFor(model => model.RootControlMapId)
+    </form>

@@ -1,0 +1,43 @@
+﻿@model IF.Manager.Contracts.Dto.EntityRelationDto
+
+@{
+    Layout = null;
+    //List<SelectListItem> primitives = ViewData["primitives"] as List<SelectListItem>;
+    List<SelectListItem> entities = ViewData["entities"] as List<SelectListItem>;
+    var index = Guid.NewGuid();
+}
+
+<tr>
+
+    <td>
+        <div class="form-group">
+            @*<label for="IFEntityId">Entity Type</label>*@
+            @if (Model.IFRelatedEntityId > 0)
+            {
+                @entities.Single(e => e.Value == Model.IFRelatedEntityId.ToString()).Text
+            }
+            else
+            {
+                @Html.DropDownList($"Form[{index}].IFRelatedEntityId", entities, "Select", new { @class = "form-control" })
+            }
+        </div>
+    </td>
+    <td>
+        <div class="form-group">
+            @*<label for="">Entity Relation Type</label>*@
+            @if (Model.EntityRelationType != IF.Manager.Contracts.Enum.EntityRelationType.None)
+            {
+                @Model.EntityRelationType.ToString()
+            }
+            else
+            {
+                @Html.DropDownList($"Form[{index}].EntityRelationType", Html.GetEnumSelectList<IF.Manager.Contracts.Enum.EntityRelationType>(), "Select", new { @class = "form-control" })
+            }
+        </div>
+    </td>   
+    <td>
+        <input type="hidden" name="Form.Index" value="@index" />
+        <input type="hidden" name="Form[@index].Id" value="@Model.Id" />
+    </td>
+
+</tr>
