@@ -34,6 +34,7 @@ namespace IF.Manager.Service.Services
             entity.ProcessId = form.ProcessId;
             entity.FormModelId = form.FormModelId;
             entity.Description = form.Description;
+            entity.QueryGetType = form.QueryGetType;
             this.Add(entity);
             await this.UnitOfWork.SaveChangesAsync();
             form.Id = entity.Id;
