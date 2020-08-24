@@ -27,6 +27,11 @@ namespace IF.Manager.Contracts.Model
 
         public IFQuery Query { get; set; }
 
-        
+        public override IFQuery GetQuery()
+        {
+            return this.Query;
+        }
+
+
     }
 }

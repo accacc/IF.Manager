@@ -24,5 +24,10 @@ namespace IF.Manager.Contracts.Model
         public int? IFQueryId { get; set; }
 
         public ICollection<IFPageFormItemModelProperty> IFPageFormItemModelProperties  { get; set; }
+
+        public override IFQuery GetQuery()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -106,7 +106,7 @@ namespace IF.Manager.Service.Web.Page.Form
                 if (child.IFPageControl is IFPageAction)
                 {
                     //TODO:Caglar
-                    //AddPostMethod(child.IFPageControl as IFPageAction);
+                    AddPostMethod(child.IFPageControl as IFPageAction);
                 }
             }
 
@@ -114,32 +114,47 @@ namespace IF.Manager.Service.Web.Page.Form
         }
 
         private void AddPostMethod(IFPageAction action)
-        {            
-            CSMethod method = new CSMethod($"OnPost{action.Name}", "PartialViewResult", "public");
-            method.IsAsync = true;
+        {
 
-            CsMethodParameter parameter = new CsMethodParameter();
-            parameter.Name = "form";
-            parameter.Type = $"{action.Command.Model.Name}";
-            method.Parameters.Add(parameter);
+            CSMethod method = new CSMethod($"OnPost{action.Name}", "PartialViewResult", "public");
             method.IsAsync = true;
 
             StringBuilder methodBody = new StringBuilder();
 
-            methodBody.AppendLine($"{action.Command.Name}Command command = new {action.Command.Name}Command();");
+            if (action.Command != null)
+            {                
 
-            methodBody.AppendLine($"command.Data = form;");
+                CsMethodParameter parameter = new CsMethodParameter();
+                parameter.Name = "form";
+                parameter.Type = $"{action.Command.Model.Name}";
+                method.Parameters.Add(parameter);
+                method.IsAsync = true;
 
-            methodBody.AppendLine($@"await this.apiClient.PostAsync<{action.Command.Name}Command>(""{topPage.Process.Name}Controller/{action.Command.Name}"",command);");
+             
 
-            methodBody.AppendLine($@"var response = await this.apiClient.GetAsync<{this.form.IFQuery.Name}Response>(""{topPage.Process.Name}Controller/{form.IFQuery.Name}"",new {this.form.IFQuery.Name}Request());");
+                methodBody.AppendLine($"{action.Command.Name}Command command = new {action.Command.Name}Command();");
 
-            methodBody.AppendLine($"var list = response.Data;");
+                methodBody.AppendLine($"command.Data = form;");
 
-            methodBody.AppendLine($"return new PartialViewResult");
-            methodBody.AppendLine($"{{");
-            methodBody.AppendLine($@"ViewName = ""_{this.form.Name}Table"",");
-            methodBody.AppendLine($@"ViewData = new ViewDataDictionary<List<{this.form.IFQuery.Model.Name}>>(ViewData, list)");
+                methodBody.AppendLine($@"await this.apiClient.PostAsync<{action.Command.Name}Command>(""{topPage.Process.Name}Controller/{action.Command.Name}"",command);");                
+            }
+
+            if (action.IFPageControl != null)
+            {
+
+                var query = action.IFPageControl.GetQuery();
+
+                methodBody.AppendLine($@"var response = await this.apiClient.GetAsync<{query.Name}Response>(""{topPage.Process.Name}Controller/{query.Name}"",new {query.Name}Request());");
+
+                methodBody.AppendLine($"var list = response.Data;");
+
+                methodBody.AppendLine($"return new PartialViewResult");
+                methodBody.AppendLine($"{{");
+                methodBody.AppendLine($@"ViewName = ""_{this.form.Name}Table"",");
+                methodBody.AppendLine($@"ViewData = new ViewDataDictionary<List<{query.Model.Name}>>(ViewData, list)");
+            
+            }
+
             methodBody.AppendLine($"}};");
 
             method.Body = methodBody.ToString();

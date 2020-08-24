@@ -1,12 +1,13 @@
 ﻿using IF.Core.Control;
 using IF.Core.Data;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace IF.Manager.Contracts.Model
 {
-    public class IFPageControl : Entity
+    public abstract class IFPageControl : Entity
     {
         public IFPageControl()
         {
@@ -30,5 +31,9 @@ namespace IF.Manager.Contracts.Model
 
         public int IFPageControlMapId { get; set; }
 
+        public abstract IFQuery GetQuery();
+        
+            
+        
     }
 }

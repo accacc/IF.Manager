@@ -26,5 +26,10 @@ namespace IF.Manager.Contracts.Model
         public IFPageLayout PageLayout { get; set; }
 
         public ICollection<IFPageParameter> IFPageParameters { get; set; }
+
+        public override IFModel GetQuery()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -4,8 +4,11 @@ using System.Text;
 
 namespace IF.Manager.Contracts.Model
 {
-    public class IFPagePanel: IFPageControl
+    public class IFPagePanel : IFPageControl
     {
-        
+        public override IFQuery GetQuery()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
