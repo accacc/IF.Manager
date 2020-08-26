@@ -10,7 +10,7 @@ namespace IF.Manager.Contracts.Model
 
         public IFProject IFProject { get; set; }
 
-        public override IFModel GetQuery()
+        public override IFQuery GetQuery()
         {
             throw new NotImplementedException();
         }

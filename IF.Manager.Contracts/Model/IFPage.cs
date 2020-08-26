@@ -27,7 +27,7 @@ namespace IF.Manager.Contracts.Model
 
         public ICollection<IFPageParameter> IFPageParameters { get; set; }
 
-        public override IFModel GetQuery()
+        public override IFQuery GetQuery()
         {
             throw new NotImplementedException();
         }

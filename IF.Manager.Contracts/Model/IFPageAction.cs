@@ -45,7 +45,7 @@ namespace IF.Manager.Contracts.Model
 
         public ICollection<IFPageActionRouteValue> IFPageActionRouteValues { get; set; }
 
-        public override IFModel GetQuery()
+        public override IFQuery GetQuery()
         {
             throw new NotImplementedException();
         }
