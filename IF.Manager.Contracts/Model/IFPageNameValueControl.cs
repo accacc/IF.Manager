@@ -15,6 +15,9 @@ namespace IF.Manager.Contracts.Model
 
         public int ValuePropertyId { get; set; }
 
+
+
+
         public override IFQuery GetQuery()
         {
             throw new NotImplementedException();

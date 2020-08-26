@@ -118,7 +118,7 @@ namespace IF.Manager.Contracts.Model
 
             if (this.IFPageControl is IFPage && this.Parent == null)
             {
-                paths.Add((IFPage)this.IFPageControl);
+                return paths;
             }
 
             var page = this;

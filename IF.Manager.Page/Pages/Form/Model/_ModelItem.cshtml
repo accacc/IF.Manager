@@ -27,32 +27,40 @@
 
 }
 
-    <tr id="@index">
-        <td>
-            <div class="form-group">
-
-                @Html.DropDownList($"Form[{index}].IFModelPropertyId", model_properties, "Select", new { @class = "form-control" })
-
-            </div>
-        </td>
+<tr id="@index">
+    <td>
+        <div class="form-group">
+            @Html.DropDownList($"Form[{index}].IFModelPropertyId", model_properties, "Select", new { @class = "form-control" })
+        </div>
+    </td>
 
 
-        <td>
-            <div class="form-group">
+    <td>
+        <div class="form-group">
+            @Html.DropDownList($"Form[{index}].IFPageFormItemId", form_items, "Select", new { @class = "form-control", onclick = $"CheckDropDown(this);" });
+        </div>
+    </td>
 
-                @Html.DropDownList($"Form[{index}].IFPageFormItemId", form_items, "Select", new { @class = "form-control" })
+    <td>
+        <input type="hidden" name="Form.Index" value="@index" />
+        <input type="hidden" name="Form[@index].Id" value="@Model.Id" />
+    </td>
+    <td>
+        <button onclick="deleteOrder('@index')">-</button>
+    </td>
+    <td>
+        <a class="btn btn-primary"
+           href="@Url.Page("/Form/DropDown/DropDownForm",new { Id = Model.Id })"
+           if-ajax="true"
+           if-ajax-method="get"
+           if-ajax-insertion-mode="replace"
+           if-ajax-show-dialog="true"
+           if-ajax-modal-id="@Guid.NewGuid()">
+            Query
+        </a>
 
-            </div>
-        </td>
-
-
-
-        <td>
-            <input type="hidden" name="Form.Index" value="@index" />
-            <input type="hidden" name="Form[@index].Id" value="@Model.Id" />
-        </td>
-        <td><button onclick="deleteOrder('@index')">-</button></td>
-    </tr>
+    </td>
+</tr>
 
 
 <script>
@@ -61,4 +69,12 @@
         $(id).remove();
         return false;
     }
+
+    function CheckDropDown(element) {
+        alert($(element).val());
+        return false;
+    }
+
+
+
 </script>

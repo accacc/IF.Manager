@@ -23,6 +23,5 @@ namespace IF.Manager.Contracts.Model
 
         public int IFPageFormId { get; set; }
 
-
     }
 }
