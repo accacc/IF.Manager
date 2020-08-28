@@ -10,13 +10,17 @@ namespace IF.Manager.Contracts.Model
 
         public int IFQueryId { get; set; }
 
-        public int NamePropertyId { get; set; }
+        public int NameIFModelPropertyId { get; set; }
 
+        public IFModelProperty NameIFModelProperty { get; set; }
 
-        public int ValuePropertyId { get; set; }
+        public int ValueIFModelPropertyId { get; set; }
 
+        public IFModelProperty ValueModelProperty { get; set; }
 
+        public int IFPageFormItemModelPropertyId { get; set; }
 
+        public IFPageFormItemModelProperty IFPageFormItemModelProperty { get; set; }
 
         public override IFQuery GetQuery()
         {
