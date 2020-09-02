@@ -37,7 +37,7 @@
 
     <td>
         <div class="form-group">
-            @Html.DropDownList($"Form[{index}].IFPageFormItemId", form_items, "Select", new { @class = "form-control", onclick = $"CheckDropDown(this);" });
+            @Html.DropDownList($"Form[{index}].IFPageFormItemId", form_items, "Select", new { @class = "form-control" })
         </div>
     </td>
 
@@ -69,12 +69,4 @@
         $(id).remove();
         return false;
     }
-
-    function CheckDropDown(element) {
-        alert($(element).val());
-        return false;
-    }
-
-
-
 </script>

@@ -61,7 +61,7 @@ namespace IF.Manager.Persistence.EF
             builder.ApplyConfiguration(new IFPageFormItemModelPropertyMapping());
 
             builder.ApplyConfiguration(new IFPageNavigationMapping());
-            builder.ApplyConfiguration(new IFPageNameValueControlMapping());
+            //builder.ApplyConfiguration(new IFPageNameValueControlMapping());
 
             builder.ApplyConfiguration(new IFPageParameterBaseMapping());
             builder.ApplyConfiguration(new IFPageActionRouteValueMapping());
@@ -130,7 +130,7 @@ namespace IF.Manager.Persistence.EF
 
         public DbSet<IFPageParameter> PageParameters { get; set; }
 
-        public DbSet<IFPageNameValueControl>   PageNameValueControls   { get; set; }
+        //public DbSet<IFPageNameValueControl>   PageNameValueControls   { get; set; }
 
         public DbSet<IFPageFormItemModelProperty> PageFormItemModelProperties { get; set; }
 
