@@ -20,7 +20,7 @@ namespace IF.Manager.Persistence.EF.Mappings
             builder.Property(x => x.Description).IsRequired();
 
             builder.HasOne<IFProcess>(s => s.Process).WithMany(s => s.Pages).HasForeignKey(s => s.ProcessId).OnDelete(DeleteBehavior.Restrict);
-            builder.HasMany(cn => cn.IFPageParameters).WithOne(tl => tl.IFPage).HasForeignKey(tl => tl.ObjectId);
+            builder.HasMany(cn => cn.IFPageParameters).WithOne(tl => tl.IFPage).HasForeignKey(tl => tl.ObjectId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

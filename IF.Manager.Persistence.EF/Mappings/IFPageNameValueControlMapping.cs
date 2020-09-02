@@ -16,8 +16,8 @@ namespace IF.Manager.Persistence.EF.Mappings
             //base.Configure(builder);
             //builder.ToTable("IFPage");
             
-            builder.Property(x => x.NamePropertyId).IsRequired();
-            builder.Property(x => x.ValuePropertyId).IsRequired();
+            builder.Property(x => x.NameIFModelPropertyId).IsRequired();
+            builder.Property(x => x.ValueIFModelPropertyId).IsRequired();
 
             //builder.HasOne<IFProcess>(s => s.Process).WithMany(s => s.Pages).HasForeignKey(s => s.ProcessId).OnDelete(DeleteBehavior.Restrict);
         }

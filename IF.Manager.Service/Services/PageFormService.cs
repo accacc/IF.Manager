@@ -120,7 +120,7 @@ namespace IF.Manager.Service.Services
 
         public async Task<List<IFPageFormItemModelProperty>> GetPageFormItemModelProperties(int id)
         {
-            var data = await this.GetQuery<IFPageFormItemModelProperty>(c => c.IFPageFormId == id).ToListAsync();
+            var data = await this.GetQuery<IFPageFormItemModelProperty>(c => c.ObjectId == id).ToListAsync();
 
             return data;
         }
@@ -150,7 +150,7 @@ namespace IF.Manager.Service.Services
                     {
                         IFPageFormItemModelProperty property = new IFPageFormItemModelProperty();
                         property.IFModelPropertyId = dto.IFModelPropertyId;
-                        property.IFPageFormId = formId;
+                        property.ObjectId = formId;
                         property.IFPageFormItemId = dto.IFPageFormItemId;
                         entity.IFPageFormItemModelProperties.Add(property);
                     }
@@ -158,7 +158,7 @@ namespace IF.Manager.Service.Services
                     {
                         var property = entity.IFPageFormItemModelProperties.SingleOrDefault(p => p.Id == dto.Id);
                         property.IFModelPropertyId = dto.IFModelPropertyId;
-                        property.IFPageFormId = formId;
+                        property.ObjectId = formId;
                         property.IFPageFormItemId = dto.IFPageFormItemId;
                         this.Update(property);
                     }

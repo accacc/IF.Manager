@@ -21,6 +21,7 @@ namespace IF.Manager.Persistence.EF.Mappings
 
             builder.HasOne<IFPageFormLayout>(s => s.FormLayout).WithMany(s => s.PageForms).HasForeignKey(s => s.FormLayoutId).OnDelete(DeleteBehavior.Restrict);
             builder.HasOne<IFModel>(s => s.IFModel).WithMany(s => s.PageForms).HasForeignKey(s => s.IFModelId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasMany(cn => cn.IFPageFormItemModelProperties).WithOne(tl => tl.IFPageForm).HasForeignKey(tl => tl.ObjectId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

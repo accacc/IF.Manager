@@ -21,7 +21,7 @@ namespace IF.Manager.Contracts.Model
 
         public IFPageForm IFPageForm { get; set; }
 
-        public int IFPageFormId { get; set; }
+        public int? ObjectId { get; set; }
 
     }
 }

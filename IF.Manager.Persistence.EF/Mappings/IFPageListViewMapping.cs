@@ -16,7 +16,7 @@ namespace IF.Manager.Persistence.EF.Mappings
             builder.Property(x => x.Name).IsRequired();
             builder.Property(x => x.Description).IsRequired();
 
-            builder.HasMany(cn => cn.IFPageParameters).WithOne(tl => tl.IFPageListView).HasForeignKey(tl => tl.ObjectId);
+            builder.HasMany(cn => cn.IFPageParameters).WithOne(tl => tl.IFPageListView).HasForeignKey(tl => tl.ObjectId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

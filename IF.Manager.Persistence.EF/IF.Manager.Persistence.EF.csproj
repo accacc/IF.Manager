@@ -7,6 +7,18 @@
   <ItemGroup>
     <Compile Remove="Migrations\20200508171745_58-1.cs" />
     <Compile Remove="Migrations\20200508171745_58-1.Designer.cs" />
+    <Compile Remove="Migrations\20200828230529_829-1.cs" />
+    <Compile Remove="Migrations\20200828230529_829-1.Designer.cs" />
+    <Compile Remove="Migrations\20200828231822_829-1.cs" />
+    <Compile Remove="Migrations\20200828231822_829-1.Designer.cs" />
+    <Compile Remove="Migrations\20200828231941_829-1.cs" />
+    <Compile Remove="Migrations\20200828231941_829-1.Designer.cs" />
+    <Compile Remove="Migrations\20200828233048_829-1.cs" />
+    <Compile Remove="Migrations\20200828233048_829-1.Designer.cs" />
+    <Compile Remove="Migrations\20200828233622_829-1.cs" />
+    <Compile Remove="Migrations\20200828233622_829-1.Designer.cs" />
+    <Compile Remove="Migrations\20200829192602_829-1.cs" />
+    <Compile Remove="Migrations\20200829192602_829-1.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
