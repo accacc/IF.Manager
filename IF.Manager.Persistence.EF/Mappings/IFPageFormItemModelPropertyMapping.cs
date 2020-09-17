@@ -14,7 +14,7 @@ namespace IF.Manager.Persistence.EF.Mappings
         {
             builder.ToTable("IFPageFormItemModelProperty");
             builder.Property(x => x.Id).IsRequired();
-            
+            builder.HasMany(cn => cn.IFPageControlItemModelProperties).WithOne(tl => tl.IFPageFormItemModelProperty).HasForeignKey(tl => tl.ObjectId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

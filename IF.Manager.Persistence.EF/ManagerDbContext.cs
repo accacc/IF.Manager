@@ -61,7 +61,7 @@ namespace IF.Manager.Persistence.EF
             builder.ApplyConfiguration(new IFPageFormItemModelPropertyMapping());
 
             builder.ApplyConfiguration(new IFPageNavigationMapping());
-            //builder.ApplyConfiguration(new IFPageNameValueControlMapping());
+            builder.ApplyConfiguration(new IFPageControlItemModelPropertyMapping());
 
             builder.ApplyConfiguration(new IFPageParameterBaseMapping());
             builder.ApplyConfiguration(new IFPageActionRouteValueMapping());

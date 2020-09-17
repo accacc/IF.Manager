@@ -48,9 +48,12 @@
     <td>
         <button onclick="deleteOrder('@index')">-</button>
     </td>
+
+    @if (Model.IFPageFormItemId == 4)
+    {
     <td>
         <a class="btn btn-primary"
-           href="@Url.Page("/Form/DropDown/DropDownForm",new { Id = Model.Id })"
+           href="@Url.Page("/Form/DropDown/DropDownForm", new { Id = Model.Id,ObjectId = Model.ObjectId })"
            if-ajax="true"
            if-ajax-method="get"
            if-ajax-insertion-mode="replace"
@@ -60,6 +63,7 @@
         </a>
 
     </td>
+    }
 </tr>
 
 

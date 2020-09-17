@@ -7,17 +7,18 @@
     List<SelectListItem> queries = ViewData["queries"] as List<SelectListItem>;
 }
 
-@*<form>
+<form>
     @Html.AntiForgeryToken()
 
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
                 <label for="QueryId">Query</label>
-                @Html.DropDownList("Form.QueryId", queries, "Select", new { @class = "form-control" })
+                @Html.DropDownList("Form.IFQueryId", queries, "Select", new { @class = "form-control" })
             </div>
         </div>
     </div>
+
 
     <div class="row">
         <div class="col-md-6">
@@ -31,8 +32,7 @@
                 Save
             </button>
         </div>
-    </div>
-    @Html.HiddenFor(model => model.Form.Id)
-</form>*@
+    </div>    
+</form>
 
 

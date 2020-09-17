@@ -8,6 +8,11 @@ namespace IF.Manager.Contracts.Model
 {
     public class IFPageFormItemModelProperty:Entity
     {
+        public IFPageFormItemModelProperty()
+        {
+            this.IFPageControlItemModelProperties = new List<IFPageControlItemModelProperty>();
+        }
+
         [Key]
         public int Id { get; set; }
 
@@ -22,6 +27,8 @@ namespace IF.Manager.Contracts.Model
         public IFPageForm IFPageForm { get; set; }
 
         public int? ObjectId { get; set; }
+
+        public ICollection<IFPageControlItemModelProperty> IFPageControlItemModelProperties { get; set; }
 
     }
 }
