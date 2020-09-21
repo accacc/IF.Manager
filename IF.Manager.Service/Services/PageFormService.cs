@@ -125,6 +125,13 @@ namespace IF.Manager.Service.Services
             return data;
         }
 
+        public async Task<IFPageControlItemModelProperty> GetPageControlItemModelProperty(int iFPageFormItemModelPropertyId)
+        {
+            var data = await this.GetQuery<IFPageControlItemModelProperty>(c => c.IFPageFormItemModelPropertyId == iFPageFormItemModelPropertyId).SingleOrDefaultAsync();
+
+            return data;
+        }
+
         public async Task UpdateFormItemModelProperties(List<IFPageFormItemModelProperty> dtos, int formId)
         {
             try
@@ -172,6 +179,39 @@ namespace IF.Manager.Service.Services
                 throw;
             }
         }
+
+        public async Task AddPageControlItemModelProperty(IFPageControlItemModelProperty form)
+        {
+            await this.AddAsync(form);
+            await this.UnitOfWork.SaveChangesAsync();
+        }
+
+        public async Task UpdatePageControlItemModelProperty(IFPageControlItemModelProperty form)
+        {
+
+            try
+            {
+                var entity = await this.GetQuery<IFPageControlItemModelProperty>()
+            .SingleOrDefaultAsync(k => k.Id == form.Id);
+
+                if (entity == null) { throw new BusinessException($"{nameof(IFPageControlItemModelProperty)} : No such entity exists"); }
+
+
+                entity.IFQueryId = form.IFQueryId; ;
+                entity.NameIFModelPropertyId = form.NameIFModelPropertyId;
+                
+                entity.ValueIFModelPropertyId = form.ValueIFModelPropertyId;
+                this.Update(entity);
+                await this.UnitOfWork.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+       
     }
 }
 

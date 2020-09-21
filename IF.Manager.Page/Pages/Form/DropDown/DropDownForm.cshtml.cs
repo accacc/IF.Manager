@@ -19,20 +19,68 @@ namespace IF.Manager.Page.Pages.Form.DropDown
 
         private readonly IQueryService queryService;
         private readonly IModelService modelService;
+        private readonly IPageFormService pageFormService;
 
-        public DropDownFormModel(IQueryService queryService, IModelService modelService)
+        public DropDownFormModel(IQueryService queryService, IModelService modelService, IPageFormService pageFormService)
         {
             this.queryService = queryService;
             this.modelService = modelService;
+            this.pageFormService = pageFormService;
         }
 
         [BindProperty(SupportsGet = true), Required]
         public IFPageControlItemModelProperty Form { get; set; }
-        
+
         public async Task OnGet()
-        {            
+        {
+            if (this.Form.IFPageFormItemModelPropertyId > 0)
+            {
+                var entity = await this.pageFormService.GetPageControlItemModelProperty(this.Form.IFPageFormItemModelPropertyId);
+                if (entity != null)
+                {
+                    this.Form = entity;
+                }
+            }
             await this.SetFormDefaults();
+
         }
+
+        //public async Task OnGetUpdateAsync(int Id)
+        //{
+        //    this.Form = await this.pageFormService.GetPageControlItemModelProperty(Id);
+        //    await this.SetFormDefaults();
+
+        //}
+
+        public async Task<IActionResult> OnPostSaveAsync()
+        {
+
+            if (Form.Id <= 0)
+            {
+                await this.pageFormService.AddPageControlItemModelProperty(this.Form);
+            }
+            else
+            {
+                await this.pageFormService.UpdatePageControlItemModelProperty(this.Form);
+            }
+
+            return new EmptyResult();
+        }
+
+        //public async Task<PartialViewResult> OnPostUpdateAsync()
+        //{
+
+        //    await this.pageFormService.UpdateForm(this.Form);
+
+
+        //    var list = await this.pageFormService.GetFormList();
+
+        //    return new PartialViewResult
+        //    {
+        //        ViewName = "_FormListTable",
+        //        ViewData = new ViewDataDictionary<List<IFPageForm>>(ViewData, list)
+        //    };
+        //}
 
 
         public async Task<PartialViewResult> OnGetDropDownPropertyPartialAsync()

@@ -20,7 +20,7 @@
     </div>
 
     <div id="DropDownPropertyDiv">
-        @if (Model.Form.IFQueryId > 0)
+        @if (Model.Form.Id > 0)
         {
             await Html.RenderPartialAsync("_DropDownProperty", Model.Form);
         }
@@ -29,8 +29,7 @@
     <div class="row">
         <div class="col-md-6">
             <button type="submit" class="btn btn-primary"
-                    @{ var handler = "Add"; if (this.Model.Form.Id > 0) { handler = "Update"; } }
-                    if-ajax-action="@Url.Page("/Grid/GridForm",handler)"
+                    if-ajax-action="@Url.Page("/Form/DropDown/DropDownForm","Save")"
                     if-ajax-form-submit="true"
                     if-ajax-method="post"
                     if-ajax-close-modal-on-success="true"
@@ -39,6 +38,9 @@
             </button>
         </div>
     </div>
+
+    @Html.HiddenFor(m => m.Form.Id)
+    @Html.HiddenFor(m=>m.Form.IFPageFormItemModelPropertyId)
 </form>
 
 
