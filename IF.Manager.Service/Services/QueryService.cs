@@ -122,6 +122,15 @@ namespace IF.Manager.Service.Services
             return data;
         }
 
+        public async Task<List<IFModelProperty>> GetQueryModelPropertyList(int queryId)
+        {
+            var query = await this.GetQuery<IFQuery>(q => q.Id == queryId).SingleOrDefaultAsync();
+
+            var data = await this.GetQuery<IFModelProperty>(x => x.ModelId == query.ModelId).Include(p=>p.EntityProperty).ToListAsync();
+
+            return data;
+        }
+
         public async Task<QueryFilterDto> GetQueryFilterItems(int queryId)
         {
             QueryFilterDto filter = new QueryFilterDto();

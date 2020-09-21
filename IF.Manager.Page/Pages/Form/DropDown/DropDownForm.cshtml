@@ -19,6 +19,12 @@
         </div>
     </div>
 
+    <div id="DropDownPropertyDiv">
+        @if (Model.Form.IFQueryId > 0)
+        {
+            await Html.RenderPartialAsync("_DropDownProperty", Model.Form);
+        }
+    </div>
 
     <div class="row">
         <div class="col-md-6">
@@ -32,7 +38,25 @@
                 Save
             </button>
         </div>
-    </div>    
+    </div>
 </form>
 
+
+<script>
+
+    $('#Form_IFQueryId').on('change', function (e) {
+        var valueSelected = this.value;
+        debugger;
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Page("/Form/DropDown/DropDownForm", "DropDownPropertyPartial")',
+            data: { IFQueryId: valueSelected },
+            success: function (data) {
+                debugger;
+                $("#DropDownPropertyDiv").html(data);
+            }
+        });
+    });
+
+</script>
 

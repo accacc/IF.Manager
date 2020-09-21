@@ -7,6 +7,8 @@ namespace IF.Manager.Contracts.Enum
     public enum  QueryGetType
     {
         Single=0,
-        List=1
+        List=1,
+        NameValue=2
+
     }
 }

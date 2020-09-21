@@ -10,6 +10,8 @@ namespace IF.Manager.Contracts.Services
     public interface IQueryService: IRepository
     {
 
+
+        Task<List<IFModelProperty>> GetQueryModelPropertyList(int queryId);
         Task<List<IFPageParameter>> GetPageParametersFromQuery(int queryId);
 
         Task<List<IFFormModelProperty>> GetFormModelPropertyList(int formModelId);
