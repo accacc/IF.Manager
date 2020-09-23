@@ -35,22 +35,15 @@ namespace IF.Manager.Page.Pages.Form.DropDown
         {
             if (this.Form.IFPageFormItemModelPropertyId > 0)
             {
-                var entity = await this.pageFormService.GetPageControlItemModelProperty(this.Form.IFPageFormItemModelPropertyId);
-                if (entity != null)
-                {
-                    this.Form = entity;
-                }
+                this.Form = await this.pageFormService.GetPageControlItemModelProperty(this.Form.IFPageFormItemModelPropertyId);
+                await this.SetQueryModelProperties();
             }
+
             await this.SetFormDefaults();
 
         }
 
-        //public async Task OnGetUpdateAsync(int Id)
-        //{
-        //    this.Form = await this.pageFormService.GetPageControlItemModelProperty(Id);
-        //    await this.SetFormDefaults();
-
-        //}
+      
 
         public async Task<IActionResult> OnPostSaveAsync()
         {
@@ -67,25 +60,9 @@ namespace IF.Manager.Page.Pages.Form.DropDown
             return new EmptyResult();
         }
 
-        //public async Task<PartialViewResult> OnPostUpdateAsync()
-        //{
-
-        //    await this.pageFormService.UpdateForm(this.Form);
-
-
-        //    var list = await this.pageFormService.GetFormList();
-
-        //    return new PartialViewResult
-        //    {
-        //        ViewName = "_FormListTable",
-        //        ViewData = new ViewDataDictionary<List<IFPageForm>>(ViewData, list)
-        //    };
-        //}
-
-
         public async Task<PartialViewResult> OnGetDropDownPropertyPartialAsync()
         {
-            await SetModels();
+            await SetQueryModelProperties();
 
             return new PartialViewResult
             {
@@ -126,7 +103,7 @@ namespace IF.Manager.Page.Pages.Form.DropDown
             ViewData["queries"] = items;
         }
 
-        private async Task SetModels()
+        private async Task SetQueryModelProperties()
         {
 
             var properties = await this.queryService.GetQueryModelPropertyList(this.Form.IFQueryId);
@@ -159,7 +136,7 @@ namespace IF.Manager.Page.Pages.Form.DropDown
             {
                 SelectListItem item = new SelectListItem();
 
-                if (this.Form.NameIFModelPropertyId == data.Id)
+                if (this.Form.ValueIFModelPropertyId == data.Id)
                 {
                     item.Selected = true;
                 }
