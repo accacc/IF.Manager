@@ -23,5 +23,6 @@ namespace IF.Manager.Contracts.Services
         Task AddPageControlItemModelProperty(IFPageControlItemModelProperty form);
         Task UpdatePageControlItemModelProperty(IFPageControlItemModelProperty form);
         Task<IFPageControlItemModelProperty> GetPageControlItemModelProperty(int iFPageFormItemModelPropertyId);
+        void MoveModelItemUp(int ıd);
     }
 }

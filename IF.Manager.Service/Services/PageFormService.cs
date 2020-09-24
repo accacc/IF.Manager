@@ -211,7 +211,22 @@ namespace IF.Manager.Service.Services
             }
         }
 
-       
+        public void MoveModelItemUp(int Id)
+        {
+            IFPageFormItemModelProperty entity = this.GetPageFormItemModelProperty(Id);
+            
+            if (entity != null)
+            {
+                this.MoveUpOne<IFPageFormItemModelProperty>(entity.Sequence);
+            }
+        }
+
+        private IFPageFormItemModelProperty GetPageFormItemModelProperty(int Id)
+        {       
+        
+            return this.GetByKey<IFPageFormItemModelProperty>(Id);
+        
+        }
     }
 }
 

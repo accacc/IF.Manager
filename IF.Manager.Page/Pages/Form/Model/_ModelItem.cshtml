@@ -46,6 +46,17 @@
         <input type="hidden" name="Form[@index].Id" value="@Model.Id" />
     </td>
     <td>
+        <a class="btn btn-primary"
+           href="@Url.Page("/Form/Model/ModelForm","MoveModelItemUpOne", new { Id = Model.Id,Sequence = Model.Sequence })"
+           if-ajax="true"
+           if-ajax-method="post"
+           if-ajax-insertion-mode="replace"           
+           if-ajax-update-id="ModelItemListDiv">
+            &#8593;
+        </a>
+
+    </td>
+    <td>
         <button onclick="deleteOrder('@index')">-</button>
     </td>
 

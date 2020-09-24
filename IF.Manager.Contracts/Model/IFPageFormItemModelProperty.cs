@@ -6,7 +6,7 @@ using System.Text;
 
 namespace IF.Manager.Contracts.Model
 {
-    public class IFPageFormItemModelProperty:Entity
+    public class IFPageFormItemModelProperty:Entity, IMoveable
     {
         public IFPageFormItemModelProperty()
         {
@@ -15,6 +15,8 @@ namespace IF.Manager.Contracts.Model
 
         [Key]
         public int Id { get; set; }
+
+        public int Sequence { get; set; }
 
         public IFPageFormItem IFPageFormItem { get; set; }
 

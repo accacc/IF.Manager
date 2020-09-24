@@ -14,22 +14,9 @@
 <form class="form-inline">
     @Html.AntiForgeryToken()
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12" id="ModelItemListDiv">
 
-            <table class="table table-striped table-sm" id="EmptyFormItem">
-                <thead>
-                    <tr>
-                        <th>Property</th>
-                        <th>Control</th>
-                    </tr>
-                </thead>
-
-                @for (int i = 0; i < Model.Form.Count; i++)
-                {
-                    await Html.RenderPartialAsync("_ModelItem", Model.Form[i]);
-                }
-
-            </table>
+            @{await Html.RenderPartialAsync("_ModelItemList", Model.Form); }
 
         </div>
     </div>

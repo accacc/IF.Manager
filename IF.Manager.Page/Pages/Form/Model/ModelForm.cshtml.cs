@@ -91,6 +91,21 @@ namespace IF.Manager.Page.Pages.Form.Model
 
         }
 
+        public async Task<PartialViewResult> OnPostMoveModelItemUpOneAsync(int Id,int Sequence)
+        {
+            var propertyList = await this.pageFormService.GetPageFormItemModelProperties(Id);
+
+
+            this.pageFormService.MoveModelItemUp(Id);
+
+            return new PartialViewResult
+            {
+                ViewName = "_ModelItemList",
+                ViewData = new ViewDataDictionary<List<IFPageFormItemModelProperty>>(ViewData, propertyList)
+            };
+
+        }
+
         private void SetEmptyForm(int Id)
         {
             var order = new IFPageFormItemModelProperty();
