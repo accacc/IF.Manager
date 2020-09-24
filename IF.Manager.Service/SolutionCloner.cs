@@ -15,7 +15,7 @@ namespace IF.Manager.Service
             this.newSolutionName = newSolutionName;
             this.projects = projects;
 
-
+             
         }
         public void Clone()
         {
