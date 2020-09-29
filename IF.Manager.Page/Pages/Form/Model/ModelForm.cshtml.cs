@@ -91,12 +91,29 @@ namespace IF.Manager.Page.Pages.Form.Model
 
         }
 
-        public async Task<PartialViewResult> OnPostMoveModelItemUpOneAsync(int Id,int Sequence)
+        public async Task<PartialViewResult> OnPostMoveModelItemUpOneAsync(int Id)
         {
-            var propertyList = await this.pageFormService.GetPageFormItemModelProperties(Id);
-
-
             this.pageFormService.MoveModelItemUp(Id);
+
+            var propertyList = await this.pageFormService.GetPageFormItemModelProperties(this.FormId);
+
+            await this.SetFromDefaults(this.FormId);
+
+            return new PartialViewResult
+            {
+                ViewName = "_ModelItemList",
+                ViewData = new ViewDataDictionary<List<IFPageFormItemModelProperty>>(ViewData, propertyList)
+            };
+
+        }
+
+        public async Task<PartialViewResult> OnPostMoveModelItemDownOneAsync(int Id)
+        {
+            this.pageFormService.MoveModelItemDown(Id);            
+
+            var propertyList = await this.pageFormService.GetPageFormItemModelProperties(this.FormId);
+
+            await this.SetFromDefaults(this.FormId);
 
             return new PartialViewResult
             {
@@ -116,11 +133,9 @@ namespace IF.Manager.Page.Pages.Form.Model
         }
 
         private async Task SetFromDefaults(int Id)
-        {
-            List<ModelPropertyDto> modelProperties = await this.pageFormService.GetFormModelProperties(Id);
+        {           
 
-            SetModelProperties(modelProperties);
-
+            await SetModelProperties();
             await SetFormItems();
 
         }
@@ -145,8 +160,11 @@ namespace IF.Manager.Page.Pages.Form.Model
             ViewData["form_items"] = items;
         }
 
-        private void SetModelProperties(List<ModelPropertyDto> properties)
+        private async Task SetModelProperties()
         {
+
+            List<ModelPropertyDto> properties = await this.pageFormService.GetFormModelProperties(this.FormId);
+
             List<SelectListItem> items = new List<SelectListItem>();
 
 

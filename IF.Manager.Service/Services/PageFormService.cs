@@ -120,7 +120,7 @@ namespace IF.Manager.Service.Services
 
         public async Task<List<IFPageFormItemModelProperty>> GetPageFormItemModelProperties(int id)
         {
-            var data = await this.GetQuery<IFPageFormItemModelProperty>(c => c.ObjectId == id).ToListAsync();
+            var data = await this.GetQuery<IFPageFormItemModelProperty>(c => c.ObjectId == id).OrderBy(a=>a.Sequence).ToListAsync();
 
             return data;
         }
@@ -218,6 +218,16 @@ namespace IF.Manager.Service.Services
             if (entity != null)
             {
                 this.MoveUpOne<IFPageFormItemModelProperty>(entity.Sequence);
+            }
+        }
+
+        public void MoveModelItemDown(int Id)
+        {
+            IFPageFormItemModelProperty entity = this.GetPageFormItemModelProperty(Id);
+
+            if (entity != null)
+            {
+                this.MoveDownOne<IFPageFormItemModelProperty>(entity.Sequence);
             }
         }
 

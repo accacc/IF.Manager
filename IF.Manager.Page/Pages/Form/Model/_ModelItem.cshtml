@@ -1,13 +1,20 @@
 ﻿@model IF.Manager.Contracts.Model.IFPageFormItemModelProperty
 
+@using IF.Web.Mvc.Extensions
 @{
     Layout = null;
     var index = Guid.NewGuid();
     List<SelectListItem> model_properties = ViewData["model_properties"] as List<SelectListItem>;
     List<SelectListItem> form_items = ViewData["form_items"] as List<SelectListItem>;
 
+
+
+
     foreach (var property in model_properties)
     {
+
+        property.Selected = false;
+
         if (property.Value == Model.IFModelPropertyId.ToString())
         {
             property.Selected = true;
@@ -17,6 +24,7 @@
 
     foreach (var formItem in form_items)
     {
+        formItem.Selected = false;
         if (formItem.Value == Model.IFPageFormItemId.ToString())
         {
             formItem.Selected = true;
@@ -47,12 +55,25 @@
     </td>
     <td>
         <a class="btn btn-primary"
-           href="@Url.Page("/Form/Model/ModelForm","MoveModelItemUpOne", new { Id = Model.Id,Sequence = Model.Sequence })"
+           href="@Url.Page("/Form/Model/ModelForm","MoveModelItemUpOne", new { Id = Model.Id,FormId = Model.IFPageForm.Id })"
            if-ajax="true"
            if-ajax-method="post"
-           if-ajax-insertion-mode="replace"           
+           if-ajax-insertion-mode="replace"
+           if-anti-forgery-token="@Context.GetAntiforgeryToken()"
            if-ajax-update-id="ModelItemListDiv">
             &#8593;
+        </a>
+
+        &nbsp;
+
+        <a class="btn btn-primary"
+           href="@Url.Page("/Form/Model/ModelForm","MoveModelItemDownOne", new { Id = Model.Id,FormId = Model.IFPageForm.Id })"
+           if-ajax="true"
+           if-ajax-method="post"
+           if-ajax-insertion-mode="replace"
+           if-anti-forgery-token="@Context.GetAntiforgeryToken()"
+           if-ajax-update-id="ModelItemListDiv">
+            &#8595;
         </a>
 
     </td>
@@ -62,18 +83,18 @@
 
     @if (Model.IFPageFormItemId == 4)
     {
-    <td>
-        <a class="btn btn-primary"
-           href="@Url.Page("/Form/DropDown/DropDownForm", new { IFPageFormItemModelPropertyId = Model.Id,ObjectId = Model.ObjectId,IFQueryId = Model.IFPageForm.IFQueryId })"
-           if-ajax="true"
-           if-ajax-method="get"
-           if-ajax-insertion-mode="replace"
-           if-ajax-show-dialog="true"
-           if-ajax-modal-id="@Guid.NewGuid()">
-            Query
-        </a>
+        <td>
+            <a class="btn btn-primary"
+               href="@Url.Page("/Form/DropDown/DropDownForm", new { IFPageFormItemModelPropertyId = Model.Id,ObjectId = Model.ObjectId,IFQueryId = Model.IFPageForm.IFQueryId })"
+               if-ajax="true"
+               if-ajax-method="get"
+               if-ajax-insertion-mode="replace"
+               if-ajax-show-dialog="true"
+               if-ajax-modal-id="@Guid.NewGuid()">
+                Query
+            </a>
 
-    </td>
+        </td>
     }
 </tr>
 
