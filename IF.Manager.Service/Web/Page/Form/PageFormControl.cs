@@ -3,6 +3,7 @@ using IF.Core.Exception;
 using IF.Manager.Contracts.Model;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace IF.Manager.Service.Web.Page.Form
@@ -39,9 +40,8 @@ namespace IF.Manager.Service.Web.Page.Form
             builder.AppendLine("<form>");
             builder.AppendLine("@Html.AntiForgeryToken()");
 
-            foreach (var item in form.IFPageFormItemModelProperties)
+            foreach (var item in form.IFPageFormItemModelProperties.OrderBy(p=>p.Sequence))
             {
-
 
                 string required = "required";
 
@@ -54,7 +54,15 @@ namespace IF.Manager.Service.Web.Page.Form
                 builder.AppendLine("<div class=\"col-md-6\">");
                 builder.AppendLine("<div class=\"form-group\">");
                 builder.AppendLine($"<label for=\"{item.IFModelProperty.EntityProperty.Name}\">{item.IFModelProperty.EntityProperty.Name}</label>");
+
+
+                
+
                 builder.AppendLine($"<input type=\"text\" name=\"Form.{item.IFModelProperty.EntityProperty.Name}\" class=\"form-control\" value=\"@Model.Form.{item.IFModelProperty.EntityProperty.Name}\" {required} />");
+                
+                
+                
+                
                 builder.AppendLine($"</div>");
                 builder.AppendLine($"</div>");
                 builder.AppendLine($"</div>");

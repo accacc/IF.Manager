@@ -331,6 +331,14 @@ namespace IF.Manager.Service
             entity.Name = name;
             entity.GroupId = dto.GroupId;
             entity.IsAudited = dto.IsAudited;
+
+            IFEntityProperty primaryKeyProperty = new IFEntityProperty();
+            primaryKeyProperty.IsIdentity = true;
+            primaryKeyProperty.Name = "Id";
+            primaryKeyProperty.Type = "int";
+            primaryKeyProperty.IsNullable = false;
+            entity.Properties.Add(primaryKeyProperty);
+
             this.Add(entity);
             await UnitOfWork.SaveChangesAsync();
         }
@@ -357,16 +365,7 @@ namespace IF.Manager.Service
                .SingleOrDefaultAsync(k => k.Id == entityId);
 
                 if (entity == null) { throw new BusinessException(" No such entity exists"); }
-
-                if (dtos.Any(d => d.Id <= 0))
-                {
-                    EntityPropertyDto primaryKeyProperty = new EntityPropertyDto();
-                    primaryKeyProperty.IsIdentity = true;
-                    primaryKeyProperty.Name = "Id";
-                    primaryKeyProperty.Type = "int";
-                    primaryKeyProperty.IsNullable = false;
-                    dtos.Add(primaryKeyProperty);
-                }
+               
 
                 foreach (var dto in dtos)
                 {
@@ -413,8 +412,7 @@ namespace IF.Manager.Service
         {
 
 
-            var entity = await this.GetQuery<IFEntity>()
-
+            var entity = await this.GetQuery<IFEntity>().Include(e=>e.Properties)
                 .SingleOrDefaultAsync(k => k.Id == dto.Id);
 
             if (entity == null) { throw new BusinessException(" No such entity exists"); }
@@ -425,6 +423,18 @@ namespace IF.Manager.Service
             entity.Description = dto.Description;
             entity.IsAudited = dto.IsAudited;
             entity.GroupId = dto.GroupId;
+
+
+            if(!entity.Properties.Any(p=>p.IsIdentity && p.Name == "Id"))
+            {
+                IFEntityProperty primaryKeyProperty = new IFEntityProperty();
+                primaryKeyProperty.IsIdentity = true;
+                primaryKeyProperty.Name = "Id";
+                primaryKeyProperty.Type = "int";
+                primaryKeyProperty.IsNullable = false;
+                entity.Properties.Add(primaryKeyProperty);
+            }
+
             this.Update(entity);
             await this.UnitOfWork.SaveChangesAsync();
 

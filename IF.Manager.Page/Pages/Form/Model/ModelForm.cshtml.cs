@@ -55,7 +55,7 @@ namespace IF.Manager.Page.Pages.Form.Model
                 SetEmptyForm(Id);
             }
 
-            await SetFromDefaults(Id);
+            await SetFormDefaults(Id);
 
         }
 
@@ -64,7 +64,7 @@ namespace IF.Manager.Page.Pages.Form.Model
 
         public async Task<PartialViewResult> OnGetEmptyModelItemPartialAsync(int Id)
         {
-            await SetFromDefaults(Id);
+            await SetFormDefaults(Id);
 
             var emptyFormItem = new IFPageFormItemModelProperty();
 
@@ -97,7 +97,7 @@ namespace IF.Manager.Page.Pages.Form.Model
 
             var propertyList = await this.pageFormService.GetPageFormItemModelProperties(this.FormId);
 
-            await this.SetFromDefaults(this.FormId);
+            await this.SetFormDefaults(this.FormId);
 
             return new PartialViewResult
             {
@@ -113,7 +113,7 @@ namespace IF.Manager.Page.Pages.Form.Model
 
             var propertyList = await this.pageFormService.GetPageFormItemModelProperties(this.FormId);
 
-            await this.SetFromDefaults(this.FormId);
+            await this.SetFormDefaults(this.FormId);
 
             return new PartialViewResult
             {
@@ -125,14 +125,16 @@ namespace IF.Manager.Page.Pages.Form.Model
 
         private void SetEmptyForm(int Id)
         {
-            var order = new IFPageFormItemModelProperty();
+            var modelProperty = new IFPageFormItemModelProperty();
+            modelProperty.IFPageForm = new IFPageForm();
+            modelProperty.IFPageForm.Id = Id;
             this.FormId = Id;
-            this.Form = new List<IFPageFormItemModelProperty>();
-            this.Form.Add(order);
+            this.Form = new List<IFPageFormItemModelProperty>();            
+            this.Form.Add(modelProperty);
 
         }
 
-        private async Task SetFromDefaults(int Id)
+        private async Task SetFormDefaults(int Id)
         {           
 
             await SetModelProperties();

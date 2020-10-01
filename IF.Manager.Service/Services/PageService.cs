@@ -235,7 +235,7 @@ namespace IF.Manager.Service.Services
                 .Include(p => p.IFPageControl).ThenInclude(k => ((IFPageListView)k).IFQuery.Model.Properties).ThenInclude(f => f.EntityProperty.Entity)
                 .Include(p => p.IFPageControl).ThenInclude(e => ((IFPageForm)e).IFModel)
                 .Include(p => p.IFPageControl).ThenInclude(e => ((IFPageForm)e).IFQuery)
-                .Include(p => p.IFPageControl).ThenInclude(e => ((IFPageForm)e).IFPageFormItemModelProperties)
+                .Include(p => p.IFPageControl).ThenInclude(e => ((IFPageForm)e).IFPageFormItemModelProperties).ThenInclude(f=>f.IFModelProperty.EntityProperty)
                 
 
 
