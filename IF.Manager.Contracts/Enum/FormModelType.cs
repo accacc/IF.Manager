@@ -6,9 +6,9 @@ namespace IF.Manager.Contracts.Enum
 {
     public enum FormModelType
     {
-        DatePicker = 0,
-        DropDown =1,
-        Textbox=2,
+        DatePicker = 2,
+        DropDown =4,
+        Textbox=1,
         Checkbox=3
             
     }

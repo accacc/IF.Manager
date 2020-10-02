@@ -81,7 +81,7 @@
         <button onclick="deleteOrder('@index')">-</button>
     </td>
 
-    @if (Model.IFPageFormItemId == 4)
+    @if (Model.IFPageFormItem.Name == IF.Manager.Contracts.Enum.FormModelType.DropDown.ToString())
     {
         <td>
             <a class="btn btn-primary"
