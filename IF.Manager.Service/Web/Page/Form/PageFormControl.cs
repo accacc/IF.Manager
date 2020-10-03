@@ -85,7 +85,7 @@ namespace IF.Manager.Service.Web.Page.Form
                 builder.AppendLine("if-ajax-form-submit=\"true\"");
                 builder.AppendLine("if-ajax-method=\"post\"");
                 builder.AppendLine("if-ajax-close-modal-on-success=\"true\"");
-                builder.AppendLine($"if-ajax-update-id=\"{form.Name}Div\"");
+                builder.AppendLine($"if-ajax-update-id=\"{action.IFPageControl.Name}Div\"");
                 builder.AppendLine(">");
                 builder.AppendLine("Kaydet");
                 builder.AppendLine("</button>");
@@ -158,7 +158,7 @@ namespace IF.Manager.Service.Web.Page.Form
 
                 methodBody.AppendLine($"return new PartialViewResult");
                 methodBody.AppendLine($"{{");
-                methodBody.AppendLine($@"ViewName = ""_{this.form.Name}Table"",");
+                methodBody.AppendLine($@"ViewName = ""_{action.IFPageControl.Name}"",");
                 methodBody.AppendLine($@"ViewData = new ViewDataDictionary<List<{query.Model.Name}>>(ViewData, list)");
             
             }

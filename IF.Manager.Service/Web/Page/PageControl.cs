@@ -87,7 +87,7 @@ namespace IF.Manager.Service.Web.Page
                 if (child.IFPageControl is IFPagePanel)
                 {
                     builder.AppendDivStart("col", $@"{name}Div");
-                    builder.AppendLine($@"@{{await Html.RenderPartialAsync(""{name}"");}}");
+                    builder.AppendLine($@"@{{await Html.RenderPartialAsync(""_{name}"");}}");
                     builder.AppendDivEnd();
 
                 }
@@ -95,7 +95,7 @@ namespace IF.Manager.Service.Web.Page
                 {
 
                     builder.AppendDivStart("col", $@"{name}Div");
-                    builder.AppendLine($@"@{{await Html.RenderPartialAsync(""{name}"", Model.{modelName});}}");
+                    builder.AppendLine($@"@{{await Html.RenderPartialAsync(""_{name}"", Model.{modelName});}}");
                     builder.AppendDivEnd();
 
                 }
