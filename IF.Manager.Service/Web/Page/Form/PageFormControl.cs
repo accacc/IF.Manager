@@ -108,6 +108,7 @@ namespace IF.Manager.Service.Web.Page.Form
             base.AddApiClientProperty();
             AddFormModelProperty();
             AddGetMethod();
+            AddSetFormDefaultsMethod();
 
             foreach (var child in this.PageControlMap.Childrens)
             {
@@ -119,6 +120,24 @@ namespace IF.Manager.Service.Web.Page.Form
             }
 
             fileSystem.FormatCode(this.GenerateCode().Template, "cshtml.cs", this.PageControlMap.IFPageControl.Name);
+        }
+
+        private void AddSetFormDefaultsMethod()
+        {
+            CSMethod method = new CSMethod("SetFormDefaults", "void", "public");
+            method.IsAsync = true;
+
+            StringBuilder methodBody = new StringBuilder();
+
+            foreach (var formProperty in this.form.IFPageFormItemModelProperties)
+            {
+                //formProperty.IFPageControlItemModelProperties
+            }
+            
+
+            method.Body = methodBody.ToString();
+
+            this.Methods.Add(method);
         }
 
         private void AddPostMethod(IFPageAction action)
@@ -213,8 +232,20 @@ namespace IF.Manager.Service.Web.Page.Form
 
         private void AddFormModelProperty()
         {
-            var formProprety = new CSProperty("public", "Form", false);
-            formProprety.PropertyTypeString = $"{this.form.IFModel.Name}";
+            IFModel model = this.form.IFModel;
+
+            if(model == null)
+            {
+                model = this.form.IFQuery.Model;
+            }
+
+            if (model == null)
+            {
+                throw new BusinessException("Bu form için herhangi bir model ya da query tanımı yapılmamış.");
+            }
+
+                var formProprety = new CSProperty("public", "Form", false);
+            formProprety.PropertyTypeString = $"{model.Name}";
             formProprety.Attirubites.Add("BindProperty");
             formProprety.Attirubites.Add("Required");
             this.Properties.Add(formProprety);
