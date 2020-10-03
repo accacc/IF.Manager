@@ -177,6 +177,13 @@ namespace IF.Manager.Service.Services
                 if (entity == null) { throw new BusinessException(" No such entity exists"); }
 
 
+                for (int i = 0; i < entity.QueryFilterItems.Count; i++)
+                {
+                    if (!dtos.Any(d => d.Id == entity.QueryFilterItems.ElementAt(i).Id))
+                    {
+                        this.Delete(entity.QueryFilterItems.ElementAt(i));
+                    }
+                }
 
 
                 foreach (var dto in dtos)
@@ -189,14 +196,22 @@ namespace IF.Manager.Service.Services
                         if (dto.FormModelPropertyId.HasValue)
                         {
                             filter.FormModelPropertyId = dto.FormModelPropertyId;
+                            filter.Value = null;
                         }
                         else if (dto.PageParameterId.HasValue)
                         {
                             filter.IFPageParameterId = dto.PageParameterId;
+                            filter.Value = null;
+                        }
+                        else if(dto.Value!=null)
+                        {
+                            filter.Value = dto.Value;
                         }
                         else
                         {
-                            filter.Value = dto.Value;
+                            filter.Value = null;
+                            filter.IFPageParameterId = null;
+                            filter.FormModelPropertyId = null;
                         }
 
                         filter.QueryId = form.QueryId;
@@ -213,16 +228,23 @@ namespace IF.Manager.Service.Services
                         if (filter.FormModelPropertyId.HasValue)
                         {
                             filter.FormModelPropertyId = dto.FormModelPropertyId;
+                            filter.Value = "";
                         }
                         else if (dto.PageParameterId.HasValue)
                         {
                             filter.IFPageParameterId = dto.PageParameterId;
+                            filter.Value = "";
                         }
-                        else
+                        else if (dto.Value != null)
                         {
                             filter.Value = dto.Value;
                         }
-
+                        else
+                        {
+                            filter.Value = null;
+                            filter.IFPageParameterId = null;
+                            filter.FormModelPropertyId = null;
+                        }
                         filter.QueryId = form.QueryId;
                         filter.ConditionOperator = form.ConditionOperator;
                         filter.EntityPropertyId = dto.EntityPropertyId;

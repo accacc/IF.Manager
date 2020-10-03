@@ -16,6 +16,8 @@ namespace IF.Manager.Contracts.Model
 
         public IFPage IFPage { get; set; }
 
+        public IFPageGrid IFPageGrid { get; set; }
+
         public IFPageListView IFPageListView { get; set; }
 
         public string Type { get; set; }

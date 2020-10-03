@@ -14,7 +14,7 @@
 
     foreach (var entity in entities)
     {
-        if(entity.Value == Model.EntityPropertyId.ToString())
+        if (entity.Value == Model.EntityPropertyId.ToString())
         {
             entity.Selected = true;
         }
@@ -47,46 +47,56 @@
 
 }
 
-    <tr>
-        <td>
-            <div class="form-group">
+<tr id="@index">
+    <td>
+        <div class="form-group">
 
-                @Html.DropDownList($"Form.Items[{index}].EntityPropertyId", entities, "Select", new { @class = "form-control" })
+            @Html.DropDownList($"Form.Items[{index}].EntityPropertyId", entities, "Select", new { @class = "form-control" })
 
-            </div>
-        </td>
+        </div>
+    </td>
 
-        <td>
-            <div class="form-group">
+    <td>
+        <div class="form-group">
 
-                @Html.DropDownList($"Form.Items[{index}].FilterOperator", filterOperators, "Select", new { @class = "form-control" })
-            </div>
-        </td>
+            @Html.DropDownList($"Form.Items[{index}].FilterOperator", filterOperators, "Select", new { @class = "form-control" })
+        </div>
+    </td>
 
 
 
-        <td>
-            <div class="form-group">
-                
-                <input type="text" name="Form.Items[@index].Value" value="@Model.Value" class="form-control" />
-            </div>
-        </td>
+    <td>
+        <div class="form-group">
 
-        <td>
-            <div class="form-group">
-                @Html.DropDownList($"Form.Items[{index}].FormModelPropertyId", formModelProps, "Select", new { @class = "form-control" })
-            </div>
-        </td>
+            <input type="text" name="Form.Items[@index].Value" value="@Model.Value" class="form-control" />
+        </div>
+    </td>
 
-        <td>
-            <div class="form-group">
-                @Html.DropDownList($"Form.Items[{index}].PageParameterId", page_parameters, "Select", new { @class = "form-control" })
-            </div>
-        </td>
+    <td>
+        <div class="form-group">
+            @Html.DropDownList($"Form.Items[{index}].FormModelPropertyId", formModelProps, "Select", new { @class = "form-control" })
+        </div>
+    </td>
 
-        <td>
-            <input type="hidden" name="Form.Items.Index" value="@index" />
-            <input type="hidden" name="Form.Items[@index].Id" value="@Model.Id" />
-        </td>
+    <td>
+        <div class="form-group">
+            @Html.DropDownList($"Form.Items[{index}].PageParameterId", page_parameters, "Select", new { @class = "form-control" })
+        </div>
+    </td>
 
-    </tr>
+    <td>
+        <input type="hidden" name="Form.Items.Index" value="@index" />
+        <input type="hidden" name="Form.Items[@index].Id" value="@Model.Id" />
+    </td>
+    <td><button onclick="deleteFilter('@index')">-</button></td>
+</tr>
+
+
+<script>
+    function deleteFilter(index) {
+        debugger;
+        var id = "table#EmptyFormItem tr#" + index;
+        $(id).remove();
+        return false;
+    }
+</script>

@@ -12,7 +12,7 @@ namespace IF.Manager.Contracts.Model
 
         public IFPageGrid()
         {
-            
+            this.IFPageParameters = new List<IFPageParameter>();
         }
 
 
@@ -26,6 +26,8 @@ namespace IF.Manager.Contracts.Model
 
 
         public IFQuery Query { get; set; }
+
+        public ICollection<IFPageParameter> IFPageParameters { get; set; }
 
         public override IFQuery GetQuery()
         {

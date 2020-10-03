@@ -17,11 +17,9 @@
             Düzenle
         </th>
         <th>
-            Filters
+            Parameters
         </th>
-        <th>
-            Orders
-        </th>
+       
     </tr>
     @if (Model != null && Model.Any())
     {
@@ -50,30 +48,16 @@
     </td>
 
     <td>
-
         <a class="btn btn-primary"
-           href="@Url.Page("/Grid/Action/ActionListIndex",new { Id = item.Id })"
+           href="@Url.Page("/PageParameterForm",new {  ObjectId= item.Id,ObjectType = IF.Manager.Contracts.Enum.PageParameterType.GridView })"
            if-ajax="true"
            if-ajax-method="get"
            if-ajax-insertion-mode="replace"
            if-ajax-show-dialog="true"
-           if-ajax-modal-id="@Guid.NewGuid()">
-            Row Actions
+           if-ajax-modal-id="PageControlTreeListModal">
+            Parameters
         </a>
-    </td>
-
-    @*<td>
-
-        <a class="btn btn-primary"
-           href="@Url.Page("/Grid/Action/HeaderActions",new { Id = item.Id })"
-           if-ajax="true"
-           if-ajax-method="get"
-           if-ajax-insertion-mode="replace"
-           if-ajax-show-dialog="true"
-           if-ajax-modal-id="@Guid.NewGuid()">
-            Header Actions
-        </a>
-    </td>*@
+    </td> 
 
 </tr>
         }

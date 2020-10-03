@@ -17,10 +17,10 @@
             Düzenle
         </th>
         <th>
-            Filters
+            Model
         </th>
         <th>
-            Orders
+            Parameters
         </th>
     </tr>
     @if (Model != null && Model.Any())
@@ -62,18 +62,17 @@
         </a>
     </td>
 
-    @*<td>
-
+    <td>
         <a class="btn btn-primary"
-           href="@Url.Page("/Form/Action/HeaderActions",new { Id = item.Id })"
+           href="@Url.Page("/PageParameterForm",new {  ObjectId= item.Id,ObjectType = IF.Manager.Contracts.Enum.PageParameterType.Form })"
            if-ajax="true"
            if-ajax-method="get"
            if-ajax-insertion-mode="replace"
            if-ajax-show-dialog="true"
-           if-ajax-modal-id="@Guid.NewGuid()">
-            Header Actions
+           if-ajax-modal-id="PageControlTreeListModal">
+            Parameters
         </a>
-    </td>*@
+    </td>
 
 </tr>
         }

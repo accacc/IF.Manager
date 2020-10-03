@@ -21,6 +21,7 @@ namespace IF.Manager.Persistence.EF.Mappings
 
             builder.HasOne<IFQuery>(s => s.Query).WithMany(s => s.Grids).HasForeignKey(s => s.QueryId).OnDelete(DeleteBehavior.Restrict);
             builder.HasOne<IFPageGridLayout>(s => s.GridLayout).WithMany(s => s.PageGrids).HasForeignKey(s => s.GridLayoutId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasMany(cn => cn.IFPageParameters).WithOne(tl => tl.IFPageGrid).HasForeignKey(tl => tl.ObjectId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
