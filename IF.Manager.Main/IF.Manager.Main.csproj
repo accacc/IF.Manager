@@ -25,7 +25,6 @@
     <ProjectReference Include="..\IF.Manager.Entity\IF.Manager.Entity.csproj" />
     <ProjectReference Include="..\IF.Manager.Model\IF.Manager.Model.csproj" />
     <ProjectReference Include="..\IF.Manager.Page\IF.Manager.Page.csproj" />
-    <ProjectReference Include="..\IF.Manager.Persistence.EF\IF.Manager.Persistence.EF.csproj" />
     <ProjectReference Include="..\IF.Manager.Process\IF.Manager.Process.csproj" />
     <ProjectReference Include="..\IF.Manager.Project\IF.Manager.Project.csproj" />
     <ProjectReference Include="..\IF.Manager.Service\IF.Manager.Service.csproj" />
