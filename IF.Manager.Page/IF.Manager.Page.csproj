@@ -9,7 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\IF.Manager.Contracts\IF.Manager.Contracts.csproj" />
     <ProjectReference Include="..\IF.Manager.Service\IF.Manager.Service.csproj" />
   </ItemGroup>
 

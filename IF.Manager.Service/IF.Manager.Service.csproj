@@ -27,10 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\IF.Manager.Contracts\IF.Manager.Contracts.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="IF.CodeGeneration.Core">
       <HintPath>..\packages\InFramework\IF.CodeGeneration.Core.dll</HintPath>
     </Reference>
