@@ -4,14 +4,16 @@ using IF.Manager.Persistence.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IF.Manager.Persistence.EF.Migrations
 {
     [DbContext(typeof(ManagerDbContext))]
-    partial class ManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201003232937_104-1")]
+    partial class _1041
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -481,7 +483,7 @@ namespace IF.Manager.Persistence.EF.Migrations
 
                     b.HasIndex("ValueIFModelPropertyId");
 
-                    b.ToTable("IFPageFormItemModelProperty");
+                    b.ToTable("PageFormItemModelProperties");
                 });
 
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFPageFormLayout", b =>

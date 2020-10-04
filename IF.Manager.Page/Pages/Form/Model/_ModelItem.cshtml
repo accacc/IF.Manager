@@ -86,7 +86,7 @@
     {
         <td>
             <a class="btn btn-primary"
-               href="@Url.Page("/Form/DropDown/DropDownForm", new { IFPageFormItemModelPropertyId = Model.Id, ObjectId = Model.ObjectId, IFQueryId = Model.IFPageForm.IFQueryId })"
+               href="@Url.Page("/Form/DropDown/DropDownForm", new { Id = Model.Id, ObjectId = Model.ObjectId, IFQueryId = Model.IFQueryId })"
                if-ajax="true"
                if-ajax-method="get"
                if-ajax-insertion-mode="replace"

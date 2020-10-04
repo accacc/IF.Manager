@@ -29,13 +29,13 @@ namespace IF.Manager.Page.Pages.Form.DropDown
         }
 
         [BindProperty(SupportsGet = true), Required]
-        public IFPageControlItemModelProperty Form { get; set; }
+        public IFPageFormItemModelProperty Form { get; set; }
 
         public async Task OnGet()
         {
-            if (this.Form.IFPageFormItemModelPropertyId > 0)
+            if (this.Form.IFQueryId > 0)
             {
-                this.Form = await this.pageFormService.GetPageControlItemModelProperty(this.Form.IFPageFormItemModelPropertyId);
+                this.Form = await this.pageFormService.GetPageControlItemModelProperty(this.Form.Id);
                 await this.SetQueryModelProperties();
             }
 
@@ -67,7 +67,7 @@ namespace IF.Manager.Page.Pages.Form.DropDown
             return new PartialViewResult
             {
                 ViewName = "_DropDownProperty",
-                ViewData = new ViewDataDictionary<IFPageControlItemModelProperty>(ViewData, this.Form)
+                ViewData = new ViewDataDictionary<IFPageFormItemModelProperty>(ViewData, this.Form)
             };
 
         }
@@ -106,7 +106,7 @@ namespace IF.Manager.Page.Pages.Form.DropDown
         private async Task SetQueryModelProperties()
         {
 
-            var properties = await this.queryService.GetQueryModelPropertyList(this.Form.IFQueryId);
+            var properties = await this.queryService.GetQueryModelPropertyList(this.Form.IFQueryId.Value);
 
             List<SelectListItem> name_items = new List<SelectListItem>();
 

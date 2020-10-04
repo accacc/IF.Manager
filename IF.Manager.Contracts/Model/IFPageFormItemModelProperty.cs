@@ -10,7 +10,7 @@ namespace IF.Manager.Contracts.Model
     {
         public IFPageFormItemModelProperty()
         {
-            this.IFPageControlItemModelProperties = new List<IFPageControlItemModelProperty>();
+            //this.IFPageControlItemModelProperties = new List<IFPageControlItemModelProperty>();
         }
 
         [Key]
@@ -30,7 +30,20 @@ namespace IF.Manager.Contracts.Model
 
         public int? ObjectId { get; set; }
 
-        public ICollection<IFPageControlItemModelProperty> IFPageControlItemModelProperties { get; set; }
+        //public ICollection<IFPageControlItemModelProperty> IFPageControlItemModelProperties { get; set; }
+
+        public IFQuery IFQuery { get; set; }
+
+        public int? IFQueryId { get; set; }
+
+        public int? NameIFModelPropertyId { get; set; }
+
+        public IFModelProperty NameIFModelProperty { get; set; }
+
+        public int? ValueIFModelPropertyId { get; set; }
+
+        public IFModelProperty ValueIFModelProperty { get; set; }
+
 
     }
 }

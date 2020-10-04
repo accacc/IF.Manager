@@ -44,29 +44,30 @@ namespace IF.Manager.Page.Pages.Form.Model
 
 
 
-        public async Task OnGet(int Id)
+        public async Task OnGet()
         {
 
-            this.Form = await this.pageFormService.GetPageFormItemModelProperties(Id);
-            this.FormId = Id;
+            this.Form = await this.pageFormService.GetPageFormItemModelProperties(this.FormId);
+            
 
             if (!this.Form.Any())
             {
-                SetEmptyForm(Id);
+                SetEmptyForm(this.FormId);
             }
 
-            await SetFormDefaults(Id);
+            await SetFormDefaults(this.FormId);
 
         }
 
 
 
 
-        public async Task<PartialViewResult> OnGetEmptyModelItemPartialAsync(int Id)
+        public async Task<PartialViewResult> OnGetEmptyModelItemPartialAsync()
         {
-            await SetFormDefaults(Id);
+            await SetFormDefaults(this.FormId);
 
             var emptyFormItem = new IFPageFormItemModelProperty();
+            emptyFormItem.IFPageForm = new IFPageForm();
 
             return new PartialViewResult
             {

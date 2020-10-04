@@ -1,6 +1,8 @@
 ﻿using IF.Manager.Contracts.Model;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,7 +16,7 @@ namespace IF.Manager.Persistence.EF.Mappings
         {
             builder.ToTable("IFPageFormItemModelProperty");
             builder.Property(x => x.Id).IsRequired();
-            builder.HasMany(cn => cn.IFPageControlItemModelProperties).WithOne(tl => tl.IFPageFormItemModelProperty).HasForeignKey(tl => tl.ObjectId).OnDelete(DeleteBehavior.Restrict);
+            //builder.HasMany(cn => cn.IFPageControlItemModelProperties).WithOne(tl => tl.IFPageFormItemModelProperty).HasForeignKey(tl => tl.ObjectId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

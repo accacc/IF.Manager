@@ -20,7 +20,7 @@
     </div>
 
     <div id="DropDownPropertyDiv">
-        @if (Model.Form.Id > 0)
+        @if (Model.Form.IFQueryId > 0)
         {
             await Html.RenderPartialAsync("_DropDownProperty", Model.Form);
         }
@@ -40,7 +40,7 @@
     </div>
 
     @Html.HiddenFor(m => m.Form.Id)
-    @Html.HiddenFor(m=>m.Form.IFPageFormItemModelPropertyId)
+    @*@Html.HiddenFor(m=>m.Form.IFPageFormItemModelPropertyId)*@
 </form>
 
 

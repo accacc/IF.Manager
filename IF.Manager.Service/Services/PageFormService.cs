@@ -125,9 +125,9 @@ namespace IF.Manager.Service.Services
             return data;
         }
 
-        public async Task<IFPageControlItemModelProperty> GetPageControlItemModelProperty(int iFPageFormItemModelPropertyId)
+        public async Task<IFPageFormItemModelProperty> GetPageControlItemModelProperty(int iFPageFormItemModelPropertyId)
         {
-            var data = await this.GetQuery<IFPageControlItemModelProperty>(c => c.IFPageFormItemModelPropertyId == iFPageFormItemModelPropertyId).SingleOrDefaultAsync();
+            var data = await this.GetQuery<IFPageFormItemModelProperty>(c => c.Id == iFPageFormItemModelPropertyId).SingleOrDefaultAsync();
 
             return data;
         }
@@ -180,21 +180,21 @@ namespace IF.Manager.Service.Services
             }
         }
 
-        public async Task AddPageControlItemModelProperty(IFPageControlItemModelProperty form)
+        public async Task AddPageControlItemModelProperty(IFPageFormItemModelProperty form)
         {
             await this.AddAsync(form);
             await this.UnitOfWork.SaveChangesAsync();
         }
 
-        public async Task UpdatePageControlItemModelProperty(IFPageControlItemModelProperty form)
+        public async Task UpdatePageControlItemModelProperty(IFPageFormItemModelProperty form)
         {
 
             try
             {
-                var entity = await this.GetQuery<IFPageControlItemModelProperty>()
+                var entity = await this.GetQuery<IFPageFormItemModelProperty>()
             .SingleOrDefaultAsync(k => k.Id == form.Id);
 
-                if (entity == null) { throw new BusinessException($"{nameof(IFPageControlItemModelProperty)} : No such entity exists"); }
+                if (entity == null) { throw new BusinessException($"{nameof(IFPageFormItemModelProperty)} : No such entity exists"); }
 
 
                 entity.IFQueryId = form.IFQueryId; ;
