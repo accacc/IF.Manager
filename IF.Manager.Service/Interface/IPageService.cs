@@ -10,6 +10,9 @@ namespace IF.Manager.Contracts.Services
     public interface IPageService: IRepository
     {
 
+        Task MoveModelItemDown(int Id);
+        Task MoveModelItemUp(int Id);
+
         //Task<List<PageControlTreeDto>> GetPageControlParent(int parentId);
         //Task<List<PageControlTreeDto>> GetPageControlChilds(int parentId);
 

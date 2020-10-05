@@ -6,9 +6,9 @@
 
 @{
     if (Model.IsModal)
-        {
-            Layout = "_ModalLayout";
-        }
+    {
+        Layout = "_ModalLayout";
+    }
 
 }
 
@@ -53,6 +53,29 @@
            if-anti-forgery-token="@Context.GetAntiforgeryToken()"
            if-ajax-extradatafunc="setselectedtreenode()">
             Sil
+        </a>
+        -  <a class="btn btn-primary"
+              href="@Url.Page("/Control/PageControlInsertForm","MoveModelItemUpOne")"
+              if-ajax="true"
+              if-ajax-method="post"
+              if-ajax-insertion-mode="replace"
+              if-ajax-update-id="PageControlTreeListModal"
+              if-anti-forgery-token="@Context.GetAntiforgeryToken()"
+              if-ajax-extradatafunc="setselectedtreenode()">
+            &#8593;
+        </a>
+
+        -
+
+        <a class="btn btn-primary"
+           href="@Url.Page("/Control/PageControlInsertForm","MoveModelItemDownOne")"
+           if-ajax="true"
+           if-ajax-method="post"
+           if-ajax-insertion-mode="replace"
+           if-ajax-update-id="PageControlTreeListModal"
+           if-anti-forgery-token="@Context.GetAntiforgeryToken()"
+           if-ajax-extradatafunc="setselectedtreenode()">
+            &#8595;
         </a>
     </div>
     <br />

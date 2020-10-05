@@ -31,6 +31,8 @@ namespace IF.Manager.Contracts.Model
 
         public int IFPageControlMapId { get; set; }
 
+     
+
         public abstract IFQuery GetQuery();
         
             

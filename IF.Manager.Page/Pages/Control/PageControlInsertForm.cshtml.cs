@@ -62,10 +62,44 @@ namespace IF.Manager.Page.Pages
                 ViewName = "Control/_PageControlTreeList",
                 ViewData = new ViewDataDictionary<PageControlMapModel>(ViewData, model)
             };
-        }     
+        }
 
 
-       
+        public async Task<PartialViewResult> OnPostMoveModelItemUpOneAsync()
+        {
+            await this.pageService.MoveModelItemUp(this.TreeSelectedId.Value);
+
+            var tree = await this.pageService.GetPageControlMapTreeList(this.RootControlMapId);
+            PageControlMapModel model = new PageControlMapModel();
+            model.Tree = tree;
+            model.RootControlMapId = this.RootControlMapId;
+
+            return new PartialViewResult
+            {
+                ViewName = "Control/_PageControlTreeList",
+                ViewData = new ViewDataDictionary<PageControlMapModel>(ViewData, model)
+            };
+
+        }
+
+        public async Task<PartialViewResult> OnPostMoveModelItemDownOneAsync()
+        {
+            await this.pageService.MoveModelItemDown( this.TreeSelectedId.Value);
+
+            var tree = await this.pageService.GetPageControlMapTreeList(this.RootControlMapId);
+            PageControlMapModel model = new PageControlMapModel();
+            model.Tree = tree;
+            model.RootControlMapId = this.RootControlMapId;
+
+            return new PartialViewResult
+            {
+                ViewName = "Control/_PageControlTreeList",
+                ViewData = new ViewDataDictionary<PageControlMapModel>(ViewData, model)
+            };
+
+        }
+
+
 
 
         private async Task SetFromDefaults()

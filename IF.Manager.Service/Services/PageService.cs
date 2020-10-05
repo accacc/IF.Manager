@@ -34,6 +34,26 @@ namespace IF.Manager.Service.Services
             this.pageGridService = pageGridService;
         }
 
+
+        public async Task MoveModelItemUp(int Id)
+        {
+            IFPageControlMap entity = await this.GetPageControlMap(Id);
+
+            if (entity != null)
+            {
+                this.MoveUpOne<IFPageControlMap>(entity.Sequence,e=>e.ParentId==entity.ParentId);
+            }
+        }
+
+        public async Task MoveModelItemDown(int Id)
+        {
+            IFPageControlMap entity = await this.GetPageControlMap(Id);
+
+            if (entity != null)
+            {
+                this.MoveDownOne<IFPageControlMap>(entity.Sequence, e => e.ParentId == entity.ParentId);
+            }
+        }
         public async Task AddPage(IFPage form)
         {
             IFPageControlMap entity = new IFPageControlMap();
@@ -175,7 +195,7 @@ namespace IF.Manager.Service.Services
                     ParentId = map.ParentId,
                     PageControlId = map.IFPageControlId,
                     PageControl = map.IFPageControl,
-
+                    SortOrder = map.Sequence
 
                 }).ToListAsync();
 

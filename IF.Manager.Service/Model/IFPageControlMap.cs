@@ -7,7 +7,7 @@ using System.Text;
 
 namespace IF.Manager.Contracts.Model
 {
-    public class IFPageControlMap:Entity
+    public class IFPageControlMap:Entity, IMoveable
     {
         [Key]
         public int Id { get; set; }
@@ -20,6 +20,8 @@ namespace IF.Manager.Contracts.Model
         public int IFPageControlId { get; set; }
 
         public IFPageControl IFPageControl { get; set; }
+
+        public int Sequence { get; set; }
 
         public T ToControl<T>() where T : IFPageControl
         {
