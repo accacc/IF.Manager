@@ -11,7 +11,7 @@ namespace IF.Manager.Contracts.Model
 
         public IFPageFormItem()
         {
-            this.ModelProperties = new List<IFPageFormItemModelProperty>();
+            this.ModelProperties = new List<IFPageControlItemModelProperty>();
         }
 
         [Key]
@@ -21,6 +21,6 @@ namespace IF.Manager.Contracts.Model
 
         public string Description { get; set; }
 
-        public ICollection<IFPageFormItemModelProperty> ModelProperties { get; set; }
+        public ICollection<IFPageControlItemModelProperty> ModelProperties { get; set; }
     }
 }

@@ -13,6 +13,7 @@ namespace IF.Manager.Contracts.Model
         public IFPageGrid()
         {
             this.IFPageParameters = new List<IFPageParameter>();
+            this.IFPageFormItemModelProperties = new List<IFPageControlItemModelProperty>();
         }
 
 
@@ -28,6 +29,8 @@ namespace IF.Manager.Contracts.Model
         public IFQuery Query { get; set; }
 
         public ICollection<IFPageParameter> IFPageParameters { get; set; }
+
+        public ICollection<IFPageControlItemModelProperty> IFPageFormItemModelProperties { get; set; }
 
         public override IFQuery GetQuery()
         {

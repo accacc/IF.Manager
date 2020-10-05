@@ -29,7 +29,7 @@ namespace IF.Manager.Page.Pages.Form.DropDown
         }
 
         [BindProperty(SupportsGet = true), Required]
-        public IFPageFormItemModelProperty Form { get; set; }
+        public IFPageControlItemModelProperty Form { get; set; }
 
         public async Task OnGet()
         {
@@ -67,7 +67,7 @@ namespace IF.Manager.Page.Pages.Form.DropDown
             return new PartialViewResult
             {
                 ViewName = "_DropDownProperty",
-                ViewData = new ViewDataDictionary<IFPageFormItemModelProperty>(ViewData, this.Form)
+                ViewData = new ViewDataDictionary<IFPageControlItemModelProperty>(ViewData, this.Form)
             };
 
         }

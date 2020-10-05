@@ -10,9 +10,9 @@ using System.Text;
 
 namespace IF.Manager.Persistence.EF.Mappings
 {
-    public class IFPageFormItemModelPropertyMapping : IEntityTypeConfiguration<IFPageFormItemModelProperty>
+    public class IFPageFormItemModelPropertyMapping : IEntityTypeConfiguration<IFPageControlItemModelProperty>
     {
-        public void Configure(EntityTypeBuilder<IFPageFormItemModelProperty> builder)
+        public void Configure(EntityTypeBuilder<IFPageControlItemModelProperty> builder)
         {
             builder.ToTable("IFPageFormItemModelProperty");
             builder.Property(x => x.Id).IsRequired();

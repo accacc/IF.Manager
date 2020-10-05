@@ -25,7 +25,7 @@ namespace IF.Manager.Page.Pages.ListView.Model
         private readonly IEntityService entityService;
 
         [BindProperty, Required]
-        public List<IFPageFormItemModelProperty> Form { get; set; }
+        public List<IFPageControlItemModelProperty> Form { get; set; }
 
 
         [BindProperty(SupportsGet = true), Required]
@@ -65,12 +65,12 @@ namespace IF.Manager.Page.Pages.ListView.Model
         {
             await SetFromDefaults(Id);
 
-            var emptyFormItem = new IFPageFormItemModelProperty();
+            var emptyFormItem = new IFPageControlItemModelProperty();
 
             return new PartialViewResult
             {
                 ViewName = "_ModelItem",
-                ViewData = new ViewDataDictionary<IFPageFormItemModelProperty>(ViewData, emptyFormItem)
+                ViewData = new ViewDataDictionary<IFPageControlItemModelProperty>(ViewData, emptyFormItem)
             };
         }
 
@@ -92,9 +92,9 @@ namespace IF.Manager.Page.Pages.ListView.Model
 
         private void SetEmptyForm(int Id)
         {
-            var order = new IFPageFormItemModelProperty();
+            var order = new IFPageControlItemModelProperty();
             this.FormId = Id;
-            this.Form = new List<IFPageFormItemModelProperty>();
+            this.Form = new List<IFPageControlItemModelProperty>();
             this.Form.Add(order);
 
         }

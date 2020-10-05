@@ -118,21 +118,21 @@ namespace IF.Manager.Service.Services
             return data;
         }
 
-        public async Task<List<IFPageFormItemModelProperty>> GetPageFormItemModelProperties(int id)
+        public async Task<List<IFPageControlItemModelProperty>> GetPageFormItemModelProperties(int id)
         {
-            var data = await this.GetQuery<IFPageFormItemModelProperty>(c => c.ObjectId == id).OrderBy(a=>a.Sequence).ToListAsync();
+            var data = await this.GetQuery<IFPageControlItemModelProperty>(c => c.ObjectId == id).OrderBy(a=>a.Sequence).ToListAsync();
 
             return data;
         }
 
-        public async Task<IFPageFormItemModelProperty> GetPageControlItemModelProperty(int iFPageFormItemModelPropertyId)
+        public async Task<IFPageControlItemModelProperty> GetPageControlItemModelProperty(int iFPageFormItemModelPropertyId)
         {
-            var data = await this.GetQuery<IFPageFormItemModelProperty>(c => c.Id == iFPageFormItemModelPropertyId).SingleOrDefaultAsync();
+            var data = await this.GetQuery<IFPageControlItemModelProperty>(c => c.Id == iFPageFormItemModelPropertyId).SingleOrDefaultAsync();
 
             return data;
         }
 
-        public async Task UpdateFormItemModelProperties(List<IFPageFormItemModelProperty> dtos, int formId)
+        public async Task UpdateFormItemModelProperties(List<IFPageControlItemModelProperty> dtos, int formId)
         {
             try
             {
@@ -155,7 +155,7 @@ namespace IF.Manager.Service.Services
 
                     if (dto.Id <= 0)
                     {
-                        IFPageFormItemModelProperty property = new IFPageFormItemModelProperty();
+                        IFPageControlItemModelProperty property = new IFPageControlItemModelProperty();
                         property.IFModelPropertyId = dto.IFModelPropertyId;
                         property.ObjectId = formId;
                         property.IFPageFormItemId = dto.IFPageFormItemId;
@@ -180,21 +180,21 @@ namespace IF.Manager.Service.Services
             }
         }
 
-        public async Task AddPageControlItemModelProperty(IFPageFormItemModelProperty form)
+        public async Task AddPageControlItemModelProperty(IFPageControlItemModelProperty form)
         {
             await this.AddAsync(form);
             await this.UnitOfWork.SaveChangesAsync();
         }
 
-        public async Task UpdatePageControlItemModelProperty(IFPageFormItemModelProperty form)
+        public async Task UpdatePageControlItemModelProperty(IFPageControlItemModelProperty form)
         {
 
             try
             {
-                var entity = await this.GetQuery<IFPageFormItemModelProperty>()
+                var entity = await this.GetQuery<IFPageControlItemModelProperty>()
             .SingleOrDefaultAsync(k => k.Id == form.Id);
 
-                if (entity == null) { throw new BusinessException($"{nameof(IFPageFormItemModelProperty)} : No such entity exists"); }
+                if (entity == null) { throw new BusinessException($"{nameof(IFPageControlItemModelProperty)} : No such entity exists"); }
 
 
                 entity.IFQueryId = form.IFQueryId; ;
@@ -213,28 +213,28 @@ namespace IF.Manager.Service.Services
 
         public void MoveModelItemUp(int Id)
         {
-            IFPageFormItemModelProperty entity = this.GetPageFormItemModelProperty(Id);
+            IFPageControlItemModelProperty entity = this.GetPageFormItemModelProperty(Id);
             
             if (entity != null)
             {
-                this.MoveUpOne<IFPageFormItemModelProperty>(entity.Sequence);
+                this.MoveUpOne<IFPageControlItemModelProperty>(entity.Sequence);
             }
         }
 
         public void MoveModelItemDown(int Id)
         {
-            IFPageFormItemModelProperty entity = this.GetPageFormItemModelProperty(Id);
+            IFPageControlItemModelProperty entity = this.GetPageFormItemModelProperty(Id);
 
             if (entity != null)
             {
-                this.MoveDownOne<IFPageFormItemModelProperty>(entity.Sequence);
+                this.MoveDownOne<IFPageControlItemModelProperty>(entity.Sequence);
             }
         }
 
-        private IFPageFormItemModelProperty GetPageFormItemModelProperty(int Id)
+        private IFPageControlItemModelProperty GetPageFormItemModelProperty(int Id)
         {       
         
-            return this.GetByKey<IFPageFormItemModelProperty>(Id);
+            return this.GetByKey<IFPageControlItemModelProperty>(Id);
         
         }
     }

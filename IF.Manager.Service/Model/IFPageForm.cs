@@ -4,11 +4,11 @@ using System.Text;
 
 namespace IF.Manager.Contracts.Model
 {
-    public class IFPageForm: IFPageControl
+    public class IFPageForm : IFPageControl
     {
         public IFPageForm()
         {
-            this.IFPageFormItemModelProperties = new List<IFPageFormItemModelProperty>();
+            this.IFPageFormItemModelProperties = new List<IFPageControlItemModelProperty>();
         }
 
         public IFPageFormLayout FormLayout { get; set; }
@@ -23,7 +23,7 @@ namespace IF.Manager.Contracts.Model
 
         public int? IFQueryId { get; set; }
 
-        public ICollection<IFPageFormItemModelProperty> IFPageFormItemModelProperties  { get; set; }
+        public ICollection<IFPageControlItemModelProperty> IFPageFormItemModelProperties { get; set; }
 
         public override IFQuery GetQuery()
         {

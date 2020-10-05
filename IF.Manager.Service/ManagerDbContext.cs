@@ -130,9 +130,9 @@ namespace IF.Manager.Persistence.EF
 
         public DbSet<IFPageParameter> PageParameters { get; set; }
 
-        public DbSet<IFPageFormItemModelProperty>   IFPageFormItemModelProperties   { get; set; }
+        public DbSet<IFPageControlItemModelProperty>   IFPageFormItemModelProperties   { get; set; }
 
-        public DbSet<IFPageFormItemModelProperty> PageFormItemModelProperties { get; set; }
+        public DbSet<IFPageControlItemModelProperty> PageFormItemModelProperties { get; set; }
 
         public DbSet<IFPageActionRouteValue> PageActionRouteValues { get; set; }
 
