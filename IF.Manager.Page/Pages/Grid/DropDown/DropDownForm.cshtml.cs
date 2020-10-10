@@ -13,21 +13,19 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace IF.Manager.Page.Pages.Form.DropDown
 {
-    public class DropDownFormModel : PageModel
+    public class DropDownGridModel : PageModel
     {
 
 
         private readonly IQueryService queryService;
-        private readonly IModelService modelService;
-        private readonly IPageFormService pageFormService;
         private readonly IPageService pageService;
+        private readonly IPageFormService pageFormService;
 
-        public DropDownFormModel(IQueryService queryService, IModelService modelService, IPageFormService pageFormService, IPageService pageService)
+        public DropDownGridModel(IQueryService queryService, IPageService pageService, IPageFormService pageFormService)
         {
             this.queryService = queryService;
-            this.modelService = modelService;
-            this.pageFormService = pageFormService;
             this.pageService = pageService;
+            this.pageFormService = pageFormService;
         }
 
         [BindProperty(SupportsGet = true), Required]
@@ -50,9 +48,9 @@ namespace IF.Manager.Page.Pages.Form.DropDown
         public async Task<IActionResult> OnPostSaveAsync()
         {
 
-          
+           
                 await this.pageService.UpdatePageControlItemModelProperty(this.Form);
-            
+           
 
             return new EmptyResult();
         }

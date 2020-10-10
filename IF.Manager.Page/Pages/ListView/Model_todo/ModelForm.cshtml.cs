@@ -46,7 +46,7 @@ namespace IF.Manager.Page.Pages.ListView.Model
         public async Task OnGet(int Id)
         {
 
-            this.Form = await this.pageFormService.GetPageFormItemModelProperties(Id);
+            this.Form = await this.pageService.GetPageControlItemModelProperties(Id);
             this.FormId = Id;
 
             if (!this.Form.Any())
@@ -76,7 +76,7 @@ namespace IF.Manager.Page.Pages.ListView.Model
 
         public async Task<PartialViewResult> OnPost()
         {
-            await this.pageFormService.UpdateFormItemModelProperties(this.Form, this.FormId);
+            await this.pageService.UpdateControlItemModelProperties(this.Form, this.FormId);
 
 
             var FormList = await this.pageFormService.GetFormList();

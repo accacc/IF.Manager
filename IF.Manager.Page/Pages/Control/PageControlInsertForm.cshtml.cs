@@ -67,7 +67,7 @@ namespace IF.Manager.Page.Pages
 
         public async Task<PartialViewResult> OnPostMoveModelItemUpOneAsync()
         {
-            await this.pageService.MoveModelItemUp(this.TreeSelectedId.Value);
+            await this.pageService.MovePageSequenceUp(this.TreeSelectedId.Value);
 
             var tree = await this.pageService.GetPageControlMapTreeList(this.RootControlMapId);
             PageControlMapModel model = new PageControlMapModel();
@@ -84,7 +84,7 @@ namespace IF.Manager.Page.Pages
 
         public async Task<PartialViewResult> OnPostMoveModelItemDownOneAsync()
         {
-            await this.pageService.MoveModelItemDown( this.TreeSelectedId.Value);
+            await this.pageService.MovePageSequenceDown( this.TreeSelectedId.Value);
 
             var tree = await this.pageService.GetPageControlMapTreeList(this.RootControlMapId);
             PageControlMapModel model = new PageControlMapModel();

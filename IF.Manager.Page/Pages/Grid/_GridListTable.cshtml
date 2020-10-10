@@ -17,9 +17,12 @@
             Düzenle
         </th>
         <th>
+            Models
+        </th>
+        <th>
             Parameters
         </th>
-       
+
     </tr>
     @if (Model != null && Model.Any())
     {
@@ -46,7 +49,18 @@
             Edit
         </a>
     </td>
+    <td>
 
+        <a class="btn btn-primary"
+           href="@Url.Page("/Grid/Model/ModelForm",new { FormId = item.Id })"
+           if-ajax="true"
+           if-ajax-method="get"
+           if-ajax-insertion-mode="replace"
+           if-ajax-show-dialog="true"
+           if-ajax-modal-id="@Guid.NewGuid()">
+            Model
+        </a>
+    </td>
     <td>
         <a class="btn btn-primary"
            href="@Url.Page("/PageParameterForm",new {  ObjectId= item.Id,ObjectType = IF.Manager.Contracts.Enum.PageParameterType.GridView })"
@@ -57,7 +71,7 @@
            if-ajax-modal-id="PageControlTreeListModal">
             Parameters
         </a>
-    </td> 
+    </td>
 
 </tr>
         }

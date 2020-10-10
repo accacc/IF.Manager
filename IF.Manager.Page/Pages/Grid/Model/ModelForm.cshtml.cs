@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-namespace IF.Manager.Page.Pages.Form.Model
+namespace IF.Manager.Page.Pages.Grid.Model
 {
 
 
@@ -23,7 +23,7 @@ namespace IF.Manager.Page.Pages.Form.Model
         private readonly IPageActionService pageActionService;
         private readonly IPageService pageService;
         private readonly IModelService modelService;
-        private readonly IEntityService entityService;
+        private readonly IPageGridService pageGridService;
 
         [BindProperty, Required]
         public List<IFPageControlItemModelProperty> Form { get; set; }
@@ -33,12 +33,12 @@ namespace IF.Manager.Page.Pages.Form.Model
         public int FormId { get; set; }
 
 
-        public ModelFormModel(IPageFormService pageFormService, IPageService queryService, IModelService modelService, IEntityService entityService, IPageActionService pageActionService)
+        public ModelFormModel(IPageFormService pageFormService, IPageService queryService, IModelService modelService, IPageGridService pageGridService, IPageActionService pageActionService)
         {
             this.pageFormService = pageFormService;
             this.pageService = queryService;
             this.modelService = modelService;
-            this.entityService = entityService;
+            this.pageGridService = pageGridService;
             this.pageActionService = pageActionService;
         }
 
@@ -110,7 +110,7 @@ namespace IF.Manager.Page.Pages.Form.Model
 
         public async Task<PartialViewResult> OnPostMoveModelItemDownOneAsync(int Id)
         {
-            this.pageService.MovePageControlModelItemDown(Id,this.FormId);            
+            this.pageService.MovePageControlModelItemDown(Id, this.FormId);            
 
             var propertyList = await this.pageService.GetPageControlItemModelProperties(this.FormId);
 

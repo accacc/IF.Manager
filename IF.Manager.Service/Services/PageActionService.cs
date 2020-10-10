@@ -82,34 +82,7 @@ namespace IF.Manager.Service.Services
             }
         }
 
-        //public async Task<IFModel> GetModelByAction(int id)
-        //{
-        //    var action = await this.GetQuery<IFPageAction>().SingleOrDefaultAsync(k => k.Id == id);
-
-        //    if (action == null) { throw new BusinessException($"{nameof(IFPageAction)} : No such entity exists"); }
-
-        //    if (action.IFModelId.HasValue && action.IFModelId.Value > 0)
-        //    {
-        //        var model = await this.GetQuery<IFModel>().SingleOrDefaultAsync(k => k.Id == action.IFModelId);
-        //        return model;
-        //    }
-        //    else if (action.CommandId.HasValue && action.CommandId.Value > 0)
-        //    {
-        //        var command = await this.GetQuery<IFCommand>().Include(c=>c.Model).SingleOrDefaultAsync(k => k.Id == action.CommandId);
-        //        return command.Model;
-        //    }
-        //    else if (action.QueryId.HasValue && action.QueryId.Value > 0)
-        //    {
-        //        var query = await this.GetQuery<IFQuery>().Include(c => c.Model).SingleOrDefaultAsync(k => k.Id == action.QueryId);
-        //        return query.Model;
-        //    }
-        //    else
-        //    {
-        //        throw new BusinessException("Bu action için model tanımı yok");
-        //    }
-
-
-        //}
+      
 
         public async Task<IFPageAction> GetAction(int id)
         {

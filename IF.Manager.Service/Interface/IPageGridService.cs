@@ -21,5 +21,6 @@ namespace IF.Manager.Contracts.Services
         Task<IFPagePanel> GetPanel(int id);
 
         Task<List<IFPageGridLayout>> GetGridLayouts();
+        //Task<List<IFPageControlItemModelProperty>> GetPageControlItemModelProperties(int formId);
     }
 }

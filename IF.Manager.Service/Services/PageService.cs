@@ -9,7 +9,9 @@ using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
 using IF.Manager.Service.Web.Page;
 using IF.Persistence.EF;
+
 using Microsoft.EntityFrameworkCore;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,17 +37,78 @@ namespace IF.Manager.Service.Services
         }
 
 
-        public async Task MoveModelItemUp(int Id)
+        public void MovePageControlModelItemUp(int Id,int objectId)
+        {
+            IFPageControlItemModelProperty entity = this.GetPageFormItemModelProperty(Id);
+
+            if (entity != null)
+            {
+                this.MoveUpOne<IFPageControlItemModelProperty>(entity.Sequence,e=>e.ObjectId== objectId);
+            }
+        }
+
+        public void MovePageControlModelItemDown(int Id, int objectId)
+        {
+            IFPageControlItemModelProperty entity = this.GetPageFormItemModelProperty(Id);
+
+            if (entity != null)
+            {
+                this.MoveDownOne<IFPageControlItemModelProperty>(entity.Sequence, e => e.ObjectId == objectId);
+            }
+        }
+
+        private IFPageControlItemModelProperty GetPageFormItemModelProperty(int Id)
+        {
+
+            return this.GetByKey<IFPageControlItemModelProperty>(Id);
+
+        }
+
+
+        public async Task UpdatePageControlItemModelProperty(IFPageControlItemModelProperty form)
+        {
+
+            try
+            {
+                var entity = await this.GetQuery<IFPageControlItemModelProperty>()
+            .SingleOrDefaultAsync(k => k.Id == form.Id);
+
+                if (entity == null) { throw new BusinessException($"{nameof(IFPageControlItemModelProperty)} : No such entity exists"); }
+
+
+                entity.IFQueryId = form.IFQueryId; ;
+                entity.NameIFModelPropertyId = form.NameIFModelPropertyId;
+
+                entity.ValueIFModelPropertyId = form.ValueIFModelPropertyId;
+                this.Update(entity);
+                await this.UnitOfWork.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IFPageControlItemModelProperty> GetPageControlItemModelProperty(int iFPageFormItemModelPropertyId)
+        {
+            var data = await this.GetQuery<IFPageControlItemModelProperty>(c => c.Id == iFPageFormItemModelPropertyId).SingleOrDefaultAsync();
+
+            return data;
+        }
+
+
+        public async Task MovePageSequenceUp(int Id)
         {
             IFPageControlMap entity = await this.GetPageControlMap(Id);
 
             if (entity != null)
             {
-                this.MoveUpOne<IFPageControlMap>(entity.Sequence,e=>e.ParentId==entity.ParentId);
+                this.MoveUpOne<IFPageControlMap>(entity.Sequence, e => e.ParentId == entity.ParentId);
             }
         }
 
-        public async Task MoveModelItemDown(int Id)
+        public async Task MovePageSequenceDown(int Id)
         {
             IFPageControlMap entity = await this.GetPageControlMap(Id);
 
@@ -75,6 +138,17 @@ namespace IF.Manager.Service.Services
 
 
             form.Id = entity.Id;
+        }
+
+        public async Task<List<IFPageControlItemModelProperty>> GetPageControlItemModelProperties(int id)
+        {
+            var data = await this.GetQuery<IFPageControlItemModelProperty>(c => c.ObjectId == id)
+                .Include(p => p.IFPageForm)
+                .Include(p => p.IFPageGrid)
+
+                .OrderBy(a => a.Sequence).ToListAsync();
+
+            return data;
         }
 
         public async Task UpdatePage(IFPage form)
@@ -255,7 +329,7 @@ namespace IF.Manager.Service.Services
                 .Include(p => p.IFPageControl).ThenInclude(k => ((IFPageListView)k).IFQuery.Model.Properties).ThenInclude(f => f.EntityProperty.Entity)
                 .Include(p => p.IFPageControl).ThenInclude(e => ((IFPageForm)e).IFModel)
                 .Include(p => p.IFPageControl).ThenInclude(e => ((IFPageForm)e).IFQuery)
-                .Include(p => p.IFPageControl).ThenInclude(e => ((IFPageForm)e).IFPageFormItemModelProperties).ThenInclude(f=>f.IFModelProperty.EntityProperty)
+                .Include(p => p.IFPageControl).ThenInclude(e => ((IFPageForm)e).IFPageFormItemModelProperties).ThenInclude(f => f.IFModelProperty.EntityProperty)
                 .Include(p => p.IFPageControl).ThenInclude(e => ((IFPageForm)e).IFPageFormItemModelProperties).ThenInclude(f => f.IFPageFormItem)
 
 
@@ -484,17 +558,17 @@ namespace IF.Manager.Service.Services
 
         public async Task<IFPageControlMap> GetPageControlMapByControlId(int PageControlId)
         {
-            
-                var entity = await this.GetQuery<IFPageControlMap>()
-                    .Include(e => e.IFPageControl)
-                    .Include(p => p.Parent.IFPageControl)
-                    .Include(p => p.Childrens).ThenInclude(c => c.IFPageControl)
-                    .SingleOrDefaultAsync(k => k.IFPageControlId == PageControlId);
 
-                //if (entity == null) { throw new BusinessException($"{nameof(IFPageControlMap)} : No such entity exists"); }
+            var entity = await this.GetQuery<IFPageControlMap>()
+                .Include(e => e.IFPageControl)
+                .Include(p => p.Parent.IFPageControl)
+                .Include(p => p.Childrens).ThenInclude(c => c.IFPageControl)
+                .SingleOrDefaultAsync(k => k.IFPageControlId == PageControlId);
 
-                return entity;
-            
+            //if (entity == null) { throw new BusinessException($"{nameof(IFPageControlMap)} : No such entity exists"); }
+
+            return entity;
+
         }
 
 
@@ -633,11 +707,60 @@ namespace IF.Manager.Service.Services
             return this.GetQuery<IFPageParameter>(o => o.ObjectId == id).ToListAsync();
         }
 
-        public async Task UpdatePageParameters(List<IFPageParameter> dtos, int ObjectId,PageParameterType ObjectType)
+
+        public async Task UpdateControlItemModelProperties(List<IFPageControlItemModelProperty> dtos, int objectId)
         {
             try
             {
-                var IFPageParameters = await this.GetQuery<IFPageParameter>(k => k.ObjectId == ObjectId && k.ObjectType == ObjectType)               
+                var IFPageControlItemModelProperties = await this.GetQuery<IFPageControlItemModelProperty>(k => k.ObjectId == objectId)
+               
+               .ToListAsync();
+
+                //if (entity == null) { throw new BusinessException(" No such entity exists"); }
+
+                for (int i = 0; i < IFPageControlItemModelProperties.Count; i++)
+                {
+                    if (!dtos.Any(d => d.Id == IFPageControlItemModelProperties.ElementAt(i).Id))
+                    {
+                        this.Delete(IFPageControlItemModelProperties.ElementAt(i));
+                    }
+                }
+
+                foreach (var dto in dtos)
+                {
+
+                    if (dto.Id <= 0)
+                    {
+                        IFPageControlItemModelProperty property = new IFPageControlItemModelProperty();
+                        property.IFModelPropertyId = dto.IFModelPropertyId;
+                        property.ObjectId = objectId;
+                        property.IFPageFormItemId = dto.IFPageFormItemId;
+                        this.Add(property);
+                    }
+                    else
+                    {
+                        var property = IFPageControlItemModelProperties.SingleOrDefault(p => p.Id == dto.Id);
+                        property.IFModelPropertyId = dto.IFModelPropertyId;
+                        property.ObjectId = objectId;
+                        property.IFPageFormItemId = dto.IFPageFormItemId;
+                        this.Update(property);
+                    }
+                }
+
+                await UnitOfWork.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task UpdatePageParameters(List<IFPageParameter> dtos, int ObjectId, PageParameterType ObjectType)
+        {
+            try
+            {
+                var IFPageParameters = await this.GetQuery<IFPageParameter>(k => k.ObjectId == ObjectId && k.ObjectType == ObjectType)
                .ToListAsync();
 
                 //if (IFPageParameters == null) { throw new BusinessException(" No such entity exists"); }
