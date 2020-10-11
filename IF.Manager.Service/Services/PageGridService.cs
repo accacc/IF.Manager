@@ -1,5 +1,6 @@
 ﻿using IF.Core.Control;
 using IF.Core.Exception;
+using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
@@ -14,9 +15,11 @@ namespace IF.Manager.Service.Services
 {
     public class PageGridService : GenericRepository, IPageGridService
     {
-        public PageGridService(ManagerDbContext dbContext) : base(dbContext)
-        {
 
+        private readonly IModelService modelService;
+        public PageGridService(ManagerDbContext dbContext, IModelService modelService) : base(dbContext)
+        {
+            this.modelService = modelService;
         }
         public async Task<List<IFPageGrid>> GetGridList()
         {
@@ -32,6 +35,25 @@ namespace IF.Manager.Service.Services
             return data;
         }
 
+
+        public async Task<List<ModelPropertyDto>> GetGridModelProperties(int Id)
+        {
+            var form = await this.GetGrid(Id);
+
+            List<ModelPropertyDto> modelProperties;
+
+            if (form.QueryId.HasValue)
+            {
+                modelProperties = await this.modelService.GetModelPropertyList(form.Query.ModelId);
+            }
+           
+            else
+            {
+                throw new BusinessException("Bu grid için model tanımı yok");
+            }
+
+            return modelProperties;
+        }
 
         public async Task AddGrid(IFPageGrid form)
         {

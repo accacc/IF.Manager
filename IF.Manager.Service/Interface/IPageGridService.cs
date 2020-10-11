@@ -1,4 +1,5 @@
 ﻿using IF.Core.Persistence;
+using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace IF.Manager.Contracts.Services
         Task UpdateGrid(IFPageGrid form);
         Task<IFPageGrid> GetGrid(int id);
 
+        Task<List<ModelPropertyDto>> GetGridModelProperties(int Id);
 
         Task<List<IFPagePanel>> GetPanelList();
         Task AddPanel(IFPagePanel form);

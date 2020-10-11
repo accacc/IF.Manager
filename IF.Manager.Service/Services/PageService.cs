@@ -142,13 +142,21 @@ namespace IF.Manager.Service.Services
 
         public async Task<List<IFPageControlItemModelProperty>> GetPageControlItemModelProperties(int id)
         {
-            var data = await this.GetQuery<IFPageControlItemModelProperty>(c => c.ObjectId == id)
-                .Include(p => p.IFPageForm)
-                .Include(p => p.IFPageGrid)
+            try
+            {
+                var data = await this.GetQuery<IFPageControlItemModelProperty>(c => c.ObjectId == id)
+               .Include(p => p.IFPageForm)
+               .Include(p => p.IFPageGrid)
 
-                .OrderBy(a => a.Sequence).ToListAsync();
+               .OrderBy(a => a.Sequence).ToListAsync();
 
-            return data;
+                return data;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
 
         public async Task UpdatePage(IFPage form)

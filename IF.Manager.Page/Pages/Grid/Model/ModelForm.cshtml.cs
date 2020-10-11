@@ -166,7 +166,7 @@ namespace IF.Manager.Page.Pages.Grid.Model
         private async Task SetModelProperties()
         {
 
-            List<ModelPropertyDto> properties = await this.pageFormService.GetFormModelProperties(this.FormId);
+            List<ModelPropertyDto> properties = await this.pageGridService.GetGridModelProperties(this.FormId);
 
             List<SelectListItem> items = new List<SelectListItem>();
 

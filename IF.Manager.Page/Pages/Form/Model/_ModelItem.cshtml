@@ -82,21 +82,21 @@
     </td>
     @if (Model.IFPageFormItem != null)
     {
-    @if (Model.IFPageFormItem.Name == IF.Manager.Contracts.Enum.FormModelType.DropDown.ToString())
-    {
-        <td>
-            <a class="btn btn-primary"
-               href="@Url.Page("/Form/DropDown/DropDownForm", new { Id = Model.Id, ObjectId = Model.ObjectId, IFQueryId = Model.IFQueryId })"
-               if-ajax="true"
-               if-ajax-method="get"
-               if-ajax-insertion-mode="replace"
-               if-ajax-show-dialog="true"
-               if-ajax-modal-id="@Guid.NewGuid()">
-                Query
-            </a>
+        @if (Model.IFPageFormItem.Name == IF.Manager.Contracts.Enum.FormModelType.DropDown.ToString())
+        {
+            <td>
+                <a class="btn btn-primary"
+                   href="@Url.Page("/Form/DropDown/DropDownForm", new { Id = Model.Id, ObjectId = Model.ObjectId, IFQueryId = Model.IFQueryId })"
+                   if-ajax="true"
+                   if-ajax-method="get"
+                   if-ajax-insertion-mode="replace"
+                   if-ajax-show-dialog="true"
+                   if-ajax-modal-id="@Guid.NewGuid()">
+                    Query
+                </a>
 
-        </td>
-    }
+            </td>
+        }
     }
 </tr>
 
