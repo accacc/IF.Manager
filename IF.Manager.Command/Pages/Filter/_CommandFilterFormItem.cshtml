@@ -3,7 +3,6 @@
 @{
     Layout = null;
     List<SelectListItem> entities = ViewData["entities"] as List<SelectListItem>;
-    List<SelectListItem> formModelProps = ViewData["formModelProps"] as List<SelectListItem>;
     var filterOperators = Html.GetEnumSelectList<IF.Manager.Contracts.Enum.QueryFilterOperator>();
     var index = Guid.NewGuid();
 
@@ -15,13 +14,7 @@
         }
     }
 
-    foreach (var prop in formModelProps)
-    {
-        if (prop.Value == Model.FormModelPropertyId.ToString())
-        {
-            prop.Selected = true;
-        }
-    }
+
 
     foreach (var op in filterOperators)
     {
@@ -60,11 +53,7 @@
         </td>
 
 
-        <td>
-            <div class="form-group">
-                @Html.DropDownList($"Form[{index}].FormModelPropertyId", formModelProps, "Select", new { @class = "form-control" })
-            </div>
-        </td>
+       
 
         <td>
             <input type="hidden" name="Form.Index" value="@index" />

@@ -4,7 +4,6 @@
 @{
     Layout = "_ModalLayout";
     List<SelectListItem> models = ViewData["models"] as List<SelectListItem>;
-    List<SelectListItem> formmodels = ViewData["formmodels"] as List<SelectListItem>;
     List<SelectListItem> process = ViewData["process"] as List<SelectListItem>;
 }
 
@@ -30,14 +29,7 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="FormModelId">Form Model</label>
-                    @Html.DropDownList("Form.FormModelId", formmodels, "Select", new { @class = "form-control" })
-                </div>
-            </div>
-        </div>
+    
 
         <div class="row">
             <div class="col-md-6">

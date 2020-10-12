@@ -30,9 +30,9 @@ namespace IF.Manager.Contracts.Model
 
         public IFModel Model { get; set; }
 
-        public IFFormModel FormModel { get; set; }
+        //public IFFormModel FormModel { get; set; }
 
-        public int FormModelId { get; set; }
+        //public int FormModelId { get; set; }
 
         public IFProcess Process { get; set; }
 

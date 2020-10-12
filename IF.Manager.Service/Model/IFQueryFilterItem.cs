@@ -39,6 +39,5 @@ namespace IF.Manager.Contracts.Model
 
         //public IFFormModel FormModel { get; set; }
 
-        public IFFormModelProperty FormModelProperty { get; set; }
     }
 }

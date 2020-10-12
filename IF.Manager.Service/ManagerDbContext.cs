@@ -33,10 +33,6 @@ namespace IF.Manager.Persistence.EF
             builder.ApplyConfiguration(new IFModelPropertyMapping());
             builder.ApplyConfiguration(new IFModelMapping());
             builder.ApplyConfiguration(new IFPublishMapping());
-            //builder.ApplyConfiguration(new IFModelEntityMapping());            
-            
-            builder.ApplyConfiguration(new IFFormModelMapping());
-            builder.ApplyConfiguration(new IFFormModelPropertyMapping());
 
             builder.ApplyConfiguration(new IFQueryMapping());
             builder.ApplyConfiguration(new IFQueryOrderMapping());
@@ -58,10 +54,9 @@ namespace IF.Manager.Persistence.EF
             builder.ApplyConfiguration(new IFPageControlMapping());
 
             builder.ApplyConfiguration(new IFPageFormItemMapping());
-            builder.ApplyConfiguration(new IFPageFormItemModelPropertyMapping());
+            builder.ApplyConfiguration(new IFPageControlItemModelPropertyMapping());
 
             builder.ApplyConfiguration(new IFPageNavigationMapping());
-            //builder.ApplyConfiguration(new IFPageControlItemModelPropertyMapping());
 
             builder.ApplyConfiguration(new IFPageParameterBaseMapping());
             builder.ApplyConfiguration(new IFPageActionRouteValueMapping());
@@ -102,9 +97,6 @@ namespace IF.Manager.Persistence.EF
 
         
         public DbSet<IFQueryFilterItem> QueryFilterItems { get; set; }
-
-        public DbSet<IFFormModel> FormModels { get; set; }
-        public DbSet<IFFormModelProperty> FormModelProperties { get; set; }
 
         public DbSet<IFCommand> Commands { get; set; }
         public DbSet<IFCommandFilterItem> CommandFilterItems { get; set; }

@@ -102,17 +102,8 @@ namespace IF.Manager.Query.Pages.Filter
 
             var entities = await this.entityService.GetEntityAllRelations(model.EntityId);
 
-            //var selectList = entities.Select(s => new SelectListItem { Text = s.Name, Value = s.Name }).ToList();
-
-            //ViewData["entities"] = selectList;
-
-
-            //var groups = await this.modelService.GetModelList();
 
             SetEntities(entities);
-
-
-            await SetFormModelProps(query);
             await SetPageParameters(query);
 
         }
@@ -140,34 +131,7 @@ namespace IF.Manager.Query.Pages.Filter
             ViewData["page_parameters"] = formModelItems;
         }
 
-        private async Task SetFormModelProps(QueryDto query)
-        {
-            List<SelectListItem> formModelItems = new List<SelectListItem>();
-
-            var formModelProperties = await this.queryService.GetFormModelPropertyList(query.FormModelId);
-
-
-
-            foreach (var property in formModelProperties)
-            {
-                SelectListItem item = new SelectListItem();
-
-                //if (this.Form.ModelId == group.Id)
-                //{
-                //    item.Selected = true;
-                //}
-
-                item.Text = property.Name;
-                item.Value = property.Id.ToString();
-                formModelItems.Add(item);
-            }
-
-
-
-
-            ViewData["formModelProps"] = formModelItems;
-        }
-
+     
        
         private void SetEntities(List<EntityDto> entities)
         {

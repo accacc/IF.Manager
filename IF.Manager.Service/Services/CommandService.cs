@@ -3,7 +3,9 @@ using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
 using IF.Persistence.EF;
+
 using Microsoft.EntityFrameworkCore;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,12 +28,14 @@ namespace IF.Manager.Service.Services
             string name = DirectoryHelper.AddAsLastWord(form.Name, "DataCommand");
             entity.Name = name;
             entity.ModelId = form.ModelId;
-            entity.FormModelId = form.FormModelId;
             entity.ProcessId = form.ProcessId;
             entity.CommandGetType = form.CommandGetType;
             entity.Description = form.Description;
+
             this.Add(entity);
+
             await this.UnitOfWork.SaveChangesAsync();
+
             form.Id = entity.Id;
         }
 
@@ -48,7 +52,6 @@ namespace IF.Manager.Service.Services
                 entity.Name = form.Name;
                 entity.Description = form.Description;
                 entity.ModelId = form.ModelId;
-                entity.FormModelId = form.FormModelId;
                 entity.CommandGetType = form.CommandGetType;
                 entity.ProcessId = form.ProcessId;
 
@@ -73,10 +76,8 @@ namespace IF.Manager.Service.Services
                 Description = x.Description,
                 ModelId = x.ModelId,
                 ProcessId = x.ProcessId,
-                //Filter = x.Filter,
-                FormModelId = x.FormModelId,
                 CommandGetType = x.CommandGetType,
-                
+
             }).SingleOrDefaultAsync(k => k.Id == id);
 
             if (entity == null) { throw new BusinessException("Command : No such entity exists"); }
@@ -99,69 +100,14 @@ namespace IF.Manager.Service.Services
         }
 
 
-        public async Task<List<IFFormModel>> GetFormModelList()
-        {
-            var data = await this.GetQuery<IFFormModel>().ToListAsync();
-
-            return data;
-        }
-
-        public async Task<List<IFFormModelProperty>> GetFormModelPropertyList(int formModelId)
-        {
-            var data = await this.GetQuery<IFFormModelProperty>(x=>x.FormModelId == formModelId).ToListAsync();
-
-            return data;
-        }
-
-        //public async Task SaveFilter(int id, CommandBuilderFilterRule data)
-        //{
-        //    var entity = await this.GetQuery<IFQuery>(q => q.Id == id).SingleOrDefaultAsync();
-
-        //    entity.Filter = JsonConvert.SerializeObject(data);
-
-        //    this.Update(entity);
-        //    await this.UnitOfWork.SaveChangesAsync();
-        //}
-
         public async Task<List<IFCommandFilterItem>> GetCommandFilterItems(int CommandId)
         {
-            
-            var filters = await this.GetQuery<IFCommandFilterItem>(f => f.CommandId == CommandId)
 
-
-                //.Select(i => new QueryFilterItemDto
-                //{
-
-                //    ConditionOperator = i.ConditionOperator,
-                //    FilterOperator = i.FilterOperator,
-                //    CommandId = i.CommandId,
-                //    Value = i.Value,
-                //    EntityPropertyId = i.EntityPropertyId,
-                //    //EntityId = i.EntityId,
-                //    //EntityName = i.Entity.Name,
-                //    PropertyName = i.EntityProperty.Name,
-                //    FormModelPropertyId = i.FormModelPropertyId,
-                //    Id = i.Id
-
-                //}
-
-                        .ToListAsync();
-
-
-
-            //filter.Items.AddRange(query);
-
-            //if (query.Any())
-            //{
-
-            //    filter.ConditionOperator = query.First().ConditionOperator;
-            //    filter.CommandId = query.First().CommandId;
-            //}
-
+            var filters = await this.GetQuery<IFCommandFilterItem>(f => f.CommandId == CommandId).ToListAsync();
             return filters;
         }
 
-        public async Task UpdateCommandFilters(List<IFCommandFilterItem> form,int commandId)
+        public async Task UpdateCommandFilters(List<IFCommandFilterItem> form, int commandId)
         {
             var dtos = form;
 
@@ -173,16 +119,13 @@ namespace IF.Manager.Service.Services
 
                 if (entity == null) { throw new BusinessException(" No such entity exists"); }
 
-
-
-
                 foreach (var dto in dtos)
                 {
 
                     if (dto.Id <= 0)
                     {
                         IFCommandFilterItem filter = new IFCommandFilterItem();
-                        
+
                         if (dto.FormModelPropertyId.HasValue)
                         {
                             filter.FormModelPropertyId = dto.FormModelPropertyId;
@@ -218,12 +161,6 @@ namespace IF.Manager.Service.Services
 
                         this.Update(filter);
                     }
-
-
-                    //DbContext.Entry(property).State = dto.Id == 0 ?
-                    //                  EntityState.Added :
-                    //                  EntityState.Modified;
-
                 }
 
                 await UnitOfWork.SaveChangesAsync();
@@ -236,16 +173,6 @@ namespace IF.Manager.Service.Services
 
 
         }
-
-        //Task<List<IFCommandFilterItem>> ICommandService.GetCommandFilterItems(int CommandId)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task UpdatCommandFilters(IFCommandFilterItem form)
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
 
 }

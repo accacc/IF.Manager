@@ -32,7 +32,6 @@ namespace IF.Manager.Service.Services
             entity.Name = name;
             entity.ModelId = form.ModelId;
             entity.ProcessId = form.ProcessId;
-            entity.FormModelId = form.FormModelId;
             entity.Description = form.Description;
             entity.QueryGetType = form.QueryGetType;
             this.Add(entity);
@@ -54,7 +53,6 @@ namespace IF.Manager.Service.Services
                 entity.Description = form.Description;
                 entity.ModelId = form.ModelId;
                 entity.ProcessId = form.ProcessId;
-                entity.FormModelId = form.FormModelId;
                 entity.QueryGetType = form.QueryGetType;
 
                 if (entity.QueryGetType == Contracts.Enum.QueryGetType.List)
@@ -82,7 +80,6 @@ namespace IF.Manager.Service.Services
                 Description = x.Description,
                 ModelId = x.ModelId,
                 ProcessId = x.ProcessId,                
-                FormModelId = x.FormModelId,
                 QueryGetType = x.QueryGetType,
                 PageSize = x.PageSize
                 
@@ -108,19 +105,19 @@ namespace IF.Manager.Service.Services
         }
 
 
-        public async Task<List<IFFormModel>> GetFormModelList()
-        {
-            var data = await this.GetQuery<IFFormModel>().ToListAsync();
+        //public async Task<List<IFFormModel>> GetFormModelList()
+        //{
+        //    var data = await this.GetQuery<IFFormModel>().ToListAsync();
 
-            return data;
-        }
+        //    return data;
+        //}
 
-        public async Task<List<IFFormModelProperty>> GetFormModelPropertyList(int formModelId)
-        {
-            var data = await this.GetQuery<IFFormModelProperty>(x=>x.FormModelId == formModelId).ToListAsync();
+        //public async Task<List<IFFormModelProperty>> GetFormModelPropertyList(int formModelId)
+        //{
+        //    var data = await this.GetQuery<IFFormModelProperty>(x=>x.FormModelId == formModelId).ToListAsync();
 
-            return data;
-        }
+        //    return data;
+        //}
 
         public async Task<List<IFModelProperty>> GetQueryModelPropertyList(int queryId)
         {

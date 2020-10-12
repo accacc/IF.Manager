@@ -73,7 +73,6 @@ namespace IF.Manager.Query.Pages
         private async Task SetFromDefaults()
         {
             await SetModels();
-            await SetFormModels();
             await SetProceses();
 
 
@@ -129,28 +128,6 @@ namespace IF.Manager.Query.Pages
         }
 
 
-        private async Task SetFormModels()
-        {
-            var formModels = await this.queryService.GetFormModelList();
-
-            List<SelectListItem> items = new List<SelectListItem>();
-
-
-            foreach (var data in formModels)
-            {
-                SelectListItem item = new SelectListItem();
-
-                if (this.Form.FormModelId == data.Id)
-                {
-                    item.Selected = true;
-                }
-
-                item.Text = data.Name;
-                item.Value = data.Id.ToString();
-                items.Add(item);
-            }
-
-            ViewData["formmodels"] = items;
-        }
+      
     }
 }

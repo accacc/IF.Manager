@@ -1,22 +1,22 @@
-﻿//using IF.Manager.Contracts.Model;
+﻿using IF.Manager.Contracts.Model;
 
-//using Microsoft.EntityFrameworkCore;
-//using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-//using System;
-//using System.Collections.Generic;
-//using System.ComponentModel.DataAnnotations;
-//using System.Text;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
 
-//namespace IF.Manager.Persistence.EF.Mappings
-//{
-//    public class IFPageControlItemModelPropertyMapping : IEntityTypeConfiguration<IFPageControlItemModelProperty>
-//    {
-//        public void Configure(EntityTypeBuilder<IFPageControlItemModelProperty> builder)
-//        {
-//            builder.ToTable("IFPageControlItemModelProperty");
-//            builder.Property(x => x.Id).IsRequired();
-
-//        }
-//    }
-//}
+namespace IF.Manager.Persistence.EF.Mappings
+{
+    public class IFPageControlItemModelPropertyMapping : IEntityTypeConfiguration<IFPageControlItemModelProperty>
+    {
+        public void Configure(EntityTypeBuilder<IFPageControlItemModelProperty> builder)
+        {
+            builder.ToTable("IFPageControlItemModelProperty");
+            builder.Property(x => x.Id).IsRequired();
+            //builder.HasMany(cn => cn.IFPageControlItemModelProperties).WithOne(tl => tl.IFPageFormItemModelProperty).HasForeignKey(tl => tl.ObjectId).OnDelete(DeleteBehavior.Restrict);
+        }
+    }
+}

@@ -14,8 +14,8 @@ namespace IF.Manager.Contracts.Services
         Task<List<IFModelProperty>> GetQueryModelPropertyList(int queryId);
         Task<List<IFPageParameter>> GetPageParametersFromQuery(int queryId);
 
-        Task<List<IFFormModelProperty>> GetFormModelPropertyList(int formModelId);
-        Task<List<IFFormModel>> GetFormModelList();
+        //Task<List<IFFormModelProperty>> GetFormModelPropertyList(int formModelId);
+        //Task<List<IFFormModel>> GetFormModelList();
         Task<QueryFilterDto> GetQueryFilterItems(int queryId);
 
         Task AddQuery(QueryDto form);

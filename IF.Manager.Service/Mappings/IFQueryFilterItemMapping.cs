@@ -16,7 +16,6 @@ namespace IF.Manager.Persistence.EF.Mappings
             builder.ToTable("IFQueryFilterItem");
             builder.Property(x => x.Id).IsRequired();
 
-            builder.HasOne<IFFormModelProperty>(s => s.FormModelProperty).WithMany(s => s.QueryFilterItems).HasForeignKey(s => s.FormModelPropertyId).OnDelete(DeleteBehavior.Restrict);
             builder.HasOne<IFEntityProperty>(s => s.EntityProperty).WithMany(s => s.QueryFilterItems).HasForeignKey(s => s.EntityPropertyId).OnDelete(DeleteBehavior.Restrict);
 
         }

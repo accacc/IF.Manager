@@ -101,48 +101,12 @@ namespace IF.Manager.Command.Pages.Filter
 
             var entities = await this.entityService.GetEntityAllRelations(model.EntityId);
 
-            //var selectList = entities.Select(s => new SelectListItem { Text = s.Name, Value = s.Name }).ToList();
-
-            //ViewData["entities"] = selectList;
-
-
-            //var groups = await this.modelService.GetModelList();
-
+          
             SetEntities(entities);
 
-
-            await SetFormModelProps(Command);
-
         }
 
-        private async Task SetFormModelProps(IFCommand Command)
-        {
-            List<SelectListItem> formModelItems = new List<SelectListItem>();
-
-            var formModelProperties = await this.CommandService.GetFormModelPropertyList(Command.FormModelId);
-
-
-
-            foreach (var property in formModelProperties)
-            {
-                SelectListItem item = new SelectListItem();
-
-                //if (this.Form.ModelId == group.Id)
-                //{
-                //    item.Selected = true;
-                //}
-
-                item.Text = property.Name;
-                item.Value = property.Id.ToString();
-                formModelItems.Add(item);
-            }
-
-
-
-
-            ViewData["formModelProps"] = formModelItems;
-        }
-
+    
        
         private void SetEntities(List<EntityDto> entities)
         {

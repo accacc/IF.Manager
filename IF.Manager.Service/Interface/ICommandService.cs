@@ -8,8 +8,8 @@ namespace IF.Manager.Contracts.Services
     public interface ICommandService: IRepository
     {
 
-        Task<List<IFFormModelProperty>> GetFormModelPropertyList(int formModelId);
-        Task<List<IFFormModel>> GetFormModelList();
+        //Task<List<IFFormModelProperty>> GetFormModelPropertyList(int formModelId);
+        //Task<List<IFFormModel>> GetFormModelList();
         Task<List<IFCommandFilterItem>> GetCommandFilterItems(int CommandId);
 
         Task AddCommand(IFCommand form);
