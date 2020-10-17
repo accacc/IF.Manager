@@ -18,11 +18,13 @@ namespace IF.Manager.Page.Pages
         private readonly IPageGridService pageGridService;
         private readonly IQueryService queryService;
         private readonly IProjectService projectService;
-        public GridFormModel(IPageGridService pageGridService, IQueryService queryService, IProjectService projectService)
+        private readonly IPageFormService formService;
+        public GridFormModel(IPageGridService pageGridService, IQueryService queryService, IProjectService projectService, IPageFormService formService)
         {
             this.pageGridService = pageGridService;
             this.queryService = queryService;
             this.projectService = projectService;
+            this.formService = formService;
         }
 
         [BindProperty, Required]
@@ -75,17 +77,40 @@ namespace IF.Manager.Page.Pages
         {
             await SetQueries();
             await SetGridLayouts();
+            await SetForms();
         }
 
-
-        private async Task SetQueries()
+        private async Task SetForms()
         {
-            var process = await this.queryService.GetQueryList();
+            var entitites = await this.formService.GetFormList();
 
             List<SelectListItem> items = new List<SelectListItem>();
 
 
-            foreach (var data in process)
+            foreach (var data in entitites)
+            {
+                SelectListItem item = new SelectListItem();
+
+                if (this.Form.QueryId == data.Id)
+                {
+                    item.Selected = true;
+                }
+
+                item.Text = data.Name;
+                item.Value = data.Id.ToString();
+                items.Add(item);
+            }
+
+            ViewData["forms"] = items;
+        }
+        private async Task SetQueries()
+        {
+            var entities = await this.queryService.GetQueryList();
+
+            List<SelectListItem> items = new List<SelectListItem>();
+
+
+            foreach (var data in entities)
             {
                 SelectListItem item = new SelectListItem();
 

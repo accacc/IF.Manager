@@ -65,6 +65,7 @@ namespace IF.Manager.Service.Services
             entity.QueryId = form.QueryId;
             entity.Description = form.Description;
             entity.GridLayoutId = entity.GridLayoutId;
+            entity.IFFilterPageFormId = entity.IFFilterPageFormId;
             this.Add(entity);
             await this.UnitOfWork.SaveChangesAsync();
             form.Id = entity.Id;
@@ -85,6 +86,7 @@ namespace IF.Manager.Service.Services
                 entity.Description = form.Description;
                 entity.GridLayoutId = form.GridLayoutId;
                 entity.QueryId = form.QueryId;
+                entity.IFFilterPageFormId = entity.IFFilterPageFormId;
                 this.Update(entity);
                 await this.UnitOfWork.SaveChangesAsync();
             }

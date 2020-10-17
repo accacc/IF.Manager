@@ -22,6 +22,9 @@ namespace IF.Manager.Contracts.Model
 
         public IFPageGridLayout GridLayout { get; set; }
 
+        public IFPageForm IFFilterPageForm { get; set; }
+
+        public int? IFFilterPageFormId { get; set; }
 
         public int? GridLayoutId { get; set; }
 
