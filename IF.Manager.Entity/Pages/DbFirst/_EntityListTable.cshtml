@@ -1,0 +1,48 @@
+﻿@model List<DatabaseSchemaReader.DataSchema.DatabaseTable>
+
+@{ Layout = null;}
+
+
+
+
+@if (Model != null && Model.Any())
+{
+    @foreach (var group in Model)
+    {
+
+        <div class="row">
+            <div class="col-md-12">
+                <p style="color:red;" data-toggle="collapse" data-target="#g_@group.Name" aria-expanded="false" aria-controls="collapseExample">
+                    <input name="tables" id="chk@(group.Name)" type="checkbox" value="@group.Name" /> @group.Name <b>+ @group.Name</b>
+
+                </p>
+
+            </div>
+        </div>
+        <div id="g_@group.Name" class="row collapse">
+            <div class="col-md-12">
+                @foreach (var item in group.Columns)
+                {
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p data-toggle="collapse" style="color:darkslateblue;" data-target="#e_@item.Name" aria-expanded="false" aria-controls="collapseExample">
+                                <b>&nbsp;&nbsp;+@item.Name</b>
+                            </p>
+
+                        </div>
+                    </div>
+
+
+
+
+                }
+            </div>
+        </div>
+    }
+}
+else
+{
+    @:Veri bulunamadı,Lütfen Kriter seçiniz
+}
+

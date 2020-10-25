@@ -1,0 +1,45 @@
+﻿@page
+@model IF.Manager.Entity.Pages.DbFirst.FormModel
+
+
+
+<form>
+    @Html.AntiForgeryToken()
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Name">ConnectionString</label>
+                @Html.TextBoxFor(m => m.ConnectionString, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <button type="submit" class="btn btn-primary"
+                    if-ajax-action="@Url.Page("/DbFirst/Form","ListTables")"
+                    if-ajax-form-submit="true"
+                    if-ajax-method="get"
+                    if-ajax-update-id="EntityListDiv">
+                Get Tables
+
+            </button>
+            &nbsp;
+            <button type="submit" class="btn btn-primary"
+                    if-ajax-action="@Url.Page("/DbFirst/Form","AddTables")"
+                    if-ajax-form-submit="true"
+                    if-ajax-method="post"
+                    if-ajax-close-modal-on-success="true"
+                    if-ajax-update-id="EntityListDiv">
+                Save
+
+            </button>
+        </div>
+    </div>
+
+    <div id="EntityListDiv"></div>
+</form>
+
+

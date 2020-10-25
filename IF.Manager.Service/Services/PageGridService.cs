@@ -65,10 +65,29 @@ namespace IF.Manager.Service.Services
             entity.QueryId = form.QueryId;
             entity.Description = form.Description;
             entity.GridLayoutId = entity.GridLayoutId;
-            entity.IFFilterPageFormId = entity.IFFilterPageFormId;
+            entity.IFFilterPageFormId = form.IFFilterPageFormId;
             this.Add(entity);
+
+            await UpdateFilterForm(form, entity);
+
             await this.UnitOfWork.SaveChangesAsync();
             form.Id = entity.Id;
+        }
+
+        private async Task UpdateFilterForm(IFPageGrid form, IFPageGrid entity)
+        {
+            if (form.IFFilterPageFormId.HasValue)
+            {
+
+                var filterForm = await this.GetQuery<IFPageForm>(f => f.Id == form.IFFilterPageFormId).SingleOrDefaultAsync();
+
+                filterForm.IFQueryId = entity.QueryId;
+
+                var query = await this.GetQuery<IFQuery>(f => f.Id == entity.QueryId).SingleOrDefaultAsync();
+
+                filterForm.IFModelId = query.ModelId;
+
+            }
         }
 
         public async Task UpdateGrid(IFPageGrid form)
@@ -86,8 +105,11 @@ namespace IF.Manager.Service.Services
                 entity.Description = form.Description;
                 entity.GridLayoutId = form.GridLayoutId;
                 entity.QueryId = form.QueryId;
-                entity.IFFilterPageFormId = entity.IFFilterPageFormId;
+                entity.IFFilterPageFormId = form.IFFilterPageFormId;
                 this.Update(entity);
+
+                await UpdateFilterForm(form, entity);
+
                 await this.UnitOfWork.SaveChangesAsync();
             }
             catch (Exception ex)

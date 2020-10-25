@@ -1,4 +1,6 @@
-﻿using IF.Core.Data;
+﻿using DatabaseSchemaReader.DataSchema;
+
+using IF.Core.Data;
 using IF.Core.Exception;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
@@ -325,7 +327,7 @@ namespace IF.Manager.Service
             }
 
             string name = DirectoryHelper.AddAsLastWord(dto.Name, "Entity");
-
+            
             IFEntity entity = new IFEntity();
             entity.Description = dto.Description;
             entity.Name = name;
@@ -442,18 +444,7 @@ namespace IF.Manager.Service
 
         
 
-        public string[] GetPrimitives()
-        {
-
-            return new[] {
-                "string",
-                "int",
-                "decimal",
-                "DateTime",
-                "bool"
-            };
-
-        }
+       
 
         public List<Type> GetAllEntityTypes()
         {
@@ -630,6 +621,67 @@ namespace IF.Manager.Service
             return entity;
         }
 
+        public async Task AddDbFirst(List<DatabaseTable> mytables)
+        {
+            foreach (var dto in mytables)
+            {
 
+                if (await EntityIsExistByName(dto.Name))
+                {
+                    throw new BusinessException($"{dto.Name} Entity already exist");
+                }
+
+                string name = DirectoryHelper.AddAsLastWord(dto.Name, "Entity");
+
+                IFEntity entity = new IFEntity();
+                entity.Description = name;
+                entity.Name = name;
+                entity.IsAudited = false;
+
+                foreach (var column in dto.Columns)
+                {
+                    //dto.PrimaryKeyColumn
+
+                    IFEntityProperty property = new IFEntityProperty();
+                    property.IsIdentity =column.IsPrimaryKey;
+                    property.Name = column.Name;
+                    property.Type = GetPrimitiveByDotnet(column.NetDataType());
+                    property.IsNullable = column.Nullable;
+                    entity.Properties.Add(property);
+                }
+
+                
+             
+
+                this.Add(entity);
+            }
+
+            await UnitOfWork.SaveChangesAsync();
+        }
+
+        public string GetPrimitiveByDotnet(Type type)
+        {
+
+            if(type.Name =="String")  {return "string";  }
+
+            if (type.Name == "Int32") { return "int"; }
+            if (type.Name == "Boolean") { return "bool"; }
+            if (type.Name == "DateTime") { return "DateTime"; }
+            if (type.Name == "Decimal") { return "decimal"; }
+
+            throw new ApplicationException($"Tip bulunamadi {type.Name}");
+        }
+        public string[] GetPrimitives()
+        {
+
+            return new[] {
+                "string",
+                "int",
+                "decimal",
+                "DateTime",
+                "bool"
+            };
+
+        }
     }
 }
