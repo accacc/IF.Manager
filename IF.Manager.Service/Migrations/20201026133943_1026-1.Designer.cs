@@ -4,14 +4,16 @@ using IF.Manager.Persistence.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IF.Manager.Persistence.EF.Migrations
 {
     [DbContext(typeof(ManagerDbContext))]
-    partial class ManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201026133943_1026-1")]
+    partial class _10261
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -192,14 +194,23 @@ namespace IF.Manager.Persistence.EF.Migrations
                     b.Property<int?>("ForeignKeyPropertyId")
                         .HasColumnType("int");
 
+                    b.Property<int>("From")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FromEntityName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDbFirst")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Prefix")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("RelationId")
                         .HasColumnType("int");
+
+                    b.Property<int>("To")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ToEntityName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");

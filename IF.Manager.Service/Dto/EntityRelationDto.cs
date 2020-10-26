@@ -18,6 +18,14 @@ namespace IF.Manager.Contracts.Dto
 
         public int IFEntityId { get; set; }
 
+        public string FromEntityName { get; set; }
+
+        public string ToEntityName { get; set; }
+
+        public int? ForeignKeyPropertyId { get; set; }
+
+        public bool IsDbFirst { get; set; }
+
         public EntityDto IFRelatedEntity { get; set; }
         public EntityRelationType EntityRelationType { get; set; }
 

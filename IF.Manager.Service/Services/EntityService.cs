@@ -241,6 +241,7 @@ namespace IF.Manager.Service
                    Prefix = e.Group.Prefix,
                    GroupId = e.Group.Id,
                    GroupName = e.Group.Name,
+                   
 
                    IsAudited = e.IsAudited,
                    Properties = e.Properties.Select(p => new EntityPropertyDto
@@ -263,8 +264,9 @@ namespace IF.Manager.Service
                        IFRelatedEntityId = r.RelationId,
                        RelatedEntityName = r.Entity.Name,
                        IFEntityId = r.EntityId,
-                       To = r.From,
-                       From = r.To
+                       //To = r.From,
+                       //From = r.To
+
                    }).ToList(),
                    Relations = e.Relations.Select(r => new EntityRelationDto
                    {
@@ -273,8 +275,8 @@ namespace IF.Manager.Service
                        IFRelatedEntityId = r.RelationId,
                        RelatedEntityName = r.Relation.Name,
                        IFEntityId = r.EntityId,
-                       To = r.To,
-                       From = r.From
+                       //To = r.To,
+                       //From = r.From
 
                    }).ToList()
 
@@ -492,14 +494,14 @@ namespace IF.Manager.Service
                         case Contracts.Enum.EntityRelationType.None:
                             break;
                         case Contracts.Enum.EntityRelationType.OneToMany:
-                            relation.From = Contracts.Enum.EntityRelationDirectionType.One;
-                            relation.To = Contracts.Enum.EntityRelationDirectionType.Many;
+                            //relation.From = Contracts.Enum.EntityRelationDirectionType.One;
+                            //relation.To = Contracts.Enum.EntityRelationDirectionType.Many;
 
                             var relatedEntity = await this.GetQuery<IFEntity>()
                                                         .Include(e => e.Properties)
                                                         .SingleOrDefaultAsync(k => k.Id == dto.IFRelatedEntityId);
 
-                            if (entity == null) { throw new BusinessException(" No such entity exists"); }
+                            if (entity == null) { throw new BusinessException("No such entity exists"); }
 
                             string name = DirectoryHelper.AddAsLastWord(entity.Name, "Entity");
 
@@ -514,12 +516,12 @@ namespace IF.Manager.Service
 
                             break;
                         case Contracts.Enum.EntityRelationType.OneToOne:
-                            relation.From = Contracts.Enum.EntityRelationDirectionType.One;
-                            relation.To = Contracts.Enum.EntityRelationDirectionType.One;
+                            //relation.From = Contracts.Enum.EntityRelationDirectionType.One;
+                            //relation.To = Contracts.Enum.EntityRelationDirectionType.One;
                             break;
                         case Contracts.Enum.EntityRelationType.ManyToMany:
-                            relation.From = Contracts.Enum.EntityRelationDirectionType.Many;
-                            relation.To = Contracts.Enum.EntityRelationDirectionType.Many;
+                            //relation.From = Contracts.Enum.EntityRelationDirectionType.Many;
+                            //relation.To = Contracts.Enum.EntityRelationDirectionType.Many;
                             break;
                         default:
                             break;

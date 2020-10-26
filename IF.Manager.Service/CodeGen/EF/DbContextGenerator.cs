@@ -60,7 +60,7 @@ namespace IF.Manager.Service
                     var relationName = relation.RelatedEntityName;
                     var type = relation.RelatedEntityName;
 
-                    if (relation.To == Contracts.Enum.EntityRelationDirectionType.Many)
+                    if (relation.EntityRelationType == Contracts.Enum.EntityRelationType.ManyToMany)
                     {
                         relationName += "s";
                         type = $"ICollection<{relation.RelatedEntityName}>";
@@ -79,7 +79,7 @@ namespace IF.Manager.Service
                     var relationName = relation.RelatedEntityName;
                     var type = relation.RelatedEntityName;
 
-                    if (relation.To == Contracts.Enum.EntityRelationDirectionType.Many)
+                    //if (relation.To == Contracts.Enum.EntityRelationDirectionType.One && relation.From == Contracts.Enum.EntityRelationDirectionType.Many)
                     {
                         relationName += "s";
                         type = $"ICollection<{relation.RelatedEntityName}>";
@@ -103,7 +103,7 @@ namespace IF.Manager.Service
                     var relationName = relation.RelatedEntityName;
                     var type = relation.RelatedEntityName;
 
-                    if (relation.To == Contracts.Enum.EntityRelationDirectionType.Many)
+                    if (relation.EntityRelationType == Contracts.Enum.EntityRelationType.ManyToMany)
                     {
                         relationName += "s";
                         type = $"List<{relation.RelatedEntityName}>";
@@ -119,7 +119,7 @@ namespace IF.Manager.Service
                     var relationName = relation.RelatedEntityName;
                     var type = relation.RelatedEntityName;
 
-                    if (relation.To == Contracts.Enum.EntityRelationDirectionType.Many)
+                    //if (relation.To == Contracts.Enum.EntityRelationDirectionType.One && relation.From == Contracts.Enum.EntityRelationDirectionType.Many)
                     {
                         relationName += "s";
                         type = $"List<{relation.RelatedEntityName}>";
