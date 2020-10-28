@@ -502,7 +502,7 @@ namespace IF.Manager.Service
                         case Contracts.Enum.EntityRelationType.OneToMany:
                             //relation.From = Contracts.Enum.EntityRelationDirectionType.One;
                             //relation.To = Contracts.Enum.EntityRelationDirectionType.Many;
-                            if (relation.ForeignKeyIFEntityPropertyId.HasValue && relation.ForeignKeyIFEntityPropertyId > 0)
+                            if (!relation.ForeignKeyIFEntityPropertyId.HasValue || relation.ForeignKeyIFEntityPropertyId <= 0)
                             {
                                 var relatedEntity = await this.GetQuery<IFEntity>()
                                                             .Include(e => e.Properties)
