@@ -14,7 +14,9 @@ namespace IF.Manager.Contracts.Model
 
         public string Prefix { get; set; }
 
-        public int? ForeignKeyPropertyId { get; set; }
+        public int? ForeignKeyIFEntityPropertyId  { get; set; }
+
+        public IFEntityProperty ForeignKeyIFEntityProperty  { get; set; }
 
         public bool IsDbFirst { get; set; }
 

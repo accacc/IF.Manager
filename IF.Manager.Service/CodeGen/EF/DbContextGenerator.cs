@@ -129,8 +129,8 @@ namespace IF.Manager.Service
 
                 }
 
-
                 constructorMethod.Body = constructorMethodBody.ToString();
+
                 @cs.Methods.Add(constructorMethod);
 
 

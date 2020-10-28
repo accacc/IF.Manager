@@ -17,8 +17,8 @@ namespace IF.Manager.Persistence.EF.Mappings
             builder.Property(x => x.Name).IsRequired();
             builder.Property(x => x.Description).IsRequired();
 
-            builder.HasOne<IFModel>(s => s.Model).WithMany(s => s.Queries).HasForeignKey(s => s.ModelId).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne<IFProcess>(s => s.Process).WithMany(s => s.Queries).HasForeignKey(s => s.ProcessId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(s => s.Model).WithMany(s => s.Queries).HasForeignKey(s => s.ModelId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(s => s.Process).WithMany(s => s.Queries).HasForeignKey(s => s.ProcessId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

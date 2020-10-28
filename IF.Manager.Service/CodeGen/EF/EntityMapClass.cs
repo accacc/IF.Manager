@@ -42,6 +42,14 @@ namespace IF.Manager.Service
                 methodBody.AppendLine($"builder.Property(x => x.{item.Name});");
             }
 
+            foreach (var relation in this.EntityMetaData.Relations)
+            {
+                if (relation.ForeignKeyPropertyId.HasValue && relation.ForeignKeyPropertyId > 0)
+                {
+                    methodBody.AppendLine($"builder.HasOne(s => s.{relation.RelatedEntityName}).WithMany(s => s.{relation.EntityName}s).HasForeignKey(s => s.{relation.ForeignKeyPropertyName}).OnDelete(DeleteBehavior.Restrict);");
+                }
+            }
+
             mapClassMethod.Body = methodBody.ToString();
             this.Methods.Add(mapClassMethod);
 

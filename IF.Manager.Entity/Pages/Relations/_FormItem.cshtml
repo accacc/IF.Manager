@@ -4,6 +4,8 @@
     Layout = null;
     List<SelectListItem> entities = ViewData["entities"] as List<SelectListItem>;
     var index = Guid.NewGuid();
+    ViewData["Index"] = index;
+    Model.Index = index;
 }
 
 <tr>
@@ -33,6 +35,22 @@
         </div>
     </td>
     <td>
+        <div class="form-group" id="PrimaryKeyPropertyDropDown">
+
+            @*@if (Model.ForeignKeyPropertyId > 0)
+            {
+                await Html.RenderPartialAsync("_DropDownPrimaryKeyProperty", Model);
+            }*@
+        </div>
+
+    </td>
+    <td>
+        <div class="form-group">
+
+            <input type="text" name="Form.[@index].Prefix" value="@Model.Prefix" class="form-control" />
+        </div>
+    </td>
+    <td>
         <input type="hidden" name="Form.Index" value="@index" />
         <input type="hidden" name="Form[@index].Id" value="@Model.Id" />
     </td>
@@ -41,20 +59,20 @@
 
 
 <script>
+    var index = '@index';
+    $('#Form_' + index + '__IFRelatedEntityId').on('change', function (e) {
 
-    $('#Form_[@index]__IFRelatedEntityId').on('change', function (e) {
-
-        @*var valueSelected = this.value;
+        var valueSelected = this.value;
         debugger;
         $.ajax({
             type: 'GET',
-            url: '@Url.Page("/Form/DropDown/DropDownForm", "DropDownPropertyPartial")',
-            data: { IFQueryId: valueSelected },
+            url: '@Url.Page("/Relations/Form", "PrimaryKeyDropDownPropertyPartial")',
+            data: { IFEntityId: valueSelected, Index:'@index'},
             success: function (data) {
                 debugger;
-                $("#DropDownPropertyDiv").html(data);
+                $("#PrimaryKeyPropertyDropDown").html(data);
             }
-        });*@
+        });
     });
 
 </script>

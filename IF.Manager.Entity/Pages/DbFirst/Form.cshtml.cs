@@ -8,6 +8,8 @@ using DatabaseSchemaReader.DataSchema;
 
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Services;
+using IF.Manager.Service;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -16,10 +18,14 @@ using Microsoft.Data.SqlClient;
 
 namespace IF.Manager.Entity.Pages.DbFirst
 {
+    
     public class FormModel : PageModel
     {
 
         private readonly IEntityService entityService;
+
+        [BindProperty, Required]
+        public List<TableDbFirstDto> Form { get; set; }
 
         public FormModel(IEntityService entityService)
         {
@@ -48,18 +54,20 @@ namespace IF.Manager.Entity.Pages.DbFirst
             }
         }
 
-      
 
-        public async Task<IActionResult> OnPostAddTablesAsync(List<string> tables)
+        [DisableRequestSizeLimit]
+
+        public async Task<IActionResult> OnPostAddTablesAsync()
         {
+            this.Form = this.Form.Where(f => f != null).ToList();
 
             var tablesa = GetAllTables();
 
-            var mytables = tablesa.Where(c => tables.Contains(c.Name)).ToList();
+            var mytables = tablesa.Where(c => this.Form.Select(s=>s.Table).ToArray().Contains(c.Name)).ToList();
 
             try
             {
-                await this.entityService.AddDbFirst(mytables);
+                await this.entityService.AddDbFirst(mytables,this.Form);
             }
             catch (Exception ex)
             {

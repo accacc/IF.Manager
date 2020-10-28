@@ -4,14 +4,16 @@ using IF.Manager.Persistence.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IF.Manager.Persistence.EF.Migrations
 {
     [DbContext(typeof(ManagerDbContext))]
-    partial class ManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201027184841_1027-1")]
+    partial class _10271
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -189,7 +191,7 @@ namespace IF.Manager.Persistence.EF.Migrations
                     b.Property<int>("EntityId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ForeignKeyIFEntityPropertyId")
+                    b.Property<int?>("ForeignKeyPropertyId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDbFirst")
@@ -207,8 +209,6 @@ namespace IF.Manager.Persistence.EF.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("EntityId");
-
-                    b.HasIndex("ForeignKeyIFEntityPropertyId");
 
                     b.HasIndex("RelationId");
 
@@ -967,10 +967,6 @@ namespace IF.Manager.Persistence.EF.Migrations
                         .HasForeignKey("EntityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("IF.Manager.Contracts.Model.IFEntityProperty", "ForeignKeyIFEntityProperty")
-                        .WithMany()
-                        .HasForeignKey("ForeignKeyIFEntityPropertyId");
 
                     b.HasOne("IF.Manager.Contracts.Model.IFEntity", "Relation")
                         .WithMany("ReverseRelations")

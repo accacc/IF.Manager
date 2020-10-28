@@ -18,22 +18,26 @@ namespace IF.Manager.Contracts.Dto
 
         public int IFEntityId { get; set; }
 
-        public string FromEntityName { get; set; }
+        public string Prefix { get; set; }
 
-        public string ToEntityName { get; set; }
-
+        public Guid Index { get; set; }
         public int? ForeignKeyPropertyId { get; set; }
+
+        public string ForeignKeyPropertyName { get; set; }
 
         public bool IsDbFirst { get; set; }
 
-        public EntityDto IFRelatedEntity { get; set; }
+        //public EntityDto IFRelatedEntity { get; set; }
+
+        //public EntityDto IFEntity { get; set; }
         public EntityRelationType EntityRelationType { get; set; }
 
         public string RelatedEntityName { get; set; }
+        public string EntityName { get; set; }
 
-        public EntityRelationDirectionType From { get; set; }
+        //public EntityRelationDirectionType From { get; set; }
 
-        public EntityRelationDirectionType To { get; set; }
+        //public EntityRelationDirectionType To { get; set; }
         //public string ReverseRelatedEntityName { get; set; }
         //public int Index { get; set; }
 

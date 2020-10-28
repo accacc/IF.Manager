@@ -43,7 +43,9 @@ namespace IF.Manager.Entity.Pages.Relations
                 SetEmptyForm();
             }
 
-            await SetFromDefaults();
+            await SetFormDefaults();
+
+
 
         }
 
@@ -51,30 +53,57 @@ namespace IF.Manager.Entity.Pages.Relations
 
         public async Task<PartialViewResult> OnGetEmptyFormItemPartialAsync()
         {
-            await SetFromDefaults();
+            await SetFormDefaults();
 
             var emptyFormItem = new EntityRelationDto();
-            //this.CurrentFormItemIndex++;
-            //emptyFormItem.Index = this.CurrentFormItemIndex;
-            
 
             return new PartialViewResult
             {
                 ViewName = "_FormItem",
                 ViewData = new ViewDataDictionary<EntityRelationDto>(ViewData,emptyFormItem )
             };
+        }
 
-            //return Partial("",this.EntityList);
+        public async Task<PartialViewResult> OnGetPrimaryKeyDropDownPropertyPartialAsync(int IFEntityId,Guid Index)
+        {
+            await SetForeignKeyProperties(IFEntityId);
+
+            return new PartialViewResult
+            {
+                ViewName = "_DropDownPrimaryKeyProperty",
+                ViewData = new ViewDataDictionary<EntityRelationDto>(ViewData, new EntityRelationDto() { Index = Index })
+            };
+
+        }
+
+        private async Task SetForeignKeyProperties(int IFEntityId)
+        {
+            var propertyList = await this.entityService.GetEntityPropertyList(IFEntityId);
+
+
+            List<SelectListItem> items = new List<SelectListItem>();
+
+
+            foreach (var data in propertyList)
+            {
+                SelectListItem item = new SelectListItem();
+
+                item.Text = data.Name;
+                item.Value = data.Id.ToString();
+                items.Add(item);
+            }
+
+            ViewData["properties"] = items;
         }
 
         public async Task<PartialViewResult> OnPost()
         {            
 
-            await this.entityService.UpdateEntityRelations(this.Form, this.EntityId);
+          await this.entityService.UpdateEntityRelations(this.Form, this.EntityId);
 
             var entityList = await this.entityService.GetEntityListGrouped();
 
-            await SetFromDefaults();
+            await SetFormDefaults();
 
             return new PartialViewResult
             {
@@ -95,11 +124,10 @@ namespace IF.Manager.Entity.Pages.Relations
 
 
 
-        private async Task SetFromDefaults()
+        private async Task SetFormDefaults()
         {
-            //var primitives = this.entityService.GetPrimitives();
-            //var pList = primitives.Select(s => new SelectListItem { Text = s.Name, Value = s.Name }).ToList();
-            //ViewData["primitives"] = pList;
+            //List<SelectListItem> items = new List<SelectListItem>();
+            //ViewData["properties"] = items;
 
             var entities = await this.entityService.GetEntityList();
             var eList = entities.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();

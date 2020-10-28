@@ -50,7 +50,6 @@ $(document).ready(function () {
 });
 
 function handleAjaxMessages() {
-    debugger;
     $(document).ajaxSuccess(function (event, request) {
         checkAndHandleMessageFromHeader(request);
     }).ajaxError(function (event, request) {        

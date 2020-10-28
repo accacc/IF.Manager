@@ -227,7 +227,7 @@ namespace IF.Manager.Service
             var list = await GetQuery<IFEntity>()
                 .Include(e => e.Group)
                 .Include(e => e.Properties)
-                .Include(e => e.Relations)
+                .Include(e => e.Relations).ThenInclude(r=>r.ForeignKeyIFEntityProperty)
                 .ThenInclude(r => r.Entity)
                 .Include(e => e.ReverseRelations).ThenInclude(r => r.Relation)
 
@@ -264,6 +264,7 @@ namespace IF.Manager.Service
                        IFRelatedEntityId = r.RelationId,
                        RelatedEntityName = r.Entity.Name,
                        IFEntityId = r.EntityId,
+                       EntityName = r.Relation.Name,
                        //To = r.From,
                        //From = r.To
 
@@ -275,6 +276,9 @@ namespace IF.Manager.Service
                        IFRelatedEntityId = r.RelationId,
                        RelatedEntityName = r.Relation.Name,
                        IFEntityId = r.EntityId,
+                       EntityName = r.Entity.Name,
+                       ForeignKeyPropertyId = r.ForeignKeyIFEntityPropertyId,
+                       ForeignKeyPropertyName = r.ForeignKeyIFEntityProperty.Name
                        //To = r.To,
                        //From = r.From
 
@@ -488,6 +492,8 @@ namespace IF.Manager.Service
                     relation.EntityId = entityId;
                     relation.RelationId = dto.IFRelatedEntityId;
                     relation.Type = dto.EntityRelationType;
+                    relation.ForeignKeyIFEntityPropertyId = dto.ForeignKeyPropertyId;
+                    relation.Prefix = dto.Prefix;
 
                     switch (dto.EntityRelationType)
                     {
@@ -496,24 +502,27 @@ namespace IF.Manager.Service
                         case Contracts.Enum.EntityRelationType.OneToMany:
                             //relation.From = Contracts.Enum.EntityRelationDirectionType.One;
                             //relation.To = Contracts.Enum.EntityRelationDirectionType.Many;
-
-                            var relatedEntity = await this.GetQuery<IFEntity>()
-                                                        .Include(e => e.Properties)
-                                                        .SingleOrDefaultAsync(k => k.Id == dto.IFRelatedEntityId);
-
-                            if (entity == null) { throw new BusinessException("No such entity exists"); }
-
-                            string name = DirectoryHelper.AddAsLastWord(entity.Name, "Entity");
-
-                            relatedEntity.Properties.Add(new IFEntityProperty()
+                            if (relation.ForeignKeyIFEntityPropertyId.HasValue && relation.ForeignKeyIFEntityPropertyId > 0)
                             {
-                                //Caglar:Foreign Key
-                                Name = $"{name}Id",
-                                Type = "int"
+                                var relatedEntity = await this.GetQuery<IFEntity>()
+                                                            .Include(e => e.Properties)
+                                                            .SingleOrDefaultAsync(k => k.Id == dto.IFRelatedEntityId);
 
-                            });
+                                if (entity == null) { throw new BusinessException("No such entity exists"); }
+
+                                string name = DirectoryHelper.AddAsLastWord(entity.Name, "Entity");
 
 
+
+                                relatedEntity.Properties.Add(new IFEntityProperty()
+                                {
+                                    //Caglar:Foreign Key
+                                    Name = $"{name}Id",
+                                    Type = "int"
+
+                                });
+
+                            }
                             break;
                         case Contracts.Enum.EntityRelationType.OneToOne:
                             //relation.From = Contracts.Enum.EntityRelationDirectionType.One;
@@ -547,7 +556,9 @@ namespace IF.Manager.Service
                   {
                       Id = e.Id,
                       EntityRelationType = e.Type,
-                      IFRelatedEntityId = e.RelationId
+                      IFRelatedEntityId = e.RelationId,
+                      Prefix = e.Prefix,
+                      ForeignKeyPropertyId = e.ForeignKeyIFEntityPropertyId
                   })
                   .ToListAsync();
             return list;
@@ -623,36 +634,54 @@ namespace IF.Manager.Service
             return entity;
         }
 
-        public async Task AddDbFirst(List<DatabaseTable> mytables)
+        public async Task AddDbFirst(List<DatabaseTable> mytables, List<TableDbFirstDto> infos)
         {
-            foreach (var dto in mytables)
+            foreach (var table in mytables)
             {
 
-                if (await EntityIsExistByName(dto.Name))
+                if (await EntityIsExistByName(table.Name))
                 {
-                    throw new BusinessException($"{dto.Name} Entity already exist");
+                    throw new BusinessException($"{table.Name} Entity already exist");
                 }
 
-                string name = DirectoryHelper.AddAsLastWord(dto.Name, "Entity");
+                string name = DirectoryHelper.AddAsLastWord(table.Name, "Entity");
 
                 IFEntity entity = new IFEntity();
                 entity.Description = name;
                 entity.Name = name;
                 entity.IsAudited = false;
 
-                foreach (var column in dto.Columns)
+
+               
+
+                foreach (var column in table.Columns)
                 {
                     //dto.PrimaryKeyColumn
 
-                    IFEntityProperty property = new IFEntityProperty();
-                    property.IsIdentity =column.IsPrimaryKey;
+                    IFEntityProperty property = new IFEntityProperty();                   
+                   
+                        property.IsIdentity = column.IsPrimaryKey;
+                   
+
                     property.Name = column.Name;
                     property.Type = GetPrimitiveByDotnet(column.NetDataType());
                     property.IsNullable = column.Nullable;
                     entity.Properties.Add(property);
                 }
 
-                
+                if(!entity.Properties.Any(p=>p.IsIdentity))
+                {
+                    var info = infos.SingleOrDefault(i => i.Table == table.Name);
+
+                    if (info != null && info.PrimaryKey != null)
+                    {
+                        var primaryColumn = entity.Properties.SingleOrDefault(e => e.Name == info.PrimaryKey);
+
+                        if (primaryColumn != null) primaryColumn.IsIdentity = true;
+
+                    }
+
+                }
              
 
                 this.Add(entity);
@@ -685,5 +714,13 @@ namespace IF.Manager.Service
             };
 
         }
+    }
+
+    public class TableDbFirstDto
+    {
+
+        public string Table { get; set; }
+
+        public string PrimaryKey { get; set; }
     }
 }
