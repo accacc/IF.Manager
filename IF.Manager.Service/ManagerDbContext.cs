@@ -1,5 +1,8 @@
 ﻿using IF.Manager.Contracts.Model;
 using IF.Manager.Persistence.EF.Mappings;
+using IF.Manager.Service.Mappings;
+using IF.Manager.Service.Model;
+
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -64,6 +67,10 @@ namespace IF.Manager.Persistence.EF
             builder.ApplyConfiguration(new IFPagePanelMapping());
 
             builder.ApplyConfiguration(new IFPageParameterMapping());
+
+            builder.ApplyConfiguration(new IFCustomClassMapping());
+
+            builder.ApplyConfiguration(new IFCustomClassPropertyMapping());
 
 
 
@@ -133,6 +140,10 @@ namespace IF.Manager.Persistence.EF
         public DbSet<IFPagePanel> Panels { get; set; }
 
         public DbSet<IFPageParameter>  IFPageParameters { get; set; }
+
+        public DbSet<IFCustomClass> IFCustomClasses { get; set; }
+
+        public DbSet<IFCustomClassProperty> IFCustomClassProperties { get; set; }
 
 
     }
