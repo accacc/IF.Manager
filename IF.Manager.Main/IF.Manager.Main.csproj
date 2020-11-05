@@ -21,6 +21,7 @@
 
 
   <ItemGroup>
+    <ProjectReference Include="..\IF.Manager.ClassDesigner\IF.Manager.ClassDesigner.csproj" />
     <ProjectReference Include="..\IF.Manager.Command\IF.Manager.Command.csproj" />
     <ProjectReference Include="..\IF.Manager.Entity\IF.Manager.Entity.csproj" />
     <ProjectReference Include="..\IF.Manager.Model\IF.Manager.Model.csproj" />
