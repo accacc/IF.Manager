@@ -20,6 +20,10 @@ namespace IF.Manager.Contracts.Services
 
         Task<List<IFCustomClassProperty>> GetClassPropertyList(int classId);
 
-        Task UpdateClassProperties(List<IFCustomClassProperty> dtos, int entityId);
+        Task UpdateClassProperties(List<IFCustomClassProperty> dtos, int classId);
+
+        Task<List<IFCustomClassRelation>> GetClassRelationList(int classId);
+
+        Task UpdateClassRelations(List<IFCustomClassRelation> relations, int classId);
     }
 }

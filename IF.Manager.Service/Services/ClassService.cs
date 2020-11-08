@@ -29,6 +29,48 @@ namespace IF.Manager.Service
 
         }
 
+
+        public async Task UpdateClassRelations(List<IFCustomClassRelation> relations, int classId)
+        {
+            try
+            {
+                var entity = await this.GetQuery<IFCustomClass>()
+                   .Include(e => e)
+               .SingleOrDefaultAsync(k => k.Id == classId);
+
+                if (entity == null) { throw new BusinessException(" No such entity exists"); }
+
+                foreach (var dto in relations)
+                {
+                    if (dto.Id > 0) continue;
+
+                    IFCustomClassRelation relation = new IFCustomClassRelation();
+                    relation.MainIFCustomClassId = classId;
+                    relation.RelatedIFCustomClassId = dto.RelatedIFCustomClassId;
+                    relation.RelationType = dto.RelationType;
+                    relation.Name = dto.Name;
+
+                    DbContext.Entry(relation).State = EntityState.Added;
+                }
+
+                await UnitOfWork.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+
+        public async Task<List<IFCustomClassRelation>> GetClassRelationList(int classId)
+        {
+            var list = await GetQuery<IFCustomClassRelation>(c=>c.MainIFCustomClassId == classId)
+              
+                  .ToListAsync();
+            return list;
+        }
+
         public async Task<List<IFCustomClass>> GetClassList()
         {
 
