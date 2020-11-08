@@ -71,7 +71,7 @@ namespace IF.Manager.Persistence.EF
             builder.ApplyConfiguration(new IFCustomClassMapping());
 
             builder.ApplyConfiguration(new IFCustomClassPropertyMapping());
-
+            builder.ApplyConfiguration(new IFCustomClassRelationMapping());
 
 
 
@@ -144,6 +144,8 @@ namespace IF.Manager.Persistence.EF
         public DbSet<IFCustomClass> IFCustomClasses { get; set; }
 
         public DbSet<IFCustomClassProperty> IFCustomClassProperties { get; set; }
+
+        public DbSet<IFCustomClassRelation>  IFCustomClassRelations { get; set; }
 
 
     }

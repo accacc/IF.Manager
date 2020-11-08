@@ -5,7 +5,7 @@ using System.Text;
 namespace IF.Manager.Contracts.Enum
 {
 
-    public enum EntityRelationDirectionType
+    public enum ClassRelationType
     {
         One=0,
         Many=1
