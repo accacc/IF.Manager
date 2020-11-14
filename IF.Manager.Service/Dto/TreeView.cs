@@ -34,7 +34,7 @@ namespace IF.Manager.Contracts.Dto
     public static class JsTreeExtension
     {
 
-        public static List<JsTreeViewItemModel> ListToJsTree(List<EntityTreeDto> list, List<int> selecteds)
+        public static List<JsTreeViewItemModel> ListToJsTree(List<ClassTreeDto> list, List<int> selecteds)
         {
             list = list.OrderBy(p => p.SortOrder).ToList();
 

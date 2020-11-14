@@ -64,12 +64,12 @@ namespace IF.Manager.Service
 
         }
 
-        private void GenerateDeleteCqrsHandlerClass(IFCommand command, IFProcess process, EntityTreeDto entityTree)
+        private void GenerateDeleteCqrsHandlerClass(IFCommand command, IFProcess process, ClassTreeDto entityTree)
         {
             throw new NotImplementedException();
         }
 
-        private void GenerateUpdateCqrsHandlerClass(IFCommand command, IFProcess process, EntityTreeDto entityTree)
+        private void GenerateUpdateCqrsHandlerClass(IFCommand command, IFProcess process, ClassTreeDto entityTree)
         {
 
             string nameSpace = SolutionHelper.GetProcessNamaspace(process);
@@ -84,7 +84,7 @@ namespace IF.Manager.Service
 
         }
 
-        private void GenerateInsertCqrsHandlerClass(IFCommand command, IFProcess process, EntityTreeDto entityTree)
+        private void GenerateInsertCqrsHandlerClass(IFCommand command, IFProcess process, ClassTreeDto entityTree)
         {
 
             string nameSpace = SolutionHelper.GetProcessNamaspace(process);
@@ -140,7 +140,7 @@ namespace IF.Manager.Service
             return commandHandlerClass;
         }
 
-        private void GenerateCqrsCommandClass(IFCommand command, IFProcess process, EntityTreeDto entityTree)
+        private void GenerateCqrsCommandClass(IFCommand command, IFProcess process, ClassTreeDto entityTree)
         {
             CSClass commandClass = new CSClass();
             commandClass.BaseClass = "BaseCommand";

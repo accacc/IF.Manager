@@ -15,7 +15,7 @@ namespace IF.Manager.Service.Model
             this.fileSystem = fileSystem;
         }
 
-        public  void GenerateModels(IFModel model, IFProcess process, EntityTreeDto entityTree)
+        public  void GenerateModels(IFModel model, IFProcess process, ClassTreeDto entityTree)
         {
             string nameSpace = SolutionHelper.GetProcessNamaspace(process);
 
@@ -35,11 +35,11 @@ namespace IF.Manager.Service.Model
 
             }
         }        
-        private void GenerateRelatedModels(List<EntityTreeDto> relations, IFModel model, string nameSpace)
+        private void GenerateRelatedModels(List<ClassTreeDto> relations, IFModel model, string nameSpace)
         {
             foreach (var relation in relations)
             {
-                bool IsModelProperty = EntityTreeDto.IsModelProperty(relation, model);
+                bool IsModelProperty = ClassTreeDto.IsModelProperty(relation, model);
 
                 if (!IsModelProperty) continue;
 

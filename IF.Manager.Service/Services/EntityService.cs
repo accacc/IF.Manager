@@ -91,14 +91,14 @@ namespace IF.Manager.Service
         }
 
 
-        public async Task<EntityTreeDto> GetEntityTree(int entityId)
+        public async Task<ClassTreeDto> GetEntityTree(int entityId)
         {
 
             var entity = await GetQuery<IFEntity>()             
              .SingleOrDefaultAsync(e => e.Id == entityId);
 
 
-            EntityTreeDto tree = new EntityTreeDto();
+            ClassTreeDto tree = new ClassTreeDto();
             tree.Id = entity.Id;
             tree.ClientId = "self-" + entityId;
             tree.Name = entity.Name;
@@ -109,7 +109,7 @@ namespace IF.Manager.Service
 
             foreach (var property in properties)
             {
-                EntityTreeDto child = new EntityTreeDto();
+                ClassTreeDto child = new ClassTreeDto();
                 child.Id = property.Id;
                 child.ClientId = $"{property.Id}-{entityId}";
                 child.Name = property.Name;
@@ -127,7 +127,7 @@ namespace IF.Manager.Service
 
         }
 
-        private async Task ToTreeRelations(EntityTreeDto parent)
+        private async Task ToTreeRelations(ClassTreeDto parent)
         {
             var entity = await GetQuery<IFEntity>()
                 .Include(e => e.Relations).ThenInclude(r => r.Relation)             
@@ -135,7 +135,7 @@ namespace IF.Manager.Service
 
             foreach (var relation in entity.Relations)
             {
-                EntityTreeDto child = new EntityTreeDto();
+                ClassTreeDto child = new ClassTreeDto();
                 child.Id = relation.RelationId;
                 child.ClientId = "relation-" + relation.RelationId;
                 child.Name = relation.Relation.Name;
@@ -154,7 +154,7 @@ namespace IF.Manager.Service
 
                 foreach (var property in properties)
                 {
-                    EntityTreeDto childProperty = new EntityTreeDto();
+                    ClassTreeDto childProperty = new ClassTreeDto();
                     childProperty.Id = property.Id;
                     childProperty.ClientId = $"{property.Id}-{child.Id}";
                     childProperty.Name = property.Name;
@@ -173,7 +173,7 @@ namespace IF.Manager.Service
             
         }
 
-        private async Task ToTreeReverseRelations(EntityTreeDto parent)
+        private async Task ToTreeReverseRelations(ClassTreeDto parent)
         {
             var entity = await GetQuery<IFEntity>()
                 .Include(e => e.ReverseRelations).ThenInclude(r => r.Entity)
@@ -181,7 +181,7 @@ namespace IF.Manager.Service
 
             foreach (var relation in entity.ReverseRelations)
             {
-                EntityTreeDto child = new EntityTreeDto();
+                ClassTreeDto child = new ClassTreeDto();
                 child.Id = relation.EntityId;
                 child.ClientId = "relation-" + relation.EntityId;
                 child.Name = relation.Entity.Name;
@@ -200,7 +200,7 @@ namespace IF.Manager.Service
 
                 foreach (var property in properties)
                 {
-                    EntityTreeDto childProperty = new EntityTreeDto();
+                    ClassTreeDto childProperty = new ClassTreeDto();
                     childProperty.Id = property.Id;
                     childProperty.ClientId = $"{property.Id}-{child.Id}";
                     childProperty.Name = property.Name;

@@ -10,7 +10,7 @@ namespace IF.Manager.Service.Cqrs
 {
     public class CqrsQueryHandlerGenerator
     {
-        public void GenerateCqrsHandlerClass(IFQuery query,EntityTreeDto entityTree, FileSystemCodeFormatProvider fileSystem)
+        public void GenerateCqrsHandlerClass(IFQuery query,ClassTreeDto entityTree, FileSystemCodeFormatProvider fileSystem)
         {
             CSClass queryHandlerclass = new CSClass();
 

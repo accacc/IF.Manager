@@ -48,7 +48,15 @@ namespace IF.Manager.ClassDesigner.Pages.Relations
 
         }
 
-      
+        public async Task OnFromJsonGet()
+        {
+           
+
+
+
+        }
+
+
 
         public async Task<PartialViewResult> OnGetEmptyFormItemPartialAsync()
         {

@@ -8,15 +8,15 @@ using System.Text;
 
 namespace IF.Manager.Contracts.Dto
 {
-    public class EntityTreeDto : TreeDto<EntityTreeDto>
+    public class ClassTreeDto : TreeDto<ClassTreeDto>
     {
-        public EntityTreeDto()
+        public ClassTreeDto()
         {
-            this.Childs = new List<EntityTreeDto>();
+            this.Childs = new List<ClassTreeDto>();
         }
 
 
-        public static bool IsModelProperty(EntityTreeDto childEntityTree, IFModel model)
+        public static bool IsModelProperty(ClassTreeDto childEntityTree, IFModel model)
         {
             bool IsModelProperty = false;
 

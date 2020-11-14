@@ -1,4 +1,4 @@
-﻿using IF.Core.Data;
+﻿                                                                                                                                                                                                                                                                                                                                                                                                                                                                using IF.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +11,6 @@ namespace IF.Manager.Contracts.Model
         public IFEntity()
         {
             this.Properties = new List<IFEntityProperty>();
-            this.Relations = new List<IFEntityRelation>();
             this.ReverseRelations = new List<IFEntityRelation>();
             //this.ModelEntities = new List<IFModelEntity>();
             this.ModelProperties = new List<IFModelProperty>();
@@ -47,3 +46,4 @@ namespace IF.Manager.Contracts.Model
 
     }
 }
+  

@@ -22,7 +22,7 @@ namespace IF.Manager.Contracts.Services
         Task<List<EntityPropertyDto>> GetEntityPropertyList(int entityId);
 
         Task UpdateEntityProperties(List<EntityPropertyDto> dtos, int entityId);
-        Task<EntityTreeDto> GetEntityTree(int entityId);
+        Task<ClassTreeDto> GetEntityTree(int entityId);
         string[] GetPrimitives();
 
         List<Type> GetAllEntityTypes();

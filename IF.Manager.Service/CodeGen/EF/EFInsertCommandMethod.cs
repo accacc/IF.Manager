@@ -10,11 +10,11 @@ namespace IF.Manager.Service.EF
     public class EFInsertCommandMethod
     {
 
-        EntityTreeDto entityTree;
+        ClassTreeDto entityTree;
         IFCommand command;
         CSMethod method;
 
-        public EFInsertCommandMethod(string nameSpace, string name, EntityTreeDto entityTree, IFCommand command)
+        public EFInsertCommandMethod(string nameSpace, string name, ClassTreeDto entityTree, IFCommand command)
         {
             this.entityTree = entityTree;
             this.command = command;
@@ -39,7 +39,7 @@ namespace IF.Manager.Service.EF
 
                 if (property.IsRelation) continue;
 
-                bool IsModelProperty = EntityTreeDto.IsModelProperty(property,command.Model);
+                bool IsModelProperty = ClassTreeDto.IsModelProperty(property,command.Model);
 
                 if (!IsModelProperty) continue;
 
