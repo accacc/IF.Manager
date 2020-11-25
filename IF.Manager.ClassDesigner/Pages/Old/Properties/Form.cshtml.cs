@@ -5,33 +5,37 @@ using System.Linq;
 using System.Threading.Tasks;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Services;
+using IF.Manager.Service.Model;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-namespace IF.Manager.Entity.Pages.Properties
+namespace IF.Manager.ClassDesigner.Pages.Properties
 {
     public class FormModel : PageModel
     {
 
+        private readonly IClassService ClassService;
         private readonly IEntityService entityService;
 
         [BindProperty, Required]
-        public List<EntityPropertyDto> Form { get; set; }
+        public List<IFCustomClassProperty> Form { get; set; }
 
         [BindProperty(SupportsGet =true), Required]
-        public int EntityId { get; set; }
+        public int ClassId { get; set; }
 
-        public FormModel(IEntityService entityService)
+        public FormModel(IClassService ClassService, IEntityService entityService)
         {
+            this.ClassService = ClassService;
             this.entityService = entityService;
         }
 
 
         public async Task OnGet()
         {
-            this.Form = await this.entityService.GetEntityPropertyList(this.EntityId);
+            this.Form = await this.ClassService.GetClassPropertyList(this.ClassId);
             
             if (!this.Form.Any())
             {
@@ -48,28 +52,28 @@ namespace IF.Manager.Entity.Pages.Properties
         {
             SetFromDefaults();
 
-            var emptyFormItem = new EntityPropertyDto();          
+            var emptyFormItem = new IFCustomClassProperty();          
 
             return new PartialViewResult
             {
                 ViewName = "_FormItem",
-                ViewData = new ViewDataDictionary<EntityPropertyDto>(ViewData,emptyFormItem )
+                ViewData = new ViewDataDictionary<IFCustomClassProperty>(ViewData,emptyFormItem )
             };            
         }
 
         public async Task<PartialViewResult> OnPost()
         {
-            await this.entityService.UpdateEntityProperties(this.Form, this.EntityId);
+            await this.ClassService.UpdateClassProperties(this.Form, this.ClassId);
             
 
-            var entityList = await this.entityService.GetEntityListGrouped();
+            var ClassList = await this.ClassService.GetClassList();
 
             this.SetFromDefaults();
 
             return new PartialViewResult
             {
-                ViewName = "_EntityListTable",
-                ViewData = new ViewDataDictionary<List<List<EntityDto>>>(ViewData, entityList)
+                ViewName = "_ClassListTable",
+                ViewData = new ViewDataDictionary<List<IFCustomClassProperty>>(ViewData, ClassList)
             };
 
         }
@@ -77,7 +81,7 @@ namespace IF.Manager.Entity.Pages.Properties
         private void SetEmptyForm()
         {
 
-            var emptyFormItem = new EntityPropertyDto();
+            var emptyFormItem = new IFCustomClassProperty();
             this.Form.Add(emptyFormItem);
         }
 

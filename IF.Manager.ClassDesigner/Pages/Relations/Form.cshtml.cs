@@ -5,37 +5,38 @@ using System.Linq;
 using System.Threading.Tasks;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Services;
-using IF.Manager.Service.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-namespace IF.Manager.ClassDesigner.Pages.Relations
+namespace IF.Manager.Entity.Pages.Relations
 {
     public class FormModel : PageModel
     {
 
-        private readonly IClassService classService;
+        private readonly IEntityService entityService;
 
         [BindProperty, Required]
-        public List<IFCustomClassRelation> Form { get; set; }
+        public List<EntityRelationDto> Form { get; set; }
 
 
+        //[BindProperty(SupportsGet = true), Required]
+        //public int CurrentFormItemIndex { get; set; }
 
 
         [BindProperty(SupportsGet =true), Required]
-        public int ClassId { get; set; }
+        public int EntityId { get; set; }
 
-        public FormModel(IClassService classService)
+        public FormModel(IEntityService entityService)
         {
-            this.classService = classService;
+            this.entityService = entityService;
         }
 
 
         public async Task OnGet()
         {
-            this.Form = await this.classService.GetClassRelationList(this.ClassId);
+            this.Form = await this.entityService.GetEntityRelationList(this.EntityId);
             
             if (!this.Form.Any())
             {
@@ -48,54 +49,74 @@ namespace IF.Manager.ClassDesigner.Pages.Relations
 
         }
 
-        public async Task OnFromJsonGet()
-        {
-           
-
-
-
-        }
-
-
+      
 
         public async Task<PartialViewResult> OnGetEmptyFormItemPartialAsync()
         {
             await SetFormDefaults();
 
-            var emptyFormItem = new IFCustomClassRelation();
+            var emptyFormItem = new EntityRelationDto();
 
             return new PartialViewResult
             {
                 ViewName = "_FormItem",
-                ViewData = new ViewDataDictionary<IFCustomClassRelation>(ViewData,emptyFormItem )
+                ViewData = new ViewDataDictionary<EntityRelationDto>(ViewData,emptyFormItem )
             };
         }
 
-       
+        public async Task<PartialViewResult> OnGetPrimaryKeyDropDownPropertyPartialAsync(int IFEntityId,Guid Index)
+        {
+            await SetForeignKeyProperties(IFEntityId);
 
-       
+            return new PartialViewResult
+            {
+                ViewName = "_DropDownPrimaryKeyProperty",
+                ViewData = new ViewDataDictionary<EntityRelationDto>(ViewData, new EntityRelationDto() { Index = Index })
+            };
+
+        }
+
+        private async Task SetForeignKeyProperties(int IFEntityId)
+        {
+            var propertyList = await this.entityService.GetEntityPropertyList(IFEntityId);
+
+
+            List<SelectListItem> items = new List<SelectListItem>();
+
+
+            foreach (var data in propertyList)
+            {
+                SelectListItem item = new SelectListItem();
+
+                item.Text = data.Name;
+                item.Value = data.Id.ToString();
+                items.Add(item);
+            }
+
+            ViewData["properties"] = items;
+        }
 
         public async Task<PartialViewResult> OnPost()
         {            
 
-          await this.classService.UpdateClassRelations(this.Form, this.ClassId);
+          await this.entityService.UpdateEntityRelations(this.Form, this.EntityId);
 
-            var ClassList = await this.classService.GetClassList();
+            var entityList = await this.entityService.GetEntityListGrouped();
 
             await SetFormDefaults();
 
             return new PartialViewResult
             {
-                ViewName = "_ClassListTable",
-                ViewData = new ViewDataDictionary<List<IFCustomClass>>(ViewData, ClassList)
+                ViewName = "_EntityListTable",
+                ViewData = new ViewDataDictionary<List<List<EntityDto>>>(ViewData, entityList)
             };
 
         }
 
         private void SetEmptyForm()
         {
-            //this.Form = new List<ClassPropertyDto>();
-            var emptyFormItem = new IFCustomClassRelation();
+            //this.Form = new List<EntityPropertyDto>();
+            var emptyFormItem = new EntityRelationDto();
             //this.CurrentFormItemIndex++;
             //emptyFormItem.Index = this.CurrentFormItemIndex;
             this.Form.Add(emptyFormItem);
@@ -108,9 +129,9 @@ namespace IF.Manager.ClassDesigner.Pages.Relations
             //List<SelectListItem> items = new List<SelectListItem>();
             //ViewData["properties"] = items;
 
-            var classes = await this.classService.GetClassList();
-            var eList = classes.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
-            ViewData["classes"] = eList;
+            var entities = await this.entityService.GetEntityList();
+            var eList = entities.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
+            ViewData["entities"] = eList;
         }
 
 

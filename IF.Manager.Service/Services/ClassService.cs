@@ -30,6 +30,102 @@ namespace IF.Manager.Service
         }
 
 
+        public async Task<List<EntityGroupDto>> GetEntityGroupList()
+        {
+            var data = await this.GetQuery<CustomClassGroup>()
+                                .Select(x => new EntityGroupDto
+                                {
+                                    Id = x.Id,
+                                    Name = x.Name,
+                                    Prefix = x.Prefix,
+                                }).ToListAsync();
+
+            return data;
+        }
+
+        public async Task<List<List<EntityDto>>> GetEntityListGrouped()
+        {
+
+
+            var entitylist = await this.GetEntityList();
+            var list = entitylist.GroupBy(l => l.GroupId).Select(s => s.ToList()).ToList();
+
+            return list;
+        }
+
+        public async Task<List<EntityDto>> GetEntityList()
+        {
+
+
+
+            var list = await GetQuery<CustomClass>()
+                .Include(e => e.Group)
+                .Include(e => e.CustomClassProperties)
+                .Include(e => e.Relations).ThenInclude(r=>r.MainCustomClass)//.ThenInclude(r => r.ForeignKeyIFEntityProperty).ThenInclude(r => r.Entity)
+                .Include(e => e.ReverseRelations).ThenInclude(r => r.RelatedCustomClass)
+
+
+
+               .Select(e => new EntityDto
+               {
+                   Id = e.Id,
+                   Description = e.Description,
+                   Name = e.Name,
+                   Prefix = e.Group.Prefix,
+                   GroupId = e.Group.Id,
+                   GroupName = e.Group.Name,
+
+
+                   IsAudited = e.IsAudited,
+                   Properties = e.CustomClassProperties.Select(p => new EntityPropertyDto
+                   {
+                       Id = p.Id,
+                       //IFEntityId = p.EntityId,
+                       //IsIdentity = p.IsIdentity,
+                       //MaxValue = p.MaxValue,
+                       Name = p.Name,
+                       Type = p.Type,
+                       IsNullable = p.IsNullable,
+                       //IsMultiLanguage = p.IsMultiLanguage,
+                       //IsAudited = p.IsAudited
+
+                   }).ToList(),
+                   ReverseRelations = e.ReverseRelations.Select(r => new EntityRelationDto
+                   {
+                       //EntityRelationType = r.Type,
+                       Id = r.Id,
+                       //IFRelatedEntityId = r.RelationId,
+                       //RelatedEntityName = r.Entity.Name,
+                       //IFEntityId = r.EntityId,
+                       //EntityName = r.Relation.Name,
+                       //To = r.From,
+                       //From = r.To
+
+                   }).ToList(),
+                   Relations = e.Relations.Select(r => new EntityRelationDto
+                   {
+                       //EntityRelationType = r.Type,
+                       Id = r.Id,
+                       //IFRelatedEntityId = r.RelationId,
+                       //RelatedEntityName = r.Relation.Name,
+                       //IFEntityId = r.EntityId,
+                       //EntityName = r.Entity.Name,
+                       //ForeignKeyPropertyId = r.ForeignKeyIFEntityPropertyId,
+                       //ForeignKeyPropertyName = r.ForeignKeyIFEntityProperty.Name
+                       //To = r.To,
+                       //From = r.From
+
+                   }).ToList()
+
+               })
+               .ToListAsync();
+
+
+
+            return list;
+        }
+
+
         public async Task UpdateClassRelations(List<IFCustomClassRelation> relations, int classId)
         {
             try

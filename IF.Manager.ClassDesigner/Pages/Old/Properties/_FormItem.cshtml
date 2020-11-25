@@ -1,5 +1,4 @@
-﻿@model IF.Manager.Contracts.Dto.EntityPropertyDto
-
+﻿@model IF.Manager.Service.Model.IFCustomClassProperty
 @{
     Layout = null;
     List<SelectListItem> primitives = ViewData["primitives"] as List<SelectListItem>; 
@@ -35,7 +34,7 @@
             </div>
         </td>
 
-        <td>
+        @*<td>
             <div class="form-group">
                 
                 @Html.CheckBox($"Form[{index}].IsMultiLanguage", Model.IsMultiLanguage, new { @class = "form-check-input" })
@@ -54,7 +53,7 @@
                 
                 <input type="text" name="Form[@index].MaxValue" value="@Model.MaxValue" class="form-control" />
             </div>
-        </td>
+        </td>*@
         <td>
             <input type="hidden" name="Form.Index" value="@index" />
             <input type="hidden" name="Form[@index].Id" value="@Model.Id" />

@@ -1,29 +1,29 @@
-using IF.Manager.Contracts.Dto;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using IF.Manager.Contracts.Services;
-
+using IF.Manager.Service.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace IF.Manager.Class.Pages
+namespace IF.Manager.ClassDesigner.Pages
 {
-    public class ClassManagerIndexModel : PageModel
+    public class ClassDesignerIndexModel : PageModel
     {
-        private readonly IClassService ClassService;
+        private readonly IClassService classService;
 
-        public List<List<EntityDto>> ClassList { get; set; }
+        public List<IFCustomClass> ClassList { get; set; }
 
-        public ClassManagerIndexModel(IClassService ClassService)
+        public ClassDesignerIndexModel(IClassService ClassService)
         {
-            this.ClassService = ClassService;
+            this.classService = ClassService;
         }
         public async Task OnGetAsync()
         {
             await SetModel();
-        }        
+        }
 
         public async Task<PartialViewResult> OnGetClassListPartialAsync()
         {
@@ -32,7 +32,7 @@ namespace IF.Manager.Class.Pages
             return new PartialViewResult
             {
                 ViewName = "_ClassListTable",
-                ViewData = new ViewDataDictionary<List<List<EntityDto>>>(ViewData, this.ClassList)
+                ViewData = new ViewDataDictionary<List<IFCustomClass>>(ViewData, this.ClassList)
             };
 
             //return Partial("",this.ClassList);
@@ -40,9 +40,11 @@ namespace IF.Manager.Class.Pages
 
         private async Task SetModel()
         {
-            var list = await this.ClassService.GetEntityListGrouped();
+            var list = await this.classService.GetClassList();
 
             this.ClassList = list;
         }
     }
+
+
 }

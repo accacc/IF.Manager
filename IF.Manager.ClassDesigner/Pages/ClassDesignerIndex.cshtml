@@ -1,12 +1,10 @@
 ﻿@page
-@model IF.Manager.ClassDesigner.Pages.ClassDesignerIndexModel
-@{
-}
+@model IF.Manager.Entity.Pages.EntityManagerIndexModel
 
 
 
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-12">
         <a class="btn btn-success"
            href="@Url.Page("/Form","Add")"
            if-ajax="true"
@@ -15,19 +13,7 @@
            if-ajax-show-dialog="true"
            if-ajax-modal-id="@Guid.NewGuid()">
             Add
-        </a>
-    </div>
-
-    <div class="col-md-3">
-        <a class="btn btn-success"
-           href="@Url.Page("/Form","LoadJson")"
-           if-ajax="true"
-           if-ajax-method="get"
-           if-ajax-insertion-mode="replace"
-           if-ajax-show-dialog="true"
-           if-ajax-modal-id="@Guid.NewGuid()">
-            Load From Json
-        </a>
+        </a>      
     </div>
 </div>
 
@@ -38,13 +24,7 @@
 </div>
 
 <div class="row">
-    <div id="ClassListDiv" class="col-md-12">
-        @{await Html.RenderPartialAsync("_ClassListTable", Model.ClassList);}
+    <div id="EntityListDiv" class="col-md-12">
+        @{await Html.RenderPartialAsync("_EntityListTable", Model.EntityList);}
     </div>
 </div>
-
-@section    Scripts
-{
-
-
-}

@@ -1,31 +1,53 @@
-﻿@model IF.Manager.Service.Model.IFCustomClassRelation
+﻿@model IF.Manager.Contracts.Dto.EntityRelationDto
 
 @{
     Layout = null;
-    List<SelectListItem> classes = ViewData["classes"] as List<SelectListItem>;
+    List<SelectListItem> entities = ViewData["entities"] as List<SelectListItem>;
     var index = Guid.NewGuid();
     ViewData["Index"] = index;
+    Model.Index = index;
 }
 
 <tr>
 
     <td>
         <div class="form-group">
-           
-                @Html.DropDownList($"Form[{index}].RelatedIFCustomClassId", classes, "Select", new { @class = "form-control" })
+            @if (Model.IFRelatedEntityId > 0)
+            {
+                @entities.Single(e => e.Value == Model.IFRelatedEntityId.ToString()).Text
+            }
+            else
+            {
+                @Html.DropDownList($"Form[{index}].IFRelatedEntityId", entities, "Select", new { @class = "form-control" })
+            }
         </div>
     </td>
     <td>
         <div class="form-group">
-          
-                @Html.DropDownList($"Form[{index}].RelationType", Html.GetEnumSelectList<IF.Manager.Contracts.Enum.ClassRelationType>(), "Select", new { @class = "form-control" })
+            @if (Model.EntityRelationType != IF.Manager.Contracts.Enum.EntityRelationType.None)
+            {
+                @Model.EntityRelationType.ToString()
+            }
+            else
+            {
+                @Html.DropDownList($"Form[{index}].EntityRelationType", Html.GetEnumSelectList<IF.Manager.Contracts.Enum.EntityRelationType>(), "Select", new { @class = "form-control" })
+            }
         </div>
     </td>
-   
+    <td>
+        <div class="form-group" id="PrimaryKeyPropertyDropDown">
+
+            @*@if (Model.ForeignKeyPropertyId > 0)
+            {
+                await Html.RenderPartialAsync("_DropDownPrimaryKeyProperty", Model);
+            }*@
+        </div>
+
+    </td>
     <td>
         <div class="form-group">
 
-            <input type="text" name="Form.[@index].Name" value="@Model.Name" class="form-control" />
+            <input type="text" name="Form.[@index].Prefix" value="@Model.Prefix" class="form-control" />
         </div>
     </td>
     <td>
@@ -36,3 +58,21 @@
 </tr>
 
 
+<script>
+    var index = '@index';
+    $('#Form_' + index + '__IFRelatedEntityId').on('change', function (e) {
+
+        var valueSelected = this.value;
+        debugger;
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Page("/Relations/Form", "PrimaryKeyDropDownPropertyPartial")',
+            data: { IFEntityId: valueSelected, Index:'@index'},
+            success: function (data) {
+                debugger;
+                $("#PrimaryKeyPropertyDropDown").html(data);
+            }
+        });
+    });
+
+</script>
