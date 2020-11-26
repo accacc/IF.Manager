@@ -8,39 +8,39 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-namespace IF.Manager.Entity.Pages.Group
+namespace IF.Manager.ClassDesigner.Pages.ClassGroup
 {
     public class GroupIndexModel : PageModel
     {
 
         private readonly IClassService classService;
 
-        public List<EntityGroupDto> EntityGroupList { get; set; }
+        public List<EntityGroupDto> ClassGroupList { get; set; }
 
-        public GroupIndexModel(IClassService entityService)
+        public GroupIndexModel(IClassService classService)
         {
-            this.classService = entityService;
+            this.classService = classService;
         }
         public async Task OnGetAsync()
         {
             await SetModel();
         }
 
-        public async Task<PartialViewResult> OnGetEntityGroupListPartialAsync()
+        public async Task<PartialViewResult> OnGetClassGroupListPartialAsync()
         {
             await SetModel();
 
             return new PartialViewResult
             {
-                ViewName = "_EntityGroupListTable",
-                ViewData = new ViewDataDictionary<List<EntityGroupDto>>(ViewData, this.EntityGroupList)
+                ViewName = "_ClassGroupListTable",
+                ViewData = new ViewDataDictionary<List<EntityGroupDto>>(ViewData, this.ClassGroupList)
             };
             
         }
 
         private async Task SetModel()
         {
-            this.EntityGroupList = await this.classService.GetEntityGroupList();
+            this.ClassGroupList = await this.classService.GetClassGroupList();
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿@page
-@model IF.Manager.Entity.Pages.EntityManagerIndexModel
+@model IF.Manager.Class.Pages.ClassManagerIndexModel
 
 
 
@@ -24,7 +24,7 @@
 </div>
 
 <div class="row">
-    <div id="EntityListDiv" class="col-md-12">
-        @{await Html.RenderPartialAsync("_EntityListTable", Model.EntityList);}
+    <div id="ClassListDiv" class="col-md-12">
+        @{await Html.RenderPartialAsync("_ClassListTable", Model.ClassList);}
     </div>
 </div>

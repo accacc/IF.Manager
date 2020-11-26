@@ -9,15 +9,15 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
-namespace IF.Manager.Entity.Pages.Group
+namespace IF.Manager.ClassDesigner.Pages.ClassGroup
 {
-    public class GroupFormModel : PageModel
+    public class ClassGroupFormModel : PageModel
     {
-        private readonly IEntityService entityService;
+        private readonly IClassService classService;
 
-        public GroupFormModel(IEntityService entityService)
+        public ClassGroupFormModel(IClassService classService)
         {
-            this.entityService = entityService;
+            this.classService = classService;
         }
 
         [BindProperty, Required]
@@ -29,21 +29,21 @@ namespace IF.Manager.Entity.Pages.Group
 
         public async Task OnGetUpdateAsync(int Id)
         {
-            this.Form = await this.entityService.GetEntityGroup(Id);
+            this.Form = await this.classService.GetClassGroup(Id);
 
         }
 
         public async Task<PartialViewResult> OnPostAddAsync()
         {
 
-            await this.entityService.AddEntityGroup(this.Form);
+            await this.classService.AddClassGroup(this.Form);
 
 
-            var list = await this.entityService.GetEntityGroupList();
+            var list = await this.classService.GetClassGroupList();
 
             return new PartialViewResult
             {
-                ViewName = "_EntityGroupListTable",
+                ViewName = "_ClassGroupListTable",
                 ViewData = new ViewDataDictionary<List<EntityGroupDto>>(ViewData, list)
             };
         }
@@ -51,10 +51,10 @@ namespace IF.Manager.Entity.Pages.Group
         public async Task<PartialViewResult> OnPostUpdateAsync()
         {
 
-            await this.entityService.UpdateEntityGroup(this.Form);
+            await this.classService.UpdateClassGroup(this.Form);
 
 
-            var list = await this.entityService.GetEntityGroupList();
+            var list = await this.classService.GetClassGroupList();
 
             return new PartialViewResult
             {

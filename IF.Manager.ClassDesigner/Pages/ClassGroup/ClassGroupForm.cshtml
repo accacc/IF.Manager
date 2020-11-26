@@ -1,5 +1,5 @@
 ﻿@page
-@model IF.Manager.Entity.Pages.Group.GroupFormModel
+@model IF.Manager.ClassDesigner.Pages.ClassGroup.ClassGroupFormModel
 
 @{
     Layout = "_ModalLayout";
@@ -37,11 +37,11 @@
 
                         }
                         
-                        if-ajax-action = "@Url.Page("/Group/GroupForm",handler)"
+                        if-ajax-action = "@Url.Page("/ClassGroup/ClassGroupForm",handler)"
                         if-ajax-form-submit="true"
                         if-ajax-method="post"
                         if-ajax-close-modal-on-success="true"
-                        if-ajax-update-id="EntityGroupListDiv"
+                        if-ajax-update-id="ClassGroupListDiv"
                         >
                     Save
                 </button>

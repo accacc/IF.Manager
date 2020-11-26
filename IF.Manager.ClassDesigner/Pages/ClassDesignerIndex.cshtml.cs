@@ -35,7 +35,6 @@ namespace IF.Manager.Class.Pages
                 ViewData = new ViewDataDictionary<List<List<EntityDto>>>(ViewData, this.ClassList)
             };
 
-            //return Partial("",this.ClassList);
         }
 
         private async Task SetModel()

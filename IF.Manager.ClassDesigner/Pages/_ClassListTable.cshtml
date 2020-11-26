@@ -52,7 +52,7 @@
                     </a>
 
                     <a class="btn btn-primary"
-                       href="@Url.Page("/Properties/Form", new { EntityId = item.Id })"
+                       href="@Url.Page("/Properties/Form", new { ClassId = item.Id })"
                        if-ajax="true"
                        if-ajax-method="get"
                        if-ajax-insertion-mode="replace"
@@ -61,7 +61,7 @@
                         Property Designer
                     </a>
                     <a class="btn btn-primary"
-                       href="@Url.Page("/Relations/Form", new { EntityId = item.Id })"
+                       href="@Url.Page("/Relations/Form", new { ClassId = item.Id })"
                        if-ajax="true"
                        if-ajax-method="get"
                        if-ajax-insertion-mode="replace"

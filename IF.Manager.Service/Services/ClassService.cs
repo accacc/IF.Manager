@@ -30,7 +30,48 @@ namespace IF.Manager.Service
         }
 
 
-        public async Task<List<EntityGroupDto>> GetEntityGroupList()
+        public async Task AddClassGroup(EntityGroupDto form)
+        {
+            CustomClassGroup entity = new CustomClassGroup();
+            entity.Id = form.Id;
+            entity.Name = form.Name;
+            entity.Prefix = form.Prefix;
+            this.Add(entity);
+            await this.UnitOfWork.SaveChangesAsync();
+            form.Id = entity.Id;
+        }
+
+        public async Task UpdateClassGroup(EntityGroupDto form)
+        {
+
+            var entity = await this.GetQuery<CustomClassGroup>()
+               .SingleOrDefaultAsync(k => k.Id == form.Id);
+
+            if (entity == null) { throw new BusinessException(" No such entity exists"); }
+
+            entity.Name = form.Name;
+            entity.Prefix = form.Prefix;
+            this.Update(entity);
+            await this.UnitOfWork.SaveChangesAsync();
+        }
+
+        public async Task<EntityGroupDto> GetClassGroup(int id)
+        {
+            var entity = await this.GetQuery<CustomClassGroup>()
+            .Select(x => new EntityGroupDto
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Prefix = x.Prefix,
+            }).SingleOrDefaultAsync(k => k.Id == id);
+
+            if (entity == null) { throw new BusinessException("CustomClassGroup : No such entity exists"); }
+
+            return entity;
+        }
+
+
+        public async Task<List<EntityGroupDto>> GetClassGroupList()
         {
             var data = await this.GetQuery<CustomClassGroup>()
                                 .Select(x => new EntityGroupDto
