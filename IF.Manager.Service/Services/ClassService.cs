@@ -217,9 +217,9 @@ namespace IF.Manager.Service
             return list;
         }
 
-        public async Task AddClass(IFCustomClass form)
+        public async Task AddClass(EntityDto form)
         {
-            IFCustomClass entity = new IFCustomClass();
+            CustomClass entity = new CustomClass();
             entity.Id = form.Id;
             string name = DirectoryHelper.AddAsLastWord(form.Name, "CustomClass");
             entity.Name = name;
@@ -231,15 +231,15 @@ namespace IF.Manager.Service
         }
 
 
-        public async Task UpdateClass(IFCustomClass form)
+        public async Task UpdateClass(EntityDto form)
         {
 
             try
             {
-                var entity = await this.GetQuery<IFCustomClass>()
+                var entity = await this.GetQuery<CustomClass>()
             .SingleOrDefaultAsync(k => k.Id == form.Id);
 
-                if (entity == null) { throw new BusinessException($"{nameof(IFCustomClass)} : No such entity exists"); }
+                if (entity == null) { throw new BusinessException($"{nameof(CustomClass)} : No such entity exists"); }
 
                 string name = DirectoryHelper.AddAsLastWord(form.Name, "CustomClass");
                 entity.Name = name;
@@ -256,18 +256,22 @@ namespace IF.Manager.Service
             }
         }
 
-        public async Task<IFCustomClass> GetClass(int id)
+        public async Task<EntityDto> GetClass(int id)
         {
-            var entity = await this.GetQuery<IFCustomClass>()
-            .Include(g => g.IFCustomClassProperties)
+            var entity = await this.GetQuery<CustomClass>()
+            .Select(x => new EntityDto
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Description = x.Description,
+                GroupId = x.CustomClassGroupId,
+                IsAudited = x.IsAudited
+            }).SingleOrDefaultAsync(k => k.Id == id);
 
-           .SingleOrDefaultAsync(k => k.Id == id);
-
-            if (entity == null) { throw new BusinessException($"{nameof(IFCustomClass)} : No such entity exists"); }
+            if (entity == null) { throw new BusinessException("CustomClass : No such entity exists"); }
 
             return entity;
         }
-
 
         public async Task<List<IFCustomClassProperty>> GetClassPropertyList(int classId)
         {

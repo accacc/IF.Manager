@@ -13,16 +13,17 @@ namespace IF.Manager.Contracts.Services
     public interface IClassService: IRepository
     {
 
+
+        Task<EntityDto> GetClass(int id);
         Task UpdateClassGroup(EntityGroupDto form);
         Task AddClassGroup(EntityGroupDto form);
         Task<EntityGroupDto> GetClassGroup(int id);
         Task<List<EntityGroupDto>> GetClassGroupList();
         Task<List<List<EntityDto>>> GetEntityListGrouped();
         Task<List<IFCustomClass>> GetClassList();
-        Task<IFCustomClass> GetClass(int id);
 
-        Task AddClass(IFCustomClass form);
-        Task UpdateClass(IFCustomClass dto);
+        Task AddClass(EntityDto form);
+        Task UpdateClass(EntityDto dto);
 
         Task<List<IFCustomClassProperty>> GetClassPropertyList(int classId);
 

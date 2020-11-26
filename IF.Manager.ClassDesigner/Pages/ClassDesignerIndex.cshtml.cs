@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace IF.Manager.Class.Pages
+namespace IF.Manager.ClassDesigner.Pages
 {
     public class ClassManagerIndexModel : PageModel
     {

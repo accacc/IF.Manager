@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-namespace IF.Manager.Entity.Pages.Properties
+namespace IF.Manager.Entity.Pages.ClassProperties
 {
     public class FormModel : PageModel
     {

@@ -10,16 +10,16 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-namespace IF.Manager.Entity.Pages
+namespace IF.Manager.ClassDesigner.Pages
 {
-    public class FormModel : PageModel
+    public class ClassFormModel : PageModel
     {
 
-        private readonly IEntityService entityService;
+        private readonly IClassService classService;
 
-        public FormModel(IEntityService entityService)
+        public ClassFormModel(IClassService classService)
         {
-            this.entityService = entityService;
+            this.classService = classService;
         }
 
         [BindProperty, Required]
@@ -33,21 +33,20 @@ namespace IF.Manager.Entity.Pages
 
         public async Task OnGetUpdateAsync(int Id)
         {            
-            this.Form = await this.entityService.GetEntity(Id);
+            this.Form = await this.classService.GetClass(Id);
             await this.SetFromDefaults();
         }
 
         public async Task<PartialViewResult> OnPostAddAsync()
         {
 
-            await this.entityService.AddEntity(this.Form);
+            await this.classService.AddClass(this.Form);
 
-
-            var list = await this.entityService.GetEntityListGrouped();
+            var list = await this.classService.GetEntityListGrouped();
 
             return new PartialViewResult
             {
-                ViewName = "_EntityListTable",
+                ViewName = "_ClassListTable",
                 ViewData = new ViewDataDictionary<List<List<EntityDto>>>(ViewData, list)
             };
         }
@@ -55,21 +54,21 @@ namespace IF.Manager.Entity.Pages
         public async Task<PartialViewResult> OnPostUpdateAsync()
         {
 
-            await this.entityService.UpdateEntity(this.Form);
+            await this.classService.UpdateClass(this.Form);
 
 
-            var list = await this.entityService.GetEntityListGrouped();
+            var list = await this.classService.GetEntityListGrouped();
 
             return new PartialViewResult
             {
-                ViewName = "_EntityListTable",
+                ViewName = "_ClassListTable",
                 ViewData = new ViewDataDictionary<List<List<EntityDto>>>(ViewData, list)
             };
         }
 
         private async Task SetFromDefaults() 
         {
-            var groups = await this.entityService.GetEntityGroupList();
+            var groups = await this.classService.GetClassGroupList();
             
             List<SelectListItem> items = new List<SelectListItem>();
 
