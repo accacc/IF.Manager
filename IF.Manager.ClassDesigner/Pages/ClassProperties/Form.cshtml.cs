@@ -15,23 +15,25 @@ namespace IF.Manager.Entity.Pages.ClassProperties
     public class FormModel : PageModel
     {
 
+        private readonly IClassService classService;
         private readonly IEntityService entityService;
 
         [BindProperty, Required]
         public List<EntityPropertyDto> Form { get; set; }
 
         [BindProperty(SupportsGet =true), Required]
-        public int EntityId { get; set; }
+        public int ClassId { get; set; }
 
-        public FormModel(IEntityService entityService)
+        public FormModel(IClassService classService, IEntityService entityService)
         {
+            this.classService = classService;
             this.entityService = entityService;
         }
 
 
         public async Task OnGet()
         {
-            this.Form = await this.entityService.GetEntityPropertyList(this.EntityId);
+            this.Form = await this.classService.GetClassPropertyList(this.ClassId);
             
             if (!this.Form.Any())
             {
@@ -59,16 +61,16 @@ namespace IF.Manager.Entity.Pages.ClassProperties
 
         public async Task<PartialViewResult> OnPost()
         {
-            await this.entityService.UpdateEntityProperties(this.Form, this.EntityId);
+            await this.classService.UpdateClassProperties(this.Form, this.ClassId);
             
 
-            var entityList = await this.entityService.GetEntityListGrouped();
+            var entityList = await this.classService.GetEntityListGrouped();
 
             this.SetFromDefaults();
 
             return new PartialViewResult
             {
-                ViewName = "_EntityListTable",
+                ViewName = "_ClassListTable",
                 ViewData = new ViewDataDictionary<List<List<EntityDto>>>(ViewData, entityList)
             };
 

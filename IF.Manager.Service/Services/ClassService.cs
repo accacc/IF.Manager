@@ -231,6 +231,29 @@ namespace IF.Manager.Service
         }
 
 
+        public async Task<List<EntityPropertyDto>> GetClassPropertyList(int classId)
+        {
+            var list = await GetQuery<CustomClassProperty>().Where(e => e.CustomClassId == classId)
+               .Select(e => new EntityPropertyDto
+               {
+                   Id = e.Id,
+                   Name = e.Name,
+                   //IsAudited = e.IsAudited,
+                   //IsMultiLanguage = e.IsMultiLanguage,
+                   //IFEntityId = e.EntityId,
+                   //IsIdentity = e.IsIdentity,
+                   //MaxValue = e.MaxValue,
+                   Type = e.Type,
+                   IsNullable = e.IsNullable
+
+               })
+               .ToListAsync();
+
+
+
+            return list;
+        }
+
         public async Task UpdateClass(EntityDto form)
         {
 
@@ -273,46 +296,54 @@ namespace IF.Manager.Service
             return entity;
         }
 
-        public async Task<List<IFCustomClassProperty>> GetClassPropertyList(int classId)
-        {
-            var list = await GetQuery<IFCustomClassProperty>().Where(e => e.IFCustomClassId == classId)
+        //public async Task<List<IFCustomClassProperty>> GetClassPropertyList(int classId)
+        //{
+        //    var list = await GetQuery<IFCustomClassProperty>().Where(e => e.IFCustomClassId == classId)
               
-               .ToListAsync();
+        //       .ToListAsync();
 
 
 
-            return list;
-        }
+        //    return list;
+        //}
 
-        public async Task UpdateClassProperties(List<IFCustomClassProperty> properties, int classId)
+        public async Task UpdateClassProperties(List<EntityPropertyDto> dtos, int classId)
         {
             try
             {
-                var @class = await this.GetQuery<IFCustomClass>()
+                var entity = await this.GetQuery<CustomClass>()
                .SingleOrDefaultAsync(k => k.Id == classId);
 
-                if (@class == null) { throw new BusinessException(" No such entity exists"); }
+                if (entity == null) { throw new BusinessException(" No such entity exists"); }
 
 
-                foreach (var property in properties)
+                foreach (var dto in dtos)
                 {
 
-                    if (property.Id <= 0)
+                    if (dto.Id <= 0)
                     {
-                        IFCustomClassProperty entityProperty = new IFCustomClassProperty();
-                        entityProperty.Name = property.Name;
-                        entityProperty.Id = property.Id;
-                        entityProperty.Type = property.Type;
-                        entityProperty.IsNullable = property.IsNullable;
-                        entityProperty.IFCustomClassId = classId;
+                        CustomClassProperty entityProperty = new CustomClassProperty();
+                        //entityProperty.IsIdentity = dto.IsIdentity;
+                        //entityProperty.MaxValue = dto.MaxValue;
+                        entityProperty.Name = dto.Name;
+                        entityProperty.Id = dto.Id;
+                        entityProperty.Type = dto.Type;
+                        //entityProperty.IsAudited = dto.IsAudited;
+                        //entityProperty.IsMultiLanguage = dto.IsMultiLanguage;
+                        //entityProperty.EntityId = classId;
+                        entityProperty.IsNullable = dto.IsNullable;
                         this.Add(entityProperty);
                     }
                     else
                     {
-                        var entityProperty = await this.GetQuery<IFCustomClassProperty>(p => p.Id == property.Id).SingleOrDefaultAsync();
-                        entityProperty.Name = property.Name;
+                        var entityProperty = await this.GetQuery<CustomClassProperty>(p => p.Id == dto.Id).SingleOrDefaultAsync();
+                        //entityProperty.IsIdentity = dto.IsIdentity;
+                        //entityProperty.MaxValue = dto.MaxValue;
+                        entityProperty.Name = dto.Name;
                         entityProperty.Type = entityProperty.Type;
-                        entityProperty.IsNullable = property.IsNullable;
+                        //entityProperty.IsAudited = dto.IsAudited;
+                        //entityProperty.IsMultiLanguage = dto.IsMultiLanguage;
+                        entityProperty.IsNullable = dto.IsNullable;
                         this.Update(entityProperty);
                     }
                 }

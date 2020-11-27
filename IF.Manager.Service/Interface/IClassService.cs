@@ -25,9 +25,9 @@ namespace IF.Manager.Contracts.Services
         Task AddClass(EntityDto form);
         Task UpdateClass(EntityDto dto);
 
-        Task<List<IFCustomClassProperty>> GetClassPropertyList(int classId);
+        Task<List<EntityPropertyDto>> GetClassPropertyList(int classId);
 
-        Task UpdateClassProperties(List<IFCustomClassProperty> dtos, int classId);
+        Task UpdateClassProperties(List<EntityPropertyDto> dtos, int classId);
 
         Task<List<IFCustomClassRelation>> GetClassRelationList(int classId);
 
