@@ -1,4 +1,4 @@
-﻿@model List<IF.Manager.Contracts.Model.IFPage>
+﻿@model List<IF.Manager.Service.Model.IFKClass>
 
 @{ Layout = null;}
 
@@ -39,7 +39,7 @@
                 </td>
                 <td>
                     <a class="btn btn-primary"
-                       href="@Url.Page("/PageForm","Update",new { Id = item.Id})"
+                       href="@Url.Page("/ClassForm","Update",new { Id = item.Id})"
                        if-ajax="true"
                        if-ajax-method="get"
                        if-ajax-mode="replace"
@@ -51,39 +51,17 @@
 
                 <td>
                     <a class="btn btn-primary"
-                       href="@Url.Page("/PageListIndex","PageControlTreeList",new { Id = item.Id })"
+                       href="@Url.Page("/ClassListIndex","ClassControlTreeList",new { Id = item.Id })"
                        if-ajax="true"
                        if-ajax-method="get"
                        if-ajax-insertion-mode="replace"
                        if-ajax-show-dialog="true"
-                       if-ajax-modal-id="PageControlTreeListModal">
-                        Page Controls
+                       if-ajax-modal-id="ClassControlTreeListModal">
+                        Properties
                     </a>
                 </td>
 
-                <td>
-                    <a class="btn btn-primary"
-                       href="@Url.Page("/PageParameterForm",new {  ObjectId= item.Id,ObjectType = IF.Manager.Contracts.Enum.PageParameterType.ListView })"
-                       if-ajax="true"
-                       if-ajax-method="get"
-                       if-ajax-insertion-mode="replace"
-                       if-ajax-show-dialog="true"
-                       if-ajax-modal-id="PageControlTreeListModal">
-                        Parameters
-                    </a>
-                </td>
-
-                <td>
-                    <a class="btn btn btn-danger"
-                       href="@Url.Page("/Publisher/PublishPageForm",new { PageId= item.Id})"
-                       if-ajax="true"
-                       if-ajax-method="get"
-                       if-ajax-insertion-mode="replace"
-                       if-ajax-show-dialog="true"
-                       if-ajax-modal-id="@Guid.NewGuid()">
-                        Publish
-                    </a>
-                </td>
+              
 
             </tr>
         }

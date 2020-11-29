@@ -5,35 +5,37 @@ using System.Threading.Tasks;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
+using IF.Manager.Service.Model;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace IF.Manager.ClassDesigner.Pages
 {
-    public class IFKClassListIndexModel : PageModel
+    public class ClassListIndexModel : PageModel
     {
         private readonly IClassService classService;
 
-        public List<IFPage> PageList { get; set; }
+        public List<IFKClass> ClassList { get; set; }
 
-        public IFKClassListIndexModel(IClassService pageService)
+        public ClassListIndexModel(IClassService pageService)
         {
             this.classService = pageService;
         }
         public async Task OnGetAsync()
         {
-           //await SetModel();
+           await SetModel();
         }
 
         public async Task<PartialViewResult> OnGetPageListPartialAsync()
         {
-            //await SetModel();
+            await SetModel();
 
             return new PartialViewResult
             {
-                ViewName = "_PageListTable",
-                ViewData = new ViewDataDictionary<List<IFPage>>(ViewData, this.PageList)
+                ViewName = "_ClassListTable",
+                ViewData = new ViewDataDictionary<List<IFKClass>>(ViewData, this.ClassList)
             };
 
         }
@@ -57,7 +59,7 @@ namespace IF.Manager.ClassDesigner.Pages
         //    {
         //        model.Tree = new List<PageControlTreeDto>();
         //    }
-            
+
 
         //    return new PartialViewResult
         //    {
@@ -66,9 +68,9 @@ namespace IF.Manager.ClassDesigner.Pages
         //    };
         //}
 
-        //private async Task SetModel()
-        //{
-        //    this.PageList = await this.classService.GetPageList();
-        //}
+        private async Task SetModel()
+        {
+            this.ClassList = await this.classService.GetClassList();
+        }
     }
 }

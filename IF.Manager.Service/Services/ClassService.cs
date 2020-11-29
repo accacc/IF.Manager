@@ -208,26 +208,37 @@ namespace IF.Manager.Service
         //    return list;
         //}
 
-        public async Task<List<IFCustomClass>> GetClassList()
+        public async Task<List<IFKClass>> GetClassList()
         {
 
 
-            var list = await this.GetQuery<IFCustomClass>().ToListAsync();
+            var list = await this.GetQuery<IFKClass>(c=>c.ParentId == null).ToListAsync();
 
             return list;
         }
 
-        public async Task AddClass(EntityDto form)
+        public async Task AddClass(IFKClass form)
         {
-            CustomClass entity = new CustomClass();
-            entity.Id = form.Id;
-            string name = DirectoryHelper.AddAsLastWord(form.Name, "CustomClass");
-            entity.Name = name;
-            entity.Description = form.Description;
-            this.Add(entity);
+            try
+            {
+                IFKClass entity = new IFKClass();
+                entity.Id = form.Id;
+                string name = DirectoryHelper.AddAsLastWord(form.Name, "CustomClass");
+                entity.Name = name;
+                entity.Type = "Class";
+                entity.IsPrimitive = true;
+                
+                entity.Description = form.Description;
+                this.Add(entity);
 
-            await this.UnitOfWork.SaveChangesAsync();
-            form.Id = entity.Id;
+                await this.UnitOfWork.SaveChangesAsync();
+                form.Id = entity.Id;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
 
 
@@ -254,17 +265,17 @@ namespace IF.Manager.Service
             return list;
         }
 
-        public async Task UpdateClass(EntityDto form)
+        public async Task UpdateClass(IFKClass form)
         {
 
             try
             {
-                var entity = await this.GetQuery<CustomClass>()
+                var entity = await this.GetQuery<IFKClass>()
             .SingleOrDefaultAsync(k => k.Id == form.Id);
 
-                if (entity == null) { throw new BusinessException($"{nameof(CustomClass)} : No such entity exists"); }
+                if (entity == null) { throw new BusinessException($"{nameof(IFKClass)} : No such entity exists"); }
 
-                string name = DirectoryHelper.AddAsLastWord(form.Name, "CustomClass");
+                string name = DirectoryHelper.AddAsLastWord(form.Name, "IFKClass");
                 entity.Name = name;
                 entity.Description = form.Description;
                 this.Update(entity);
@@ -279,19 +290,12 @@ namespace IF.Manager.Service
             }
         }
 
-        public async Task<EntityDto> GetClass(int id)
+        public async Task<IFKClass> GetClass(int id)
         {
-            var entity = await this.GetQuery<CustomClass>()
-            .Select(x => new EntityDto
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Description = x.Description,
-                GroupId = x.CustomClassGroupId,
-                IsAudited = x.IsAudited
-            }).SingleOrDefaultAsync(k => k.Id == id);
+            var entity = await this.GetQuery<IFKClass>()
+          .SingleOrDefaultAsync(k => k.Id == id);
 
-            if (entity == null) { throw new BusinessException("CustomClass : No such entity exists"); }
+            if (entity == null) { throw new BusinessException("IFKClass : No such entity exists"); }
 
             return entity;
         }

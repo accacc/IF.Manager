@@ -14,16 +14,16 @@ namespace IF.Manager.Contracts.Services
     {
 
 
-        Task<EntityDto> GetClass(int id);
+        Task<IFKClass> GetClass(int id);
         //Task UpdateClassGroup(EntityGroupDto form);
         //Task AddClassGroup(EntityGroupDto form);
         //Task<EntityGroupDto> GetClassGroup(int id);
         //Task<List<EntityGroupDto>> GetClassGroupList();
         //Task<List<List<EntityDto>>> GetEntityListGrouped();
-        Task<List<IFCustomClass>> GetClassList();
+        Task<List<IFKClass>> GetClassList();
 
-        Task AddClass(EntityDto form);
-        Task UpdateClass(EntityDto dto);
+        Task AddClass(IFKClass form);
+        Task UpdateClass(IFKClass dto);
 
         Task<List<EntityPropertyDto>> GetClassPropertyList(int classId);
 

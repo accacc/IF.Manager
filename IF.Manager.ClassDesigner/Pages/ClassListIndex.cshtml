@@ -1,5 +1,5 @@
 ﻿@page
-@model IF.Manager.ClassDesigner.Pages.IFKClassListIndexModel
+@model IF.Manager.ClassDesigner.Pages.ClassListIndexModel
 @{
 }
 
@@ -9,7 +9,7 @@
 <div class="row">
     <div class="col-md-12">
         <a class="btn btn-success"
-           href="@Url.Page("PageForm","Add")"
+           href="@Url.Page("ClassForm","Add")"
            if-ajax="true"
            if-ajax-method="get"
            if-ajax-insertion-mode="replace"
@@ -27,7 +27,7 @@
 </div>
 
 <div class="row">
-    <div id="PageListDiv" class="col-md-12">
-        @{await Html.RenderPartialAsync("_PageListTable", Model.PageList);}
+    <div id="ClassListDiv" class="col-md-12">
+        @{await Html.RenderPartialAsync("_ClassListTable", Model.ClassList);}
     </div>
 </div>
