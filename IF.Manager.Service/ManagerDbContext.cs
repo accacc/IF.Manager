@@ -89,6 +89,8 @@ namespace IF.Manager.Persistence.EF
             builder.ApplyConfiguration(new CustomClassRelationMapping());
             builder.ApplyConfiguration(new CustomClassGroupMapping());
 
+            builder.ApplyConfiguration(new IFKClassMapping());
+
 
 
 
@@ -169,6 +171,8 @@ namespace IF.Manager.Persistence.EF
 
         public DbSet<CustomClassRelation> CustomClassRelations { get; set; }
         public DbSet<CustomClassGroup> CustomClassGroups { get; set; }
+
+        public DbSet<IFKClass> IFKClasses { get; set; }
 
 
 

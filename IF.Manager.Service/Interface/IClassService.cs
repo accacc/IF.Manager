@@ -15,11 +15,11 @@ namespace IF.Manager.Contracts.Services
 
 
         Task<EntityDto> GetClass(int id);
-        Task UpdateClassGroup(EntityGroupDto form);
-        Task AddClassGroup(EntityGroupDto form);
-        Task<EntityGroupDto> GetClassGroup(int id);
-        Task<List<EntityGroupDto>> GetClassGroupList();
-        Task<List<List<EntityDto>>> GetEntityListGrouped();
+        //Task UpdateClassGroup(EntityGroupDto form);
+        //Task AddClassGroup(EntityGroupDto form);
+        //Task<EntityGroupDto> GetClassGroup(int id);
+        //Task<List<EntityGroupDto>> GetClassGroupList();
+        //Task<List<List<EntityDto>>> GetEntityListGrouped();
         Task<List<IFCustomClass>> GetClassList();
 
         Task AddClass(EntityDto form);
@@ -29,8 +29,8 @@ namespace IF.Manager.Contracts.Services
 
         Task UpdateClassProperties(List<EntityPropertyDto> dtos, int classId);
 
-        Task<List<IFCustomClassRelation>> GetClassRelationList(int classId);
+        //Task<List<IFCustomClassRelation>> GetClassRelationList(int classId);
 
-        Task UpdateClassRelations(List<IFCustomClassRelation> relations, int classId);
+        //Task UpdateClassRelations(List<IFCustomClassRelation> relations, int classId);
     }
 }
