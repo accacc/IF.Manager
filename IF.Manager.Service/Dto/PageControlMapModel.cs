@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace IF.Manager.Contracts.Dto
 {
@@ -10,5 +8,13 @@ namespace IF.Manager.Contracts.Dto
         public bool IsModal { get; set; }
         public int? RootControlMapId { get; set; }
         public List<PageControlTreeDto> Tree { get; set; }
+    }
+
+    public class ClassMapModel
+    {
+
+        public bool IsModal { get; set; }
+        public int? ClassId { get; set; }
+        public List<ClassControlTreeDto> Tree { get; set; }
     }
 }

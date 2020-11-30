@@ -40,33 +40,34 @@ namespace IF.Manager.ClassDesigner.Pages
 
         }
 
-        //public async Task<PartialViewResult> OnGetPageControlTreeListAsync(int Id)
-        //{
-        //    PageControlMapModel model = new PageControlMapModel();
-        //    model.IsModal = true;
+        public async Task<PartialViewResult> OnGetClassTreeListAsync(int Id)
+        {
+            ClassMapModel model = new ClassMapModel();
+            
+            model.IsModal = true;
 
-        //    var pageControl = await this.classService.GetPageControlMapByControlId(Id);
+            var @class = await this.classService.GetClass(Id);
 
-        //    if (pageControl != null)
-        //    {
-        //        var tree = await this.classService.GetPageControlMapTreeList(pageControl.Id);
-
-
-        //        model.Tree = tree;
-        //        model.RootControlMapId = pageControl.Id;
-        //    }
-        //    else
-        //    {
-        //        model.Tree = new List<PageControlTreeDto>();
-        //    }
+            if (@class != null)
+            {
+                var tree = await this.classService.GetClassTreeList(@class.Id);
 
 
-        //    return new PartialViewResult
-        //    {
-        //        ViewName = "_PageTree",
-        //        ViewData = new ViewDataDictionary<PageControlMapModel>(ViewData,model)
-        //    };
-        //}
+                model.Tree = tree;
+                model.ClassId = @class.Id;
+            }
+            else
+            {
+                model.Tree = new List<ClassControlTreeDto>();
+            }
+
+
+            return new PartialViewResult
+            {
+                ViewName = "_ClassTree",
+                ViewData = new ViewDataDictionary<ClassMapModel>(ViewData, model)
+            };
+        }
 
         private async Task SetModel()
         {

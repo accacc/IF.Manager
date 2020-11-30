@@ -25,9 +25,12 @@ namespace IF.Manager.Contracts.Services
         Task AddClass(IFKClass form);
         Task UpdateClass(IFKClass dto);
 
-        Task<List<EntityPropertyDto>> GetClassPropertyList(int classId);
 
-        Task UpdateClassProperties(List<EntityPropertyDto> dtos, int classId);
+        Task UpdateClassProperties(List<ClassControlTreeDto> dtos, int classId);
+
+        Task<List<ClassControlTreeDto>> GetClassTreeList(int ParentId);
+
+        Task<List<ClassControlTreeDto>> GetClassPropertyList(int classId    );
 
         //Task<List<IFCustomClassRelation>> GetClassRelationList(int classId);
 

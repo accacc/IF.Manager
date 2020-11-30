@@ -1,0 +1,50 @@
+﻿@model IF.Manager.Contracts.Dto.ClassControlTreeDto
+
+@{
+    Layout = null;
+    List<SelectListItem> primitives = ViewData["primitives"] as List<SelectListItem>; 
+    var index = Guid.NewGuid();
+    
+}
+
+<tr>
+    <td>
+        <div class="form-group">
+
+            <input type="text" name="Form[@index].Name" value="@Model.Name" class="form-control" />
+        </div>
+    </td>
+    <td>
+        <div class="form-group">
+
+            <input type="text" name="Form[@index].Name" value="@Model.Description" class="form-control" />
+        </div>
+    </td>
+    <td>
+        <div class="form-group">
+
+            @if (!String.IsNullOrWhiteSpace(Model.Type))
+            {
+                @Model.Type
+            }
+            else
+            {
+                @Html.DropDownList($"Form[{index}].Type", primitives, "Select", new { @class = "form-control" })
+            }
+        </div>
+    </td>
+
+    <td>
+        <div class="form-group">
+
+            @Html.CheckBox($"Form[{index}].IsNullable", Model.IsNullable, new { @class = "form-check-input" })
+        </div>
+    </td>
+
+    
+    <td>
+        <input type="hidden" name="Form.Index" value="@index" />
+        <input type="hidden" name="Form[@index].Id" value="@Model.Id" />
+    </td>
+
+</tr>

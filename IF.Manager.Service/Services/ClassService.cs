@@ -30,6 +30,26 @@ namespace IF.Manager.Service
         }
 
 
+        public async Task<List<ClassControlTreeDto>> GetClassPropertyList(int classId)
+        {
+            var list = await GetQuery<IFKClass>().Where(e => e.ParentId == classId)
+               .Select(e => new ClassControlTreeDto
+               {
+                   Id = e.Id,
+                   Name = e.Name,
+                   Type = e.Type,
+                   IsNullable = e.IsNullable,
+                   Description = e.Description
+                   
+
+               })
+               .ToListAsync();
+
+
+
+            return list;
+        }
+
         //public async Task AddClassGroup(EntityGroupDto form)
         //{
         //    CustomClassGroup entity = new CustomClassGroup();
@@ -203,7 +223,7 @@ namespace IF.Manager.Service
         //public async Task<List<IFCustomClassRelation>> GetClassRelationList(int classId)
         //{
         //    var list = await GetQuery<IFCustomClassRelation>(c=>c.MainIFCustomClassId == classId)
-              
+
         //          .ToListAsync();
         //    return list;
         //}
@@ -242,28 +262,64 @@ namespace IF.Manager.Service
         }
 
 
-        public async Task<List<EntityPropertyDto>> GetClassPropertyList(int classId)
+        public async Task<List<ClassControlTreeDto>> GetClassTreeList(int ParentId)
         {
-            var list = await GetQuery<CustomClassProperty>().Where(e => e.CustomClassId == classId)
-               .Select(e => new EntityPropertyDto
-               {
-                   Id = e.Id,
-                   Name = e.Name,
-                   //IsAudited = e.IsAudited,
-                   //IsMultiLanguage = e.IsMultiLanguage,
-                   //IFEntityId = e.EntityId,
-                   //IsIdentity = e.IsIdentity,
-                   //MaxValue = e.MaxValue,
-                   Type = e.Type,
-                   IsNullable = e.IsNullable
+            List<ClassControlTreeDto> tree = null;
 
-               })
-               .ToListAsync();
+            try
+            {
+                var list = await this.GetQuery<IFKClass>().Select
+                    
+               (map =>
+                new ClassControlTreeDto
+                {
+
+                    Name = map.Name,
+                    Id = map.Id,
+                    ParentId = map.ParentId,
+                    Type = map.Type,
+                    IsPrimitive = map.IsPrimitive,
+                    Description = map.Description,
+                    IsNullable = map.IsNullable
+
+                }).ToListAsync();
+
+                var parents = list.Where(c => c.Id == ParentId).ToList();
 
 
+                tree = list.ToTree(parents);
+            }
+            catch (Exception ex)
+            {
 
-            return list;
+                throw;
+            }
+
+            return tree;
         }
+
+        //public async Task<List<EntityPropertyDto>> GetClassPropertyList(int classId)
+        //{
+        //    var list = await GetQuery<CustomClassProperty>().Where(e => e.CustomClassId == classId)
+        //       .Select(e => new EntityPropertyDto
+        //       {
+        //           Id = e.Id,
+        //           Name = e.Name,
+        //           //IsAudited = e.IsAudited,
+        //           //IsMultiLanguage = e.IsMultiLanguage,
+        //           //IFEntityId = e.EntityId,
+        //           //IsIdentity = e.IsIdentity,
+        //           //MaxValue = e.MaxValue,
+        //           Type = e.Type,
+        //           IsNullable = e.IsNullable
+
+        //       })
+        //       .ToListAsync();
+
+
+
+        //    return list;
+        //}
 
         public async Task UpdateClass(IFKClass form)
         {
@@ -311,11 +367,11 @@ namespace IF.Manager.Service
         //    return list;
         //}
 
-        public async Task UpdateClassProperties(List<EntityPropertyDto> dtos, int classId)
+        public async Task UpdateClassProperties(List<ClassControlTreeDto> dtos, int classId)
         {
             try
             {
-                var entity = await this.GetQuery<CustomClass>()
+                var entity = await this.GetQuery<IFKClass>()
                .SingleOrDefaultAsync(k => k.Id == classId);
 
                 if (entity == null) { throw new BusinessException(" No such entity exists"); }
@@ -326,24 +382,29 @@ namespace IF.Manager.Service
 
                     if (dto.Id <= 0)
                     {
-                        CustomClassProperty entityProperty = new CustomClassProperty();
+                        IFKClass entityProperty = new IFKClass();
                         //entityProperty.IsIdentity = dto.IsIdentity;
                         //entityProperty.MaxValue = dto.MaxValue;
                         entityProperty.Name = dto.Name;
                         entityProperty.Id = dto.Id;
                         entityProperty.Type = dto.Type;
+                        entity.IsPrimitive = false;
+                        entity.ParentId = classId;
                         //entityProperty.IsAudited = dto.IsAudited;
                         //entityProperty.IsMultiLanguage = dto.IsMultiLanguage;
                         //entityProperty.EntityId = classId;
                         entityProperty.IsNullable = dto.IsNullable;
+                        entity.Description = dto.Description;
                         this.Add(entityProperty);
                     }
                     else
                     {
-                        var entityProperty = await this.GetQuery<CustomClassProperty>(p => p.Id == dto.Id).SingleOrDefaultAsync();
+                        var entityProperty = await this.GetQuery<IFKClass>(p => p.Id == dto.Id).SingleOrDefaultAsync();
                         //entityProperty.IsIdentity = dto.IsIdentity;
                         //entityProperty.MaxValue = dto.MaxValue;
                         entityProperty.Name = dto.Name;
+                        entity.IsPrimitive = false;
+                        entity.Description = dto.Description;
                         entityProperty.Type = entityProperty.Type;
                         //entityProperty.IsAudited = dto.IsAudited;
                         //entityProperty.IsMultiLanguage = dto.IsMultiLanguage;

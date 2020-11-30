@@ -1,0 +1,10 @@
+﻿@model IF.Manager.Contracts.Dto.ClassMapModel
+
+@*@{
+    Layout = "_ModalLayout";
+
+}*@
+
+    <script src="~/js/IF.Tree.js"></script>
+
+@{await Html.RenderPartialAsync("Control/_ClassTreeList.cshtml", Model);}
