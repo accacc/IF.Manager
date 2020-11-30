@@ -371,10 +371,10 @@ namespace IF.Manager.Service
         {
             try
             {
-                var entity = await this.GetQuery<IFKClass>()
+                var @class = await this.GetQuery<IFKClass>()
                .SingleOrDefaultAsync(k => k.Id == classId);
 
-                if (entity == null) { throw new BusinessException(" No such entity exists"); }
+                if (@class == null) { throw new BusinessException(" No such entity exists"); }
 
 
                 foreach (var dto in dtos)
@@ -382,34 +382,35 @@ namespace IF.Manager.Service
 
                     if (dto.Id <= 0)
                     {
-                        IFKClass entityProperty = new IFKClass();
+                        IFKClass property = new IFKClass();
                         //entityProperty.IsIdentity = dto.IsIdentity;
                         //entityProperty.MaxValue = dto.MaxValue;
-                        entityProperty.Name = dto.Name;
-                        entityProperty.Id = dto.Id;
-                        entityProperty.Type = dto.Type;
-                        entity.IsPrimitive = false;
-                        entity.ParentId = classId;
+                        property.Name = dto.Name;
+                        property.Id = dto.Id;
+                        property.Type = dto.Type;
+                        property.IsPrimitive = false;
+                        property.ParentId = classId;
                         //entityProperty.IsAudited = dto.IsAudited;
                         //entityProperty.IsMultiLanguage = dto.IsMultiLanguage;
                         //entityProperty.EntityId = classId;
-                        entityProperty.IsNullable = dto.IsNullable;
-                        entity.Description = dto.Description;
-                        this.Add(entityProperty);
+                        property.IsNullable = dto.IsNullable;
+                        @class.Description = dto.Description;
+                        this.Add(property);
                     }
                     else
                     {
-                        var entityProperty = await this.GetQuery<IFKClass>(p => p.Id == dto.Id).SingleOrDefaultAsync();
+                        var property = await this.GetQuery<IFKClass>(p => p.Id == dto.Id && p.ParentId == classId).SingleOrDefaultAsync();
                         //entityProperty.IsIdentity = dto.IsIdentity;
                         //entityProperty.MaxValue = dto.MaxValue;
-                        entityProperty.Name = dto.Name;
-                        entity.IsPrimitive = false;
-                        entity.Description = dto.Description;
-                        entityProperty.Type = entityProperty.Type;
+                        property.Name = dto.Name;
+                        property.IsPrimitive = false;
+                        property.ParentId = classId;
+                        property.Description = dto.Description;
+                        property.Type = property.Type;
                         //entityProperty.IsAudited = dto.IsAudited;
                         //entityProperty.IsMultiLanguage = dto.IsMultiLanguage;
-                        entityProperty.IsNullable = dto.IsNullable;
-                        this.Update(entityProperty);
+                        property.IsNullable = dto.IsNullable;
+                        this.Update(property);
                     }
                 }
 

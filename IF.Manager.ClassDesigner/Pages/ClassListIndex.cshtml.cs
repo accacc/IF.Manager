@@ -64,7 +64,7 @@ namespace IF.Manager.ClassDesigner.Pages
 
             return new PartialViewResult
             {
-                ViewName = "_ClassTree",
+                ViewName = "_ClassTreeMain",
                 ViewData = new ViewDataDictionary<ClassMapModel>(ViewData, model)
             };
         }

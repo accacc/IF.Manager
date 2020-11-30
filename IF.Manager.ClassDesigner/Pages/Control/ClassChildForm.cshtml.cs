@@ -52,28 +52,55 @@ namespace IF.Manager.ClassDesigner.Pages.Control
         {
             SetFromDefaults();
 
-            var emptyFormItem = new EntityPropertyDto();          
+            var emptyFormItem = new ClassControlTreeDto();          
 
             return new PartialViewResult
             {
                 ViewName = "_ClassChildFormItem",
-                ViewData = new ViewDataDictionary<EntityPropertyDto>(ViewData,emptyFormItem )
+                ViewData = new ViewDataDictionary<ClassControlTreeDto>(ViewData,emptyFormItem )
             };            
         }
 
         public async Task<PartialViewResult> OnPost()
         {
             await this.classService.UpdateClassProperties(this.Form, this.ClassId);
-            
 
-            var entityList = await this.classService.GetClassList();
 
-            this.SetFromDefaults();
+            //var entityList = await this.classService.GetClassList();
+
+            //this.SetFromDefaults();
+
+            //return new PartialViewResult
+            //{
+            //    ViewName = "_ClassListTable",
+            //    ViewData = new ViewDataDictionary<List<IFKClass>>(ViewData, entityList)
+            //};
+
+
+            ClassMapModel model = new ClassMapModel();
+
+            model.IsModal = true;
+
+            var @class = await this.classService.GetClass(this.ClassId);
+
+            if (@class != null)
+            {
+                var tree = await this.classService.GetClassTreeList(@class.Id);
+
+
+                model.Tree = tree;
+                model.ClassId = @class.Id;
+            }
+            else
+            {
+                model.Tree = new List<ClassControlTreeDto>();
+            }
+
 
             return new PartialViewResult
             {
-                ViewName = "_EntityListTable",
-                ViewData = new ViewDataDictionary<List<IFKClass>>(ViewData, entityList)
+                ViewName = "_ClassTreeMain",
+                ViewData = new ViewDataDictionary<ClassMapModel>(ViewData, model)
             };
 
         }

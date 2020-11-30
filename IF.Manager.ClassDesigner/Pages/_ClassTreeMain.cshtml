@@ -1,0 +1,33 @@
+﻿@model IF.Manager.Contracts.Dto.ClassMapModel
+
+@*@{
+    Layout = "_ModalLayout";
+
+}*@
+
+    <script>
+
+        function setselectedtreenode() {
+            debugger;
+            var id = $("#ClassMapTree").jstree('get_selected');
+            //alert(id);
+            if (id == "") {
+                alert("Lütfen bir eleman seçiniz.")
+            }
+
+            var data = {};
+
+            data.TreeSelectedId = id[0];
+
+            return data;
+        }
+
+
+        $(document).ready(function () {
+            $("#ClassMapTree").jstree({
+                "plugins": ["wholerow"]
+            })
+        });
+    </script>
+
+@{await Html.RenderPartialAsync("Control/_ClassTreeList.cshtml", Model);}
