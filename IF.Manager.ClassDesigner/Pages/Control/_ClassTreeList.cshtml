@@ -23,16 +23,27 @@
     <div id="row">
 
         <a class="btn btn-primary"
-           href="@Url.Page("/Control/ClassChildForm",new { ClassId = Model.ClassId})"
+           href="@Url.Page("/Control/ClassChildForm","AddPrimitiveProperty",new { ClassId = Model.ClassId})"
            if-ajax="true"
            if-ajax-method="get"
            if-ajax-mode="replace"
            if-ajax-show-dialog="true"
            if-ajax-extradatafunc="setselectedtreenode()"
            if-ajax-modal-id="@Guid.NewGuid()">
-            Ekle
+            Primitive Property Ekle
         </a>
         -
+
+        <a class="btn btn-primary"
+           href="@Url.Page("/ClassForm","Add",new { ParentId = Model.ClassId})"
+           if-ajax="true"
+           if-ajax-method="get"
+           if-ajax-mode="replace"
+           if-ajax-show-dialog="true"
+           if-ajax-extradatafunc="setselectedtreenode()"
+           if-ajax-modal-id="@Guid.NewGuid()">
+            Class Property Ekle
+        </a>
         @*<a class="btn btn-primary"
            href="@Url.Page("/Control/ClassUpdateForm","UpdateControl",new { RootControlMapId = Model.ClassId})"
            if-ajax="true"

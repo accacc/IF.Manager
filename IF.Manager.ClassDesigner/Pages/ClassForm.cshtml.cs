@@ -1,3 +1,4 @@
+using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Service.Model;
@@ -25,7 +26,7 @@ namespace IF.Manager.ClassDesigner.Pages
 
         [BindProperty, Required]
         public IFKClass Form { get; set; }
-        public async Task OnGetAddAsync()
+        public void OnGetAdd()
         {
             this.Form = new IFKClass();
             //await this.SetFromDefaults();
@@ -38,19 +39,59 @@ namespace IF.Manager.ClassDesigner.Pages
 
         }
 
+        private async Task<ClassMapModel> GetTreeModel()
+        {
+            ClassMapModel model = new ClassMapModel();
+
+            model.IsModal = true;
+
+            var @class = await this.classService.GetClass(this.Form.Id);
+
+            if (@class != null)
+            {
+                var tree = await this.classService.GetClassTreeList(@class.Id);
+
+
+                model.Tree = tree;
+                model.ClassId = @class.Id;
+            }
+            else
+            {
+                model.Tree = new List<ClassControlTreeDto>();
+            }
+
+            return model;
+        }
+
         public async Task<PartialViewResult> OnPostAddAsync()
         {
 
 
             await this.classService.AddClass(this.Form);
 
-            var list = await this.classService.GetClassList();
-
-            return new PartialViewResult
+            if (this.Form.ParentId.HasValue)
             {
-                ViewName = "_ClassListTable",
-                ViewData = new ViewDataDictionary<List<IFKClass>>(ViewData, list)
-            };
+                ClassMapModel model = await GetTreeModel();
+
+                return new PartialViewResult
+                {
+                    ViewName = "_ClassTreeMain",
+                    ViewData = new ViewDataDictionary<ClassMapModel>(ViewData, model)
+                };
+            }
+
+            else
+            {
+
+                var list = await this.classService.GetClassList();
+
+                return new PartialViewResult
+                {
+                    ViewName = "_ClassListTable",
+                    ViewData = new ViewDataDictionary<List<IFKClass>>(ViewData, list)
+                };
+
+            }
         }
 
         public async Task<PartialViewResult> OnPostUpdateAsync()

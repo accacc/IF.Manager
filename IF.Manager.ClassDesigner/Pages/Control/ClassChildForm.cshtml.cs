@@ -61,22 +61,38 @@ namespace IF.Manager.ClassDesigner.Pages.Control
             };            
         }
 
-        public async Task<PartialViewResult> OnPost()
+       
+
+            public async Task<PartialViewResult> OnPostAddPrimitivePropertyAsync()
         {
             await this.classService.UpdateClassProperties(this.Form, this.ClassId);
 
+            ClassMapModel model = await GetTreeModel();
 
-            //var entityList = await this.classService.GetClassList();
+            return new PartialViewResult
+            {
+                ViewName = "_ClassTreeMain",
+                ViewData = new ViewDataDictionary<ClassMapModel>(ViewData, model)
+            };
 
-            //this.SetFromDefaults();
-
-            //return new PartialViewResult
-            //{
-            //    ViewName = "_ClassListTable",
-            //    ViewData = new ViewDataDictionary<List<IFKClass>>(ViewData, entityList)
-            //};
+        }
 
 
+        public async Task<PartialViewResult> OnPostAddClassPropertyAsync()
+        {
+            await this.classService.UpdateClassProperties(this.Form, this.ClassId);
+
+            ClassMapModel model = await GetTreeModel();
+
+            return new PartialViewResult
+            {
+                ViewName = "_ClassTreeMain",
+                ViewData = new ViewDataDictionary<ClassMapModel>(ViewData, model)
+            };
+
+        }
+        private async Task<ClassMapModel> GetTreeModel()
+        {
             ClassMapModel model = new ClassMapModel();
 
             model.IsModal = true;
@@ -96,13 +112,7 @@ namespace IF.Manager.ClassDesigner.Pages.Control
                 model.Tree = new List<ClassControlTreeDto>();
             }
 
-
-            return new PartialViewResult
-            {
-                ViewName = "_ClassTreeMain",
-                ViewData = new ViewDataDictionary<ClassMapModel>(ViewData, model)
-            };
-
+            return model;
         }
 
         private void SetEmptyForm()
