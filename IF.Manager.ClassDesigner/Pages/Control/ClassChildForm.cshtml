@@ -22,7 +22,7 @@
                             <tr>
                                 <th>Name</th>
                                 <th>Description</th>
-                                <th>Type</th>                                
+                                <th>Type</th>
                                 <th>IsNullable</th>
                             </tr>
                         </thead>
@@ -54,8 +54,7 @@
                             if-ajax-method="post"
                             if-ajax-close-modal-on-success="true"
                             if-ajax-on-success-refresh="true"
-                            if-ajax-update-id="ClassTreeListModal"
-                            >
+                            if-ajax-update-id="ClassTreeListModal">
                         Kaydet
                     </button>
                 </div>
@@ -64,6 +63,7 @@
 
 
             @Html.HiddenFor(m => m.ParentId)
+            @Html.HiddenFor(m => m.RootParentId)
         </form>
 
 

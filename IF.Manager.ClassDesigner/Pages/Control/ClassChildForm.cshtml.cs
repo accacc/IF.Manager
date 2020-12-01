@@ -23,8 +23,8 @@ namespace IF.Manager.ClassDesigner.Pages.Control
         [BindProperty, Required]
         public List<ClassControlTreeDto> Form { get; set; }
 
-        //[BindProperty(SupportsGet =true), Required]
-        //public int ClassId { get; set; }
+        [BindProperty(SupportsGet = true), Required]
+        public int RootParentId { get; set; }
 
         [BindProperty(SupportsGet = true), Required]
         public int? ParentId { get; set; }
@@ -104,11 +104,11 @@ namespace IF.Manager.ClassDesigner.Pages.Control
 
             model.IsModal = true;
 
-            var @class = await this.classService.GetClass(this.ParentId.Value);
+            var @class = await this.classService.GetClass(this.RootParentId);
 
             if (@class != null)
             {
-                var tree = await this.classService.GetClassTreeList(@class.Id);
+                var tree = await this.classService.GetClassTreeList(this.RootParentId);
 
 
                 model.Tree = tree;

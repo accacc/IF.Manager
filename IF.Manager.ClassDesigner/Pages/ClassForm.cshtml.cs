@@ -27,6 +27,10 @@ namespace IF.Manager.ClassDesigner.Pages
         [BindProperty(SupportsGet =true), Required]
         public int? ParentId { get; set; }
 
+
+        [BindProperty(SupportsGet = true), Required]
+        public int RootParentId { get; set; }
+
         [BindProperty, Required]
         public IFKClass Form { get; set; }
         public void OnGetAdd()
@@ -49,11 +53,11 @@ namespace IF.Manager.ClassDesigner.Pages
 
             model.IsModal = true;
 
-            var @class = await this.classService.GetClass(this.Form.Id);
+            var @class = await this.classService.GetClass(this.RootParentId);
 
             if (@class != null)
             {
-                var tree = await this.classService.GetClassTreeList(this.Form.ParentId.Value);
+                var tree = await this.classService.GetClassTreeList(this.RootParentId);
 
 
                 model.Tree = tree;

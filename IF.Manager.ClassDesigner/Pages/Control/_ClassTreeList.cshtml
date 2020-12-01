@@ -23,7 +23,7 @@
     <div id="row">
 
         <a class="btn btn-primary"
-           href="@Url.Page("/Control/ClassChildForm","AddPrimitiveProperty")"
+           href="@Url.Page("/Control/ClassChildForm","AddPrimitiveProperty",new {RootParentId = Model.ClassId })"
            if-ajax="true"
            if-ajax-method="get"
            if-ajax-mode="replace"
@@ -35,7 +35,7 @@
         -
 
         <a class="btn btn-primary"
-           href="@Url.Page("/ClassForm","Add")"
+           href="@Url.Page("/ClassForm","Add",new {RootParentId = Model.ClassId })"
            if-ajax="true"
            if-ajax-method="get"
            if-ajax-mode="replace"
@@ -44,50 +44,7 @@
            if-ajax-modal-id="@Guid.NewGuid()">
             Class Property Ekle
         </a>
-        @*<a class="btn btn-primary"
-           href="@Url.Page("/Control/ClassUpdateForm","UpdateControl",new { RootControlMapId = Model.ClassId})"
-           if-ajax="true"
-           if-ajax-method="get"
-           if-ajax-mode="replace"
-           if-ajax-show-dialog="true"
-           if-ajax-extradatafunc="setselectedtreenode()"
-           if-ajax-modal-id="@Guid.NewGuid()">
-            Güncelle
-        </a>
-        -
-        <a class="btn btn-primary"
-           href="@Url.Page("/Control/ClassUpdateForm","DeleteControl",new { RootControlMapId = Model.ClassId})"
-           if-ajax="true"
-           if-ajax-method="post"
-           if-ajax-mode="replace"
-           if-ajax-update-id="ClassTreeListModal"
-           if-anti-forgery-token="@Context.GetAntiforgeryToken()"
-           if-ajax-extradatafunc="setselectedtreenode()">
-            Sil
-        </a>
-        -  <a class="btn btn-primary"
-              href="@Url.Page("/Control/ClassInsertForm","MoveModelItemUpOne")"
-              if-ajax="true"
-              if-ajax-method="post"
-              if-ajax-insertion-mode="replace"
-              if-ajax-update-id="ClassTreeListModal"
-              if-anti-forgery-token="@Context.GetAntiforgeryToken()"
-              if-ajax-extradatafunc="setselectedtreenode()">
-            &#8593;
-        </a>
 
-        -
-
-        <a class="btn btn-primary"
-           href="@Url.Page("/Control/ClassInsertForm","MoveModelItemDownOne")"
-           if-ajax="true"
-           if-ajax-method="post"
-           if-ajax-insertion-mode="replace"
-           if-ajax-update-id="ClassTreeListModal"
-           if-anti-forgery-token="@Context.GetAntiforgeryToken()"
-           if-ajax-extradatafunc="setselectedtreenode()">
-            &#8595;
-        </a>*@
     </div>
     <br />
     <div id="row">
