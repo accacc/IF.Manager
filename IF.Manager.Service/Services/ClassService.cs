@@ -205,7 +205,14 @@ namespace IF.Manager.Service
             }
         }
 
+        public async Task GenerateClass(int classId)
+        {
+            var mainClass = await this.GetQuery<IFKClass>(c => c.Id == classId).SingleOrDefaultAsync();
 
+            var childClasses = await this.GetQuery<IFKClass>(c => c.ParentId == classId).ToListAsync();
+
+
+        }
     }
 
 

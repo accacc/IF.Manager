@@ -28,6 +28,31 @@ namespace IF.Manager.ClassDesigner.Pages
            await SetModel();
         }
 
+
+        public async Task<PartialViewResult> OnPostGenerateAsync(int ClassId)
+        {
+            try
+            {
+                await this.classService.GenerateClass(ClassId);
+            }
+            catch (System.Exception ex)
+            {
+
+                throw;
+            }
+
+
+            await SetModel();
+
+            return new PartialViewResult
+            {
+                ViewName = "_ClassListTable",
+                ViewData = new ViewDataDictionary<List<IFKClass>>(ViewData, this.ClassList)
+            };
+
+
+        }
+
         public async Task<PartialViewResult> OnGetPageListPartialAsync()
         {
             await SetModel();

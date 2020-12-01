@@ -29,7 +29,7 @@ namespace IF.Manager.Contracts.Services
         Task UpdateClassProperties(List<ClassControlTreeDto> dtos, int classId);
 
         Task<List<ClassControlTreeDto>> GetClassTreeList(int ParentId);
-
+        Task GenerateClass(int classId);
         Task<List<ClassControlTreeDto>> GetClassPropertyList(int classId    );
 
         //Task<List<IFCustomClassRelation>> GetClassRelationList(int classId);
