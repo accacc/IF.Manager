@@ -24,11 +24,15 @@ namespace IF.Manager.ClassDesigner.Pages
             this.classService = pageService;
         }
 
+        [BindProperty(SupportsGet =true), Required]
+        public int? ParentId { get; set; }
+
         [BindProperty, Required]
         public IFKClass Form { get; set; }
         public void OnGetAdd()
         {
             this.Form = new IFKClass();
+            this.Form.ParentId = this.ParentId;
             //await this.SetFromDefaults();
         }
 
@@ -49,7 +53,7 @@ namespace IF.Manager.ClassDesigner.Pages
 
             if (@class != null)
             {
-                var tree = await this.classService.GetClassTreeList(@class.Id);
+                var tree = await this.classService.GetClassTreeList(this.Form.ParentId.Value);
 
 
                 model.Tree = tree;
@@ -116,97 +120,5 @@ namespace IF.Manager.ClassDesigner.Pages
                 ViewData = new ViewDataDictionary<List<IFKClass>>(ViewData, list)
             };
         }
-
-
-
-
-
-        //private async Task SetFromDefaults()
-        //{
-        //    await SetPageLayouts();
-        //    await SetProceses();
-        //    await SetProjects();
-
-
-        //}
-
-        //private async Task SetProjects()
-        //{
-        //    var projects = await this.projectService.GetProjectList();
-
-        //    List<SelectListItem> items = new List<SelectListItem>();
-
-
-        //    foreach (var data in projects)
-        //    {
-        //        SelectListItem item = new SelectListItem();
-
-        //        if (this.Form.IFProjectId == data.Id)
-        //        {
-        //            item.Selected = true;
-        //        }
-
-        //        item.Text = data.Name;
-        //        item.Value = data.Id.ToString();
-        //        items.Add(item);
-        //    }
-
-        //    ViewData["projects"] = items;
-        //}
-
-        //private async Task SetProceses()
-        //{
-        //    var process = await this.projectService.GetProcessList();
-
-        //    List<SelectListItem> items = new List<SelectListItem>();
-
-
-        //    foreach (var data in process)
-        //    {
-        //        SelectListItem item = new SelectListItem();
-
-        //        if (this.Form.ProcessId == data.Id)
-        //        {
-        //            item.Selected = true;
-        //        }
-
-        //        item.Text = data.Name;
-        //        item.Value = data.Id.ToString();
-        //        items.Add(item);
-        //    }
-
-        //    ViewData["process"] = items;
-        //}
-
-        //private async Task SetPageLayouts()
-        //{
-        //    List<IFPageLayout> datas = await this.classService.GetPageLayoutList();
-
-        //    List<SelectListItem> items = new List<SelectListItem>();
-
-
-        //    foreach (var data in datas)
-        //    {
-        //        SelectListItem item = new SelectListItem();
-
-        //        if (this.Form.PageLayoutId == data.Id)
-        //        {
-        //            item.Selected = true;
-        //        }
-
-        //        item.Text = data.Name;
-        //        item.Value = data.Id.ToString();
-        //        items.Add(item);
-        //    }
-
-        //    ViewData["page_layouts"] = items;
-        //}
-
-
-
-
-
-
-
     }
 }

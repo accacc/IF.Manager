@@ -23,7 +23,7 @@
     <div id="row">
 
         <a class="btn btn-primary"
-           href="@Url.Page("/Control/ClassChildForm","AddPrimitiveProperty",new { ClassId = Model.ClassId})"
+           href="@Url.Page("/Control/ClassChildForm","AddPrimitiveProperty")"
            if-ajax="true"
            if-ajax-method="get"
            if-ajax-mode="replace"
@@ -35,7 +35,7 @@
         -
 
         <a class="btn btn-primary"
-           href="@Url.Page("/ClassForm","Add",new { ParentId = Model.ClassId})"
+           href="@Url.Page("/ClassForm","Add")"
            if-ajax="true"
            if-ajax-method="get"
            if-ajax-mode="replace"

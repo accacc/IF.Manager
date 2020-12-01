@@ -23,8 +23,15 @@ namespace IF.Manager.ClassDesigner.Pages.Control
         [BindProperty, Required]
         public List<ClassControlTreeDto> Form { get; set; }
 
-        [BindProperty(SupportsGet =true), Required]
-        public int ClassId { get; set; }
+        //[BindProperty(SupportsGet =true), Required]
+        //public int ClassId { get; set; }
+
+        [BindProperty(SupportsGet = true), Required]
+        public int? ParentId { get; set; }
+
+
+        //[BindProperty(SupportsGet = true), Required]
+        //public int? TreeSelectedId { get; set; }
 
         public ClassChildFormModel(IClassService classService, IEntityService entityService)
         {
@@ -35,7 +42,7 @@ namespace IF.Manager.ClassDesigner.Pages.Control
 
         public async Task OnGet()
         {
-            this.Form = await this.classService.GetClassPropertyList(this.ClassId);
+            this.Form = await this.classService.GetClassPropertyList(this.ParentId.Value);
             
             if (!this.Form.Any())
             {
@@ -65,7 +72,7 @@ namespace IF.Manager.ClassDesigner.Pages.Control
 
             public async Task<PartialViewResult> OnPostAddPrimitivePropertyAsync()
         {
-            await this.classService.UpdateClassProperties(this.Form, this.ClassId);
+            await this.classService.UpdateClassProperties(this.Form, this.ParentId.Value);
 
             ClassMapModel model = await GetTreeModel();
 
@@ -80,7 +87,7 @@ namespace IF.Manager.ClassDesigner.Pages.Control
 
         public async Task<PartialViewResult> OnPostAddClassPropertyAsync()
         {
-            await this.classService.UpdateClassProperties(this.Form, this.ClassId);
+            await this.classService.UpdateClassProperties(this.Form, this.ParentId.Value);
 
             ClassMapModel model = await GetTreeModel();
 
@@ -97,7 +104,7 @@ namespace IF.Manager.ClassDesigner.Pages.Control
 
             model.IsModal = true;
 
-            var @class = await this.classService.GetClass(this.ClassId);
+            var @class = await this.classService.GetClass(this.ParentId.Value);
 
             if (@class != null)
             {

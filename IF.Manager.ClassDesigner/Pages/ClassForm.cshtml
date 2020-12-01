@@ -3,6 +3,11 @@
 
 @{
     Layout = "_ModalLayout";
+    string updatedId = "ClassListDiv";
+    @if(Model.ParentId.HasValue)
+    {
+        updatedId = "ClassTreeListModal";
+    }
 }
 
 
@@ -35,7 +40,7 @@
                     if-ajax-form-submit="true"
                     if-ajax-method="post"
                     if-ajax-close-modal-on-success="true"
-                    if-ajax-update-id="ClassListDiv">
+                    if-ajax-update-id="@updatedId">
                 Save
             </button>
         </div>
