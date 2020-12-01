@@ -9,6 +9,11 @@ namespace IF.Manager.Service.Model
 {
     public class IFKClass : Entity
     {
+        public IFKClass()
+        {
+            this.Childrens = new List<IFKClass>();
+        }
+
         [Key]
         public int Id { get; set; }
         public int? ParentId { get; set; }
@@ -22,6 +27,8 @@ namespace IF.Manager.Service.Model
         public string Description { get; set; }
 
         public string Type { get; set; }
+
+        public string GenericType { get; set; }
 
         public bool IsNullable { get; set; }
         public bool IsPrimitive { get; set; }

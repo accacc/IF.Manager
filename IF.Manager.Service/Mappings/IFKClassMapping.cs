@@ -18,6 +18,11 @@ namespace IF.Manager.Service.Mappings
             //builder.Property(x => x.IFRelatedEntityId).IsRequired();
             builder.Property(x => x.Type).IsRequired();
 
+            builder.HasOne(x => x.Parent)
+            .WithMany(x => x.Childrens)
+            .HasForeignKey(x => x.ParentId)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

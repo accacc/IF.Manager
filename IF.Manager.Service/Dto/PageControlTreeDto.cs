@@ -19,6 +19,9 @@ namespace IF.Manager.Contracts.Dto
 
         public string Type { get; set; }
 
+        public string GenericType { get; set; }
+
+
 
         public bool IsPrimitive { get; set; }
 

@@ -1,5 +1,7 @@
 ﻿using DatabaseSchemaReader.DataSchema;
 
+using IF.CodeGeneration.Core;
+using IF.CodeGeneration.CSharp;
 using IF.Core.Data;
 using IF.Core.Exception;
 using IF.Manager.Contracts.Dto;
@@ -14,17 +16,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace IF.Manager.Service
 {
     public class ClassService : GenericRepository, IClassService
     {
-
+        private readonly FileSystemCodeFormatProvider fileSystem;
         public ClassService(ManagerDbContext dbContext) : base(dbContext)
         {
 
-           
+            this.fileSystem = new FileSystemCodeFormatProvider(DirectoryHelper.GetTempGeneratedDirectoryName());
 
 
         }
@@ -38,9 +41,10 @@ namespace IF.Manager.Service
                    Id = e.Id,
                    Name = e.Name,
                    Type = e.Type,
+                   GenericType = e.GenericType,
                    IsNullable = e.IsNullable,
                    Description = e.Description
-                   
+
 
                })
                .ToListAsync();
@@ -50,13 +54,13 @@ namespace IF.Manager.Service
             return list;
         }
 
-      
+
 
         public async Task<List<IFKClass>> GetClassList()
         {
 
 
-            var list = await this.GetQuery<IFKClass>(c=>c.ParentId == null).ToListAsync();
+            var list = await this.GetQuery<IFKClass>(c => c.ParentId == null).ToListAsync();
 
             return list;
         }
@@ -67,10 +71,11 @@ namespace IF.Manager.Service
             {
                 IFKClass entity = new IFKClass();
                 entity.Id = form.Id;
-                string name = DirectoryHelper.AddAsLastWord(form.Name, "CustomClass");
-                entity.Name = name;
-                entity.Type = "Class";
-                entity.IsPrimitive = true;
+                string type = DirectoryHelper.AddAsLastWord(form.Type, "CustomClass");
+                entity.Type = type;
+                entity.Name = form.Name;
+                entity.GenericType = form.GenericType;
+                entity.IsPrimitive = false;
                 entity.ParentId = form.ParentId;
                 entity.Description = form.Description;
                 this.Add(entity);
@@ -93,7 +98,7 @@ namespace IF.Manager.Service
             try
             {
                 var list = await this.GetQuery<IFKClass>().Select
-                    
+
                (map =>
                 new ClassControlTreeDto
                 {
@@ -102,6 +107,7 @@ namespace IF.Manager.Service
                     Id = map.Id,
                     ParentId = map.ParentId,
                     Type = map.Type,
+                    GenericType = map.GenericType,
                     IsPrimitive = map.IsPrimitive,
                     Description = map.Description,
                     IsNullable = map.IsNullable
@@ -133,9 +139,11 @@ namespace IF.Manager.Service
 
                 if (entity == null) { throw new BusinessException($"{nameof(IFKClass)} : No such entity exists"); }
 
-                string name = DirectoryHelper.AddAsLastWord(form.Name, "IFKClass");
-                entity.Name = name;
+                string type = DirectoryHelper.AddAsLastWord(form.Type, "CustomClass");
+                entity.Type = type;
+                entity.Name = form.Name;
                 entity.Description = form.Description;
+                entity.GenericType = form.GenericType;
                 this.Update(entity);
 
 
@@ -177,7 +185,8 @@ namespace IF.Manager.Service
                         property.Name = dto.Name;
                         property.Id = dto.Id;
                         property.Type = dto.Type;
-                        property.IsPrimitive = false;
+                        property.GenericType = dto.GenericType;
+                        property.IsPrimitive = true;
                         property.ParentId = classId;
                         property.IsNullable = dto.IsNullable;
                         property.Description = dto.Description;
@@ -187,10 +196,11 @@ namespace IF.Manager.Service
                     {
                         var property = await this.GetQuery<IFKClass>(p => p.Id == dto.Id && p.ParentId == classId).SingleOrDefaultAsync();
                         property.Name = dto.Name;
-                        property.IsPrimitive = false;
+                        property.IsPrimitive = true;
                         property.ParentId = classId;
                         property.Description = dto.Description;
                         property.Type = property.Type;
+                        property.GenericType = dto.GenericType;
                         property.IsNullable = dto.IsNullable;
                         this.Update(property);
                     }
@@ -207,9 +217,77 @@ namespace IF.Manager.Service
 
         public async Task GenerateClass(int classId)
         {
-            var mainClass = await this.GetQuery<IFKClass>(c => c.Id == classId).SingleOrDefaultAsync();
+            var map = await this.GetClass(classId);
 
-            var childClasses = await this.GetQuery<IFKClass>(c => c.ParentId == classId).ToListAsync();
+            var dto = new ClassControlTreeDto
+            {
+
+                Name = map.Name,
+                Id = map.Id,
+                ParentId = map.ParentId,
+                Type = map.Type,
+                GenericType = map.GenericType,
+                IsPrimitive = map.IsPrimitive,
+                Description = map.Description,
+                IsNullable = map.IsNullable
+
+            };
+
+           
+
+            var childs = await this.GetClassTreeList(classId);
+
+            dto.Childs = childs;
+
+            List<CSClass> allClass = new List<CSClass>();
+            
+
+            CSClass csClass = new CSClass();
+
+            GenerateClassTree(dto, csClass,allClass);
+
+
+            StringBuilder code = new StringBuilder();
+
+            foreach (var @class in allClass)
+            {
+                code.AppendLine(@class.GenerateCode().Template);
+            }
+
+
+            fileSystem.FormatCode(code.ToString(), "cs",dto.Name);
+        }
+
+        private static void GenerateClassTree(ClassControlTreeDto mainClass, CSClass csClass,List<CSClass> allClass)
+        {
+            allClass.Add(csClass);
+
+            csClass.Name = mainClass.Type;
+            
+
+            foreach (var child in mainClass.Childs)
+            {
+                if (child.IsPrimitive)
+                {
+                    CSProperty property = new CSProperty("public", child.Name, child.IsNullable);
+                    property.PropertyTypeString = child.Type;
+                    property.GenericType = child.GenericType;
+                    csClass.Properties.Add(property);
+                }
+                else
+                {
+                    CSProperty property = new CSProperty("public", child.Name, false);
+                    property.PropertyTypeString = child.Type;
+                    property.GenericType = child.GenericType;
+                    csClass.Properties.Add(property);
+
+                    CSClass childClass = new CSClass();                        
+                    
+                    GenerateClassTree(child, childClass,allClass);
+
+                }
+
+            }
 
 
         }
