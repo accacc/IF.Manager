@@ -78,6 +78,7 @@ namespace IF.Manager.Service
                 entity.IsPrimitive = false;
                 entity.ParentId = form.ParentId;
                 entity.Description = form.Description;
+                entity.Childrens = form.Childrens;
                 this.Add(entity);
 
                 await this.UnitOfWork.SaveChangesAsync();

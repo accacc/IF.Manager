@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IF.Admin", "IF.Admin\IF.Adm
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IF.Manager.ClassDesigner", "IF.Manager.ClassDesigner\IF.Manager.ClassDesigner.csproj", "{95AC1809-6450-4752-9A62-120901FD4605}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IF.Manager.Integration", "IF.Manager.Integration\IF.Manager.Integration.csproj", "{4D43C4B8-E774-4977-BF00-39BB5FBADD26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IF.Manager.Integration", "IF.Manager.Integration\IF.Manager.Integration.csproj", "{4D43C4B8-E774-4977-BF00-39BB5FBADD26}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

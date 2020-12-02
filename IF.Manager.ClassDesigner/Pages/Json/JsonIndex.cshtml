@@ -1,0 +1,16 @@
+﻿@page
+@model IF.Manager.ClassDesigner.Pages.Json.JsonIndexModel
+@{
+}
+
+
+
+<form method="post" enctype="multipart/form-data">
+
+    <input type="submit" />
+    <textarea id="jsondata" name="jsondata" rows="100" cols="100">
+  </textarea>
+
+    @Html.AntiForgeryToken()
+</form>
+
