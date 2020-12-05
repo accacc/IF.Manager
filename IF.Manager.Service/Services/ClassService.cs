@@ -32,10 +32,62 @@ namespace IF.Manager.Service
 
         }
 
+        public async Task<List<IFClassMapper>> GetClassMapperList()
+        {
+            var data = await this.GetQuery<IFClassMapper>().ToListAsync();
+
+            return data;
+        }
+
+
+        public async Task AddClassMapper(IFClassMapper form)
+        {
+            IFClassMapper entity = new IFClassMapper();
+            string name = DirectoryHelper.AddAsLastWord(form.Name, "IFClassMapper");
+            entity.Name = name;
+            entity.Description = form.Description;
+            this.Add(entity);
+            await this.UnitOfWork.SaveChangesAsync();
+            form.Id = entity.Id;
+        }
+
+        public async Task UpdateClassMapper(IFClassMapper form)
+        {
+
+            try
+            {
+                var entity = await this.GetQuery<IFClassMapper>()
+            .SingleOrDefaultAsync(k => k.Id == form.Id);
+
+                if (entity == null) { throw new BusinessException($"{nameof(IFClassMapper)} : No such entity exists"); }
+
+                string name = DirectoryHelper.AddAsLastWord(form.Name, "IFClassMapper");
+                entity.Name = name;
+                entity.Description = form.Description;
+                this.Update(entity);
+                await this.UnitOfWork.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IFClassMapper> GetClassMapper(int id)
+        {
+            var entity = await this.GetQuery<IFClassMapper>()
+            .SingleOrDefaultAsync(k => k.Id == id);
+
+            if (entity == null) { throw new BusinessException($"{nameof(IFClassMapper)} : No such entity exists"); }
+
+            return entity;
+        }
+
 
         public async Task<List<ClassControlTreeDto>> GetClassPropertyList(int classId)
         {
-            var list = await GetQuery<IFKClass>().Where(e => e.ParentId == classId)
+            var list = await GetQuery<IFClass>().Where(e => e.ParentId == classId)
                .Select(e => new ClassControlTreeDto
                {
                    Id = e.Id,
@@ -56,20 +108,20 @@ namespace IF.Manager.Service
 
 
 
-        public async Task<List<IFKClass>> GetClassList()
+        public async Task<List<IFClass>> GetClassList()
         {
 
 
-            var list = await this.GetQuery<IFKClass>(c => c.ParentId == null).ToListAsync();
+            var list = await this.GetQuery<IFClass>(c => c.ParentId == null).ToListAsync();
 
             return list;
         }
 
-        public async Task AddClass(IFKClass form)
+        public async Task AddClass(IFClass form)
         {
             try
             {
-                IFKClass entity = new IFKClass();
+                IFClass entity = new IFClass();
                 entity.Id = form.Id;
                 string type = DirectoryHelper.AddAsLastWord(form.Type, "CustomClass");
                 entity.Type = type;
@@ -98,7 +150,7 @@ namespace IF.Manager.Service
 
             try
             {
-                var list = await this.GetQuery<IFKClass>().Select
+                var list = await this.GetQuery<IFClass>().Select
 
                (map =>
                 new ClassControlTreeDto
@@ -130,15 +182,15 @@ namespace IF.Manager.Service
         }
 
 
-        public async Task UpdateClass(IFKClass form)
+        public async Task UpdateClass(IFClass form)
         {
 
             try
             {
-                var entity = await this.GetQuery<IFKClass>()
+                var entity = await this.GetQuery<IFClass>()
             .SingleOrDefaultAsync(k => k.Id == form.Id);
 
-                if (entity == null) { throw new BusinessException($"{nameof(IFKClass)} : No such entity exists"); }
+                if (entity == null) { throw new BusinessException($"{nameof(IFClass)} : No such entity exists"); }
 
                 string type = DirectoryHelper.AddAsLastWord(form.Type, "CustomClass");
                 entity.Type = type;
@@ -157,9 +209,9 @@ namespace IF.Manager.Service
             }
         }
 
-        public async Task<IFKClass> GetClass(int id)
+        public async Task<IFClass> GetClass(int id)
         {
-            var entity = await this.GetQuery<IFKClass>()
+            var entity = await this.GetQuery<IFClass>()
           .SingleOrDefaultAsync(k => k.Id == id);
 
             if (entity == null) { throw new BusinessException("IFKClass : No such entity exists"); }
@@ -171,7 +223,7 @@ namespace IF.Manager.Service
         {
             try
             {
-                var @class = await this.GetQuery<IFKClass>()
+                var @class = await this.GetQuery<IFClass>()
                .SingleOrDefaultAsync(k => k.Id == classId);
 
                 if (@class == null) { throw new BusinessException(" No such entity exists"); }
@@ -182,7 +234,7 @@ namespace IF.Manager.Service
 
                     if (dto.Id <= 0)
                     {
-                        IFKClass property = new IFKClass();
+                        IFClass property = new IFClass();
                         property.Name = dto.Name;
                         property.Id = dto.Id;
                         property.Type = dto.Type;
@@ -195,7 +247,7 @@ namespace IF.Manager.Service
                     }
                     else
                     {
-                        var property = await this.GetQuery<IFKClass>(p => p.Id == dto.Id && p.ParentId == classId).SingleOrDefaultAsync();
+                        var property = await this.GetQuery<IFClass>(p => p.Id == dto.Id && p.ParentId == classId).SingleOrDefaultAsync();
                         property.Name = dto.Name;
                         property.IsPrimitive = true;
                         property.ParentId = classId;

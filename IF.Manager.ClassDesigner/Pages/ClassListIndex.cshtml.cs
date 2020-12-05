@@ -17,7 +17,7 @@ namespace IF.Manager.ClassDesigner.Pages
     {
         private readonly IClassService classService;
 
-        public List<IFKClass> ClassList { get; set; }
+        public List<IFClass> ClassList { get; set; }
 
         public ClassListIndexModel(IClassService pageService)
         {
@@ -47,7 +47,7 @@ namespace IF.Manager.ClassDesigner.Pages
             return new PartialViewResult
             {
                 ViewName = "_ClassListTable",
-                ViewData = new ViewDataDictionary<List<IFKClass>>(ViewData, this.ClassList)
+                ViewData = new ViewDataDictionary<List<IFClass>>(ViewData, this.ClassList)
             };
 
 
@@ -60,7 +60,7 @@ namespace IF.Manager.ClassDesigner.Pages
             return new PartialViewResult
             {
                 ViewName = "_ClassListTable",
-                ViewData = new ViewDataDictionary<List<IFKClass>>(ViewData, this.ClassList)
+                ViewData = new ViewDataDictionary<List<IFClass>>(ViewData, this.ClassList)
             };
 
         }

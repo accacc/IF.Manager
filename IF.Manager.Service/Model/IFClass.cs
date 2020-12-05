@@ -7,20 +7,20 @@ using System.Text;
 
 namespace IF.Manager.Service.Model
 {
-    public class IFKClass : Entity
+    public class IFClass : Entity
     {
-        public IFKClass()
+        public IFClass()
         {
-            this.Childrens = new List<IFKClass>();
+            this.Childrens = new List<IFClass>();
         }
 
         [Key]
         public int Id { get; set; }
         public int? ParentId { get; set; }
 
-        public IFKClass Parent { get; set; }
+        public IFClass Parent { get; set; }
 
-        public ICollection<IFKClass> Childrens { get; set; }
+        public ICollection<IFClass> Childrens { get; set; }
 
         public string Name { get; set; }
 

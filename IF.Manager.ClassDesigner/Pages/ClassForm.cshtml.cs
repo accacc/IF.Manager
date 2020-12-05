@@ -32,10 +32,10 @@ namespace IF.Manager.ClassDesigner.Pages
         public int RootParentId { get; set; }
 
         [BindProperty, Required]
-        public IFKClass Form { get; set; }
+        public IFClass Form { get; set; }
         public void OnGetAdd()
         {
-            this.Form = new IFKClass();
+            this.Form = new IFClass();
             this.Form.ParentId = this.ParentId;
             //await this.SetFromDefaults();
         }
@@ -96,7 +96,7 @@ namespace IF.Manager.ClassDesigner.Pages
                 return new PartialViewResult
                 {
                     ViewName = "_ClassListTable",
-                    ViewData = new ViewDataDictionary<List<IFKClass>>(ViewData, list)
+                    ViewData = new ViewDataDictionary<List<IFClass>>(ViewData, list)
                 };
 
             }
@@ -121,7 +121,7 @@ namespace IF.Manager.ClassDesigner.Pages
             return new PartialViewResult
             {
                 ViewName = "_ClassListTable",
-                ViewData = new ViewDataDictionary<List<IFKClass>>(ViewData, list)
+                ViewData = new ViewDataDictionary<List<IFClass>>(ViewData, list)
             };
         }
     }

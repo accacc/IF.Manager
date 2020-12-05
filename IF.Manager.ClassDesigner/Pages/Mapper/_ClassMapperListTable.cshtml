@@ -1,4 +1,4 @@
-﻿@model List<IF.Manager.Service.Model.IFClass>
+﻿@model List<IF.Manager.Service.Model.IFClassMapper>
 
 @{ Layout = null;}
 
@@ -19,7 +19,7 @@
             Düzenle
         </th>
         <th>
-            Properties
+            Mapping
         </th>
         <th>Generate</th>
 
@@ -40,7 +40,7 @@
                 </td>
                 <td>
                     <a class="btn btn-primary"
-                       href="@Url.Page("/ClassForm","Update",new { Id = item.Id})"
+                       href="@Url.Page("/ClassMapperForm","Update",new { Id = item.Id})"
                        if-ajax="true"
                        if-ajax-method="get"
                        if-ajax-mode="replace"
@@ -50,9 +50,9 @@
                     </a>
                 </td>
 
-                <td>
+                @*<td>
                     <a class="btn btn-primary"
-                       href="@Url.Page("/ClassListIndex","ClassTreeList",new { Id = item.Id })"
+                       href="@Url.Page("/ClassMapperListIndex","ClassTreeList",new { Id = item.Id })"
                        if-ajax="true"
                        if-ajax-method="get"
                        if-ajax-insertion-mode="replace"
@@ -61,10 +61,11 @@
                         Properties
                     </a>
                 </td>
+
                 <td>
 
                     <a class="btn btn-primary"
-                       href="@Url.Page("/ClassListIndex","Generate",new { ClassId = item.Id})"
+                       href="@Url.Page("/ClassMapperListIndex","Generate",new { ClassId = item.Id})"
                        if-ajax="true"
                        if-ajax-method="post"
                        if-ajax-mode="replace"
@@ -72,7 +73,7 @@
                        if-anti-forgery-token="@Context.GetAntiforgeryToken()">
                         Generate Class
                     </a>
-                </td>
+                </td>*@
 
 
             </tr>

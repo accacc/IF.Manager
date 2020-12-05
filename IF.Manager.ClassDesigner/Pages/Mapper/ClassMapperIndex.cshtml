@@ -2,3 +2,31 @@
 @model IF.Manager.ClassDesigner.Pages.Mapper.ClassMapperIndexModel
 @{
 }
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <a class="btn btn-success"
+           href="@Url.Page("/MapperClassForm","Add")"
+           if-ajax="true"
+           if-ajax-method="get"
+           if-ajax-insertion-mode="replace"
+           if-ajax-show-dialog="true"
+           if-ajax-modal-id="@Guid.NewGuid()">
+            Add
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <hr />
+    </div>
+</div>
+
+<div class="row">
+    <div id="ClassMapperListDiv" class="col-md-12">
+        @{await Html.RenderPartialAsync("_ClassMapperListTable", Model.ClassMapperList);}
+    </div>
+</div>

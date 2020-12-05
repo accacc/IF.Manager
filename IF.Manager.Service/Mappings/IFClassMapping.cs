@@ -9,11 +9,11 @@ using System.Text;
 
 namespace IF.Manager.Service.Mappings
 {
-    public class IFKClassMapping : IEntityTypeConfiguration<IFKClass>
+    public class IFClassMapping : IEntityTypeConfiguration<IFClass>
     {
-        public void Configure(EntityTypeBuilder<IFKClass> builder)
+        public void Configure(EntityTypeBuilder<IFClass> builder)
         {
-            builder.ToTable("IFKClass");
+            builder.ToTable("IFClass");
             builder.Property(x => x.Id).IsRequired();
             //builder.Property(x => x.IFRelatedEntityId).IsRequired();
             builder.Property(x => x.Type).IsRequired();

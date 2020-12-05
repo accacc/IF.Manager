@@ -71,7 +71,8 @@ namespace IF.Manager.Persistence.EF
             builder.ApplyConfiguration(new IFPageParameterMapping());
 
 
-            builder.ApplyConfiguration(new IFKClassMapping());
+            builder.ApplyConfiguration(new IFClassMapping());
+            builder.ApplyConfiguration(new IFClassMapperMapping());
 
 
 
@@ -141,7 +142,11 @@ namespace IF.Manager.Persistence.EF
 
         public DbSet<IFPageParameter>  IFPageParameters { get; set; }
 
-        public DbSet<IFKClass> IFKClasses { get; set; }
+        public DbSet<IFClass> IFClasses { get; set; }
+
+        public DbSet<IFClassMapper> IFClassMappers { get; set; }
+
+
 
 
 

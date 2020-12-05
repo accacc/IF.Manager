@@ -59,20 +59,20 @@ namespace IF.Manager.ClassDesigner.Pages.Json
 
             var types = gen.Types;
 
-            IFKClass mainClass = new IFKClass();
+            IFClass mainClass = new IFClass();
             mainClass.Name = "aaa";
             mainClass.Type = "aaa";
             mainClass.IsPrimitive = true;
 
            
 
-            List<IFKClass> list = new List<IFKClass>();
+            List<IFClass> list = new List<IFClass>();
 
             mainClass.Childrens = list;
 
             foreach (var item in types)
             {
-                IFKClass cls = new IFKClass();
+                IFClass cls = new IFClass();
 
                 if (item.Type == JsonTypeEnum.Object)
                 {
@@ -81,7 +81,7 @@ namespace IF.Manager.ClassDesigner.Pages.Json
 
                     foreach (var field in item.Fields)
                     {
-                        IFKClass prop = new IFKClass();
+                        IFClass prop = new IFClass();
                         prop.Name = field.MemberName;
                         prop.Type = field.Type.Type.ToString();
                         prop.IsPrimitive = false;
