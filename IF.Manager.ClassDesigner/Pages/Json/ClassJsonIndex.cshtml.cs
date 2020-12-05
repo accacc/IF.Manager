@@ -21,11 +21,11 @@ namespace IF.Manager.ClassDesigner.Pages.Json
 
     
 
-    public class JsonIndexModel : PageModel
+    public class ClassIndexModel : PageModel
     {
         private IHostingEnvironment _environment;
         private readonly IClassService classService;
-        public JsonIndexModel(IHostingEnvironment environment, IClassService classService)
+        public ClassIndexModel(IHostingEnvironment environment, IClassService classService)
         {
             _environment = environment;
             this.classService = classService;

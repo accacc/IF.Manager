@@ -26,14 +26,7 @@ namespace IF.Manager.Persistence.EF
                 .HasForeignKey(g => g.RelationId).OnDelete(DeleteBehavior.Restrict);
 
 
-            builder.Entity<CustomClass>().HasMany(t => t.Relations)
-    .WithOne(g => g.MainCustomClass)
-    .HasForeignKey(g => g.MainCustomClassId);
-
-            builder.Entity<CustomClass>().HasMany(t => t.ReverseRelations)
-                .WithOne(g => g.RelatedCustomClass)
-                .HasForeignKey(g => g.RelatedCustomClassId).OnDelete(DeleteBehavior.Restrict);
-
+        
 
             builder.ApplyConfiguration(new IFEntityMapping());
             builder.ApplyConfiguration(new IFEntityPropertyMapping());
@@ -77,17 +70,6 @@ namespace IF.Manager.Persistence.EF
 
             builder.ApplyConfiguration(new IFPageParameterMapping());
 
-            builder.ApplyConfiguration(new IFCustomClassMapping());
-
-            builder.ApplyConfiguration(new IFCustomClassPropertyMapping());
-            builder.ApplyConfiguration(new IFCustomClassRelationMapping());
-
-
-            builder.ApplyConfiguration(new CustomClassMapping());
-
-            builder.ApplyConfiguration(new CustomClassPropertyMapping());
-            builder.ApplyConfiguration(new CustomClassRelationMapping());
-            builder.ApplyConfiguration(new CustomClassGroupMapping());
 
             builder.ApplyConfiguration(new IFKClassMapping());
 
@@ -158,19 +140,6 @@ namespace IF.Manager.Persistence.EF
         public DbSet<IFPagePanel> Panels { get; set; }
 
         public DbSet<IFPageParameter>  IFPageParameters { get; set; }
-
-        public DbSet<IFCustomClass> IFCustomClasses { get; set; }
-
-        public DbSet<IFCustomClassProperty> IFCustomClassProperties { get; set; }
-
-        public DbSet<IFCustomClassRelation>  IFCustomClassRelations { get; set; }
-
-        public DbSet<CustomClass> CustomClasses { get; set; }
-
-        public DbSet<CustomClassProperty> CustomClassProperties { get; set; }
-
-        public DbSet<CustomClassRelation> CustomClassRelations { get; set; }
-        public DbSet<CustomClassGroup> CustomClassGroups { get; set; }
 
         public DbSet<IFKClass> IFKClasses { get; set; }
 
