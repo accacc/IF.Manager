@@ -696,6 +696,7 @@ namespace IF.Manager.Service
             if(type.Name =="String")  {return "string";  }
 
             if (type.Name == "Int32") { return "int"; }
+            if (type.Name == "Int64") { return "int"; }
             if (type.Name == "Boolean") { return "bool"; }
             if (type.Name == "DateTime") { return "DateTime"; }
             if (type.Name == "Decimal") { return "decimal"; }

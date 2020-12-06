@@ -30,7 +30,7 @@ namespace IF.Manager.Entity.Pages.DbFirst
         public FormModel(IEntityService entityService)
         {
             this.entityService = entityService;
-            this.ConnectionString = @"Data Source=88.249.221.31\SQLEXPRESS;Initial Catalog=THOS;Persist Security Info=false;User Id=sa;Password=Thos2014@;MultipleActiveResultSets=true;";
+            this.ConnectionString = @"Data Source=88.249.221.31;Initial Catalog=THOS;Persist Security Info=false;User Id=sa;Password=Thos2014@;MultipleActiveResultSets=true;";
         }
 
         [BindProperty(SupportsGet =true), Required]

@@ -1,4 +1,5 @@
 ﻿using IF.CodeGeneration.CSharp;
+using IF.Core.Exception;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Service.EF;
@@ -79,20 +80,24 @@ namespace IF.Manager.Service
             {
                 if (!String.IsNullOrWhiteSpace(queryFilterItem.Value))
                 {
-                    //if (queryFilterItem.Value.StartsWith("{") && queryFilterItem.Value.EndsWith("}"))
-                    //{
-                    //    var formProperty = queryFilterItem.Value.Replace("{", "");
-                    //    formProperty = formProperty.Replace("}", "");
-                    //    whereCon += $"x.{formProperty} == request.Data.{formProperty}";
-                    //}
-                    //else
-                    //{
-                    whereCon += $"x.{queryFilterItem.EntityProperty.Name} == {queryFilterItem.Value} && ";
-                    ///}
+                    if (queryFilterItem.Value.StartsWith("{") && queryFilterItem.Value.EndsWith("}"))
+                    {
+                        var formProperty = queryFilterItem.Value.Replace("{", "");
+                        formProperty = formProperty.Replace("}", "");
+                        whereCon += $"x.{queryFilterItem.EntityProperty.Name} == request.Data.{formProperty}  && ";
+                    }
+                    else
+                    {
+                        whereCon += $"x.{queryFilterItem.EntityProperty.Name} == {queryFilterItem.Value} && ";
+                    }
                 }
                 else if (queryFilterItem.IFPageParameterId.HasValue)
                 {
                     whereCon += $"x.{queryFilterItem.EntityProperty.Name} == request.Data.{queryFilterItem.IFPageParameter.Name} && ";
+                }
+                else 
+                {
+                    throw new BusinessException("Bilinmeyen filtre tipi");
                 }
             }
 

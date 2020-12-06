@@ -1,11 +1,8 @@
-using IF.Manager.Contracts.Dto;
-using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Service.Model;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 using System.Collections.Generic;
@@ -48,7 +45,7 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper
             return new PartialViewResult
             {
                 ViewName = "_ClassMapperListTable",
-                ViewData = new ViewDataDictionary<List<EntityGroupDto>>(ViewData, list)
+                ViewData = new ViewDataDictionary<List<IFClassMapper>>(ViewData, list)
             };
         }
 

@@ -1,6 +1,9 @@
 ﻿using IF.CodeGeneration.Core;
 using IF.CodeGeneration.CSharp;
+using IF.Core.Exception;
 using IF.Manager.Contracts.Model;
+
+using System;
 
 namespace IF.Manager.Service.Cqrs
 {
@@ -21,11 +24,51 @@ namespace IF.Manager.Service.Cqrs
             CSClass requestModelClass = new CSClass();
             requestModelClass.Name = $"{query.Name}Filter";
             requestModelClass.Usings.Add($"IF.Core.Data");
+            requestModelClass.Usings.Add($"System");
             requestModelClass.Usings.Add(nameSpace);
 
             foreach (var queryFilterItem in query.QueryFilterItems)
             {
-                if (queryFilterItem.IFPageParameterId.HasValue)
+                //if (queryFilterItem.IFPageParameterId.HasValue)
+                //{
+                //    var property = new CSProperty("public", queryFilterItem.IFPageParameter.Name, false);
+
+                //    property.PropertyTypeString = queryFilterItem.IFPageParameter.Type;
+
+                //    requestModelClass.Properties.Add(property);
+                //}
+                //else
+                //{
+                //    var property = new CSProperty("public", queryFilterItem.EntityProperty.Name, queryFilterItem.EntityProperty.IsNullable);
+
+                //    property.PropertyTypeString = queryFilterItem.EntityProperty.Type;
+
+                //    requestModelClass.Properties.Add(property);
+                //}
+
+                if (!String.IsNullOrWhiteSpace(queryFilterItem.Value))
+                {
+                    if (queryFilterItem.Value.StartsWith("{") && queryFilterItem.Value.EndsWith("}"))
+                    {
+                        var formProperty = queryFilterItem.Value.Replace("{", "");
+                        formProperty = formProperty.Replace("}", "");
+                        var property = new CSProperty("public",formProperty, queryFilterItem.EntityProperty.IsNullable);
+
+                        property.PropertyTypeString = queryFilterItem.EntityProperty.Type;
+
+                        requestModelClass.Properties.Add(property);
+
+                    }
+                    else
+                    {
+                        var property = new CSProperty("public", queryFilterItem.EntityProperty.Name, queryFilterItem.EntityProperty.IsNullable);
+
+                        property.PropertyTypeString = queryFilterItem.EntityProperty.Type;
+
+                        requestModelClass.Properties.Add(property);
+                    }
+                }
+                else if (queryFilterItem.IFPageParameterId.HasValue)
                 {
                     var property = new CSProperty("public", queryFilterItem.IFPageParameter.Name, false);
 
@@ -35,11 +78,7 @@ namespace IF.Manager.Service.Cqrs
                 }
                 else
                 {
-                    var property = new CSProperty("public", queryFilterItem.EntityProperty.Name, queryFilterItem.EntityProperty.IsNullable);
-
-                    property.PropertyTypeString = queryFilterItem.EntityProperty.Type;
-
-                    requestModelClass.Properties.Add(property);
+                    throw new BusinessException("Bilinmeyen filtre tipi");
                 }
             }
 
