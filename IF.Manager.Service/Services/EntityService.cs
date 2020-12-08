@@ -432,16 +432,16 @@ namespace IF.Manager.Service
             entity.IsAudited = dto.IsAudited;
             entity.GroupId = dto.GroupId;
 
-
-            if(!entity.Properties.Any(p=>p.IsIdentity && p.Name == "Id"))
-            {
-                IFEntityProperty primaryKeyProperty = new IFEntityProperty();
-                primaryKeyProperty.IsIdentity = true;
-                primaryKeyProperty.Name = "Id";
-                primaryKeyProperty.Type = "int";
-                primaryKeyProperty.IsNullable = false;
-                entity.Properties.Add(primaryKeyProperty);
-            }
+            //Todo:Caglar db first yuzunden iptal edildi, zaten code first de entity eklerken primary key ekleniyor otomatik
+            //if(!entity.Properties.Any(p=>p.IsIdentity && p.Name == "Id"))
+            //{
+            //    IFEntityProperty primaryKeyProperty = new IFEntityProperty();
+            //    primaryKeyProperty.IsIdentity = true;
+            //    primaryKeyProperty.Name = "Id";
+            //    primaryKeyProperty.Type = "int";
+            //    primaryKeyProperty.IsNullable = false;
+            //    entity.Properties.Add(primaryKeyProperty);
+            //}
 
             this.Update(entity);
             await this.UnitOfWork.SaveChangesAsync();
@@ -665,6 +665,10 @@ namespace IF.Manager.Service
 
                     property.Name = column.Name;
                     property.Type = GetPrimitiveByDotnet(column.NetDataType());
+                    if(column.DbDataType == "smallint")
+                    {
+                        property.Type = "Int16";
+                    }
                     property.IsNullable = column.Nullable;
                     entity.Properties.Add(property);
                 }
@@ -696,7 +700,7 @@ namespace IF.Manager.Service
             if(type.Name =="String")  {return "string";  }
 
             if (type.Name == "Int32") { return "int"; }
-            if (type.Name == "Int64") { return "int"; }
+            if (type.Name == "Int64") { return "long"; }
             if (type.Name == "Boolean") { return "bool"; }
             if (type.Name == "DateTime") { return "DateTime"; }
             if (type.Name == "Decimal") { return "decimal"; }

@@ -43,7 +43,15 @@ namespace IF.Manager.Service
 
                 foreach (var property in entity.Properties)
                 {
-                    var p = new CSProperty("public", property.Name, property.IsNullable);
+
+                    bool IsNullable = property.IsNullable;
+                    if(property.Type == "string")
+                    {
+                        IsNullable = false;
+                    }
+
+
+                    var p = new CSProperty("public", property.Name, IsNullable);
 
                     p.PropertyTypeString = property.Type;
 
@@ -60,7 +68,8 @@ namespace IF.Manager.Service
                     var relationName = relation.RelatedEntityName;
                     var type = relation.RelatedEntityName;
 
-                    if (relation.EntityRelationType == Contracts.Enum.EntityRelationType.ManyToMany)
+                    if (relation.EntityRelationType == Contracts.Enum.EntityRelationType.ManyToMany || 
+                        relation.EntityRelationType ==Contracts.Enum.EntityRelationType.OneToMany)
                     {
                         relationName += "s";
                         type = $"ICollection<{relation.RelatedEntityName}>";
@@ -79,7 +88,7 @@ namespace IF.Manager.Service
                     var relationName = relation.RelatedEntityName;
                     var type = relation.RelatedEntityName;
 
-                    //if (relation.To == Contracts.Enum.EntityRelationDirectionType.One && relation.From == Contracts.Enum.EntityRelationDirectionType.Many)
+                    if (relation.EntityRelationType == Contracts.Enum.EntityRelationType.ManyToMany)
                     {
                         relationName += "s";
                         type = $"ICollection<{relation.RelatedEntityName}>";
@@ -103,7 +112,8 @@ namespace IF.Manager.Service
                     var relationName = relation.RelatedEntityName;
                     var type = relation.RelatedEntityName;
 
-                    if (relation.EntityRelationType == Contracts.Enum.EntityRelationType.ManyToMany)
+                    if (relation.EntityRelationType == Contracts.Enum.EntityRelationType.ManyToMany ||
+                         relation.EntityRelationType == Contracts.Enum.EntityRelationType.OneToMany)
                     {
                         relationName += "s";
                         type = $"List<{relation.RelatedEntityName}>";
@@ -119,7 +129,7 @@ namespace IF.Manager.Service
                     var relationName = relation.RelatedEntityName;
                     var type = relation.RelatedEntityName;
 
-                    //if (relation.To == Contracts.Enum.EntityRelationDirectionType.One && relation.From == Contracts.Enum.EntityRelationDirectionType.Many)
+                    if (relation.EntityRelationType == Contracts.Enum.EntityRelationType.ManyToMany)
                     {
                         relationName += "s";
                         type = $"List<{relation.RelatedEntityName}>";

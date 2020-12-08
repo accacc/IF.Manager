@@ -46,7 +46,7 @@ namespace IF.Manager.Service
             {
                 if (relation.ForeignKeyPropertyId.HasValue && relation.ForeignKeyPropertyId > 0)
                 {
-                    methodBody.AppendLine($"builder.HasOne(s => s.{relation.RelatedEntityName}).WithMany(s => s.{relation.EntityName}s).HasForeignKey(s => s.{relation.ForeignKeyPropertyName}).OnDelete(DeleteBehavior.Restrict);");
+                    methodBody.AppendLine($"builder.HasMany(s => s.{relation.RelatedEntityName}s).WithOne(s => s.{relation.EntityName}).HasForeignKey(s => s.{relation.ForeignKeyPropertyName}).OnDelete(DeleteBehavior.Restrict);");
                 }
             }
 
