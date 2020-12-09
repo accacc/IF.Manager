@@ -43,8 +43,20 @@ namespace IF.Manager.Service
             this.method.Parameters.Add(parameter);
         }
 
+      
+        public CSMethod BuildOverridenQuery()
+        {
 
-        public CSMethod Build()
+            StringBuilder builder = new StringBuilder();
+
+            builder.AppendLine("throw new NotImplementedException();");
+
+            this.method.Body = builder.ToString();
+
+            return this.method;
+
+        }
+        public CSMethod BuildGeneratedQuery()
         {
             StringBuilder builder = new StringBuilder();
 

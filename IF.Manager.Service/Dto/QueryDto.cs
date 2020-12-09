@@ -27,6 +27,8 @@ namespace IF.Manager.Contracts.Dto
 
         public string Description { get; set; }
 
-    
+        public bool IsQueryOverride { get; set; }
+
+
     }
 }

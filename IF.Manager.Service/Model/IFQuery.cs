@@ -32,6 +32,10 @@ namespace IF.Manager.Contracts.Model
 
         public string Name { get; set; }
 
+        public bool IsQueryOverride { get; set; }
+
+
+
         public string Description { get; set; }
 
         public int ModelId { get; set; }

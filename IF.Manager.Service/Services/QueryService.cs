@@ -34,6 +34,9 @@ namespace IF.Manager.Service.Services
             entity.ProcessId = form.ProcessId;
             entity.Description = form.Description;
             entity.QueryGetType = form.QueryGetType;
+            entity.PageNumber = form.PageNumber;
+            entity.PageSize = form.PageSize;
+            entity.IsQueryOverride = form.IsQueryOverride;
             this.Add(entity);
             await this.UnitOfWork.SaveChangesAsync();
             form.Id = entity.Id;
@@ -54,11 +57,14 @@ namespace IF.Manager.Service.Services
                 entity.ModelId = form.ModelId;
                 entity.ProcessId = form.ProcessId;
                 entity.QueryGetType = form.QueryGetType;
+                entity.PageNumber = form.PageNumber;
+                entity.PageSize = form.PageSize;
+                entity.IsQueryOverride = form.IsQueryOverride;
 
-                if (entity.QueryGetType == Contracts.Enum.QueryGetType.List)
-                {
-                    entity.PageSize = form.PageSize;
-                }
+                //if (entity.QueryGetType == Contracts.Enum.QueryGetType.List)
+                //{
+                //    entity.PageSize = form.PageSize;
+                //}
 
                 this.Update(entity);
                 await this.UnitOfWork.SaveChangesAsync();
@@ -81,7 +87,9 @@ namespace IF.Manager.Service.Services
                 ModelId = x.ModelId,
                 ProcessId = x.ProcessId,                
                 QueryGetType = x.QueryGetType,
-                PageSize = x.PageSize
+                PageSize = x.PageSize,
+                PageNumber = x.PageNumber,
+                IsQueryOverride = x.IsQueryOverride
                 
             }).SingleOrDefaultAsync(k => k.Id == id);
 
