@@ -143,7 +143,8 @@ namespace IF.Manager.Service
                 child.IsRelation = true;
                 child.Type = relation.Relation.Name;
 
-                if (relation.Type == Contracts.Enum.EntityRelationType.OneToMany)
+                if (relation.Type == Contracts.Enum.EntityRelationType.ManyToMany ||
+                        relation.Type == Contracts.Enum.EntityRelationType.OneToMany)
                 {
                     child.IsList = true;
                 }
@@ -189,7 +190,7 @@ namespace IF.Manager.Service
                 child.IsRelation = true;
                 child.Type = relation.Entity.Name;
 
-                if (relation.Type == Contracts.Enum.EntityRelationType.OneToMany)
+                if (relation.Type == Contracts.Enum.EntityRelationType.ManyToMany)
                 {
                     child.IsList = true;
                 }

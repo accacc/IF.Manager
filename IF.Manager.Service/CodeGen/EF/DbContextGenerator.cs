@@ -68,9 +68,9 @@ namespace IF.Manager.Service
                     var relationName = relation.RelatedEntityName;
                     var type = relation.RelatedEntityName;
 
-                    if (relation.EntityRelationType == Contracts.Enum.EntityRelationType.ManyToMany || 
-                        relation.EntityRelationType ==Contracts.Enum.EntityRelationType.OneToMany)
-                    {
+                        if (relation.EntityRelationType == Contracts.Enum.EntityRelationType.ManyToMany || 
+                            relation.EntityRelationType ==Contracts.Enum.EntityRelationType.OneToMany)
+                        {
                         relationName += "s";
                         type = $"ICollection<{relation.RelatedEntityName}>";
                     }

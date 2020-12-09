@@ -109,24 +109,34 @@ namespace IF.Manager.Service
 
         private void AddProjections(StringBuilder builder)
         {
+            
             builder.AppendLine($".Select(x => new {this.query.Model.Name}" + Environment.NewLine);
 
             builder.AppendLine($"{{" + Environment.NewLine);
 
-            foreach (var property in this.entityTree.Childs)
+            foreach (var childTree in this.entityTree.Childs)
             {
-                bool IsModelProperty = ClassTreeDto.IsModelProperty(property, query.Model);
+                bool IsModelProperty = ClassTreeDto.IsModelProperty(childTree, query.Model);
 
                 if (!IsModelProperty) continue;
 
-                if (property.IsRelation)
+                if (childTree.IsRelation)
                 {
 
-                    string name = DirectoryHelper.AddAsLastWord(property.Name, "DataModel");
+                    string name = DirectoryHelper.AddAsLastWord(childTree.Name, "DataModel");
 
-                    builder.AppendLine($@"{name} = new {name}{{" + Environment.NewLine);
+                    if (childTree.IsList)
+                    {
 
-                    foreach (var childProperty in property.Childs)
+                        builder.AppendLine($@"{name} = x.{childTree.Name}s.Select(a=> new {name}{{" + Environment.NewLine);
+                    }
+                    else
+                    {
+                        builder.AppendLine($@"{name} = new {name}{{" + Environment.NewLine);
+                    }
+
+
+                    foreach (var childProperty in childTree.Childs)
                     {
                         IsModelProperty = ClassTreeDto.IsModelProperty(childProperty, query.Model);
 
@@ -137,15 +147,23 @@ namespace IF.Manager.Service
                         if (!childProperty.IsRelation)
                         {
 
-                            builder.AppendLine($"{childProperty.Name} = x.{property.Name}.{childProperty.Name},");
+                            builder.AppendLine($"{childProperty.Name} = a.{childProperty.Name},");
                         }
                     }
 
-                    builder.AppendLine("},");
+                    if (childTree.IsList)
+                    {
+                        builder.AppendLine("})");
+                    }
+                    else
+                    {
+
+                        builder.AppendLine("},");
+                    }
                 }
                 else
                 {
-                    builder.AppendLine($"{property.Name} = x.{property.Name}," + Environment.NewLine);
+                    builder.AppendLine($"{childTree.Name} = x.{childTree.Name}," + Environment.NewLine);
                 }
 
 
@@ -180,7 +198,7 @@ namespace IF.Manager.Service
                     relationName = relationName + "s";
                 }
 
-                builder.AppendLine($".Include(e => e.{relation.Name})");
+                builder.AppendLine($".Include(e => e.{relationName})");
             }
 
         }

@@ -21,6 +21,7 @@ namespace IF.Manager.Service
         public void Build(ClassTreeDto entityTree)
         {
             this.Usings.Add("System");
+            this.Usings.Add("System.Collections.Generic");
 
             foreach (var childEntityTree in entityTree.Childs)
             {               
@@ -36,6 +37,11 @@ namespace IF.Manager.Service
                         name = DirectoryHelper.AddAsLastWord(childEntityTree.Name, "DataModel");
                         name = $"{name}";
                         type = name;
+
+                        if(childEntityTree.IsList)
+                        {
+                            type = $"IEnumerable<{name}>";
+                        }
                     }
 
                     bool IsNullable = childEntityTree.IsNullable;
