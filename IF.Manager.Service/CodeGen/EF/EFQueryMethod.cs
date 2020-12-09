@@ -146,8 +146,14 @@ namespace IF.Manager.Service
 
                         if (!childProperty.IsRelation)
                         {
+                            if (childTree.IsList)
+                            {
+                                builder.AppendLine($"{childProperty.Name} = a.{childProperty.Name},");
 
-                            builder.AppendLine($"{childProperty.Name} = a.{childProperty.Name},");
+                            }
+                            else
+                            {
+                                builder.AppendLine($"{childProperty.Name} = x.{childTree.Name}.{childProperty.Name},"); }
                         }
                     }
 
