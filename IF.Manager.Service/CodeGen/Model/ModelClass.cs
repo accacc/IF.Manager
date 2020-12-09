@@ -29,14 +29,23 @@ namespace IF.Manager.Service
                 if (IsModelProperty)
                 {
                     string name = childEntityTree.Name;
+                    string type = childEntityTree.Type;
 
                     if (childEntityTree.IsRelation)
                     {
-                        name = $"{childEntityTree.Name}";
+                        name = DirectoryHelper.AddAsLastWord(childEntityTree.Name, "DataModel");
+                        name = $"{name}";
+                        type = name;
                     }
 
-                    var p = new CSProperty("public", name, childEntityTree.IsNullable);
-                    p.PropertyTypeString = childEntityTree.Type;
+                    bool IsNullable = childEntityTree.IsNullable;
+                    if (childEntityTree.Type == "string")
+                    {
+                        IsNullable = false;
+                    }
+
+                    var p = new CSProperty("public", name, IsNullable);
+                    p.PropertyTypeString = type;
                     this.Properties.Add(p);
                 }
 

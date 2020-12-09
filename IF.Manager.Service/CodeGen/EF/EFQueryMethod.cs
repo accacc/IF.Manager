@@ -121,7 +121,10 @@ namespace IF.Manager.Service
 
                 if (property.IsRelation)
                 {
-                    builder.AppendLine($@"{property.Name} = new {property.Name}{{" + Environment.NewLine);
+
+                    string name = DirectoryHelper.AddAsLastWord(property.Name, "DataModel");
+
+                    builder.AppendLine($@"{name} = new {name}{{" + Environment.NewLine);
 
                     foreach (var childProperty in property.Childs)
                     {

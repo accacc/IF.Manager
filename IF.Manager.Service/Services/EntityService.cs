@@ -665,10 +665,14 @@ namespace IF.Manager.Service
 
                     property.Name = column.Name;
                     property.Type = GetPrimitiveByDotnet(column.NetDataType());
+                    
                     if(column.DbDataType == "smallint")
                     {
                         property.Type = "Int16";
                     }
+
+                    
+
                     property.IsNullable = column.Nullable;
                     entity.Properties.Add(property);
                 }
