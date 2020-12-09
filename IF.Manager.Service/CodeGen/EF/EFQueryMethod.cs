@@ -173,6 +173,13 @@ namespace IF.Manager.Service
 
                 if (!IsModelProperty) continue;
 
+                string relationName = relation.Name;
+
+                if(relation.IsList)
+                {
+                    relationName = relationName + "s";
+                }
+
                 builder.AppendLine($".Include(e => e.{relation.Name})");
             }
 
