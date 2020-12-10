@@ -17,25 +17,13 @@ namespace IF.Manager.Contracts.Dto
         public QueryConditionOperator ConditionOperator { get; set; }
     }
 
-    //public class QueryFilterGroupDto
-    //{
-
-    //    public QueryFilterGroupDto()
-    //    {
-    //        this.Items = new List<QueryFilterGroupItemDto>();
-    //    }
-    //    public int QueryFilterId { get; set; }        
-
-    //    public QueryConditionOperator ConditionOperator { get; set; }
-
-    //    public List<QueryFilterGroupItemDto> Items { get; set; }
-    //}
+   
 
     public class QueryFilterItemDto
     {
 
-        
 
+        public bool? IsNullCheck { get; set; }
         public int Id { get; set; }
 
         public QueryFilterOperator FilterOperator { get; set; }
@@ -45,11 +33,9 @@ namespace IF.Manager.Contracts.Dto
 
         public int QueryId { get; set; }
 
-        //public int EntityId { get; set; }
 
         public int EntityPropertyId { get; set; }
 
-        //public string EntityName { get; set; }
 
         public string PropertyName { get; set; }
 

@@ -59,12 +59,15 @@
 
     <td>
         <div class="form-group">
-
             <input type="text" name="Form.Items[@index].Value" value="@Model.Value" class="form-control" />
         </div>
     </td>
 
-
+    <td>
+        <div class="form-group">
+            @Html.CheckBox($"Form.Items[{index}].IsNullCheck", Model.IsNullCheck, new { @class = "form-check-input" })
+        </div>
+    </td>
     <td>
         <div class="form-group">
             @Html.DropDownList($"Form.Items[{index}].PageParameterId", page_parameters, "Select", new { @class = "form-control" })

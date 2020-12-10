@@ -19,17 +19,11 @@ namespace IF.Manager.Contracts.Model
 
         public int QueryId { get; set; }
 
-        //public int EntityId { get; set; }
-
         public int EntityPropertyId { get; set; }
-
-        //public IFEntity Entity { get; set; }
 
         public IFEntityProperty EntityProperty { get; set; }
 
         public IFQuery Query { get; set; }
-
-        //public int FormModelId { get; set; }
 
         public int? FormModelPropertyId { get; set; }
 
@@ -37,7 +31,8 @@ namespace IF.Manager.Contracts.Model
 
         public IFPageParameter IFPageParameter { get; set; }
 
-        //public IFFormModel FormModel { get; set; }
+        public bool? IsNullCheck { get; set; }
+
 
     }
 }

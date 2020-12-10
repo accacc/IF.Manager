@@ -112,21 +112,6 @@ namespace IF.Manager.Service.Services
             return data;
         }
 
-
-        //public async Task<List<IFFormModel>> GetFormModelList()
-        //{
-        //    var data = await this.GetQuery<IFFormModel>().ToListAsync();
-
-        //    return data;
-        //}
-
-        //public async Task<List<IFFormModelProperty>> GetFormModelPropertyList(int formModelId)
-        //{
-        //    var data = await this.GetQuery<IFFormModelProperty>(x=>x.FormModelId == formModelId).ToListAsync();
-
-        //    return data;
-        //}
-
         public async Task<List<IFModelProperty>> GetQueryModelPropertyList(int queryId)
         {
             var query = await this.GetQuery<IFQuery>(q => q.Id == queryId).SingleOrDefaultAsync();
@@ -153,7 +138,10 @@ namespace IF.Manager.Service.Services
                     PropertyName = i.EntityProperty.Name,
                     FormModelPropertyId = i.FormModelPropertyId,
                     PageParameterId = i.IFPageParameterId,
-                    Id = i.Id
+                    Id = i.Id,
+                    IsNullCheck = i.IsNullCheck
+                    
+                    
 
                 }).ToListAsync();
 
@@ -223,6 +211,7 @@ namespace IF.Manager.Service.Services
                         filter.ConditionOperator = form.ConditionOperator;
                         filter.EntityPropertyId = dto.EntityPropertyId;
                         filter.FilterOperator = dto.FilterOperator;
+                        filter.IsNullCheck = dto.IsNullCheck;
 
                         this.Add(filter);
                     }
@@ -254,6 +243,7 @@ namespace IF.Manager.Service.Services
                         filter.ConditionOperator = form.ConditionOperator;
                         filter.EntityPropertyId = dto.EntityPropertyId;
                         filter.FilterOperator = dto.FilterOperator;
+                        filter.IsNullCheck = dto.IsNullCheck;
 
                         this.Update(filter);
                     }
