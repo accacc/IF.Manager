@@ -52,7 +52,7 @@ namespace IF.Manager.Service.Cqrs
                     {
                         var formProperty = queryFilterItem.Value.Replace("{", "");
                         formProperty = formProperty.Replace("}", "");
-                        var property = new CSProperty("public",formProperty, queryFilterItem.EntityProperty.IsNullable);
+                        var property = new CSProperty("public",formProperty, queryFilterItem.IsNullCheck.Value);
 
                         property.PropertyTypeString = queryFilterItem.EntityProperty.Type;
 
@@ -61,7 +61,7 @@ namespace IF.Manager.Service.Cqrs
                     }
                     else
                     {
-                        var property = new CSProperty("public", queryFilterItem.EntityProperty.Name, queryFilterItem.EntityProperty.IsNullable);
+                        var property = new CSProperty("public", queryFilterItem.EntityProperty.Name, queryFilterItem.IsNullCheck.Value);
 
                         property.PropertyTypeString = queryFilterItem.EntityProperty.Type;
 
@@ -78,7 +78,11 @@ namespace IF.Manager.Service.Cqrs
                 }
                 else
                 {
-                    throw new BusinessException("Bilinmeyen filtre tipi");
+                    var property = new CSProperty("public", queryFilterItem.EntityProperty.Name, queryFilterItem.IsNullCheck.Value);
+
+                    property.PropertyTypeString = queryFilterItem.EntityProperty.Type;
+
+                    requestModelClass.Properties.Add(property);
                 }
             }
 

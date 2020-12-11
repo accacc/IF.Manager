@@ -1,0 +1,26 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace IF.Manager.Service.CodeGen.Rules.Filters
+{
+    public class EndsWithRule : EFFilterRule
+    {
+
+        public override bool IsSuccess(FilterContext context)
+        {
+            if (context.CurrentFilterItem.FilterOperator != Contracts.Enum.QueryFilterOperator.EndWith) return true;
+
+            if (context.CurrentFilterItem.IsNullCheck.Value)
+            {
+                context.FilterBuilder.AppendLine($@" (x.{context.PropertyName}.EndWith({context.PropertyValue}) || x.{context.PropertyName}!=null) {context.ConditionOperator} ");
+
+            }
+            else
+            {
+                context.FilterBuilder.AppendLine($@"x.{context.PropertyName}.EndWith({context.PropertyValue})  {context.ConditionOperator} ");
+            }
+            return true;
+        }
+    }
+}

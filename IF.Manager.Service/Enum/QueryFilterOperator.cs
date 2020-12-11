@@ -8,7 +8,7 @@ namespace IF.Manager.Contracts.Enum
     {
         Equal=0,
         NotEqual=1,
-        Contains=2,
+        StringContains=2,
         Null=3,
         NotNull=4,
         Greater=5,
