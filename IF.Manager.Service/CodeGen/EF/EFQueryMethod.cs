@@ -1,6 +1,7 @@
 ﻿using IF.CodeGeneration.CSharp;
 using IF.Core.Exception;
 using IF.Manager.Contracts.Dto;
+using IF.Manager.Contracts.Enum;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Service.EF;
 using System;
@@ -90,22 +91,76 @@ namespace IF.Manager.Service
 
             foreach (var queryFilterItem in this.query.QueryFilterItems)
             {
+                string filterOperator = "";
+
+                switch (queryFilterItem.FilterOperator)
+                {
+                    case QueryFilterOperator.Equal:
+                        filterOperator = "==";
+                        break;
+                    case QueryFilterOperator.NotEqual:
+                        filterOperator = "!=";
+                        break;
+                    case QueryFilterOperator.Contains:
+                        break;
+                    case QueryFilterOperator.Null:
+                        filterOperator = "== null";
+                        break;
+                    case QueryFilterOperator.NotNull:
+                        filterOperator = "!= null";
+                        break;
+                    case QueryFilterOperator.Greater:
+                        filterOperator =">";
+                        break;
+                    case QueryFilterOperator.Less:
+                        filterOperator = "<";
+                        break;
+                    case QueryFilterOperator.StartWith:
+                        break;
+                    case QueryFilterOperator.EndWith:
+                        break;
+                    case QueryFilterOperator.GreaterAndEqual:
+                        filterOperator = ">=";
+                        break;
+                    case QueryFilterOperator.LessAndEqual:
+                        filterOperator = "<=";
+                        break;
+                    default:
+                        break;
+                }
+
+                string conditionOperator = "";
+
+                switch (queryFilterItem.ConditionOperator)
+                {
+                    case QueryConditionOperator.AND:
+                        conditionOperator = "&&";
+                        break;
+                    case QueryConditionOperator.OR:
+                        conditionOperator = "||";
+                        break;
+                    default:
+                        break;
+                }
+
                 if (!String.IsNullOrWhiteSpace(queryFilterItem.Value))
                 {
                     if (queryFilterItem.Value.StartsWith("{") && queryFilterItem.Value.EndsWith("}"))
                     {
                         var formProperty = queryFilterItem.Value.Replace("{", "");
                         formProperty = formProperty.Replace("}", "");
-                        whereCon += $"x.{queryFilterItem.EntityProperty.Name} == request.Data.{formProperty}  && ";
+
+
+                        whereCon += $"x.{queryFilterItem.EntityProperty.Name} == request.Data.{formProperty}  {conditionOperator} ";
                     }
                     else
                     {
-                        whereCon += $"x.{queryFilterItem.EntityProperty.Name} == {queryFilterItem.Value} && ";
+                        whereCon += $"x.{queryFilterItem.EntityProperty.Name} == {queryFilterItem.Value} {conditionOperator} ";
                     }
                 }
                 else if (queryFilterItem.IFPageParameterId.HasValue)
                 {
-                    whereCon += $"x.{queryFilterItem.EntityProperty.Name} == request.Data.{queryFilterItem.IFPageParameter.Name} && ";
+                    whereCon += $"x.{queryFilterItem.EntityProperty.Name} == request.Data.{queryFilterItem.IFPageParameter.Name} && {conditionOperator}";
                 }
                 else 
                 {
@@ -118,6 +173,8 @@ namespace IF.Manager.Service
 
             builder.AppendLine($".Where(x=> {whereCon})" + Environment.NewLine);
         }
+
+      
 
         private void AddProjections(StringBuilder builder)
         {
