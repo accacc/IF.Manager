@@ -55,7 +55,7 @@ namespace IF.Manager.Service.CodeGen.Rules.Filters
                 }
 
                 context.CurrentFilterItem = queryFilterItem;
-
+                
 
                 if (!String.IsNullOrWhiteSpace(queryFilterItem.Value))
                 {
@@ -88,6 +88,8 @@ namespace IF.Manager.Service.CodeGen.Rules.Filters
                     context.PropertyName = queryFilterItem.EntityProperty.Name;
                     context.PropertyValue = $"request.Data.{ queryFilterItem.EntityProperty.Name}";
                 }
+
+                context.IsNullableCondition = $"&& {context.PropertyValue}!=null";
 
                 rules.Run(context);
 

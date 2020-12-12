@@ -13,7 +13,7 @@ namespace IF.Manager.Service.CodeGen.Rules.Filters
 
             if (context.CurrentFilterItem.IsNullCheck.Value)
             {
-                context.FilterBuilder.AppendLine($@" (x.{context.PropertyName}.EndWith({context.PropertyValue}) || x.{context.PropertyName}!=null) {context.ConditionOperator} ");
+                context.FilterBuilder.AppendLine($@" (x.{context.PropertyName}.EndWith({context.PropertyValue}) {context.IsNullableCondition}) {context.ConditionOperator} ");
 
             }
             else
