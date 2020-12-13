@@ -35,19 +35,25 @@
         </div>
     </td>
     <td>
-        <div class="form-group" id="PrimaryKeyPropertyDropDown">
+        <div class="form-group" id="PrimaryKeyPropertyDropDown_@index">
 
-            @*@if (Model.ForeignKeyPropertyId > 0)
+            @if (Model.ForeignKeyPropertyId > 0)
             {
-                await Html.RenderPartialAsync("_DropDownPrimaryKeyProperty", Model);
-            }*@
+               @Model.ForeignKeyPropertyName
+            }
         </div>
 
     </td>
     <td>
         <div class="form-group">
-
+            @if (Model.Prefix != null)
+            {
+                @Model.Prefix
+            }
+            else
+            {
             <input type="text" name="Form.[@index].Prefix" value="@Model.Prefix" class="form-control" />
+            }
         </div>
     </td>
     <td>
@@ -70,7 +76,7 @@
             data: { IFEntityId: valueSelected, Index:'@index'},
             success: function (data) {
                 debugger;
-                $("#PrimaryKeyPropertyDropDown").html(data);
+                $("#PrimaryKeyPropertyDropDown_"+index).html(data);
             }
         });
     });

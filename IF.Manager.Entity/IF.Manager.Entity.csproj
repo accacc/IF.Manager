@@ -17,5 +17,8 @@
     <Reference Include="IF.Core">
       <HintPath>..\packages\InFramework\IF.Core.dll</HintPath>
     </Reference>
+    <Reference Include="IF.Web.Mvc">
+      <HintPath>..\packages\InFramework\IF.Web.Mvc.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

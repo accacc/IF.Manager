@@ -551,7 +551,7 @@ namespace IF.Manager.Service
 
         public async Task<List<EntityRelationDto>> GetEntityRelationList(int entityId)
         {
-            var list = await GetQuery<IFEntityRelation>()
+            var list = await GetQuery<IFEntityRelation>().Include(e=>e.ForeignKeyIFEntityProperty)
                 .Where(r => r.EntityId == entityId)
                   .Select(e => new EntityRelationDto
                   {
@@ -559,7 +559,9 @@ namespace IF.Manager.Service
                       EntityRelationType = e.Type,
                       IFRelatedEntityId = e.RelationId,
                       Prefix = e.Prefix,
-                      ForeignKeyPropertyId = e.ForeignKeyIFEntityPropertyId
+                      ForeignKeyPropertyId = e.ForeignKeyIFEntityPropertyId,
+                      ForeignKeyPropertyName = e.ForeignKeyIFEntityProperty.Name
+                     
                   })
                   .ToListAsync();
             return list;
