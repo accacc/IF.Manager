@@ -7,6 +7,7 @@ using DatabaseSchemaReader;
 using DatabaseSchemaReader.DataSchema;
 
 using IF.Manager.Contracts.Dto;
+using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Service;
 
@@ -23,18 +24,62 @@ namespace IF.Manager.Entity.Pages.DbFirst
     {
 
         private readonly IEntityService entityService;
-
+        private readonly IProjectService projectService;
+     
+        
         [BindProperty, Required]
         public List<TableDbFirstDto> Form { get; set; }
-
-        public FormModel(IEntityService entityService)
+        
+        public FormModel(IEntityService entityService,IProjectService projectService)
         {
             this.entityService = entityService;
-            this.ConnectionString = @"Data Source=88.249.221.31;Initial Catalog=THOS;Persist Security Info=false;User Id=sa;Password=Thos2014@;MultipleActiveResultSets=true;";
+            this.projectService = projectService;
+            //this.ConnectionString = @"Data Source=88.249.221.31;Initial Catalog=THOS;Persist Security Info=false;User Id=sa;Password=Thos2014@;MultipleActiveResultSets=true;";
         }
 
+      
+
         [BindProperty(SupportsGet =true), Required]
+        public int IFProjectId { get; set; }
+
+        [BindProperty(SupportsGet = true), Required]
         public string ConnectionString { get; set; }
+
+
+        public async Task OnGet()
+        {
+            await this.SetFormDefaults();
+
+        }
+
+        public async Task<IActionResult> OnGetGetProjectCnnString()
+        {
+            IFProject project = await this.projectService.GetProject(this.IFProjectId);
+
+            return Content(project.ConnectionString);
+
+        }
+
+        private async Task SetFormDefaults()
+        {
+            var entities = await this.projectService.GetProjectList();
+
+            List<SelectListItem> items = new List<SelectListItem>();
+
+
+            foreach (var entity in entities)
+            {
+                SelectListItem item = new SelectListItem();
+
+                item.Text = entity.Name;
+                item.Value = entity.Id.ToString();
+                items.Add(item);
+            }
+
+            ViewData["projects"] = items;
+        }
+
+
         public PartialViewResult OnGetListTablesAsync()
         {
             try

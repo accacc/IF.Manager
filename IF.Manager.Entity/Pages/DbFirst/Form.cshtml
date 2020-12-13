@@ -1,14 +1,26 @@
 ﻿@page
 @model IF.Manager.Entity.Pages.DbFirst.FormModel
 
+@{
 
+    List<SelectListItem> projects = ViewData["projects"] as List<SelectListItem>;
+}
 
 <form>
     @Html.AntiForgeryToken()
 
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="IFProjectId">Project</label>
+                @Html.DropDownList("IFProjectId", projects, "Select", new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
             <div class="form-group">
                 <label for="Name">ConnectionString</label>
                 @Html.TextBoxFor(m => m.ConnectionString, new { @class = "form-control" })
@@ -42,3 +54,27 @@
 </form>
 
 
+@section Scripts
+{
+
+    <script>
+
+     
+
+    $('#IFProjectId').on('change', function () {
+
+        //alert(this.value);
+
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Page("/DbFirst/Form", "GetProjectCnnString")',
+            data: { IFProjectId: this.value },
+            success: function (data) {
+                $("#ConnectionString").val(data);
+               
+            }
+        });
+
+    });
+    </script>
+}
