@@ -74,6 +74,7 @@ namespace IF.Manager.Service
             entity.Id = form.Id;
             entity.Name = form.Name;
             entity.SolutionId = form.SolutionId;
+            entity.ProjectType = form.ProjectType;
             entity.ConnectionString = form.ConnectionString;
             this.Add(entity);
             await this.UnitOfWork.SaveChangesAsync();
@@ -90,6 +91,7 @@ namespace IF.Manager.Service
 
             entity.Name = form.Name;
             entity.ConnectionString = form.ConnectionString;
+            entity.ProjectType = form.ProjectType;
             this.Update(entity);
             await this.UnitOfWork.SaveChangesAsync();
         }
