@@ -1,0 +1,31 @@
+﻿@model List<IF.Manager.Contracts.Dto.QueryFilterTreeDto>
+
+
+<ul>
+
+    @foreach (var item in Model)
+    {
+        if (ViewBag.ParentId != null && item.Id == Convert.ToInt32(ViewBag.ParentId))
+        {
+            @:<li class="jstree-open" data-jstree='{"selected":true}' id="@item.Id">
+            }
+            else
+            {
+                @:<li class="jstree-open" id="@item.Id">
+            }
+
+            <b>@item.Value</b>
+
+
+
+            @if (item.Childs != null && item.Childs.Any())
+            {
+                
+                await Html.RenderPartialAsync("_FilterTree.cshtml", item.Childs);
+
+            }
+
+        @:</li>
+    }
+
+</ul>

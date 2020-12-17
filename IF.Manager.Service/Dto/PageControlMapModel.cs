@@ -17,4 +17,12 @@ namespace IF.Manager.Contracts.Dto
         public int? ClassId { get; set; }
         public List<ClassControlTreeDto> Tree { get; set; }
     }
+
+
+    public class QueryFilterMapModel
+    {
+
+        public int? QueryId { get; set; }
+        public List<QueryFilterTreeDto> Tree { get; set; }
+    }
 }

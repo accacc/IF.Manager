@@ -1,4 +1,5 @@
-﻿using IF.Core.Exception;
+﻿using IF.Core.Data;
+using IF.Core.Exception;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Enum;
 using IF.Manager.Contracts.Model;
@@ -20,6 +21,43 @@ namespace IF.Manager.Service.Services
         public QueryService(ManagerDbContext dbContext) : base(dbContext)
         {
 
+        }
+
+        public async Task<List<QueryFilterTreeDto>> GetFilterTreeList(int queryId)
+        {
+            List<QueryFilterTreeDto> tree = null;
+
+            try
+            {
+                var list = await this.GetQuery<IFQueryFilterItem>().Select
+
+               (map =>
+                new QueryFilterTreeDto
+                {
+
+                    ConditionOperator = map.ConditionOperator,
+                    Id = map.Id,
+                    ParentId = map.ParentId,
+                    FilterOperator = map.FilterOperator,
+                    IsNullCheck = map.IsNullCheck,
+                    EntityPropertyId = map.EntityPropertyId,
+                    Value = map.Value,
+                    QueryId = map.QueryId
+
+                }).ToListAsync();
+
+                var parents = list.Where(c => c.QueryId == queryId).ToList();
+
+
+                tree = list.ToTree(parents);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+            return tree;
         }
 
         public async Task AddQuery(QueryDto form)
@@ -121,10 +159,14 @@ namespace IF.Manager.Service.Services
             return data;
         }
 
-        public async Task<QueryFilterDto> GetQueryFilterItems(int queryId)
+        public async Task<QueryFilterDto> GetQueryFilterItems(int queryId,int? ParentId)
         {
             QueryFilterDto filter = new QueryFilterDto();
-            var query = await this.GetQuery<IFQueryFilterItem>(f => f.QueryId == queryId)
+            filter.QueryId = queryId;
+            filter.ParentId = ParentId;
+
+
+            var query = await this.GetQuery<IFQueryFilterItem>(f => f.QueryId == queryId && f.ParentId == ParentId)
 
 
                 .Select(i => new QueryFilterItemDto
@@ -149,9 +191,7 @@ namespace IF.Manager.Service.Services
 
             if (query.Any())
             {
-
                 filter.ConditionOperator = query.First().ConditionOperator;
-                filter.QueryId = query.First().QueryId;
             }
 
             return filter;
@@ -165,7 +205,7 @@ namespace IF.Manager.Service.Services
             {
                 var entity = await this.GetQuery<IFQuery>()
                .Include(e => e.QueryFilterItems)
-               .SingleOrDefaultAsync(q => q.Id == form.QueryId);
+               .SingleOrDefaultAsync(q => q.Id == form.QueryId && q.QueryFilterItems.Any(f=>f.ParentId == form.ParentId));
 
                 if (entity == null) { throw new BusinessException(" No such entity exists"); }
 
@@ -212,6 +252,7 @@ namespace IF.Manager.Service.Services
                         filter.EntityPropertyId = dto.EntityPropertyId;
                         filter.FilterOperator = dto.FilterOperator;
                         filter.IsNullCheck = dto.IsNullCheck;
+                        filter.ParentId = form.ParentId;
 
                         this.Add(filter);
                     }
@@ -244,7 +285,7 @@ namespace IF.Manager.Service.Services
                         filter.EntityPropertyId = dto.EntityPropertyId;
                         filter.FilterOperator = dto.FilterOperator;
                         filter.IsNullCheck = dto.IsNullCheck;
-
+                        filter.ParentId = form.ParentId;
                         this.Update(filter);
                     }
                 }

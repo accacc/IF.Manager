@@ -10,13 +10,13 @@ namespace IF.Manager.Contracts.Services
     public interface IQueryService: IRepository
     {
 
-
+        Task<List<QueryFilterTreeDto>> GetFilterTreeList(int queryId);
         Task<List<IFModelProperty>> GetQueryModelPropertyList(int queryId);
         Task<List<IFPageParameter>> GetPageParametersFromQuery(int queryId);
 
         //Task<List<IFFormModelProperty>> GetFormModelPropertyList(int formModelId);
         //Task<List<IFFormModel>> GetFormModelList();
-        Task<QueryFilterDto> GetQueryFilterItems(int queryId);
+        Task<QueryFilterDto> GetQueryFilterItems(int queryId,int? parentId);
 
         Task AddQuery(QueryDto form);
 

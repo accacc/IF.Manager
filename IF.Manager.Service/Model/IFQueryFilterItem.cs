@@ -9,9 +9,20 @@ namespace IF.Manager.Contracts.Model
 {
     public class IFQueryFilterItem:Entity
     {
+
+        public IFQueryFilterItem()
+        {
+            this.Childrens = new List<IFQueryFilterItem>();
+        }
+
         [Key]
         public int Id { get; set; }
 
+        public int? ParentId { get; set; }
+
+        public IFQueryFilterItem Parent { get; set; }
+
+        public ICollection<IFQueryFilterItem> Childrens { get; set; }
         public QueryConditionOperator ConditionOperator { get; set; }
         public QueryFilterOperator FilterOperator { get; set; }
 

@@ -12,6 +12,7 @@ namespace IF.Manager.Contracts.Dto
             this.Items = new List<QueryFilterItemDto>();
         }
         public int QueryId { get; set; }
+        public int? ParentId { get; set; }
         public List<QueryFilterItemDto> Items { get; set; }
 
         public QueryConditionOperator ConditionOperator { get; set; }

@@ -1,14 +1,7 @@
-﻿@model IF.Manager.Contracts.Dto.ClassMapModel
-
-@using IF.Web.Mvc.Extensions
-
-
+﻿@model IF.Manager.Contracts.Dto.QueryFilterMapModel
 
 @{
-    if (Model.IsModal)
-    {
         Layout = "_ModalLayout";
-    }
 
 }
 
@@ -23,33 +16,33 @@
     <div id="row">
 
         <a class="btn btn-primary"
-           href="@Url.Page("/Control/ClassChildForm","AddPrimitiveProperty",new {RootParentId = Model.ClassId })"
+           href="@Url.Page("/Filter/QueryFilterForm",new {QueryId = Model.QueryId })"
            if-ajax="true"
            if-ajax-method="get"
            if-ajax-mode="replace"
            if-ajax-show-dialog="true"
            if-ajax-extradatafunc="setselectedtreenode()"
            if-ajax-modal-id="@Guid.NewGuid()">
-           Properties
+            Rules
         </a>
         -
 
         <a class="btn btn-primary"
-           href="@Url.Page("/ClassForm","Add",new {RootParentId = Model.ClassId })"
+           href="@Url.Page("/Filter/QueryFilterForm",new {QueryId = Model.QueryId })"
            if-ajax="true"
            if-ajax-method="get"
            if-ajax-mode="replace"
            if-ajax-show-dialog="true"
            if-ajax-extradatafunc="setselectedtreenode()"
            if-ajax-modal-id="@Guid.NewGuid()">
-            Add Class
+           Add Group
         </a>
 
     </div>
     <br />
     <div id="row">
-        <div id="ClassMapTree">
-            @{await Html.RenderPartialAsync("../Control/_ClassTree.cshtml", Model.Tree);}
+        <div id="FilterMapTree">
+            @{await Html.RenderPartialAsync("../Filter/_FilterTree.cshtml", Model.Tree);}
         </div>
     </div>
 </form>

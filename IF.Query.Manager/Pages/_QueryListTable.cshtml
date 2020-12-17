@@ -52,7 +52,7 @@
     <td>
 
         <a class="btn btn-primary"
-           href="@Url.Page("/Filter/QueryFilterForm",new { Id = item.Id })"
+           href="@Url.Page("/QueryListIndex","FilterTreeList",new { Id = item.Id })"
            if-ajax="true"
            if-ajax-method="get"
            if-ajax-insertion-mode="replace"

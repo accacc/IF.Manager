@@ -23,13 +23,13 @@ namespace IF.Manager.Query.Pages.Filter
         private readonly IModelService modelService;
         private readonly IPageService pageService;
 
-        [BindProperty, Required]
+        [BindProperty(SupportsGet =true), Required]
         public QueryFilterDto Form { get; set; }
 
         
         
 
-        public QueryFilterModel(IEntityService entityService, IQueryService queryService, IModelService modelService,IPageService pageService)
+      public QueryFilterModel(IEntityService entityService, IQueryService queryService, IModelService modelService,IPageService pageService)
         {
             
             this.entityService = entityService;
@@ -39,25 +39,40 @@ namespace IF.Manager.Query.Pages.Filter
         }
 
 
-        public async Task OnGet(int Id)
+        public async Task OnGet()
         {
 
-            this.Form = await this.queryService.GetQueryFilterItems(Id);
+            this.Form = await this.queryService.GetQueryFilterItems(this.Form.QueryId,this.Form.ParentId);
+
+            await SetFormDefaults(this.Form.QueryId);
 
             if (!this.Form.Items.Any())
             {
-                SetEmptyForm(Id);
+                this.Form.Items.Add(new QueryFilterItemDto());
             }
 
-            await SetFromDefaults(Id);
+         
 
         }
 
+        //public async Task<PartialViewResult> OnGetEmptyFormGroupPartialAsync()
+        //{
+
+        //    SetEmptyForm(this.Form.QueryId);
+        //    await SetFormDefaults(this.Form.QueryId);
+        //    //QueryFilterDto emptyFormItem = new QueryFilterDto();
+
+        //    return new PartialViewResult
+        //    {
+        //        ViewName = "QueryFilterForm",
+        //        ViewData = new ViewDataDictionary<QueryFilterModel>(ViewData, this)
+        //    };
+        //}
 
 
         public async Task<PartialViewResult> OnGetEmptyFormItemPartialAsync(int Id)
         {
-            await SetFromDefaults(Id);
+            await SetFormDefaults(Id);
 
             var emptyFormItem = new QueryFilterItemDto();
 
@@ -84,19 +99,20 @@ namespace IF.Manager.Query.Pages.Filter
 
         }
 
-        private void SetEmptyForm(int Id)
-        {
-            this.Form = new QueryFilterDto();
-            this.Form.QueryId = Id;
-            var item = new QueryFilterItemDto();
+        //private void SetEmptyForm(int queryId,int? ParentId)
+        //{
+        //    this.Form = new QueryFilterDto();
+        //    this.Form.QueryId = queryId;
+        //    this.Form.ParentId = ParentId;
+        //    var item = new QueryFilterItemDto();
             
-            this.Form.Items.Add(item);            
+        //    this.Form.Items.Add(item);            
 
-        }
+        //}
 
-        private async Task SetFromDefaults(int Id)
+        private async Task SetFormDefaults(int queryId)
         {
-            var query = await this.queryService.GetQuery(Id);
+            var query = await this.queryService.GetQuery(queryId);
 
             var model = await this.modelService.GetModel(query.ModelId);
 
