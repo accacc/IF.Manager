@@ -88,15 +88,38 @@ namespace IF.Manager.Query.Pages.Filter
             await this.queryService.UpdatQueryFilters(this.Form);
 
 
-            var QueryList = await this.queryService.GetQueryList();
-            
+            QueryFilterMapModel model = await GetTreeModel(this.Form.QueryId);
 
             return new PartialViewResult
             {
-                ViewName = "_QueryListTable",
-                ViewData = new ViewDataDictionary<List<QueryDto>>(ViewData, QueryList)
+                ViewName = "_FilterTreeMain",
+                ViewData = new ViewDataDictionary<ClassMapModel>(ViewData, model)
             };
 
+        }
+
+        private async Task<QueryFilterMapModel> GetTreeModel(int QueryId)
+        {
+            QueryFilterMapModel model = new QueryFilterMapModel();
+
+
+            var query = await this.queryService.GetQuery(QueryId);
+
+            if (query != null)
+            {
+                var tree = await this.queryService.GetFilterTreeList(query.Id);
+
+
+                model.Tree = tree;
+                model.QueryId = query.Id;
+            }
+            else
+            {
+                model.Tree = new List<QueryFilterTreeDto>();
+            }
+
+
+            return model;
         }
 
         //private void SetEmptyForm(int queryId,int? ParentId)
@@ -105,7 +128,7 @@ namespace IF.Manager.Query.Pages.Filter
         //    this.Form.QueryId = queryId;
         //    this.Form.ParentId = ParentId;
         //    var item = new QueryFilterItemDto();
-            
+
         //    this.Form.Items.Add(item);            
 
         //}

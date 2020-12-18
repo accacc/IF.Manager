@@ -204,17 +204,18 @@ namespace IF.Manager.Service.Services
             try
             {
                 var entity = await this.GetQuery<IFQuery>()
-               .Include(e => e.QueryFilterItems)
-               .SingleOrDefaultAsync(q => q.Id == form.QueryId && q.QueryFilterItems.Any(f=>f.ParentId == form.ParentId));
+               .SingleOrDefaultAsync(q => q.Id == form.QueryId);
 
                 if (entity == null) { throw new BusinessException(" No such entity exists"); }
 
 
-                for (int i = 0; i < entity.QueryFilterItems.Count; i++)
+                var queryFilterItems = await this.GetQuery<IFQueryFilterItem>(f => f.QueryId == form.QueryId && f.ParentId == form.ParentId).ToListAsync();
+
+                for (int i = 0; i < queryFilterItems.Count; i++)
                 {
-                    if (!dtos.Any(d => d.Id == entity.QueryFilterItems.ElementAt(i).Id))
+                    if (!dtos.Any(d => d.Id == queryFilterItems.ElementAt(i).Id))
                     {
-                        this.Delete(entity.QueryFilterItems.ElementAt(i));
+                        this.Delete(queryFilterItems.ElementAt(i));
                     }
                 }
 
