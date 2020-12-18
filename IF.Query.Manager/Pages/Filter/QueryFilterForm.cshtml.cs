@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
+using IF.Manager.Service.CodeGen.Rules.Filters;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -144,9 +146,15 @@ namespace IF.Manager.Query.Pages.Filter
 
             ShowFilterModel showFilterModel = new ShowFilterModel();
 
-            string query = "";
-            query = GetrulesQuery(model.Tree, query);
-            showFilterModel.Filter = query;
+
+            FilterContext filterContext = new FilterContext();
+            filterContext.FilterItems = model.Tree.ToList();
+            FilterRuleEngine filterRuleEngine = new FilterRuleEngine(filterContext);
+            filterRuleEngine.Execute();
+
+            //string query = "";
+            //query = GetrulesQuery(model.Tree, query);
+            showFilterModel.Filter = filterRuleEngine.GetFilter();
 
             return new PartialViewResult
             {

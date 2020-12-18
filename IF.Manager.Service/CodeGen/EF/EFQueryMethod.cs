@@ -88,97 +88,13 @@ namespace IF.Manager.Service
         {
 
 
-            if (!this.query.QueryFilterItems.Any()) return;
-            FilterContext filterContext = new FilterContext();
-            filterContext.FilterItems = this.query.QueryFilterItems.ToList();
-            FilterRuleEngine filterRuleEngine = new FilterRuleEngine(filterContext);
-            filterRuleEngine.Execute();
+            //if (!this.query.QueryFilterItems.Any()) return;
+            //FilterContext filterContext = new FilterContext();
+            //filterContext.FilterItems = this.query.QueryFilterItems.ToList();
+            //FilterRuleEngine filterRuleEngine = new FilterRuleEngine(filterContext);
+            //filterRuleEngine.Execute();
 
-            builder.AppendLine(filterRuleEngine.GetFilter());
-
-            //string whereCon = String.Empty;
-
-            //foreach (var queryFilterItem in this.query.QueryFilterItems)
-            //{
-            //    string filterOperator = "";
-
-            //    switch (queryFilterItem.FilterOperator)
-            //    {
-            //        case QueryFilterOperator.Equal:
-            //            filterOperator = "==";
-            //            break;
-            //        case QueryFilterOperator.NotEqual:
-            //            filterOperator = "!=";
-            //            break;
-            //        case QueryFilterOperator.Contains:
-            //            break;
-            //        case QueryFilterOperator.Null:
-            //            filterOperator = "== null";
-            //            break;
-            //        case QueryFilterOperator.NotNull:
-            //            filterOperator = "!= null";
-            //            break;
-            //        case QueryFilterOperator.Greater:
-            //            filterOperator =">";
-            //            break;
-            //        case QueryFilterOperator.Less:
-            //            filterOperator = "<";
-            //            break;
-            //        case QueryFilterOperator.StartWith:
-            //            break;
-            //        case QueryFilterOperator.EndWith:
-            //            break;
-            //        case QueryFilterOperator.GreaterAndEqual:
-            //            filterOperator = ">=";
-            //            break;
-            //        case QueryFilterOperator.LessAndEqual:
-            //            filterOperator = "<=";
-            //            break;
-            //        default:
-            //            break;
-            //    }
-
-            //    string conditionOperator = "";
-
-            //    switch (queryFilterItem.ConditionOperator)
-            //    {
-            //        case QueryConditionOperator.AND:
-            //            conditionOperator = "&&";
-            //            break;
-            //        case QueryConditionOperator.OR:
-            //            conditionOperator = "||";
-            //            break;
-            //        default:
-            //            break;
-            //    }
-
-            //    if (!String.IsNullOrWhiteSpace(queryFilterItem.Value))
-            //    {
-            //        if (queryFilterItem.Value.StartsWith("{") && queryFilterItem.Value.EndsWith("}"))
-            //        {
-            //            var formProperty = queryFilterItem.Value.Replace("{", "");
-            //            formProperty = formProperty.Replace("}", "");
-
-
-            //            whereCon += $"x.{queryFilterItem.EntityProperty.Name} == request.Data.{formProperty}  {conditionOperator} ";
-            //        }
-            //        else
-            //        {
-            //            whereCon += $"x.{queryFilterItem.EntityProperty.Name} == {queryFilterItem.Value} {conditionOperator} ";
-            //        }
-            //    }
-            //    else if (queryFilterItem.IFPageParameterId.HasValue)
-            //    {
-            //        whereCon += $"x.{queryFilterItem.EntityProperty.Name} == request.Data.{queryFilterItem.IFPageParameter.Name} && {conditionOperator}";
-            //    }
-            //    else 
-            //    {
-            //        throw new BusinessException("Bilinmeyen filtre tipi");
-            //    }
-            //}
-
-            // whereCon = whereCon.Remove(whereCon.Length - 3, 3);
-
+            //builder.AppendLine(filterRuleEngine.GetFilter());
 
 
         }

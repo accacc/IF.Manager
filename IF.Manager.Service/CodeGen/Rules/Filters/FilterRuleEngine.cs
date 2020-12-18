@@ -1,10 +1,12 @@
 ﻿using IF.Core.Exception;
 using IF.Core.RuleEngine;
+using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Enum;
 using IF.Manager.Contracts.Model;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace IF.Manager.Service.CodeGen.Rules.Filters
@@ -34,18 +36,19 @@ namespace IF.Manager.Service.CodeGen.Rules.Filters
 
             ;
         }
-        public void Execute()
+
+        public StringBuilder GetrulesQuery(List<QueryFilterTreeDto> queryFilterItems, StringBuilder builder)
+
         {
 
-            this.context.FilterBuilder = new StringBuilder();            
-
-            foreach (var queryFilterItem in this.context.FilterItems)
+            for (int i = 0; i < queryFilterItems.Count; i++)
             {
+                QueryFilterTreeDto queryFilterItem = queryFilterItems[i];
 
                 switch (queryFilterItem.ConditionOperator)
                 {
                     case QueryConditionOperator.AND:
-                      this.context.ConditionOperator= "&&";
+                        this.context.ConditionOperator = "&&";
                         break;
                     case QueryConditionOperator.OR:
                         this.context.ConditionOperator = "||";
@@ -54,8 +57,12 @@ namespace IF.Manager.Service.CodeGen.Rules.Filters
                         break;
                 }
 
+                if (i == queryFilterItems.Count - 1)
+                {
+                    this.context.ConditionOperator = "";
+                }
+
                 context.CurrentFilterItem = queryFilterItem;
-                
 
                 if (!String.IsNullOrWhiteSpace(queryFilterItem.Value))
                 {
@@ -67,34 +74,116 @@ namespace IF.Manager.Service.CodeGen.Rules.Filters
 
                         //whereCon += $"x.{queryFilterItem.EntityProperty.Name} == request.Data.{formProperty}  {conditionOperator} ";
 
-                        context.PropertyName = queryFilterItem.EntityProperty.Name;
+                        context.PropertyName = queryFilterItem.PropertyName;
                         context.PropertyValue = $"request.Data.{ formProperty}";
                     }
                     else
                     {
-                        context.PropertyName = queryFilterItem.EntityProperty.Name;
+                        context.PropertyName = queryFilterItem.PropertyName;
                         context.PropertyValue = queryFilterItem.Value;
                         //whereCon += $"x.{queryFilterItem.EntityProperty.Name} == {queryFilterItem.Value} {conditionOperator} ";
                     }
                 }
                 else if (queryFilterItem.IFPageParameterId.HasValue)
                 {
-                    context.PropertyName = queryFilterItem.EntityProperty.Name;
-                    context.PropertyValue = $"request.Data.{ queryFilterItem.IFPageParameter.Name}";
+                    //context.PropertyName = queryFilterItem.PropertyName;
+                    //context.PropertyValue = $"request.Data.{ queryFilterItem.IFPageParameter.Name}";
                     //whereCon += $"x.{queryFilterItem.EntityProperty.Name} == request.Data.{queryFilterItem.IFPageParameter.Name} && {conditionOperator}";
                 }
                 else
                 {
-                    context.PropertyName = queryFilterItem.EntityProperty.Name;
-                    context.PropertyValue = $"request.Data.{ queryFilterItem.EntityProperty.Name}";
+                    context.PropertyName = queryFilterItem.PropertyName;
+                    context.PropertyValue = $"request.Data.{ queryFilterItem.PropertyName}";
                 }
 
                 context.IsNullableCondition = $"&& {context.PropertyValue}!=null";
 
                 rules.Run(context);
 
+            
                
+
+                if (queryFilterItem.Childs.Any())
+                {
+                    this.context.FilterBuilder.Append($"(");
+
+                    builder = GetrulesQuery(queryFilterItem.Childs.ToList(), builder);
+                    builder.Append(")");
+
+                    builder.Append(queryFilterItem.ConditionOperator.ToString() + " ");
+
+                }
+
             }
+
+            return builder;
+
+
+
+        }
+        public void Execute()
+        {
+
+            this.context.FilterBuilder = new StringBuilder();
+
+            this.GetrulesQuery(this.context.FilterItems, this.context.FilterBuilder);
+
+            //foreach (var queryFilterItem in this.context.FilterItems)
+            //{
+
+            //    switch (queryFilterItem.ConditionOperator)
+            //    {
+            //        case QueryConditionOperator.AND:
+            //          this.context.ConditionOperator= "&&";
+            //            break;
+            //        case QueryConditionOperator.OR:
+            //            this.context.ConditionOperator = "||";
+            //            break;
+            //        default:
+            //            break;
+            //    }
+
+            //    context.CurrentFilterItem = queryFilterItem;
+                
+
+            //    if (!String.IsNullOrWhiteSpace(queryFilterItem.Value))
+            //    {
+            //        if (queryFilterItem.Value.StartsWith("{") && queryFilterItem.Value.EndsWith("}"))
+            //        {
+            //            var formProperty = queryFilterItem.Value.Replace("{", "");
+            //            formProperty = formProperty.Replace("}", "");
+
+
+            //            //whereCon += $"x.{queryFilterItem.EntityProperty.Name} == request.Data.{formProperty}  {conditionOperator} ";
+
+            //            context.PropertyName = queryFilterItem.EntityProperty.Name;
+            //            context.PropertyValue = $"request.Data.{ formProperty}";
+            //        }
+            //        else
+            //        {
+            //            context.PropertyName = queryFilterItem.EntityProperty.Name;
+            //            context.PropertyValue = queryFilterItem.Value;
+            //            //whereCon += $"x.{queryFilterItem.EntityProperty.Name} == {queryFilterItem.Value} {conditionOperator} ";
+            //        }
+            //    }
+            //    else if (queryFilterItem.IFPageParameterId.HasValue)
+            //    {
+            //        context.PropertyName = queryFilterItem.EntityProperty.Name;
+            //        context.PropertyValue = $"request.Data.{ queryFilterItem.IFPageParameter.Name}";
+            //        //whereCon += $"x.{queryFilterItem.EntityProperty.Name} == request.Data.{queryFilterItem.IFPageParameter.Name} && {conditionOperator}";
+            //    }
+            //    else
+            //    {
+            //        context.PropertyName = queryFilterItem.EntityProperty.Name;
+            //        context.PropertyValue = $"request.Data.{ queryFilterItem.EntityProperty.Name}";
+            //    }
+
+            //    context.IsNullableCondition = $"&& {context.PropertyValue}!=null";
+
+            //    rules.Run(context);
+
+               
+            //}
         }
 
         public string GetFilter()

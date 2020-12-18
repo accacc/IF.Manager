@@ -49,5 +49,7 @@ namespace IF.Manager.Contracts.Dto
         public int? IFPageParameterId { get; set; }
 
         public bool? IsNullCheck { get; set; }
+
+        public string PropertyName { get; set; }
     }
 }

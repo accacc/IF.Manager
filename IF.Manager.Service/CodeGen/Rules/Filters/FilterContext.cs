@@ -1,4 +1,5 @@
 ﻿using IF.Core.RuleEngine;
+using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 
 using System;
@@ -10,8 +11,8 @@ namespace IF.Manager.Service.CodeGen.Rules.Filters
 
     public class FilterContext : IIFRuleContext
     {
-        public List<IFQueryFilterItem> FilterItems;
-        public IFQueryFilterItem CurrentFilterItem { get; set; }
+        public List<QueryFilterTreeDto> FilterItems;
+        public QueryFilterTreeDto CurrentFilterItem { get; set; }
         
         public StringBuilder FilterBuilder { get; set; }
 

@@ -29,7 +29,7 @@ namespace IF.Manager.Service.Services
 
             try
             {
-                var list = await this.GetQuery<IFQueryFilterItem>().Select
+                var list = await this.GetQuery<IFQueryFilterItem>().Include(f=>f.EntityProperty).Select
 
                (map =>
                 new QueryFilterTreeDto
@@ -42,11 +42,12 @@ namespace IF.Manager.Service.Services
                     IsNullCheck = map.IsNullCheck,
                     EntityPropertyId = map.EntityPropertyId,
                     Value = map.Value,
-                    QueryId = map.QueryId
+                    QueryId = map.QueryId,
+                    PropertyName = map.EntityProperty.Name
 
                 }).ToListAsync();
 
-                var parents = list.Where(c => c.QueryId == queryId).ToList();
+                var parents = list.Where(c => c.QueryId == queryId && !c.ParentId.HasValue).ToList();
 
 
                 tree = list.ToTree(parents);
