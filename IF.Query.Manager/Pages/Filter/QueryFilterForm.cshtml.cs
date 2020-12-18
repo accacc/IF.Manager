@@ -13,8 +13,10 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace IF.Manager.Query.Pages.Filter
 {
-    
-
+    public class ShowFilterModel
+    {
+        public string Filter { get; set; }
+    }
     public class QueryFilterModel : PageModel
     {
 
@@ -88,22 +90,78 @@ namespace IF.Manager.Query.Pages.Filter
             await this.queryService.UpdatQueryFilters(this.Form);
 
 
-            QueryFilterMapModel model = await GetTreeModel(this.Form.QueryId);
+            QueryFilterMapModel model = await GetTreeModel();
 
             return new PartialViewResult
             {
                 ViewName = "_FilterTreeMain",
-                ViewData = new ViewDataDictionary<ClassMapModel>(ViewData, model)
+                ViewData = new ViewDataDictionary<QueryFilterMapModel>(ViewData, model)
             };
 
         }
 
-        private async Task<QueryFilterMapModel> GetTreeModel(int QueryId)
+        public static string GetrulesQuery(List<QueryFilterTreeDto> rules, string query)
+
+        {
+
+            for (int i = 0; i < rules.Count; i++)
+            {
+                QueryFilterTreeDto rule = rules[i];
+
+                if (i == rules.Count - 1)
+                {
+                    query += $"{rule.Value} {rule.FilterOperator.ToString()} {rule.Value}  ";
+                }
+                else
+                {
+                    query += $"{rule.Value} {rule.ConditionOperator} {rule.Value} { rule.ConditionOperator} ";
+                }
+
+                if (rule.Childs.Any())
+                {
+                    query += $"(";
+
+                    query = GetrulesQuery(rule.Childs.ToList(), query);
+                    query += ")";
+
+                    query += rule.ConditionOperator.ToString() + " ";
+
+                }
+
+            }
+
+            return query;
+
+
+
+        }
+
+        public async Task<PartialViewResult> OnGetShow()
+        {
+            
+
+            QueryFilterMapModel model = await GetTreeModel();
+
+            ShowFilterModel showFilterModel = new ShowFilterModel();
+
+            string query = "";
+            query = GetrulesQuery(model.Tree, query);
+            showFilterModel.Filter = query;
+
+            return new PartialViewResult
+            {
+                ViewName = "_ShowFilter",
+                ViewData = new ViewDataDictionary<ShowFilterModel>(ViewData, showFilterModel)
+            };
+
+        }
+
+        private async Task<QueryFilterMapModel> GetTreeModel()
         {
             QueryFilterMapModel model = new QueryFilterMapModel();
 
 
-            var query = await this.queryService.GetQuery(QueryId);
+            var query = await this.queryService.GetQuery(this.Form.QueryId);
 
             if (query != null)
             {

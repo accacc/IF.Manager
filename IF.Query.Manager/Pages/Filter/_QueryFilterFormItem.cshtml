@@ -13,15 +13,17 @@
 
     foreach (var entity in entities)
     {
+        entity.Selected = false;
         if (entity.Value == Model.EntityPropertyId.ToString())
         {
             entity.Selected = true;
         }
     }
 
-    
+
     foreach (var prop in page_parameters)
     {
+        prop.Selected = false;
         if (prop.Value == Model.PageParameterId.ToString())
         {
             prop.Selected = true;
@@ -30,6 +32,7 @@
 
     foreach (var op in filterOperators)
     {
+        op.Selected = false;
         if (op.Value == ((int)Model.FilterOperator).ToString())
         {
             op.Selected = true;

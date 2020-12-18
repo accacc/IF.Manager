@@ -35,8 +35,20 @@
            if-ajax-show-dialog="true"
            if-ajax-extradatafunc="setselectedtreenode()"
            if-ajax-modal-id="@Guid.NewGuid()">
-           Add Group
+            Add Group
         </a>
+        -
+        <a class="btn btn-primary"
+           href="@Url.Page("/Filter/QueryFilterForm","Show",new {QueryId = Model.QueryId })"
+           if-ajax="true"
+           if-ajax-method="get"
+           if-ajax-mode="replace"
+           if-ajax-show-dialog="true"
+           if-ajax-extradatafunc="setselectedtreenode()"
+           if-ajax-modal-id="@Guid.NewGuid()">
+            Show
+        </a>
+        
 
     </div>
     <br />
