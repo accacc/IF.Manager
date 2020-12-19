@@ -102,41 +102,41 @@ namespace IF.Manager.Query.Pages.Filter
 
         }
 
-        public static string GetrulesQuery(List<QueryFilterTreeDto> rules, string query)
+        //public static string GetrulesQuery(List<QueryFilterTreeDto> rules, string query)
 
-        {
+        //{
 
-            for (int i = 0; i < rules.Count; i++)
-            {
-                QueryFilterTreeDto rule = rules[i];
+        //    for (int i = 0; i < rules.Count; i++)
+        //    {
+        //        QueryFilterTreeDto rule = rules[i];
 
-                if (i == rules.Count - 1)
-                {
-                    query += $"{rule.Value} {rule.FilterOperator.ToString()} {rule.Value}  ";
-                }
-                else
-                {
-                    query += $"{rule.Value} {rule.ConditionOperator} {rule.Value} { rule.ConditionOperator} ";
-                }
+        //        if (i == rules.Count - 1)
+        //        {
+        //            query += $"{rule.Value} {rule.FilterOperator.ToString()} {rule.Value}  ";
+        //        }
+        //        else
+        //        {
+        //            query += $"{rule.Value} {rule.ConditionOperator} {rule.Value} { rule.ConditionOperator} ";
+        //        }
 
-                if (rule.Childs.Any())
-                {
-                    query += $"(";
+        //        if (rule.Childs.Any())
+        //        {
+        //            query += $"(";
 
-                    query = GetrulesQuery(rule.Childs.ToList(), query);
-                    query += ")";
+        //            query = GetrulesQuery(rule.Childs.ToList(), query);
+        //            query += ")";
 
-                    query += rule.ConditionOperator.ToString() + " ";
+        //            query += rule.ConditionOperator.ToString() + " ";
 
-                }
+        //        }
 
-            }
+        //    }
 
-            return query;
+        //    return query;
 
 
 
-        }
+        //}
 
         public async Task<PartialViewResult> OnGetShow()
         {

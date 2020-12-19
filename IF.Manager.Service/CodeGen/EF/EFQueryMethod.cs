@@ -88,13 +88,13 @@ namespace IF.Manager.Service
         {
 
 
-            //if (!this.query.QueryFilterItems.Any()) return;
-            //FilterContext filterContext = new FilterContext();
-            //filterContext.FilterItems = this.query.QueryFilterItems.ToList();
-            //FilterRuleEngine filterRuleEngine = new FilterRuleEngine(filterContext);
-            //filterRuleEngine.Execute();
+            if (!this.query.QueryFilterItems.Any()) return;
+            FilterContext filterContext = new FilterContext();
+            filterContext.FilterItems = this.query.QueryFilterItems.ToList();
+            FilterRuleEngine filterRuleEngine = new FilterRuleEngine(filterContext);
+            filterRuleEngine.Execute();
 
-            //builder.AppendLine(filterRuleEngine.GetFilter());
+            builder.AppendLine(filterRuleEngine.GetFilter());
 
 
         }
