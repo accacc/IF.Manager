@@ -31,7 +31,11 @@ namespace IF.Manager.Contracts.Dto
 
     public class QueryFilterTreeDto : TreeDto<QueryFilterTreeDto>
     {
-        public string Name { get; set; }
+        public QueryFilterTreeDto()
+        {
+            this.Childs = new List<QueryFilterTreeDto>();
+        }
+        //public string Name { get; set; }
 
       //  public string Description { get; set; }
 

@@ -90,7 +90,25 @@ namespace IF.Manager.Service
 
             if (!this.query.QueryFilterItems.Any()) return;
             FilterContext filterContext = new FilterContext();
-            filterContext.FilterItems = this.query.QueryFilterItems.ToList();
+            filterContext.FilterItems = this.query.QueryFilterItems.Select
+
+               (map =>
+                new QueryFilterTreeDto
+                {
+
+                    ConditionOperator = map.ConditionOperator,
+                    Id = map.Id,
+                    ParentId = map.ParentId,
+                    FilterOperator = map.FilterOperator,
+                    IsNullCheck = map.IsNullCheck,
+                    EntityPropertyId = map.EntityPropertyId,
+                    Value = map.Value,
+                    QueryId = map.QueryId,
+                    PropertyName = map.EntityProperty.Name
+
+                })
+
+                .ToList();
             FilterRuleEngine filterRuleEngine = new FilterRuleEngine(filterContext);
             filterRuleEngine.Execute();
 

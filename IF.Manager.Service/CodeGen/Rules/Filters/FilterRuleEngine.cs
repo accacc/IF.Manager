@@ -29,6 +29,7 @@ namespace IF.Manager.Service.CodeGen.Rules.Filters
                 .SetNext(new EndsWithRule())
                 .SetNext(new StartsWithRule())
                 .SetNext(new NullRule())
+                .SetNext(new NotNullRule())
                 .SetNext(new NotEqualRule())
                 .SetNext(new StringContainsRule())
 
@@ -94,7 +95,7 @@ namespace IF.Manager.Service.CodeGen.Rules.Filters
                     context.PropertyValue = $"request.Data.{ queryFilterItem.PropertyName}";
                 }
 
-                context.IsNullableCondition = $"&& {context.PropertyValue}!=null";
+                context.NullableCondition = $"&& {context.PropertyValue}!=null";
 
                 rules.Run(context);
 
@@ -128,7 +129,7 @@ namespace IF.Manager.Service.CodeGen.Rules.Filters
         public string GetFilter()
         { 
             string filter = this.context.FilterBuilder.ToString();
-            filter = filter.Remove(filter.Length - 6, 6);
+            //filter = filter.Remove(filter.Length - 6, 6);
 
             filter = $".Where(x=> {filter})" + Environment.NewLine;
             return filter;
