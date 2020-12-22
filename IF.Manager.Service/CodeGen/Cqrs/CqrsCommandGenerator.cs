@@ -36,13 +36,15 @@ namespace IF.Manager.Service
 
         public async Task Generate()
         {
+            string nameSpace = SolutionHelper.GetProcessNamaspace(process);
 
             foreach (var command in process.Commands)
             {
                 var entityTree = await entityService.GetEntityTree(command.Model.EntityId);
                 //var properties = await this.modelService.GetModelPropertyList(command.ModelId);
                 ModelGenerator modelGenerator = new ModelGenerator(fileSystem);
-                modelGenerator.GenerateModels(command.Model, process, entityTree);
+                
+                modelGenerator.GenerateModels(command.Model, nameSpace, entityTree);
                 GenerateCqrsCommandClass(command, process, entityTree);
 
                 switch (command.CommandGetType)

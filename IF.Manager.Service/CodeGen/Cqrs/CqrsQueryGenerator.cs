@@ -28,6 +28,7 @@ namespace IF.Manager.Service.Services
 
         public async Task Generate()
         {
+            string nameSpace = SolutionHelper.GetProcessNamaspace(process);
 
             foreach (var query in process.Queries)
             {
@@ -36,7 +37,7 @@ namespace IF.Manager.Service.Services
                 //var properties = await this.modelService.GetModelPropertyList(query.ModelId);
 
                 ModelGenerator modelGenerator = new ModelGenerator(fileSystem);
-                modelGenerator.GenerateModels(query.Model, process, entityTree);
+                modelGenerator.GenerateModels(query.Model, nameSpace, entityTree);
 
                 CqrsQueryHandlerGenerator handlerGenerator = new CqrsQueryHandlerGenerator();
                 handlerGenerator.GenerateCqrsHandlerClass(query, entityTree, fileSystem);

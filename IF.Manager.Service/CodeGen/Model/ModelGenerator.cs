@@ -15,9 +15,9 @@ namespace IF.Manager.Service.Model
             this.fileSystem = fileSystem;
         }
 
-        public  void GenerateModels(IFModel model, IFProcess process, ClassTreeDto entityTree)
+        public  void GenerateModels(IFModel model, string nameSpace , ClassTreeDto entityTree)
         {
-            string nameSpace = SolutionHelper.GetProcessNamaspace(process);
+            
 
             string name = DirectoryHelper.AddAsLastWord(model.Name,"DataModel");
 

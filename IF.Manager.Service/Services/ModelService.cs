@@ -15,10 +15,10 @@ namespace IF.Manager.Service.Services
 {
     public class ModelService : GenericRepository, IModelService
     {
-
-        public ModelService(ManagerDbContext dbContext) : base(dbContext)
+        private readonly IClassService classService;
+        public ModelService(ManagerDbContext dbContext,IClassService classService) : base(dbContext)
         {
-
+            this.classService = classService;
         }
 
         public async Task SaveModel(ModelUpdateDto modelDto, int modelId)
@@ -31,8 +31,6 @@ namespace IF.Manager.Service.Services
             {
                 this.Delete(property);
             }
-
-
 
 
             foreach (var property in modelDto.GetProperties())
@@ -48,6 +46,14 @@ namespace IF.Manager.Service.Services
 
             await this.UnitOfWork.SaveChangesAsync();
         }
+
+        //public async  Task ModelToClass(int modelId)
+        //{
+        //    var model = this.GetQuery<IFModel>(m=>m.Id == modelId)
+        //        .Include(x=>x.Properties)
+        //        .ThenInclude(p=>p.Entity)
+
+        //}
 
         public async Task<List<ModelDto>> GetModelList()
         {
