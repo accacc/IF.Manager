@@ -1,21 +1,19 @@
-﻿using DatabaseSchemaReader.DataSchema;
-
+﻿
 using IF.CodeGeneration.Core;
 using IF.CodeGeneration.CSharp;
 using IF.Core.Data;
 using IF.Core.Exception;
 using IF.Manager.Contracts.Dto;
-using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
 using IF.Manager.Service.Model;
 using IF.Persistence.EF;
+
 using Microsoft.EntityFrameworkCore;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -152,8 +150,7 @@ namespace IF.Manager.Service
             {
                 var list = await this.GetQuery<IFClass>().Select
 
-               (map =>
-                new ClassControlTreeDto
+               (map => new ClassControlTreeDto
                 {
 
                     Name = map.Name,

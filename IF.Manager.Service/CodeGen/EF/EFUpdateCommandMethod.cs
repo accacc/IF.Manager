@@ -8,11 +8,11 @@ namespace IF.Manager.Service.EF
     public class EFUpdateCommandMethod
     {
 
-        ClassTreeDto entityTree;
+        ModelClassTreeDto entityTree;
         IFCommand command;
         CSMethod method;
 
-        public EFUpdateCommandMethod(string nameSpace, string name, ClassTreeDto entityTree, IFCommand command)
+        public EFUpdateCommandMethod(string nameSpace, string name, ModelClassTreeDto entityTree, IFCommand command)
         {
             this.entityTree = entityTree;
             this.command = command;
@@ -37,7 +37,7 @@ namespace IF.Manager.Service.EF
             {
                 if (property.IsRelation) continue;
 
-                bool IsModelProperty = ClassTreeDto.IsModelProperty(property, command.Model);
+                bool IsModelProperty = ModelClassTreeDto.IsModelProperty(property, command.Model);
 
                 if (!IsModelProperty) continue;
 

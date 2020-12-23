@@ -18,14 +18,14 @@ namespace IF.Manager.Service
         }
 
 
-        public void Build(ClassTreeDto entityTree)
+        public void Build(ModelClassTreeDto entityTree)
         {
             this.Usings.Add("System");
             this.Usings.Add("System.Collections.Generic");
 
             foreach (var childEntityTree in entityTree.Childs)
             {               
-                bool IsModelProperty = ClassTreeDto.IsModelProperty(childEntityTree,model);
+                bool IsModelProperty = ModelClassTreeDto.IsModelProperty(childEntityTree,model);
 
                 if (IsModelProperty)
                 {

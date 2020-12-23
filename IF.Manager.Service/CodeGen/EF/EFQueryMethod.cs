@@ -17,11 +17,11 @@ namespace IF.Manager.Service
     public class EFQueryMethod : EFMethod
     {
 
-        ClassTreeDto entityTree;
+        ModelClassTreeDto entityTree;
         IFQuery query;
         CSMethod method;
 
-        public EFQueryMethod(ClassTreeDto entityTree, IFQuery query)
+        public EFQueryMethod(ModelClassTreeDto entityTree, IFQuery query)
         {
             this.entityTree = entityTree;
             this.query = query;
@@ -128,7 +128,7 @@ namespace IF.Manager.Service
 
             foreach (var childTree in this.entityTree.Childs)
             {
-                bool IsModelProperty = ClassTreeDto.IsModelProperty(childTree, query.Model);
+                bool IsModelProperty = ModelClassTreeDto.IsModelProperty(childTree, query.Model);
 
                 if (!IsModelProperty) continue;
 
@@ -150,7 +150,7 @@ namespace IF.Manager.Service
 
                     foreach (var childProperty in childTree.Childs)
                     {
-                        IsModelProperty = ClassTreeDto.IsModelProperty(childProperty, query.Model);
+                        IsModelProperty = ModelClassTreeDto.IsModelProperty(childProperty, query.Model);
 
                         if (!IsModelProperty) continue;
 
@@ -205,7 +205,7 @@ namespace IF.Manager.Service
             foreach (var relation in relations)
             {
 
-                bool IsModelProperty = ClassTreeDto.IsModelProperty(relation, query.Model);
+                bool IsModelProperty = ModelClassTreeDto.IsModelProperty(relation, query.Model);
 
                 if (!IsModelProperty) continue;
 

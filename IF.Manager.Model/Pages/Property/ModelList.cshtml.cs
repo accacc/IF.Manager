@@ -13,7 +13,7 @@ namespace IF.Manager.Model.Pages.Property
 {
     public class ModelTreeModel
     {
-        public List<ClassTreeDto> EntityTree { get; set; }
+        public List<ModelClassTreeDto> EntityTree { get; set; }
 
         public List<string> Selecteds { get; set; }
     }
@@ -49,7 +49,7 @@ namespace IF.Manager.Model.Pages.Property
 
                 var model = await this.modelService.GetModel(this.ModelId);
                 ModelTreeModel pageModel = new ModelTreeModel();
-                pageModel.EntityTree = new List<ClassTreeDto>();
+                pageModel.EntityTree = new List<ModelClassTreeDto>();
                 pageModel.EntityTree.Add(await this.entityService.GetEntityTree(model.EntityId));
                 pageModel.Selecteds = new List<string>();
 

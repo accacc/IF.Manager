@@ -2,6 +2,7 @@
 using IF.Core.Persistence;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Service;
+using IF.Manager.Service.Dto;
 
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace IF.Manager.Contracts.Services
         Task<List<EntityPropertyDto>> GetEntityPropertyList(int entityId);
 
         Task UpdateEntityProperties(List<EntityPropertyDto> dtos, int entityId);
-        Task<ClassTreeDto> GetEntityTree(int entityId);
+        Task<ModelClassTreeDto> GetEntityTree(int entityId);
         string[] GetPrimitives();
 
         List<Type> GetAllEntityTypes();

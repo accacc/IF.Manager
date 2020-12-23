@@ -10,6 +10,7 @@ using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Service;
+using IF.Manager.Service.Dto;
 using IF.Web.Mvc.Extensions;
 
 using Microsoft.AspNetCore.Mvc;
