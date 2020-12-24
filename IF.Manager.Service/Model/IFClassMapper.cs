@@ -33,5 +33,9 @@ namespace IF.Manager.Service.Model
         public IFClassType ToType { get; set; }
         public IFClassType FromType { get; set; }
 
+        public int FromClassId { get; set; }
+
+        public int ToClassId { get; set; }
+
     }
 }

@@ -3,6 +3,7 @@ using IF.Manager.Service.Model;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 using System.Collections.Generic;
@@ -31,6 +32,7 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper
         public async Task OnGetUpdateAsync(int Id)
         {
             this.Form = await this.classService.GetClassMapper(Id);
+            await SetClasses();
 
         }
 
@@ -64,6 +66,50 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper
             };
         }
 
+
+        public async Task<PartialViewResult> OnGetDropDownFromClassPartialAsync()
+        {
+            await SetClasses();
+
+            return new PartialViewResult
+            {
+                ViewName = "_DropDownFromClass",
+                ViewData = new ViewDataDictionary<IFClassMapper>(ViewData, this.Form)
+            };
+
+        }
+
+        public async Task<PartialViewResult> OnGetDropDownToClassPartialAsync()
+        {
+            await SetClasses();
+
+            return new PartialViewResult
+            {
+                ViewName = "_DropDownToClass",
+                ViewData = new ViewDataDictionary<IFClassMapper>(ViewData, this.Form)
+            };
+
+        }
+
+        private async Task SetClasses()
+        {
+            var classList = await this.classService.GetClassList();
+
+
+            List<SelectListItem> items = new List<SelectListItem>();
+
+
+            foreach (var data in classList)
+            {
+                SelectListItem item = new SelectListItem();
+
+                item.Text = data.Name;
+                item.Value = data.Id.ToString();
+                items.Add(item);
+            }
+
+            ViewData["classes"] = items;
+        }
 
     }
 }

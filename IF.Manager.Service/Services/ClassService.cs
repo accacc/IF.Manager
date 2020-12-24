@@ -44,6 +44,10 @@ namespace IF.Manager.Service
             string name = DirectoryHelper.AddAsLastWord(form.Name, "IFClassMapper");
             entity.Name = name;
             entity.Description = form.Description;
+            entity.ToClassId = form.ToClassId;
+            entity.ToType = form.ToType;
+            entity.FromClassId = form.FromClassId;
+            entity.FromType = form.FromType;
             this.Add(entity);
             await this.UnitOfWork.SaveChangesAsync();
             form.Id = entity.Id;
@@ -62,6 +66,10 @@ namespace IF.Manager.Service
                 string name = DirectoryHelper.AddAsLastWord(form.Name, "IFClassMapper");
                 entity.Name = name;
                 entity.Description = form.Description;
+                entity.ToClassId = form.ToClassId;
+                entity.ToType = form.ToType;
+                entity.FromClassId = form.FromClassId;
+                entity.FromType = form.FromType;
                 this.Update(entity);
                 await this.UnitOfWork.SaveChangesAsync();
             }
