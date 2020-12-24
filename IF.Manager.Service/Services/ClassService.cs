@@ -8,7 +8,7 @@ using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
 using IF.Manager.Service.Model;
 using IF.Persistence.EF;
-
+using IF.Manager.Service.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 using System;
@@ -348,6 +348,63 @@ namespace IF.Manager.Service
             }
 
 
+        }
+
+        public async Task<List<IFClassMapping>> GetClassMappings(int classMapId)
+        {
+
+            var list = await this.GetQuery<IFClassMapping>(c => c.Id == classMapId).ToListAsync();
+
+            return list;
+        }
+
+        public async Task<List<IFClass>> GetClassTree(int classId)
+        {
+            var list =await this.GetQuery<IFClass>(t => t.Id == classId)
+       .ToListAsync();
+
+            foreach (var item in list)
+            {
+                item.Childrens = await GetChildrenByParentId(item.Id);
+            }
+
+            return list;
+        }
+
+        private async Task<List<IFClass>> GetChildrenByParentId(int parentId)
+        {
+            var children = new List<IFClass>();
+
+            var threads = await this.GetQuery<IFClass>(x => x.ParentId == parentId).ToListAsync();
+
+            foreach (var t in threads)
+            {
+                t.Childrens = await GetChildrenByParentId(t.Id);
+                
+
+                children.Add(t);
+            }
+
+            return children;
+        }
+
+        public async Task<List<IFClass>> GetTreeList2(int classId)
+        {
+            var list = await GetClassTree(classId);
+
+            var flat = Flatten(list.First());
+
+            return flat.ToList();
+
+        }
+        private IEnumerable<IFClass> Flatten(IFClass @class)
+        {
+            yield return @class;
+
+            foreach (var node in @class.Childrens.SelectMany(child => Flatten(child)))
+            {
+                yield return node;
+            }
         }
     }
 

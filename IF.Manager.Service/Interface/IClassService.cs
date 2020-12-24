@@ -31,11 +31,15 @@ namespace IF.Manager.Contracts.Services
         Task UpdateClassProperties(List<ClassControlTreeDto> dtos, int classId);
 
         Task<List<ClassControlTreeDto>> GetClassTreeList(int ParentId);
+        Task<List<IFClassMapping>> GetClassMappings(int classMapId);
         Task<IFClassMapper> GetClassMapper(int ıd);
         Task GenerateClass(int classId);
         Task<List<ClassControlTreeDto>> GetClassPropertyList(int classId    );
         Task AddClassMapper(IFClassMapper form);
         Task UpdateClassMapper(IFClassMapper form);
+        Task<List<IFClass>> GetClassTree(int classId);
+
+        Task<List<IFClass>> GetTreeList2(int classId);
 
         //Task<List<IFCustomClassRelation>> GetClassRelationList(int classId);
 

@@ -51,13 +51,13 @@
     </td>
     <td>
         <a class="btn btn-primary"
-           href="@Url.Page("/Mapper/Mapping/ClassMapperForm","Update",new { Id = item.Id})"
+           href="@Url.Page("/Mapper/Mapping/ClassMappingForm",new { ClassMapId = item.Id})"
            if-ajax="true"
            if-ajax-method="get"
            if-ajax-mode="replace"
            if-ajax-show-dialog="true"
            if-ajax-modal-id="@Guid.NewGuid()">
-            Edit
+            Mapping
         </a>
     </td>
 

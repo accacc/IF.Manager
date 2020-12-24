@@ -15,8 +15,8 @@ namespace IF.Manager.Service.Model
         {
         }
 
-        [Key]
-        public int Id { get; set; }
+            [Key]
+            public int Id { get; set; }
 
 
         //public IFModelProperty IFModelProperty { get; set; }
