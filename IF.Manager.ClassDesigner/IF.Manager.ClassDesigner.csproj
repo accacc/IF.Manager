@@ -27,4 +27,8 @@
       <HintPath>..\packages\InFramework\IF.Web.Mvc.dll</HintPath>
     </Reference>
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Pages\Mapper\Mapping\" />
+  </ItemGroup>
 </Project>

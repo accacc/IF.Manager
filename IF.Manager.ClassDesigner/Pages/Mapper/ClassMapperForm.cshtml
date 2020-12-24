@@ -3,6 +3,7 @@
 
 @{
     Layout = "_ModalLayout";
+    List<SelectListItem> types = ViewData["types"] as List<SelectListItem>;
 }
 
 
@@ -21,6 +22,24 @@
             <div class="form-group">
                 <label for="Description">Description</label>
                 @Html.TextBoxFor(m => m.Form.Description, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="FromClassType">From ClassType</label>
+                @Html.DropDownList($"Form.FromClassType", Html.GetEnumSelectList<IF.Manager.Service.Enum.IFClassType>(), "Select", new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="ToClassType">To ClassType</label>
+                @Html.DropDownList($"Form.ToClassType", Html.GetEnumSelectList<IF.Manager.Service.Enum.IFClassType>(), "Select", new { @class = "form-control" })
             </div>
         </div>
     </div>

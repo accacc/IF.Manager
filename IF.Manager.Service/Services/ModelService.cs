@@ -3,6 +3,7 @@ using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
+using IF.Manager.Service.Model;
 using IF.Persistence.EF;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -47,13 +48,27 @@ namespace IF.Manager.Service.Services
             await this.UnitOfWork.SaveChangesAsync();
         }
 
-        //public async  Task ModelToClass(int modelId)
-        //{
-        //    var model = this.GetQuery<IFModel>(m=>m.Id == modelId)
-        //        .Include(x=>x.Properties)
-        //        .ThenInclude(p=>p.Entity)
+        public async Task ModelToClass(int modelId)
+        {
+            var model = await this.GetQuery<IFModel>(m => m.Id == modelId)
+                .Include(x => x.Properties)
+                .ThenInclude(p => p.EntityProperty).SingleOrDefaultAsync();
 
-        //}
+            IFClass @class = new IFClass();
+
+            @class.Type = model.Name;
+            @class.Name = model.Name;
+            @class.IsPrimitive = false;
+            @class.IsNullable = false;
+
+
+            foreach (var property in model.Properties)
+            {
+
+            }
+                 
+
+        }
 
         public async Task<List<ModelDto>> GetModelList()
         {

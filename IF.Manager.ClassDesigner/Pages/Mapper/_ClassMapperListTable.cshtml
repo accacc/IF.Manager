@@ -28,55 +28,41 @@
     {
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    <a class="btn btn-primary"
-                       href="@Url.Page("/Mapper/ClassMapperForm","Update",new { Id = item.Id})"
-                       if-ajax="true"
-                       if-ajax-method="get"
-                       if-ajax-mode="replace"
-                       if-ajax-show-dialog="true"
-                       if-ajax-modal-id="@Guid.NewGuid()">
-                        Edit
-                    </a>
-                </td>
-
-                @*<td>
-                    <a class="btn btn-primary"
-                       href="@Url.Page("/ClassMapperListIndex","ClassTreeList",new { Id = item.Id })"
-                       if-ajax="true"
-                       if-ajax-method="get"
-                       if-ajax-insertion-mode="replace"
-                       if-ajax-show-dialog="true"
-                       if-ajax-modal-id="ClassTreeListModal">
-                        Properties
-                    </a>
-                </td>
-
-                <td>
-
-                    <a class="btn btn-primary"
-                       href="@Url.Page("/ClassMapperListIndex","Generate",new { ClassId = item.Id})"
-                       if-ajax="true"
-                       if-ajax-method="post"
-                       if-ajax-mode="replace"
-                       if-ajax-update-id="ClassTreeListModal"
-                       if-anti-forgery-token="@Context.GetAntiforgeryToken()">
-                        Generate Class
-                    </a>
-                </td>*@
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.Id)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Name)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Description)
+    </td>
+    <td>
+        <a class="btn btn-primary"
+           href="@Url.Page("/Mapper/ClassMapperForm","Update",new { Id = item.Id})"
+           if-ajax="true"
+           if-ajax-method="get"
+           if-ajax-mode="replace"
+           if-ajax-show-dialog="true"
+           if-ajax-modal-id="@Guid.NewGuid()">
+            Edit
+        </a>
+    </td>
+    <td>
+        <a class="btn btn-primary"
+           href="@Url.Page("/Mapper/Mapping/ClassMapperForm","Update",new { Id = item.Id})"
+           if-ajax="true"
+           if-ajax-method="get"
+           if-ajax-mode="replace"
+           if-ajax-show-dialog="true"
+           if-ajax-modal-id="@Guid.NewGuid()">
+            Edit
+        </a>
+    </td>
 
 
-            </tr>
+</tr>
         }
     }
     else

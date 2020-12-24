@@ -1,4 +1,5 @@
 ﻿using IF.Core.Data;
+using IF.Manager.Service.Enum;
 using IF.Manager.Service.Model;
 
 using System;
@@ -28,6 +29,9 @@ namespace IF.Manager.Service.Model
         public string Name { get; set; }
 
         public string Description { get; set; }
+
+        public IFClassType ToType { get; set; }
+        public IFClassType FromType { get; set; }
 
     }
 }
