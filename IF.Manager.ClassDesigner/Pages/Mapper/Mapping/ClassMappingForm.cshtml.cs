@@ -61,14 +61,40 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper.Mapping
 
             var mapping = await this.classService.GetClassMapper(this.ClassMapId);
 
-            List<IFClass> fromMap = await this.classService.GetTreeList2(mapping.FromClassId);
+            List<IFClass> fromMaps = await this.classService.GetTreeList2(mapping.FromClassId);
 
-            ViewData["fromMap"] = fromMap;
+            SetClasses(fromMaps, "fromMaps");
 
-            List<IFClass> toMap  = await this.classService.GetTreeList2(mapping.ToClassId);
+            List<IFClass> toMaps  = await this.classService.GetTreeList2(mapping.ToClassId);
 
-            ViewData["toMap"] = toMap;
+            SetClasses(toMaps, "toMaps");
 
+        }
+
+        private void SetClasses(List<IFClass> classes,string name)
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+
+
+            foreach (var @class in classes)
+            {
+                    SelectListItem item = new SelectListItem();
+
+                if(@class.Parent==null)
+                {
+                    item.Text = @class.Name;
+                }
+                else
+                {
+                    item.Text = @class.Parent.Name + " - " + @class.Name;
+                }
+                   
+                    item.Value = @class.Id.ToString();
+                    items.Add(item);
+
+            }
+
+            ViewData[name] = items;
         }
     }
 }

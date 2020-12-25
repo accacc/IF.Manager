@@ -16,15 +16,15 @@
             <table class="table table-striped table-sm" id="EmptyFormItem">
                 <thead>
                     <tr>
-                        <th>Property</th>
-                        <th>Operator</th>
+                        <th>From</th>
+                        <th>To</th>
                         <th>Delete</th>
                     </tr>
                 </thead>
 
                 @for (int i = 0; i < Model.Form.Count; i++)
                 {
-                    await Html.RenderPartialAsync("_QueryOrderFormItem", Model.Form[i]);
+                    await Html.RenderPartialAsync("_ClassMappingFormItem", Model.Form[i]);
                 }
 
             </table>
@@ -35,7 +35,7 @@
         <div class="col-md-6">
 
             <a class="btn btn-primary"
-               href="@Url.Page("/Order/QueryOrderForm","EmptyFormItemPartial",new { Id = Model.ClassMapId })"
+               href="@Url.Page("/Mapper/Mapping/ClassMappingForm","EmptyFormItemPartial",new { Id = Model.ClassMapId })"
                if-ajax="true"
                if-ajax-method="get"
                if-ajax-insertion-mode="after"
@@ -45,12 +45,12 @@
         </div>
         <div class="col-md-6">
             <button type="submit" class="btn btn-primary"
-                    if-ajax-action="@Url.Page("/Order/QueryOrderForm",new { Id = Model.ClassMapId })"
+                    if-ajax-action="@Url.Page("/Mapper/Mapping/ClassMappingForm",new { Id = Model.ClassMapId })"
                     if-ajax-form-submit="true"
                     if-ajax-method="post"
                     if-ajax-close-modal-on-success="true"
                     if-ajax-on-success-refresh="true"
-                    if-ajax-update-id="QueryListDiv">
+                    if-ajax-update-id="ClassMapperListDiv">
                 Kaydet
             </button>
         </div>
