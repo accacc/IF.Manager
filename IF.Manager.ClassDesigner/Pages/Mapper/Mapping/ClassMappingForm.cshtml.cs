@@ -71,6 +71,19 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper.Mapping
 
         }
 
+        public async Task<PartialViewResult> OnGetEmptyFormItemPartialAsync(int ParentId)
+        {
+            await SetFromDefaults();
+
+            var emptyFormItem = new IFClassMapping();
+
+            return new PartialViewResult
+            {
+                ViewName = "_ClassMappingFormItem",
+                ViewData = new ViewDataDictionary<IFClassMapping>(ViewData, emptyFormItem)
+            };
+        }
+
         private void SetClasses(List<IFClass> classes,string name)
         {
             List<SelectListItem> items = new List<SelectListItem>();

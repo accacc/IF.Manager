@@ -1,12 +1,9 @@
-﻿$(document).on("click", "a[if-ajax=true]", function (e) {
+﻿
+$(document).on("click", "a[if-ajax=true]", function (e) {
 
     e.preventDefault();
-
     var ajaxOptions = GetAjaxOptions(this);
-
-
     ajaxOptions.url = this.href;
-
     IFAjax.Init(ajaxOptions);
     IFAjax.Send();
 
@@ -16,13 +13,16 @@
 $(document).on("click", "button[if-ajax-form-submit=true]", function (e)
 {
     e.preventDefault();
+    debugger;
+    var form = $(this).parents('form:first');
+    var formData = form.serializeObject();
 
-    var formData = $(this).parents('form:first').serialize();
+    //var formData = form.serialize();
 
     var ajaxOptions = GetAjaxOptions(this);
     ajaxOptions.url = $(this).attr("if-ajax-action");
     ajaxOptions.data = formData;
-
+    ExtendData(ajaxOptions, this);
     IFAjax.Init(ajaxOptions);
     IFAjax.Send();
 });
@@ -32,6 +32,7 @@ function GetAjaxOptions(element) {
     var ajaxOptions = {
 
         updateid: $(element).attr("if-ajax-update-id"),
+        //dataType: $(element).attr("if-ajax-data-type"),
         modalid: $(element).attr("if-ajax-modal-id"),
         refreshGrid: $(element).attr("if-ajax-refresh-grid"),
         showDialog: $(element).attr("if-ajax-show-dialog"),
@@ -51,12 +52,15 @@ function GetAjaxOptions(element) {
         onSuccessRefreshUpdateId: $(element).attr("if-ajax-on-success-refresh-updateid"),
         antiForgeryToken: $(element).attr("if-anti-forgery-token"),        
         data: {}
-
-
     };
+    return ajaxOptions;
+}
 
+function ExtendData(ajaxOptions,element) {
     if ($(element).attr("if-ajax-extradatafunc")) {
+        debugger;
         var extraData = eval($(element).attr("if-ajax-extradatafunc"));
+        //ajaxOptions.dataType ="json";
         $.extend(ajaxOptions.data, extraData);
     }
 
@@ -65,21 +69,14 @@ function GetAjaxOptions(element) {
         var id = $(element).attr("if-ajax-data-extra-by-id");
         var value = $("#" + id).val();
         ajaxOptions.data[id] = value;
-        
+
     }
-
-
-
 
     if (ajaxOptions.antiForgeryToken !== undefined) {
         //alert(ajaxOptions.antiForgeryToken);
         ajaxOptions.data["__RequestVerificationToken"] = ajaxOptions.antiForgeryToken;
 
     }
-
-
-
-    return ajaxOptions;
 }
 
 var IFAjax = {
@@ -98,6 +95,8 @@ var IFAjax = {
             url: IFAjax.ajaxOptions.url,
             data: IFAjax.ajaxOptions.data,
             type: IFAjax.ajaxOptions.method || 'GET',
+            //dataType: IFAjax.ajaxOptions.dataType || "html",
+
             cache: false,
             beforeSend: function (xhr) {
                 if (!isUndefined(IFAjax.ajaxOptions.onBeforeFunc)) {
@@ -252,3 +251,31 @@ $(document).ajaxStart(function () {
 $.ajaxSetup({ cache: false, timeout: 2000000 });
 
 
+$.fn.serializeObject = function () {
+    var o = {};
+
+    $(this).find('input[type="hidden"], input[type="text"], input[type="password"], input[type="checkbox"]:checked, input[type="radio"]:checked, select').each(function () {
+        if ($(this).attr('type') == 'hidden') { //if checkbox is checked do not take the hidden field
+            var $parent = $(this).parent();
+            var $chb = $parent.find('input[type="checkbox"][name="' + this.name.replace(/\[/g, '\[').replace(/\]/g, '\]') + '"]');
+            if ($chb != null) {
+                if ($chb.prop('checked')) return;
+            }
+        }
+        if (this.name === null || this.name === undefined || this.name === '')
+            return;
+        var elemValue = null;
+        if ($(this).is('select'))
+            elemValue = $(this).find('option:selected').val();
+        else elemValue = this.value;
+        if (o[this.name] !== undefined) {
+            if (!o[this.name].push) {
+                o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(elemValue || '');
+        } else {
+            o[this.name] = elemValue || '';
+        }
+    });
+    return o;
+}

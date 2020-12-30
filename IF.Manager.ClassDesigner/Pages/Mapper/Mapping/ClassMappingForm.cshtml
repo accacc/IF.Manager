@@ -35,10 +35,11 @@
         <div class="col-md-6">
 
             <a class="btn btn-primary"
-               href="@Url.Page("/Mapper/Mapping/ClassMappingForm","EmptyFormItemPartial",new { Id = Model.ClassMapId })"
+               href="@Url.Page("/Mapper/Mapping/ClassMappingForm","EmptyFormItemPartial",new { ClassMapId = Model.ClassMapId })"
                if-ajax="true"
                if-ajax-method="get"
                if-ajax-insertion-mode="after"
+               if-ajax-extradatafunc="setselectedtreenode()"
                if-ajax-update-id="EmptyFormItem">
                 +
             </a>
@@ -60,3 +61,19 @@
 
     @Html.HiddenFor(m => m.ClassMapId)
 </form>
+
+<script>
+
+    function setselectedtreenode() {
+        debugger;
+        alert("ok");
+
+        var data = {};
+
+        data.ParentId = 1;
+        return data;
+    }
+
+
+  
+</script>
