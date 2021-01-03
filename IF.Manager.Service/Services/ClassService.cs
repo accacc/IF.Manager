@@ -275,34 +275,37 @@ namespace IF.Manager.Service
 
         public async Task GenerateClass(int classId)
         {
-            var map = await this.GetClass(classId);
+            //var map = await this.GetClass(classId);
 
-            var dto = new ClassControlTreeDto
-            {
+            //var dto = new ClassControlTreeDto
+            //{
 
-                Name = map.Name,
-                Id = map.Id,
-                ParentId = map.ParentId,
-                Type = map.Type,
-                GenericType = map.GenericType,
-                IsPrimitive = map.IsPrimitive,
-                Description = map.Description,
-                IsNullable = map.IsNullable
+            //    Name = map.Name,
+            //    Id = map.Id,
+            //    ParentId = map.ParentId,
+            //    Type = map.Type,
+            //    GenericType = map.GenericType,
+            //    IsPrimitive = map.IsPrimitive,
+            //    Description = map.Description,
+            //    IsNullable = map.IsNullable
 
-            };
+            //};
 
            
 
-            var childs = await this.GetClassTreeList(classId);
+            var tree = await this.GetClassTreeList(classId);
 
-            dto.Childs = childs;
+            var parent = tree.First();
 
             List<CSClass> allClass = new List<CSClass>();
             
 
             CSClass csClass = new CSClass();
 
-            GenerateClassTree(dto, csClass,allClass);
+            csClass.Usings.Add("System");
+            csClass.Usings.Add("System.Collections.Generic");
+
+            GenerateClassTree(parent, csClass,allClass);
 
 
             StringBuilder code = new StringBuilder();
@@ -313,7 +316,7 @@ namespace IF.Manager.Service
             }
 
 
-            fileSystem.FormatCode(code.ToString(), "cs",dto.Name);
+            fileSystem.FormatCode(code.ToString(), "cs",parent.Name);
         }
 
         private static void GenerateClassTree(ClassControlTreeDto mainClass, CSClass csClass,List<CSClass> allClass)
@@ -406,6 +409,29 @@ namespace IF.Manager.Service
                 yield return node;
             }
         }
+
+        public async Task DeleteClass(int id)
+        {
+            var list = await GetTreeList2(id);
+
+            foreach (var item in list)
+            {
+                Delete(item);
+            }
+            await this.UnitOfWork.SaveChangesAsync();
+
+        }
+
+        //public async Task DeleteRecursive(IFClass cls)
+        //{
+        //    foreach (var child in cls.Childrens.ToArray<IFClass>())
+        //    {
+        //        this.Delete(child);
+        //        await DeleteRecursive(child);
+        //    }
+
+        //   await  this.UnitOfWork.SaveChangesAsync();
+        //}
     }
 
 

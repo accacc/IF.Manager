@@ -124,5 +124,29 @@ namespace IF.Manager.ClassDesigner.Pages
                 ViewData = new ViewDataDictionary<List<IFClass>>(ViewData, list)
             };
         }
+
+
+        public async Task<PartialViewResult> OnPostDeleteAsync(int ClassId)
+        {
+
+            try
+            {
+                await this.classService.DeleteClass(ClassId);
+            }
+            catch (System.Exception ex)
+            {
+
+                throw;
+            }
+
+
+            var list = await this.classService.GetClassList();
+
+            return new PartialViewResult
+            {
+                ViewName = "_ClassListTable",
+                ViewData = new ViewDataDictionary<List<IFClass>>(ViewData, list)
+            };
+        }
     }
 }

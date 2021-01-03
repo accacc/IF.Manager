@@ -20,6 +20,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="IF.CodeGeneration.Core">
+      <HintPath>..\packages\InFramework\IF.CodeGeneration.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.CodeGeneration.Language.CSharp">
+      <HintPath>..\packages\InFramework\IF.CodeGeneration.Language.CSharp.dll</HintPath>
+    </Reference>
     <Reference Include="IF.Core">
       <HintPath>..\..\IF.Template\packages\InFramework\IF.Core.dll</HintPath>
     </Reference>

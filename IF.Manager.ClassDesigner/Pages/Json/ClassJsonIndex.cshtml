@@ -7,9 +7,42 @@
 
 <form method="post" enctype="multipart/form-data">
 
-    <input type="submit" />
-    <textarea id="jsondata" name="jsondata" rows="100" cols="100">
-  </textarea>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Name">Name</label>
+                <input id="name" name="name" type="text" class="form-control" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" name="Generate" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="jsondata">Json</label>
+                <textarea id="jsondata" name="jsondata" rows="100" cols="100" class="form-control">@Model.jsondata</textarea>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" name="Generate" />
+            </div>
+        </div>
+    </div>
+
 
     @Html.AntiForgeryToken()
 </form>

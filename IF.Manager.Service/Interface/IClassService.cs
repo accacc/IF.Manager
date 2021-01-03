@@ -40,6 +40,7 @@ namespace IF.Manager.Contracts.Services
         Task<List<IFClass>> GetClassTree(int classId);
 
         Task<List<IFClass>> GetTreeList2(int classId);
+        Task DeleteClass(int ıd);
 
         //Task<List<IFCustomClassRelation>> GetClassRelationList(int classId);
 
