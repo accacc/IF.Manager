@@ -14,7 +14,7 @@ namespace IF.Manager.Contracts.Services
     public interface IClassService: IRepository
     {
 
-
+        Task JsonToClass(string name, string json);
         Task<IFClass> GetClass(int id);
         //Task UpdateClassGroup(EntityGroupDto form);
         //Task AddClassGroup(EntityGroupDto form);

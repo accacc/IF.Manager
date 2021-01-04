@@ -16,6 +16,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xamasoft.JsonClassGenerator;
+using Xamasoft.JsonClassGenerator.CodeWriters;
 
 namespace IF.Manager.Service
 {
@@ -28,6 +30,125 @@ namespace IF.Manager.Service
             this.fileSystem = new FileSystemCodeFormatProvider(DirectoryHelper.GetTempGeneratedDirectoryName());
 
 
+        }
+
+
+
+        public async Task JsonToClass(string name,string json)
+        {
+            JsonClassGenerator gen = GetTypes(name,json);
+
+            var types = gen.Types;
+
+            IFClass mainClass = new IFClass();
+            mainClass.Name = name;
+            mainClass.Type = name;
+            mainClass.IsPrimitive = true;
+
+            IFClass list = new IFClass();
+
+            mainClass.Childrens.Add(list);
+            var rootObject = types.Where(t => t.IsRoot).SingleOrDefault();
+            var rchilds = rootObject.Fields.Select(s => s.MemberName).ToList();
+            var rootChilds = types.Where(t => rchilds.Contains(t.AssignedName)).ToList();
+            GenerateClasses(list, rootChilds, types);
+
+            await this.AddClass(mainClass);
+        }
+
+        private void GenerateClasses(IFClass @class, List<JsonType> rootChilds, IList<JsonType> types)
+        {
+            foreach (var type in rootChilds)
+            {
+                //IFClass @class = new IFClass();
+
+                HandleType(type, type.AssignedName, @class);
+
+                if (type.Type == JsonTypeEnum.Object)
+                {
+                    @class.IsPrimitive = false;
+
+                    foreach (var field in type.Fields)
+                    {
+                        IFClass property = new IFClass();
+
+                        HandleType(field.Type, field.MemberName, property);
+
+                        @class.Childrens.Add(property);
+
+                        if (field.Type.Type == JsonTypeEnum.Object || (field.Type.InternalType != null && field.Type.InternalType.Type == JsonTypeEnum.Object))
+                        {
+                            GenerateClasses(property, types.Where(t => t.AssignedName == field.MemberName).ToList(), types);
+
+                        }
+
+                    }
+
+
+                }
+
+            }
+
+
+        }
+
+        private void HandleType(JsonType item, string name, IFClass cls)
+        {
+            cls.Name = name;
+            cls.Type = item.Type.ToString();
+            cls.IsPrimitive = true;
+            cls.Description = name;
+
+            if (item.Type == JsonTypeEnum.Array)
+            {
+                cls.GenericType = "List";
+
+                if (item.InternalType.Type == JsonTypeEnum.Object)
+                {
+                    cls.Type = name;
+                }
+            }
+
+            if (item.Type == JsonTypeEnum.Object)
+            {
+                cls.IsPrimitive = false;
+                cls.Type = name;
+            }
+
+
+
+            if (item.Type == JsonTypeEnum.NullableSomething)
+            {
+                cls.Type = "string";
+            }
+
+            if (item.Type == JsonTypeEnum.Integer)
+            {
+                cls.Type = "int";
+            }
+        }
+
+        private JsonClassGenerator GetTypes(string jsondata,string name)
+        {
+            var gen = new JsonClassGenerator();
+            gen.Example = jsondata;
+            gen.InternalVisibility = false;
+            gen.CodeWriter = new CSharpCodeWriter();
+            gen.ExplicitDeserialization = false;// chkExplicitDeserialization.Checked && gen.CodeWriter is CSharpCodeWriter;
+            gen.Namespace = "Example";//string.IsNullOrEmpty(edtNamespace.Text) ? null : edtNamespace.Text;
+            gen.NoHelperClass = false;
+            gen.SecondaryNamespace = null;
+            gen.TargetFolder = @"C:\Users\Lenovo\Desktop\Temp";
+            gen.UseProperties = true;
+            gen.MainClass = name;
+            gen.UsePascalCase = true;
+            gen.UseNestedClasses = false;
+            gen.ApplyObfuscationAttributes = false;
+            gen.SingleFile = true;
+            gen.ExamplesInDocumentation = false;
+
+            gen.GenerateClasses();
+            return gen;
         }
 
         public async Task<List<IFClassMapper>> GetClassMapperList()
