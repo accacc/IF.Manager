@@ -396,23 +396,6 @@ namespace IF.Manager.Service
 
         public async Task GenerateClass(int classId)
         {
-            //var map = await this.GetClass(classId);
-
-            //var dto = new ClassControlTreeDto
-            //{
-
-            //    Name = map.Name,
-            //    Id = map.Id,
-            //    ParentId = map.ParentId,
-            //    Type = map.Type,
-            //    GenericType = map.GenericType,
-            //    IsPrimitive = map.IsPrimitive,
-            //    Description = map.Description,
-            //    IsNullable = map.IsNullable
-
-            //};
-
-           
 
             var tree = await this.GetClassTreeList(classId);
 
@@ -484,8 +467,7 @@ namespace IF.Manager.Service
 
         public async Task<List<IFClass>> GetClassTree(int classId)
         {
-            var list =await this.GetQuery<IFClass>(t => t.Id == classId)
-       .ToListAsync();
+            var list =await this.GetQuery<IFClass>(t => t.Id == classId).ToListAsync();
 
             foreach (var item in list)
             {
