@@ -3,27 +3,38 @@
 
 @{
     Layout = "_ModalLayout";
-    List<SelectListItem> types = ViewData["types"] as List<SelectListItem>;
 
-    var fromTypes = Html.GetEnumSelectList<IF.Manager.Service.Enum.IFClassType>();
 
-    foreach (var item in fromTypes)
+    List<SelectListItem> classes = ViewData["classes"] as List<SelectListItem>;
+
+
+    @if (Model != null)
     {
-        if (item.Value == ((int)Model.Form.FromType).ToString())
+        foreach (var property in classes)
         {
-            item.Selected = true;
+            if (property.Value == Model.Form.IFModelId.ToString())
+            {
+                property.Selected = true;
+            }
         }
     }
 
-    var toTypes = Html.GetEnumSelectList<IF.Manager.Service.Enum.IFClassType>();
+    List<SelectListItem> models = ViewData["models"] as List<SelectListItem>;
 
-    foreach (var item in toTypes)
+
+    @if (Model != null)
     {
-        if (item.Value == ((int)Model.Form.ToType).ToString())
+        foreach (var property in models)
         {
-            item.Selected = true;
+            if (property.Value == Model.Form.IFClassId.ToString())
+            {
+                property.Selected = true;
+            }
         }
     }
+
+
+
 
 }
 
@@ -47,37 +58,26 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                <label for="FromClassType">From ClassType</label>
-                @Html.DropDownList($"Form.FromClassType",fromTypes, "Select", new { @class = "form-control" })
-            </div>
-        </div>
-    </div>
-
-    <div class="row" id="Form_FromClassId">
-        @if (Model.Form.FromClassId != 0)
-        {
-            await Html.RenderPartialAsync("_DropDownFromClass", Model.Form);
-        }
-    </div>
 
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
-                <label for="ToClassType">To ClassType</label>
-                @Html.DropDownList($"Form.ToClassType",toTypes, "Select", new { @class = "form-control" })
+                <label for="IFClassId">Class</label>
+                @Html.DropDownList($"Form.IFClassId", classes, "Select", new { @class = "form-control" })
             </div>
         </div>
     </div>
 
-    <div class="row" id="Form_ToClassId">
-        @if (Model.Form.ToClassId != 0)
-        {
-            await Html.RenderPartialAsync("_DropDownToClass", Model.Form);
-        }
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="IFModelId">Model</label>
+                @Html.DropDownList($"Form.IFModelId", models, "Select", new { @class = "form-control" })
+            </div>
+        </div>
     </div>
+
 
 
     <div class="row">
@@ -96,37 +96,3 @@
     @Html.HiddenFor(model => model.Form.Id)
 </form>
 
-
-<script>
-    $('#Form_FromClassType').on('change', function (e) {
-
-        var valueSelected = this.value;
-        //alert(valueSelected);
-        //debugger;
-        $.ajax({
-            type: 'GET',
-            url: '@Url.Page("/Mapper/ClassMapperForm", "DropDownFromClassPartial")',
-            success: function (data) {
-                //debugger;
-                $("#Form_FromClassId").html(data);
-            }
-        });
-    });
-
-      $('#Form_ToClassType').on('change', function (e) {
-
-        var valueSelected = this.value;
-        //alert(valueSelected);
-        //debugger;
-        $.ajax({
-            type: 'GET',
-            url: '@Url.Page("/Mapper/ClassMapperForm", "DropDownToClassPartial")',
-            success: function (data) {
-                //debugger;
-                $("#Form_ToClassId").html(data);
-            }
-        });
-    });
-
-
-</script>

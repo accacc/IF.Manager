@@ -142,6 +142,8 @@ namespace IF.Manager.Service
             gen.UseProperties = true;
             gen.MainClass = name;
             gen.UsePascalCase = true;
+            
+
             gen.UseNestedClasses = false;
             gen.ApplyObfuscationAttributes = false;
             gen.SingleFile = true;
@@ -165,10 +167,8 @@ namespace IF.Manager.Service
             string name = DirectoryHelper.AddAsLastWord(form.Name, "IFClassMapper");
             entity.Name = name;
             entity.Description = form.Description;
-            entity.ToClassId = form.ToClassId;
-            entity.ToType = form.ToType;
-            entity.FromClassId = form.FromClassId;
-            entity.FromType = form.FromType;
+            entity.IFModelId = form.IFModelId;
+            entity.IFClassId = form.IFClassId;
             this.Add(entity);
             await this.UnitOfWork.SaveChangesAsync();
             form.Id = entity.Id;
@@ -187,10 +187,8 @@ namespace IF.Manager.Service
                 string name = DirectoryHelper.AddAsLastWord(form.Name, "IFClassMapper");
                 entity.Name = name;
                 entity.Description = form.Description;
-                entity.ToClassId = form.ToClassId;
-                entity.ToType = form.ToType;
-                entity.FromClassId = form.FromClassId;
-                entity.FromType = form.FromType;
+                entity.IFModelId = form.IFModelId;
+                entity.IFClassId = form.IFClassId;
                 this.Update(entity);
                 await this.UnitOfWork.SaveChangesAsync();
             }

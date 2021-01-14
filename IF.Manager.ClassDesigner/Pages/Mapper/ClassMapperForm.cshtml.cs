@@ -1,3 +1,4 @@
+using IF.Core.Exception;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Service.Model;
 
@@ -15,25 +16,34 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper
     public class ClassMapperFormModel : PageModel
     {
         private readonly IClassService classService;
-       
+        private readonly IModelService modelService;
 
-        public ClassMapperFormModel(IClassService classService)
+
+        public ClassMapperFormModel(IClassService classService, IModelService modelService)
         {
             this.classService = classService;
+            this.modelService = modelService;
         }
 
         [BindProperty, Required]
         public IFClassMapper Form { get; set; }
-        public void OnGetAddAsync()
+        public async Task OnGetAddAsync()
         {
             this.Form = new IFClassMapper();
+            await SetForm();
         }
 
         public async Task OnGetUpdateAsync(int Id)
         {
             this.Form = await this.classService.GetClassMapper(Id);
-            await SetClasses();
+            await SetForm();
 
+        }
+
+        private async Task SetForm()
+        {
+            await SetClasses();
+            await SetModels();
         }
 
         public async Task<PartialViewResult> OnPostAddAsync()
@@ -67,44 +77,98 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper
         }
 
 
-        public async Task<PartialViewResult> OnGetDropDownFromClassPartialAsync()
-        {
-            await SetClasses();
+        //public async Task<PartialViewResult> OnGetDropDownFromClassPartialAsync(IFClassType classType)
+        //{
 
-            return new PartialViewResult
+        //    switch (classType)
+        //    {
+        //        case IFClassType.Class:
+        //            await SetClasses();
+        //            ViewData["ClassType"] = IFClassType.Class.ToString();
+        //            break;
+        //        case IFClassType.Model:
+        //            await SetModels();
+        //            ViewData["ClassType"] = IFClassType.Model.ToString();
+
+        //            break;
+        //        default:
+        //            throw new BusinessException("Unknown Class Type");
+        //    }
+
+            
+
+        //    return new PartialViewResult
+        //    {
+        //        ViewName = "_DropDownFromClass",
+        //        ViewData = new ViewDataDictionary<IFClassMapper>(ViewData, this.Form)
+        //    };
+
+        //}
+
+        
+
+        //public async Task<PartialViewResult> OnGetDropDownToClassPartialAsync(IFClassType classType)
+        //{
+        //    switch (classType)
+        //    {
+        //        case IFClassType.Class:
+        //            await SetClasses();
+        //            ViewData["ClassType"] = IFClassType.Class.ToString();
+        //            break;
+        //        case IFClassType.Model:
+        //            await SetModels();
+        //            ViewData["ClassType"] = IFClassType.Model.ToString();
+
+        //            break;
+        //        default:
+        //            throw new BusinessException("Unknown Class Type");
+        //    }
+
+
+        //    return new PartialViewResult
+        //    {
+        //        ViewName = "_DropDownToClass",
+        //        ViewData = new ViewDataDictionary<IFClassMapper>(ViewData, this.Form)
+        //    };
+
+        //}
+
+
+        private async Task SetModels()
             {
-                ViewName = "_DropDownFromClass",
-                ViewData = new ViewDataDictionary<IFClassMapper>(ViewData, this.Form)
-            };
-
-        }
-
-        public async Task<PartialViewResult> OnGetDropDownToClassPartialAsync()
-        {
-            await SetClasses();
-
-            return new PartialViewResult
-            {
-                ViewName = "_DropDownToClass",
-                ViewData = new ViewDataDictionary<IFClassMapper>(ViewData, this.Form)
-            };
-
-        }
-
-        private async Task SetClasses()
-        {
-            var classList = await this.classService.GetClassList();
+            var entities = await this.modelService.GetModelList();
 
 
             List<SelectListItem> items = new List<SelectListItem>();
 
 
-            foreach (var data in classList)
+            foreach (var entity in entities)
             {
                 SelectListItem item = new SelectListItem();
 
-                item.Text = data.Name;
-                item.Value = data.Id.ToString();
+                item.Text = entity.Name;
+                item.Value = entity.Id.ToString();
+                items.Add(item);
+            }
+
+            ViewData["models"] = items;
+        }
+
+
+        private async Task SetClasses()
+        {
+            var entities = await this.classService.GetClassList();
+
+
+            List<SelectListItem> items = new List<SelectListItem>();
+
+
+            foreach (var entity in entities)
+            {
+                SelectListItem item = new SelectListItem();
+
+                item.Text = entity.Name;
+                item.Value = entity.Id.ToString();
                 items.Add(item);
             }
 

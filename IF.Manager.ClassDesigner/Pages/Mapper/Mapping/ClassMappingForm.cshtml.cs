@@ -61,13 +61,13 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper.Mapping
 
             var mapping = await this.classService.GetClassMapper(this.ClassMapId);
 
-            List<IFClass> fromMaps = await this.classService.GetTreeList2(mapping.FromClassId);
+            List<IFClass> fromMaps = await this.classService.GetTreeList2(mapping.IFClassId.Value);
 
             SetClasses(fromMaps, "fromMaps");
 
-            List<IFClass> toMaps  = await this.classService.GetTreeList2(mapping.ToClassId);
+            //List<IFClass> toMaps  = await this.classService.GetTreeList2(mapping.IFModelId.Value);
 
-            SetClasses(toMaps, "toMaps");
+            //SetClasses(toMaps, "toMaps");
 
         }
 
