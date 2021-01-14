@@ -59,21 +59,6 @@ namespace IF.Manager.Query.Pages.Filter
 
         }
 
-        //public async Task<PartialViewResult> OnGetEmptyFormGroupPartialAsync()
-        //{
-
-        //    SetEmptyForm(this.Form.QueryId);
-        //    await SetFormDefaults(this.Form.QueryId);
-        //    //QueryFilterDto emptyFormItem = new QueryFilterDto();
-
-        //    return new PartialViewResult
-        //    {
-        //        ViewName = "QueryFilterForm",
-        //        ViewData = new ViewDataDictionary<QueryFilterModel>(ViewData, this)
-        //    };
-        //}
-
-
         public async Task<PartialViewResult> OnGetEmptyFormItemPartialAsync(int Id)
         {
             await SetFormDefaults(Id);
@@ -102,42 +87,6 @@ namespace IF.Manager.Query.Pages.Filter
 
         }
 
-        //public static string GetrulesQuery(List<QueryFilterTreeDto> rules, string query)
-
-        //{
-
-        //    for (int i = 0; i < rules.Count; i++)
-        //    {
-        //        QueryFilterTreeDto rule = rules[i];
-
-        //        if (i == rules.Count - 1)
-        //        {
-        //            query += $"{rule.Value} {rule.FilterOperator.ToString()} {rule.Value}  ";
-        //        }
-        //        else
-        //        {
-        //            query += $"{rule.Value} {rule.ConditionOperator} {rule.Value} { rule.ConditionOperator} ";
-        //        }
-
-        //        if (rule.Childs.Any())
-        //        {
-        //            query += $"(";
-
-        //            query = GetrulesQuery(rule.Childs.ToList(), query);
-        //            query += ")";
-
-        //            query += rule.ConditionOperator.ToString() + " ";
-
-        //        }
-
-        //    }
-
-        //    return query;
-
-
-
-        //}
-
         public async Task<PartialViewResult> OnGetShow()
         {
             
@@ -152,8 +101,6 @@ namespace IF.Manager.Query.Pages.Filter
             FilterRuleEngine filterRuleEngine = new FilterRuleEngine(filterContext);
             filterRuleEngine.Execute();
 
-            //string query = "";
-            //query = GetrulesQuery(model.Tree, query);
             showFilterModel.Filter = filterRuleEngine.GetFilter();
 
             return new PartialViewResult
@@ -187,17 +134,6 @@ namespace IF.Manager.Query.Pages.Filter
 
             return model;
         }
-
-        //private void SetEmptyForm(int queryId,int? ParentId)
-        //{
-        //    this.Form = new QueryFilterDto();
-        //    this.Form.QueryId = queryId;
-        //    this.Form.ParentId = ParentId;
-        //    var item = new QueryFilterItemDto();
-
-        //    this.Form.Items.Add(item);            
-
-        //}
 
         private async Task SetFormDefaults(int queryId)
         {
@@ -248,11 +184,6 @@ namespace IF.Manager.Query.Pages.Filter
                 foreach (var property in entity.Properties)
                 {
                     SelectListItem item = new SelectListItem();
-
-                    //if (this.Form.ModelId == group.Id)
-                    //{
-                    //    item.Selected = true;
-                    //}
 
                     item.Text = entity.Name + " - " + property.Name;
                     item.Value = property.Id.ToString();

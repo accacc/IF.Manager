@@ -1,4 +1,3 @@
-using IF.Core.Exception;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Service.Model;
 
@@ -75,67 +74,8 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper
                 ViewData = new ViewDataDictionary<List<IFClassMapper>>(ViewData, list)
             };
         }
-
-
-        //public async Task<PartialViewResult> OnGetDropDownFromClassPartialAsync(IFClassType classType)
-        //{
-
-        //    switch (classType)
-        //    {
-        //        case IFClassType.Class:
-        //            await SetClasses();
-        //            ViewData["ClassType"] = IFClassType.Class.ToString();
-        //            break;
-        //        case IFClassType.Model:
-        //            await SetModels();
-        //            ViewData["ClassType"] = IFClassType.Model.ToString();
-
-        //            break;
-        //        default:
-        //            throw new BusinessException("Unknown Class Type");
-        //    }
-
-            
-
-        //    return new PartialViewResult
-        //    {
-        //        ViewName = "_DropDownFromClass",
-        //        ViewData = new ViewDataDictionary<IFClassMapper>(ViewData, this.Form)
-        //    };
-
-        //}
-
-        
-
-        //public async Task<PartialViewResult> OnGetDropDownToClassPartialAsync(IFClassType classType)
-        //{
-        //    switch (classType)
-        //    {
-        //        case IFClassType.Class:
-        //            await SetClasses();
-        //            ViewData["ClassType"] = IFClassType.Class.ToString();
-        //            break;
-        //        case IFClassType.Model:
-        //            await SetModels();
-        //            ViewData["ClassType"] = IFClassType.Model.ToString();
-
-        //            break;
-        //        default:
-        //            throw new BusinessException("Unknown Class Type");
-        //    }
-
-
-        //    return new PartialViewResult
-        //    {
-        //        ViewName = "_DropDownToClass",
-        //        ViewData = new ViewDataDictionary<IFClassMapper>(ViewData, this.Form)
-        //    };
-
-        //}
-
-
         private async Task SetModels()
-            {
+        {
             var entities = await this.modelService.GetModelList();
 
 
@@ -159,9 +99,7 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper
         {
             var entities = await this.classService.GetClassList();
 
-
             List<SelectListItem> items = new List<SelectListItem>();
-
 
             foreach (var entity in entities)
             {

@@ -2,13 +2,13 @@
 @{
     Layout = null;
 
-    List<SelectListItem> fromMaps = ViewData["fromMaps"] as List<SelectListItem>;
-    List<SelectListItem> toMaps = ViewData["toMaps"] as List<SelectListItem>;
+    List<SelectListItem> classes = ViewData["classes"] as List<SelectListItem>;
+    List<SelectListItem> models = ViewData["models"] as List<SelectListItem>;
 
 
     var index = Guid.NewGuid();
 
-    foreach (var item in fromMaps)
+    foreach (var item in classes)
     {
         item.Selected = false;
         if (item.Value == Model.FromPropertyId.ToString())
@@ -18,7 +18,7 @@
     }
 
 
-    foreach (var item in toMaps)
+    foreach (var item in models)
     {
         item.Selected = false;
         if (item.Value == Model.ToPropertyId.ToString())
@@ -35,14 +35,14 @@
     <td>
         <div class="form-group">
 
-            @Html.DropDownList($"Form[{index}].FromPropertyId", fromMaps, "Select", new { @class = "form-control" })
+            @Html.DropDownList($"Form[{index}].FromPropertyId", classes, "Select", new { @class = "form-control" })
 
         </div>
     </td>
     <td>
         <div class="form-group">
 
-            @Html.DropDownList($"Form[{index}].ToPropertyId", toMaps, "Select", new { @class = "form-control" })
+            @Html.DropDownList($"Form[{index}].ToPropertyId", models, "Select", new { @class = "form-control" })
 
         </div>
     </td>
@@ -58,7 +58,6 @@
 
 <script>
     function deleteOrder(index) {
-        
         var id = "table#EmptyFormItem tr#" + index;
         $(id).remove();
         return false;

@@ -1,6 +1,7 @@
 ﻿using IF.Core.Data;
 using IF.Manager.Contracts.Model;
 
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace IF.Manager.Service.Model
@@ -9,6 +10,7 @@ namespace IF.Manager.Service.Model
     {
         public IFClassMapper()
         {
+            this.IFClassMappings = new List<IFClassMapping>();
         }
 
         [Key]
@@ -27,6 +29,11 @@ namespace IF.Manager.Service.Model
         public IFClass IFClass { get; set; }
 
         public IFModel IFModel { get; set; }
+
+        public bool IsList { get; set; }
+
+
+        public ICollection<IFClassMapping> IFClassMappings { get; set; }
 
     }
 }

@@ -8,6 +8,7 @@ using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
 using IF.Manager.Service.Dto;
 using IF.Persistence.EF;
+
 using Microsoft.EntityFrameworkCore;
 
 using System;
@@ -95,7 +96,7 @@ namespace IF.Manager.Service
         public async Task<ModelClassTreeDto> GetEntityTree(int entityId)
         {
 
-            var entity = await GetQuery<IFEntity>()             
+            var entity = await GetQuery<IFEntity>()
              .SingleOrDefaultAsync(e => e.Id == entityId);
 
 
@@ -104,7 +105,7 @@ namespace IF.Manager.Service
             tree.ClientId = "self-" + entityId;
             tree.Name = entity.Name;
             tree.Type = entity.Name;
-            
+
 
             var properties = await this.GetEntityPropertyList(entityId);
 
@@ -131,7 +132,7 @@ namespace IF.Manager.Service
         private async Task ToTreeRelations(ModelClassTreeDto parent)
         {
             var entity = await GetQuery<IFEntity>()
-                .Include(e => e.Relations).ThenInclude(r => r.Relation)             
+                .Include(e => e.Relations).ThenInclude(r => r.Relation)
              .SingleOrDefaultAsync(e => e.Id == parent.Id);
 
             foreach (var relation in entity.Relations)
@@ -172,7 +173,7 @@ namespace IF.Manager.Service
 
             }
 
-            
+
         }
 
         private async Task ToTreeReverseRelations(ModelClassTreeDto parent)
@@ -229,7 +230,7 @@ namespace IF.Manager.Service
             var list = await GetQuery<IFEntity>()
                 .Include(e => e.Group)
                 .Include(e => e.Properties)
-                .Include(e => e.Relations).ThenInclude(r=>r.ForeignKeyIFEntityProperty)
+                .Include(e => e.Relations).ThenInclude(r => r.ForeignKeyIFEntityProperty)
                 .ThenInclude(r => r.Entity)
                 .Include(e => e.ReverseRelations).ThenInclude(r => r.Relation)
 
@@ -243,7 +244,7 @@ namespace IF.Manager.Service
                    Prefix = e.Group.Prefix,
                    GroupId = e.Group.Id,
                    GroupName = e.Group.Name,
-                   
+
 
                    IsAudited = e.IsAudited,
                    Properties = e.Properties.Select(p => new EntityPropertyDto
@@ -267,8 +268,6 @@ namespace IF.Manager.Service
                        RelatedEntityName = r.Entity.Name,
                        IFEntityId = r.EntityId,
                        EntityName = r.Relation.Name,
-                       //To = r.From,
-                       //From = r.To
 
                    }).ToList(),
                    Relations = e.Relations.Select(r => new EntityRelationDto
@@ -281,8 +280,6 @@ namespace IF.Manager.Service
                        EntityName = r.Entity.Name,
                        ForeignKeyPropertyId = r.ForeignKeyIFEntityPropertyId,
                        ForeignKeyPropertyName = r.ForeignKeyIFEntityProperty.Name
-                       //To = r.To,
-                       //From = r.From
 
                    }).ToList()
 
@@ -296,11 +293,8 @@ namespace IF.Manager.Service
 
         public async Task<List<List<EntityDto>>> GetEntityListGrouped()
         {
-
-
             var entitylist = await this.GetEntityList();
             var list = entitylist.GroupBy(l => l.GroupId).Select(s => s.ToList()).ToList();
-
             return list;
         }
 
@@ -318,11 +312,9 @@ namespace IF.Manager.Service
                    MaxValue = e.MaxValue,
                    Type = e.Type,
                    IsNullable = e.IsNullable
-                   
+
                })
                .ToListAsync();
-
-
 
             return list;
         }
@@ -335,7 +327,7 @@ namespace IF.Manager.Service
             }
 
             string name = DirectoryHelper.AddAsLastWord(dto.Name, "Entity");
-            
+
             IFEntity entity = new IFEntity();
             entity.Description = dto.Description;
             entity.Name = name;
@@ -358,7 +350,7 @@ namespace IF.Manager.Service
         {
             bool isExist = false;
             IFEntity entity = await this.GetQuery<IFEntity>(s => s.Name == name).SingleOrDefaultAsync();
-            
+
             if (entity != null)
             {
                 isExist = true;
@@ -375,7 +367,7 @@ namespace IF.Manager.Service
                .SingleOrDefaultAsync(k => k.Id == entityId);
 
                 if (entity == null) { throw new BusinessException(" No such entity exists"); }
-               
+
 
                 foreach (var dto in dtos)
                 {
@@ -422,12 +414,12 @@ namespace IF.Manager.Service
         {
 
 
-            var entity = await this.GetQuery<IFEntity>().Include(e=>e.Properties)
+            var entity = await this.GetQuery<IFEntity>().Include(e => e.Properties)
                 .SingleOrDefaultAsync(k => k.Id == dto.Id);
 
             if (entity == null) { throw new BusinessException(" No such entity exists"); }
 
-            string name = DirectoryHelper.AddAsLastWord(dto.Name,"Entity");
+            string name = DirectoryHelper.AddAsLastWord(dto.Name, "Entity");
 
             entity.Name = name;
             entity.Description = dto.Description;
@@ -450,9 +442,9 @@ namespace IF.Manager.Service
 
         }
 
-        
 
-       
+
+
 
         public List<Type> GetAllEntityTypes()
         {
@@ -502,8 +494,6 @@ namespace IF.Manager.Service
                         case Contracts.Enum.EntityRelationType.None:
                             break;
                         case Contracts.Enum.EntityRelationType.OneToMany:
-                            //relation.From = Contracts.Enum.EntityRelationDirectionType.One;
-                            //relation.To = Contracts.Enum.EntityRelationDirectionType.Many;
                             if (!relation.ForeignKeyIFEntityPropertyId.HasValue || relation.ForeignKeyIFEntityPropertyId <= 0)
                             {
                                 var relatedEntity = await this.GetQuery<IFEntity>()
@@ -527,12 +517,8 @@ namespace IF.Manager.Service
                             }
                             break;
                         case Contracts.Enum.EntityRelationType.OneToOne:
-                            //relation.From = Contracts.Enum.EntityRelationDirectionType.One;
-                            //relation.To = Contracts.Enum.EntityRelationDirectionType.One;
                             break;
                         case Contracts.Enum.EntityRelationType.ManyToMany:
-                            //relation.From = Contracts.Enum.EntityRelationDirectionType.Many;
-                            //relation.To = Contracts.Enum.EntityRelationDirectionType.Many;
                             break;
                         default:
                             break;
@@ -552,7 +538,7 @@ namespace IF.Manager.Service
 
         public async Task<List<EntityRelationDto>> GetEntityRelationList(int entityId)
         {
-            var list = await GetQuery<IFEntityRelation>().Include(e=>e.ForeignKeyIFEntityProperty)
+            var list = await GetQuery<IFEntityRelation>().Include(e => e.ForeignKeyIFEntityProperty)
                 .Where(r => r.EntityId == entityId)
                   .Select(e => new EntityRelationDto
                   {
@@ -562,7 +548,7 @@ namespace IF.Manager.Service
                       Prefix = e.Prefix,
                       ForeignKeyPropertyId = e.ForeignKeyIFEntityPropertyId,
                       ForeignKeyPropertyName = e.ForeignKeyIFEntityProperty.Name
-                     
+
                   })
                   .ToListAsync();
             return list;
@@ -656,32 +642,30 @@ namespace IF.Manager.Service
                 entity.IsAudited = false;
 
 
-               
+
 
                 foreach (var column in table.Columns)
                 {
-                    //dto.PrimaryKeyColumn
+                    IFEntityProperty property = new IFEntityProperty();
 
-                    IFEntityProperty property = new IFEntityProperty();                   
-                   
-                        property.IsIdentity = column.IsPrimaryKey;
-                   
+                    property.IsIdentity = column.IsPrimaryKey;
+
 
                     property.Name = column.Name;
                     property.Type = GetPrimitiveByDotnet(column.NetDataType());
-                    
-                    if(column.DbDataType == "smallint")
+
+                    if (column.DbDataType == "smallint")
                     {
                         property.Type = "Int16";
                     }
 
-                    
+
 
                     property.IsNullable = column.Nullable;
                     entity.Properties.Add(property);
                 }
 
-                if(!entity.Properties.Any(p=>p.IsIdentity))
+                if (!entity.Properties.Any(p => p.IsIdentity))
                 {
                     var info = infos.SingleOrDefault(i => i.Table == table.Name);
 
@@ -694,7 +678,7 @@ namespace IF.Manager.Service
                     }
 
                 }
-             
+
 
                 this.Add(entity);
             }
@@ -705,8 +689,7 @@ namespace IF.Manager.Service
         public string GetPrimitiveByDotnet(Type type)
         {
 
-            if(type.Name =="String")  {return "string";  }
-
+            if (type.Name == "String") { return "string"; }
             if (type.Name == "Int32") { return "int"; }
             if (type.Name == "Int64") { return "long"; }
             if (type.Name == "Boolean") { return "bool"; }
@@ -729,5 +712,5 @@ namespace IF.Manager.Service
         }
     }
 
-   
+
 }

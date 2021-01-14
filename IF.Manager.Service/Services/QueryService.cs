@@ -99,12 +99,6 @@ namespace IF.Manager.Service.Services
                 entity.PageNumber = form.PageNumber;
                 entity.PageSize = form.PageSize;
                 entity.IsQueryOverride = form.IsQueryOverride;
-
-                //if (entity.QueryGetType == Contracts.Enum.QueryGetType.List)
-                //{
-                //    entity.PageSize = form.PageSize;
-                //}
-
                 this.Update(entity);
                 await this.UnitOfWork.SaveChangesAsync();
             }
@@ -303,7 +297,7 @@ namespace IF.Manager.Service.Services
 
         }
 
-        public async Task UpdatOrderFilters(List<IFQueryOrder> dtos, int queryId)
+        public async Task UpdateOrderFilters(List<IFQueryOrder> dtos, int queryId)
         {
             try
             {
@@ -367,7 +361,6 @@ namespace IF.Manager.Service.Services
         public async Task<List<IFPageParameter>> GetPageParametersFromQuery(int id)
         {
             var parameters = await this.GetQuery<IFPageParameter>()
-                //.Where(p => p.IFPage.Process.Queries.Any(q => q.Id == id))
                 .ToListAsync();
             return parameters;
         }

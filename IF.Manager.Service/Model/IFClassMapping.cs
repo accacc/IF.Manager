@@ -1,4 +1,5 @@
 ﻿using IF.Core.Data;
+using IF.Manager.Contracts.Model;
 
 using System.ComponentModel.DataAnnotations;
 
@@ -19,9 +20,8 @@ namespace IF.Manager.Service.Model
 
         public IFClass FromProperty { get; set; }
 
-        public IFClass ToProperty { get; set; }
+        public IFModelProperty ToProperty { get; set; }
 
-        public bool IsList { get; set; }
 
 
     }

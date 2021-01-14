@@ -25,7 +25,7 @@ namespace IF.Manager.Contracts.Services
         Task<List<QueryDto>> GetQueryList();
         //Task SaveFilter(int id,QueryBuilderFilterRule data);
         Task UpdatQueryFilters(QueryFilterDto form);
-        Task UpdatOrderFilters(List<IFQueryOrder> form,int queryId);
+        Task UpdateOrderFilters(List<IFQueryOrder> form,int queryId);
         Task<List<IFQueryOrder>> GetQueryOrders(int id);
         Task<List<IFPageParameter>> GetPageParametersFromQuery(int queryId, PageParameterType objectType);
     }

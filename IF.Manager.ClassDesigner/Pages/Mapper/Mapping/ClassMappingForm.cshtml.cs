@@ -19,11 +19,15 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper.Mapping
     {
 
         private readonly IClassService classService;
+        private readonly IEntityService entityService;
+        private readonly IModelService modelService;
 
 
-        public ClassMappingFormModel(IClassService pageService)
+        public ClassMappingFormModel(IClassService classService, IEntityService entityService, IModelService modelService)
         {
-            this.classService = pageService;
+            this.classService = classService;
+            this.entityService = entityService;
+            this.modelService = modelService;
         }
 
         [BindProperty(SupportsGet = true), Required]
@@ -47,6 +51,20 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper.Mapping
 
         }
 
+        public async Task<PartialViewResult> OnPost()
+        {
+            await this.classService.UpdateClassMapping(this.Form, this.ClassMapId);
+
+            var list = await this.classService.GetClassMapperList();
+
+            return new PartialViewResult
+            {
+                ViewName = "_ClassMapperListTable",
+                ViewData = new ViewDataDictionary<List<IFClassMapper>>(ViewData, list)
+            };
+
+        }
+
         private void SetEmptyForm()
         {
             var mapping = new IFClassMapping();
@@ -57,18 +75,37 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper.Mapping
 
         private async Task SetFromDefaults()
         {
-            
+
 
             var mapping = await this.classService.GetClassMapper(this.ClassMapId);
 
-            List<IFClass> fromMaps = await this.classService.GetTreeList2(mapping.IFClassId.Value);
 
-            SetClasses(fromMaps, "fromMaps");
+            await SetClasses(mapping.IFClassId.Value);
 
-            //List<IFClass> toMaps  = await this.classService.GetTreeList2(mapping.IFModelId.Value);
+            var model = await this.modelService.GetModelPropertyList(mapping.IFModelId.Value);
 
-            //SetClasses(toMaps, "toMaps");
+            SetModels(model);
 
+        }
+
+        private void SetModels(List<ModelPropertyDto> models)
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+
+
+
+            foreach (var property in models)
+            {
+                SelectListItem item = new SelectListItem();
+
+                item.Text = property.EntityName + " - " + property.Name;
+                item.Value = property.ModelPropertyId.ToString();
+                items.Add(item);
+            }
+
+
+
+            ViewData["models"] = items;
         }
 
         public async Task<PartialViewResult> OnGetEmptyFormItemPartialAsync(int ParentId)
@@ -84,16 +121,20 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper.Mapping
             };
         }
 
-        private void SetClasses(List<IFClass> classes,string name)
+        private async Task SetClasses(int classId)
         {
+
+            List<IFClass> classes = await this.classService.GetTreeList2(classId);
+
+
             List<SelectListItem> items = new List<SelectListItem>();
 
 
             foreach (var @class in classes)
             {
-                    SelectListItem item = new SelectListItem();
+                SelectListItem item = new SelectListItem();
 
-                if(@class.Parent==null)
+                if (@class.Parent == null)
                 {
                     item.Text = @class.Name;
                 }
@@ -101,13 +142,13 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper.Mapping
                 {
                     item.Text = @class.Parent.Name + " - " + @class.Name;
                 }
-                   
-                    item.Value = @class.Id.ToString();
-                    items.Add(item);
+
+                item.Value = @class.Id.ToString();
+                items.Add(item);
 
             }
 
-            ViewData[name] = items;
+            ViewData["classes"] = items;
         }
     }
 }

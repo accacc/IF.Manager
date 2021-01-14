@@ -8,7 +8,7 @@ using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
 using IF.Manager.Service.Model;
 using IF.Persistence.EF;
-using IF.Manager.Service.Extensions;
+
 using Microsoft.EntityFrameworkCore;
 
 using System;
@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using Xamasoft.JsonClassGenerator;
 using Xamasoft.JsonClassGenerator.CodeWriters;
 
@@ -26,17 +27,12 @@ namespace IF.Manager.Service
         private readonly FileSystemCodeFormatProvider fileSystem;
         public ClassService(ManagerDbContext dbContext) : base(dbContext)
         {
-
             this.fileSystem = new FileSystemCodeFormatProvider(DirectoryHelper.GetTempGeneratedDirectoryName());
-
-
         }
 
-
-
-        public async Task JsonToClass(string name,string json)
+        public async Task JsonToClass(string name, string json)
         {
-            JsonClassGenerator gen = GetTypes(name,json);
+            JsonClassGenerator gen = GetTypes(name, json);
 
             var types = gen.Types;
 
@@ -60,8 +56,6 @@ namespace IF.Manager.Service
         {
             foreach (var type in rootChilds)
             {
-                //IFClass @class = new IFClass();
-
                 HandleType(type, type.AssignedName, @class);
 
                 if (type.Type == JsonTypeEnum.Object)
@@ -81,15 +75,9 @@ namespace IF.Manager.Service
                             GenerateClasses(property, types.Where(t => t.AssignedName == field.MemberName).ToList(), types);
 
                         }
-
                     }
-
-
                 }
-
             }
-
-
         }
 
         private void HandleType(JsonType item, string name, IFClass cls)
@@ -128,7 +116,7 @@ namespace IF.Manager.Service
             }
         }
 
-        private JsonClassGenerator GetTypes(string jsondata,string name)
+        private JsonClassGenerator GetTypes(string jsondata, string name)
         {
             var gen = new JsonClassGenerator();
             gen.Example = jsondata;
@@ -142,7 +130,7 @@ namespace IF.Manager.Service
             gen.UseProperties = true;
             gen.MainClass = name;
             gen.UsePascalCase = true;
-            
+
 
             gen.UseNestedClasses = false;
             gen.ApplyObfuscationAttributes = false;
@@ -169,6 +157,7 @@ namespace IF.Manager.Service
             entity.Description = form.Description;
             entity.IFModelId = form.IFModelId;
             entity.IFClassId = form.IFClassId;
+            entity.IsList = form.IsList;
             this.Add(entity);
             await this.UnitOfWork.SaveChangesAsync();
             form.Id = entity.Id;
@@ -189,6 +178,8 @@ namespace IF.Manager.Service
                 entity.Description = form.Description;
                 entity.IFModelId = form.IFModelId;
                 entity.IFClassId = form.IFClassId;
+                entity.IsList = form.IsList;
+
                 this.Update(entity);
                 await this.UnitOfWork.SaveChangesAsync();
             }
@@ -278,18 +269,18 @@ namespace IF.Manager.Service
                 var list = await this.GetQuery<IFClass>().Select
 
                (map => new ClassControlTreeDto
-                {
+               {
 
-                    Name = map.Name,
-                    Id = map.Id,
-                    ParentId = map.ParentId,
-                    Type = map.Type,
-                    GenericType = map.GenericType,
-                    IsPrimitive = map.IsPrimitive,
-                    Description = map.Description,
-                    IsNullable = map.IsNullable
+                   Name = map.Name,
+                   Id = map.Id,
+                   ParentId = map.ParentId,
+                   Type = map.Type,
+                   GenericType = map.GenericType,
+                   IsPrimitive = map.IsPrimitive,
+                   Description = map.Description,
+                   IsNullable = map.IsNullable
 
-                }).ToListAsync();
+               }).ToListAsync();
 
                 var parents = list.Where(c => c.Id == ParentId).ToList();
 
@@ -400,14 +391,14 @@ namespace IF.Manager.Service
             var parent = tree.First();
 
             List<CSClass> allClass = new List<CSClass>();
-            
+
 
             CSClass csClass = new CSClass();
 
             csClass.Usings.Add("System");
             csClass.Usings.Add("System.Collections.Generic");
 
-            GenerateClassTree(parent, csClass,allClass);
+            GenerateClassTree(parent, csClass, allClass);
 
 
             StringBuilder code = new StringBuilder();
@@ -418,15 +409,15 @@ namespace IF.Manager.Service
             }
 
 
-            fileSystem.FormatCode(code.ToString(), "cs",parent.Name);
+            fileSystem.FormatCode(code.ToString(), "cs", parent.Name);
         }
 
-        private static void GenerateClassTree(ClassControlTreeDto mainClass, CSClass csClass,List<CSClass> allClass)
+        private static void GenerateClassTree(ClassControlTreeDto mainClass, CSClass csClass, List<CSClass> allClass)
         {
             allClass.Add(csClass);
 
             csClass.Name = mainClass.Type;
-            
+
 
             foreach (var child in mainClass.Childs)
             {
@@ -444,9 +435,9 @@ namespace IF.Manager.Service
                     property.GenericType = child.GenericType;
                     csClass.Properties.Add(property);
 
-                    CSClass childClass = new CSClass();                        
-                    
-                    GenerateClassTree(child, childClass,allClass);
+                    CSClass childClass = new CSClass();
+
+                    GenerateClassTree(child, childClass, allClass);
 
                 }
 
@@ -458,14 +449,14 @@ namespace IF.Manager.Service
         public async Task<List<IFClassMapping>> GetClassMappings(int classMapId)
         {
 
-            var list = await this.GetQuery<IFClassMapping>(c => c.Id == classMapId).ToListAsync();
+            var list = await this.GetQuery<IFClassMapping>(c => c.IFClassMapperId == classMapId).ToListAsync();
 
             return list;
         }
 
         public async Task<List<IFClass>> GetClassTree(int classId)
         {
-            var list =await this.GetQuery<IFClass>(t => t.Id == classId).ToListAsync();
+            var list = await this.GetQuery<IFClass>(t => t.Id == classId).ToListAsync();
 
             foreach (var item in list)
             {
@@ -484,7 +475,7 @@ namespace IF.Manager.Service
             foreach (var t in threads)
             {
                 t.Childrens = await GetChildrenByParentId(t.Id);
-                
+
 
                 children.Add(t);
             }
@@ -521,6 +512,56 @@ namespace IF.Manager.Service
             }
             await this.UnitOfWork.SaveChangesAsync();
 
+        }
+
+        public async Task UpdateClassMapping(List<IFClassMapping> form, int classMapId)
+        {
+            try
+            {
+                var entity = await this.GetQuery<IFClassMapper>()
+               .Include(e => e.IFClassMappings)
+               .SingleOrDefaultAsync(k => k.Id == classMapId);
+
+                if (entity == null) { throw new BusinessException(" No such entity exists"); }
+
+                for (int i = 0; i < entity.IFClassMappings.Count; i++)
+                {
+                    if (!form.Any(d => d.Id == entity.IFClassMappings.ElementAt(i).Id))
+                    {
+                        this.Delete(entity.IFClassMappings.ElementAt(i));
+                    }
+                }
+
+                foreach (var dto in form)
+                {
+
+                    if (dto.Id <= 0)
+                    {
+                        IFClassMapping property = new IFClassMapping();
+                        //property.IsList = dto.IsList;
+                        property.IFClassMapperId = classMapId;
+                        property.FromPropertyId = dto.FromPropertyId;
+                        property.ToPropertyId = dto.ToPropertyId;
+                        entity.IFClassMappings.Add(property);
+                    }
+                    else
+                    {
+                        var property = entity.IFClassMappings.SingleOrDefault(p => p.Id == dto.Id);
+                        //property.IsList = dto.IsList;
+                        property.IFClassMapperId = classMapId;
+                        property.FromPropertyId = dto.FromPropertyId;
+                        property.ToPropertyId = dto.ToPropertyId;
+                        this.Update(property);
+                    }
+                }
+
+                await UnitOfWork.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
 
         //public async Task DeleteRecursive(IFClass cls)

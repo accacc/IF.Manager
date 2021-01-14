@@ -70,7 +70,7 @@ namespace IF.Manager.Query.Pages.Filter
 
         public async Task<PartialViewResult> OnPost()
         {
-            await this.queryService.UpdatOrderFilters(this.Form,this.QueryId);
+            await this.queryService.UpdateOrderFilters(this.Form,this.QueryId);
 
 
             var QueryList = await this.queryService.GetQueryList();
