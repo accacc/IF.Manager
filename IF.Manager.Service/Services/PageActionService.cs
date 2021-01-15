@@ -4,7 +4,9 @@ using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
 using IF.Persistence.EF;
+
 using Microsoft.EntityFrameworkCore;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -82,7 +84,7 @@ namespace IF.Manager.Service.Services
             }
         }
 
-      
+
 
         public async Task<IFPageAction> GetAction(int id)
         {

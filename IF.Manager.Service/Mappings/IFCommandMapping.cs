@@ -19,6 +19,13 @@ namespace IF.Manager.Persistence.EF.Mappings
 
             builder.HasOne<IFModel>(s => s.Model).WithMany(s => s.Commands).HasForeignKey(s => s.ModelId).OnDelete(DeleteBehavior.Restrict);
             builder.HasOne<IFProcess>(s => s.Process).WithMany(s => s.Commands).HasForeignKey(s => s.ProcessId).OnDelete(DeleteBehavior.Restrict);
+
+
+            builder
+             .HasOne(x => x.Parent)
+             .WithMany(x => x.Childrens)
+             .HasForeignKey(x => x.ParentId)
+             .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

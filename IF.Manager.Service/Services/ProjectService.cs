@@ -62,12 +62,6 @@ namespace IF.Manager.Service
             fileSystem.FormatCode(configClass.GenerateCode(), "cs");
         }
 
-
-
-
-
-
-
         public async Task AddProject(IFProject form)
         {
             IFProject entity = new IFProject();
@@ -117,10 +111,6 @@ namespace IF.Manager.Service
             return data;
         }
 
-
-
-
-
         public async Task AddSolution(IFSolution form)
         {
             IFSolution entity = new IFSolution();
@@ -167,24 +157,6 @@ namespace IF.Manager.Service
                                 .Include(s => s.Projects).ThenInclude(s => s.IFPages)
                                 .Include(s => s.Projects).ThenInclude(s => s.Processes)
                                 .ToListAsync();
-
-            //data.AddRange(solutions);
-
-
-            //var webs = await this.GetQuery<IFSolution>()
-            //    .Include(s => s.Projects).ThenInclude(s => s.IFPages)
-            //                    .Where(s => s.Projects.Any(p => p.ProjectType == Contracts.Enum.ProjectType.Web))
-            //                    .Select(x => new SolutionDto
-
-            //                    {
-            //                        Id = x.Id,
-            //                        SolutionName = x.SolutionName,
-            //                        Path = x.Path,
-            //                        Description = x.Description,
-            //                        Projects = x.Projects.Select(p => new IFProject { Id = p.Id, Type = p.ProjectType,Name = p.Name, Pages = p.IFPages.Select(pr => new IFPage { Id = pr.Id, Name = pr.Name }).ToList() }).ToList()
-            //                    }).ToListAsync();
-
-            //data.AddRange(webs);
 
             return solutions;
         }
@@ -423,7 +395,7 @@ namespace IF.Manager.Service
                 CqrsQueryGenerator queryGenerator = new CqrsQueryGenerator(entityService, modelService,process);
                 await queryGenerator.Generate();
 
-                CqrsCommandGenerator commandGenerator = new CqrsCommandGenerator(entityService, modelService,process);
+                CqrsCommandGenerator commandGenerator = new CqrsCommandGenerator(entityService,process);
                 await commandGenerator.Generate();
 
                 DirectoryHelper.MoveDirectory(DirectoryHelper.GetTempProcessDirectory(process), DirectoryHelper.GetNewProcessDirectory(process));

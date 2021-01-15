@@ -177,23 +177,23 @@ namespace IF.Manager.Service.Services
 
 
 
-        public async Task<List<IFCommandMulti>> GetCommandMultiItems(int CommandId)
+        public async Task<List<IFCommand>> GetCommandMultiItems(int CommandId)
         {
 
-            var items = await this.GetQuery<IFCommandMulti>(f => f.IFCommandId == CommandId)
+            var items = await this.GetQuery<IFCommand>(f => f.Id == CommandId)
                 .Include(c=>c.Childrens)
                 .ToListAsync();
             return items;
         }
 
 
-        public async Task UpdateCommandMulties(List<IFCommandMulti> form, int commandId)
+        public async Task UpdateCommandMulties(List<IFCommand> form, int commandId)
         {
             try
             {
-                var entity = await this.GetQuery<IFCommandMulti>()
+                var entity = await this.GetQuery<IFCommand>()
                .Include(e => e.Childrens)
-               .SingleOrDefaultAsync(k => k.IFCommandId == commandId);
+               .SingleOrDefaultAsync(k => k.Id == commandId);
 
                 if (entity == null) { throw new BusinessException(" No such entity exists"); }
 
@@ -201,7 +201,7 @@ namespace IF.Manager.Service.Services
                 {
                     if (!form.Any(d => d.Id == entity.Childrens.ElementAt(i).Id))
                     {
-                        this.Delete(entity.Childrens.ElementAt(i));
+                        entity.Childrens.ElementAt(i).ParentId = null;
                     }
                 }
 
@@ -210,23 +210,13 @@ namespace IF.Manager.Service.Services
 
                     if (item.Id <= 0)
                     {
-                        IFCommandMulti command = new IFCommandMulti();
-
-
-
-                        command.IFCommandId = item.IFCommandId;
-                        command.ParentId = commandId;
-                        command.IFMapperId = item.IFMapperId;
-                        command.Sequence = item.Sequence;
-                        entity.Childrens.Add(command);
+                        throw new BusinessException("Command'in id parametresi eksik.");
                     }
                     else
                     {
-                        var command = entity.Childrens.SingleOrDefault(p => p.Id == item.Id);
-                        command.IFCommandId = item.IFCommandId;
+                        var command = this.GetQuery<IFCommand>().SingleOrDefault(p => p.Id == item.Id);
                         command.ParentId = commandId;
                         command.IFMapperId = item.IFMapperId;
-                        command.Sequence = item.Sequence;
                         this.Update(command);
                     }
                 }
@@ -240,56 +230,6 @@ namespace IF.Manager.Service.Services
             }
         }
 
-        public async Task UpdateCommandMulties2(List<IFCommandMulti> form, int commandId)
-        {
-
-            try
-            {
-                var entity = this.GetQuery<IFCommand>()
-               .SingleOrDefaultAsync(q => q.Id == commandId);
-
-                if (entity == null) { throw new BusinessException(" No such entity exists"); }
-
-                foreach (var item in form)
-                {
-
-                    if (item.Id <= 0)
-                    {
-                        IFCommandMulti command = new IFCommandMulti();
-
-                        
-
-                        command.IFCommandId = item.IFCommandId;
-                        command.ParentId = commandId;
-                        command.IFMapperId = item.IFMapperId;
-                        command.Sequence = item.Sequence;
-
-                        this.Add(command);
-                    }
-                    else
-                    { 
-                    
-                        var command = await this.GetQuery<IFCommandMulti>(p => p.Id == item.Id).SingleOrDefaultAsync();
-
-                        command.IFCommandId = item.IFCommandId;
-                        command.ParentId = commandId;
-                        command.IFMapperId = item.IFMapperId;
-                        command.Sequence = item.Sequence;
-
-                        this.Update(command);
-                    }
-                }
-
-                await UnitOfWork.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
-
-
-        }
     }
 
 }

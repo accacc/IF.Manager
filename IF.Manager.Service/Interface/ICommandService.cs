@@ -17,7 +17,7 @@ namespace IF.Manager.Contracts.Services
         Task UpdateCommand(IFCommand form);
         Task<List<IFCommand>> GetCommandList();
         Task UpdateCommandFilters(List<IFCommandFilterItem> form,int CommandId);
-        Task<List<IFCommandMulti>> GetCommandMultiItems(int Id);
-        Task UpdateCommandMulties(List<IFCommandMulti> form, int commandId);
+        Task<List<IFCommand>> GetCommandMultiItems(int Id);
+        Task UpdateCommandMulties(List<IFCommand> form, int commandId);
     }
 }

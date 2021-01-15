@@ -5,8 +5,8 @@ using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Service.EF;
 using IF.Manager.Service.Model;
+
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,22 +15,18 @@ namespace IF.Manager.Service
     public class CqrsCommandGenerator
     {
         private readonly IEntityService entityService;
-        private readonly IModelService modelService;
         private readonly FileSystemCodeFormatProvider fileSystem;
-        //private readonly VsManager vs;
         string generatedBasePath;
         IFProcess process;
 
-        public CqrsCommandGenerator(IEntityService entityService, IModelService modelService, IFProcess process)
+        public CqrsCommandGenerator(IEntityService entityService, IFProcess process)
         {
             this.entityService = entityService;
-            this.modelService = modelService;
             this.process = process;
 
             generatedBasePath = DirectoryHelper.GetTempProcessDirectory(process);
 
             this.fileSystem = new FileSystemCodeFormatProvider(generatedBasePath);
-            //this.vs = new VsManager();
         }
 
 
@@ -41,7 +37,6 @@ namespace IF.Manager.Service
             foreach (var command in process.Commands)
             {
                 var entityTree = await entityService.GetEntityTree(command.Model.EntityId);
-                //var properties = await this.modelService.GetModelPropertyList(command.ModelId);
                 ModelGenerator modelGenerator = new ModelGenerator(fileSystem);
                 
                 modelGenerator.GenerateModels(command.Model, nameSpace, entityTree);
@@ -111,7 +106,6 @@ namespace IF.Manager.Service
             commandHandlerClass.Usings.Add("IF.Core.Data");
             commandHandlerClass.Usings.Add("IF.Core.Exception");
             commandHandlerClass.Usings.Add("Microsoft.EntityFrameworkCore");
-            //commandHandlerClass.Usings.Add($"{nameSpace}.Contract.Commands");
             commandHandlerClass.Usings.Add("System.Threading.Tasks");
             commandHandlerClass.Usings.Add("IF.Core.Persistence");
             commandHandlerClass.Usings.Add($"{SolutionHelper.GetCoreNamespace(command.Process.Project)}");

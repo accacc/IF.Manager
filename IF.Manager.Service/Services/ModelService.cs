@@ -5,11 +5,12 @@ using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
 using IF.Manager.Service.Model;
 using IF.Persistence.EF;
+
 using Microsoft.EntityFrameworkCore;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace IF.Manager.Service.Services
@@ -17,7 +18,7 @@ namespace IF.Manager.Service.Services
     public class ModelService : GenericRepository, IModelService
     {
         private readonly IClassService classService;
-        public ModelService(ManagerDbContext dbContext,IClassService classService) : base(dbContext)
+        public ModelService(ManagerDbContext dbContext, IClassService classService) : base(dbContext)
         {
             this.classService = classService;
         }
@@ -66,7 +67,7 @@ namespace IF.Manager.Service.Services
             {
 
             }
-                 
+
 
         }
 

@@ -25,7 +25,7 @@ namespace IF.Manager.Command.Pages.Multi
         
 
         [BindProperty, Required]
-        public List<IFCommandMulti> Form { get; set; }
+        public List<IFCommand> Form { get; set; }
 
 
         [BindProperty(SupportsGet = true), Required]
@@ -66,12 +66,12 @@ namespace IF.Manager.Command.Pages.Multi
         {
             await SetFromDefaults(Id);
 
-            var emptyFormItem = new IFCommandMulti();
+            var emptyFormItem = new IFCommand();
 
             return new PartialViewResult
             {
                 ViewName = "_CommandMultiFormItem",
-                ViewData = new ViewDataDictionary<IFCommandMulti>(ViewData, emptyFormItem)
+                ViewData = new ViewDataDictionary<IFCommand>(ViewData, emptyFormItem)
             };
         }
 
@@ -93,9 +93,9 @@ namespace IF.Manager.Command.Pages.Multi
 
         private void SetEmptyForm(int Id)
         {
-            this.Form = new List<IFCommandMulti>();
+            this.Form = new List<IFCommand>();
             this.CommandId = Id;
-            var item = new IFCommandMulti();
+            var item = new IFCommand();
             
             this.Form.Add(item);            
 

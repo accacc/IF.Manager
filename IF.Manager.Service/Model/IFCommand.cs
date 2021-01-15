@@ -1,4 +1,6 @@
 ﻿using IF.Core.Data;
+using IF.Manager.Service.Model;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,6 +19,16 @@ namespace IF.Manager.Contracts.Model
             this.CommandFilterItems = new List<IFCommandFilterItem>();
             this.Actions = new List<IFPageAction>();
         }
+
+        public int? ParentId { get; set; }
+
+        public IFCommand Parent { get; set; }
+
+        public ICollection<IFCommand> Childrens { get; set; }
+
+        public int? IFMapperId { get; set; }
+
+        public IFCommand IFMapper { get; set; }
 
         public CommandType CommandGetType { get; set; }
 

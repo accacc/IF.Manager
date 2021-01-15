@@ -1,4 +1,4 @@
-﻿@model IF.Manager.Service.Model.IFCommandMulti
+﻿@model IF.Manager.Contracts.Model.IFCommand
 
 @{
     Layout = null;
@@ -8,7 +8,7 @@
 
     foreach (var entity in commands)
     {
-        if (entity.Value == Model.IFCommandId.ToString())
+        if (entity.Value == Model.Id.ToString())
         {
             entity.Selected = true;
         }
@@ -30,7 +30,7 @@
     <td>
         <div class="form-group">
 
-            @Html.DropDownList($"Form[{index}].IFCommandId", commands, "Select", new { @class = "form-control" })
+            @Html.DropDownList($"Form[{index}].Id", commands, "Select", new { @class = "form-control" })
 
         </div>
     </td>

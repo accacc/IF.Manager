@@ -74,7 +74,7 @@ namespace IF.Manager.Persistence.EF
             builder.ApplyConfiguration(new IF.Manager.Service.Mappings.IFClassMapping());
             builder.ApplyConfiguration(new IFClassMapperMapping());
             builder.ApplyConfiguration(new IFClassMappingMapping());
-            builder.ApplyConfiguration(new IFCommandMultiMapping());
+            //builder.ApplyConfiguration(new IFCommandMultiMapping());
 
 
 
@@ -147,7 +147,7 @@ namespace IF.Manager.Persistence.EF
         public DbSet<IFClass> IFClasses { get; set; }
 
         public DbSet<IFClassMapper> IFClassMappers { get; set; }
-        public DbSet<IFCommandMulti> IFCommandMulties { get; set; }
+        //public DbSet<IFCommandMulti> IFCommandMulties { get; set; }
         public DbSet<IF.Manager.Service.Model.IFClassMapping> IFClassMappings { get; set; }
 
 
