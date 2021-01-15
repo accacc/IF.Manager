@@ -1,4 +1,4 @@
-﻿using IF.Manager.Contracts.Model;
+﻿using IF.Manager.Service.Model;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -7,11 +7,11 @@ namespace IF.Manager.Persistence.EF.Mappings
 {
 
 
-    public class IFPageControlMapMapping : IEntityTypeConfiguration<IFPageControlMap>
+    public class IFCommandMultiMapping : IEntityTypeConfiguration<IFCommandMulti>
     {
-        public void Configure(EntityTypeBuilder<IFPageControlMap> builder)
+        public void Configure(EntityTypeBuilder<IFCommandMulti> builder)
         {
-            builder.ToTable("IFPageControlMap");
+            builder.ToTable("IFCommandMulti");
             builder.Property(x => x.Id).IsRequired();
 
             builder

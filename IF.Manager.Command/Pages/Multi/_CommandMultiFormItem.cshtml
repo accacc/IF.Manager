@@ -1,0 +1,62 @@
+﻿@model IF.Manager.Service.Model.IFCommandMulti
+
+@{
+    Layout = null;
+    List<SelectListItem> commands = ViewData["commands"] as List<SelectListItem>;
+    List<SelectListItem> mappers = ViewData["mappers"] as List<SelectListItem>;
+    var index = Guid.NewGuid();
+
+    foreach (var entity in commands)
+    {
+        if (entity.Value == Model.IFCommandId.ToString())
+        {
+            entity.Selected = true;
+        }
+    }
+
+
+    foreach (var entity in commands)
+    {
+        if (entity.Value == Model.IFMapperId.ToString())
+        {
+            entity.Selected = true;
+        }
+    }
+
+
+}
+
+<tr id="@index">
+    <td>
+        <div class="form-group">
+
+            @Html.DropDownList($"Form[{index}].IFCommandId", commands, "Select", new { @class = "form-control" })
+
+        </div>
+    </td>
+
+    <td>
+        <div class="form-group">
+
+            @Html.DropDownList($"Form[{index}].IFMapperId", mappers, "Select", new { @class = "form-control" })
+        </div>
+    </td>
+
+
+
+    <td>
+        <input type="hidden" name="Form.Index" value="@index" />
+        <input type="hidden" name="Form[@index].Id" value="@Model.Id" />
+    </td>
+    <td><button onclick="deleteOrder('@index')">-</button></td>
+</tr>
+
+
+<script>
+    function deleteOrder(index) {
+
+        var id = "table#EmptyFormItem tr#" + index;
+        $(id).remove();
+        return false;
+    }
+</script>

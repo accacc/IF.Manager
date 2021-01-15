@@ -20,8 +20,6 @@ namespace IF.Manager.Contracts.Model
 
         public CommandType CommandGetType { get; set; }
 
-        
-
         public string Name { get; set; }
 
         public string Description { get; set; }
@@ -29,10 +27,6 @@ namespace IF.Manager.Contracts.Model
         public int ModelId { get; set; }
 
         public IFModel Model { get; set; }
-
-        //public IFFormModel FormModel { get; set; }
-
-        //public int FormModelId { get; set; }
 
         public IFProcess Process { get; set; }
 

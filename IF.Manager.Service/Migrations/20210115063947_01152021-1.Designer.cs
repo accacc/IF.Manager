@@ -4,14 +4,16 @@ using IF.Manager.Persistence.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IF.Manager.Persistence.EF.Migrations
 {
     [DbContext(typeof(ManagerDbContext))]
-    partial class ManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210115063947_01152021-1")]
+    partial class _011520211
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,12 +42,17 @@ namespace IF.Manager.Persistence.EF.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProcessId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ModelId");
+
+                    b.HasIndex("ParentId");
 
                     b.HasIndex("ProcessId");
 
@@ -860,36 +867,6 @@ namespace IF.Manager.Persistence.EF.Migrations
                     b.ToTable("IFClassMapping");
                 });
 
-            modelBuilder.Entity("IF.Manager.Service.Model.IFCommandMulti", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("IFCommandId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("IFMapperId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ParentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Sequence")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IFCommandId");
-
-                    b.HasIndex("IFMapperId");
-
-                    b.HasIndex("ParentId");
-
-                    b.ToTable("IFCommandMulti");
-                });
-
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFPage", b =>
                 {
                     b.HasBaseType("IF.Manager.Contracts.Model.IFPageControl");
@@ -1052,6 +1029,11 @@ namespace IF.Manager.Persistence.EF.Migrations
                         .HasForeignKey("ModelId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("IF.Manager.Contracts.Model.IFCommand", "Parent")
+                        .WithMany("Childrens")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("IF.Manager.Contracts.Model.IFProcess", "Process")
                         .WithMany("Commands")
@@ -1370,24 +1352,6 @@ namespace IF.Manager.Persistence.EF.Migrations
                     b.HasOne("IF.Manager.Contracts.Model.IFModelProperty", "ToProperty")
                         .WithMany()
                         .HasForeignKey("ToPropertyId");
-                });
-
-            modelBuilder.Entity("IF.Manager.Service.Model.IFCommandMulti", b =>
-                {
-                    b.HasOne("IF.Manager.Contracts.Model.IFCommand", "IFCommand")
-                        .WithMany()
-                        .HasForeignKey("IFCommandId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("IF.Manager.Contracts.Model.IFCommand", "IFMapper")
-                        .WithMany()
-                        .HasForeignKey("IFMapperId");
-
-                    b.HasOne("IF.Manager.Service.Model.IFCommandMulti", "Parent")
-                        .WithMany("Childrens")
-                        .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFPage", b =>

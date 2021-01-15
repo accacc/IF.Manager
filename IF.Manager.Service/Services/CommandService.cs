@@ -2,6 +2,7 @@
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
+using IF.Manager.Service.Model;
 using IF.Persistence.EF;
 
 using Microsoft.EntityFrameworkCore;
@@ -160,6 +161,66 @@ namespace IF.Manager.Service.Services
                         filter.FilterOperator = dto.FilterOperator;
 
                         this.Update(filter);
+                    }
+                }
+
+                await UnitOfWork.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+
+        }
+
+
+
+        public async Task<List<IFCommandMulti>> GetCommandMultiItems(int CommandId)
+        {
+
+            var filters = await this.GetQuery<IFCommandMulti>(f => f.IFCommandId == CommandId).ToListAsync();
+            return filters;
+        }
+
+        public async Task UpdateCommandMulties(List<IFCommandMulti> form, int commandId)
+        {
+
+            try
+            {
+                var entity = this.GetQuery<IFCommand>()
+               .SingleOrDefaultAsync(q => q.Id == commandId);
+
+                if (entity == null) { throw new BusinessException(" No such entity exists"); }
+
+                foreach (var item in form)
+                {
+
+                    if (item.Id <= 0)
+                    {
+                        IFCommandMulti command = new IFCommandMulti();
+
+                        
+
+                        command.IFCommandId = item.IFCommandId;
+                        command.ParentId = commandId;
+                        command.IFMapperId = item.IFMapperId;
+                        command.Sequence = item.Sequence;
+
+                        this.Add(command);
+                    }
+                    else
+                    { 
+                    
+                        var command = await this.GetQuery<IFCommandMulti>(p => p.Id == item.Id).SingleOrDefaultAsync();
+
+                        command.IFCommandId = item.IFCommandId;
+                        command.ParentId = commandId;
+                        command.IFMapperId = item.IFMapperId;
+                        command.Sequence = item.Sequence;
+
+                        this.Update(command);
                     }
                 }
 

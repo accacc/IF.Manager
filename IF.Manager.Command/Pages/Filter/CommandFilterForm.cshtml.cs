@@ -19,7 +19,7 @@ namespace IF.Manager.Command.Pages.Filter
     {
 
         private readonly IEntityService entityService;
-        private readonly ICommandService CommandService;
+        private readonly ICommandService commandService;
         private readonly IModelService modelService;
 
         [BindProperty, Required]
@@ -30,10 +30,10 @@ namespace IF.Manager.Command.Pages.Filter
         public int CommandId { get; set; }
 
 
-        public CommandFilterModel(IEntityService entityService, ICommandService CommandService, IModelService modelService)
+        public CommandFilterModel(IEntityService entityService, ICommandService commandService, IModelService modelService)
         {
             this.entityService = entityService;
-            this.CommandService = CommandService;
+            this.commandService = commandService;
             this.modelService = modelService;
         }
 
@@ -41,7 +41,7 @@ namespace IF.Manager.Command.Pages.Filter
         public async Task OnGet(int Id)
         {
 
-            this.Form = await this.CommandService.GetCommandFilterItems(Id);
+            this.Form = await this.commandService.GetCommandFilterItems(Id);
 
             if (!this.Form.Any())
             {
@@ -69,10 +69,10 @@ namespace IF.Manager.Command.Pages.Filter
 
         public async Task<PartialViewResult> OnPost()
         {
-            await this.CommandService.UpdateCommandFilters(this.Form,this.CommandId);
+            await this.commandService.UpdateCommandFilters(this.Form,this.CommandId);
 
 
-            var CommandList = await this.CommandService.GetCommandList();
+            var CommandList = await this.commandService.GetCommandList();
             
 
             return new PartialViewResult
@@ -95,7 +95,7 @@ namespace IF.Manager.Command.Pages.Filter
 
         private async Task SetFromDefaults(int Id)
         {
-            var Command = await this.CommandService.GetCommand(Id);
+            var Command = await this.commandService.GetCommand(Id);
 
             var model = await this.modelService.GetModel(Command.ModelId);
 
