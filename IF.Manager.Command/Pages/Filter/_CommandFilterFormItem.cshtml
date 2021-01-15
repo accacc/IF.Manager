@@ -8,7 +8,7 @@
 
     foreach (var entity in entities)
     {
-        if(entity.Value == Model.EntityPropertyId.ToString())
+        if (entity.Value == Model.EntityPropertyId.ToString())
         {
             entity.Selected = true;
         }
@@ -27,37 +27,37 @@
 
 }
 
-    <tr>
-        <td>
-            <div class="form-group">
+<tr>
+    <td>
+        <div class="form-group">
 
-                @Html.DropDownList($"Form[{index}].EntityPropertyId", entities, "Select", new { @class = "form-control" })
+            @Html.DropDownList($"Form[{index}].EntityPropertyId", entities, "Select", new { @class = "form-control" })
 
-            </div>
-        </td>
+        </div>
+    </td>
 
-        <td>
-            <div class="form-group">
+    <td>
+        <div class="form-group">
 
-                @Html.DropDownList($"Form[{index}].FilterOperator",filterOperators , "Select", new { @class = "form-control" })
-            </div>
-        </td>
-
-
-
-        <td>
-            <div class="form-group">
-                
-                <input type="text" name="Form[@index].Value" value="@Model.Value" class="form-control" />
-            </div>
-        </td>
+            @Html.DropDownList($"Form[{index}].FilterOperator", filterOperators, "Select", new { @class = "form-control" })
+        </div>
+    </td>
 
 
-       
 
-        <td>
-            <input type="hidden" name="Form.Index" value="@index" />
-            <input type="hidden" name="Form[@index].Id" value="@Model.Id" />
-        </td>
+    <td>
+        <div class="form-group">
 
-    </tr>
+            <input type="text" name="Form[@index].Value" value="@Model.Value" class="form-control" />
+        </div>
+    </td>
+
+
+
+
+    <td>
+        <input type="hidden" name="Form.Index" value="@index" />
+        <input type="hidden" name="Form[@index].Id" value="@Model.Id" />
+    </td>
+
+</tr>

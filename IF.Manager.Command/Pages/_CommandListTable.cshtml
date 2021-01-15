@@ -62,7 +62,20 @@
         </a>
     </td>
 
-    
+    <td>
+
+        <a class="btn btn-primary"
+           href="@Url.Page("/Filter/CommandChildsForm",new { Id = item.Id })"
+           if-ajax="true"
+           if-ajax-method="get"
+           if-ajax-insertion-mode="replace"
+           if-ajax-show-dialog="true"
+           if-ajax-modal-id="@Guid.NewGuid()">
+            Childs
+        </a>
+    </td>
+
+
 
 </tr>
         }

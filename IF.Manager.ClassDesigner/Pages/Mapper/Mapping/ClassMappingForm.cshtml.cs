@@ -1,5 +1,4 @@
 using IF.Manager.Contracts.Dto;
-using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Service.Model;
 
@@ -92,8 +91,6 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper.Mapping
         {
             List<SelectListItem> items = new List<SelectListItem>();
 
-
-
             foreach (var property in models)
             {
                 SelectListItem item = new SelectListItem();
@@ -102,8 +99,6 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper.Mapping
                 item.Value = property.ModelPropertyId.ToString();
                 items.Add(item);
             }
-
-
 
             ViewData["models"] = items;
         }

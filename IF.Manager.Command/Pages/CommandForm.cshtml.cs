@@ -19,7 +19,7 @@ namespace IF.Manager.Command.Pages
         private readonly IModelService modelService;
         private readonly IProjectService projectService;
 
-        public CommandFormModel(ICommandService CommandService, IModelService modelService,IProjectService projectService)
+        public CommandFormModel(ICommandService CommandService, IModelService modelService, IProjectService projectService)
         {
             this.CommandService = CommandService;
             this.modelService = modelService;
@@ -29,7 +29,7 @@ namespace IF.Manager.Command.Pages
         [BindProperty, Required]
         public IFCommand Form { get; set; }
         public async Task OnGetAddAsync()
-        {            
+        {
             this.Form = new IFCommand();
             await this.SetFromDefaults();
         }
@@ -146,6 +146,6 @@ namespace IF.Manager.Command.Pages
         }
 
 
-       
+
     }
 }
