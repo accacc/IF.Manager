@@ -1,10 +1,8 @@
 ﻿using IF.Core.Data;
 using IF.Manager.Contracts.Model;
 
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 
 namespace IF.Manager.Service.Model

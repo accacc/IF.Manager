@@ -44,10 +44,16 @@ namespace IF.Manager.Command.Pages.Multi
         {
 
             this.Form = await this.commandService.GetCommandMultiItems(Id);
+            
 
             if (!this.Form.Any())
             {
+
                 SetEmptyForm(Id);
+            }
+            else
+            {
+                this.Form = this.Form.First().Childrens.ToList();
             }
 
             await SetFromDefaults(Id);
@@ -97,7 +103,7 @@ namespace IF.Manager.Command.Pages.Multi
 
         private async Task SetFromDefaults(int Id)
         {
-
+            this.CommandId = Id;
             await SetCommands();
             await SetMappers();
         }

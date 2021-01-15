@@ -180,11 +180,67 @@ namespace IF.Manager.Service.Services
         public async Task<List<IFCommandMulti>> GetCommandMultiItems(int CommandId)
         {
 
-            var filters = await this.GetQuery<IFCommandMulti>(f => f.IFCommandId == CommandId).ToListAsync();
-            return filters;
+            var items = await this.GetQuery<IFCommandMulti>(f => f.IFCommandId == CommandId)
+                .Include(c=>c.Childrens)
+                .ToListAsync();
+            return items;
         }
 
+
         public async Task UpdateCommandMulties(List<IFCommandMulti> form, int commandId)
+        {
+            try
+            {
+                var entity = await this.GetQuery<IFCommandMulti>()
+               .Include(e => e.Childrens)
+               .SingleOrDefaultAsync(k => k.IFCommandId == commandId);
+
+                if (entity == null) { throw new BusinessException(" No such entity exists"); }
+
+                for (int i = 0; i < entity.Childrens.Count; i++)
+                {
+                    if (!form.Any(d => d.Id == entity.Childrens.ElementAt(i).Id))
+                    {
+                        this.Delete(entity.Childrens.ElementAt(i));
+                    }
+                }
+
+                foreach (var item in form)
+                {
+
+                    if (item.Id <= 0)
+                    {
+                        IFCommandMulti command = new IFCommandMulti();
+
+
+
+                        command.IFCommandId = item.IFCommandId;
+                        command.ParentId = commandId;
+                        command.IFMapperId = item.IFMapperId;
+                        command.Sequence = item.Sequence;
+                        entity.Childrens.Add(command);
+                    }
+                    else
+                    {
+                        var command = entity.Childrens.SingleOrDefault(p => p.Id == item.Id);
+                        command.IFCommandId = item.IFCommandId;
+                        command.ParentId = commandId;
+                        command.IFMapperId = item.IFMapperId;
+                        command.Sequence = item.Sequence;
+                        this.Update(command);
+                    }
+                }
+
+                await UnitOfWork.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task UpdateCommandMulties2(List<IFCommandMulti> form, int commandId)
         {
 
             try
