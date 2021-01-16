@@ -119,10 +119,10 @@ namespace IF.Manager.Command.Pages.Multi
             {
                 SelectListItem item = new SelectListItem();
 
-                if (this.CommandId == data.Id)
-                {
-                    item.Selected = true;
-                }
+                //if (this.CommandId == data.Id)
+                //{
+                //    item.Selected = true;
+                //}
 
                 item.Text = data.Name;
                 item.Value = data.Id.ToString();
@@ -143,10 +143,10 @@ namespace IF.Manager.Command.Pages.Multi
             {
                 SelectListItem item = new SelectListItem();
 
-                if (this.CommandId == data.Id)
-                {
-                    item.Selected = true;
-                }
+                //if (this.CommandId == data.Id)
+                //{
+                //    item.Selected = true;
+                //}
 
                 item.Text = data.Name;
                 item.Value = data.Id.ToString();

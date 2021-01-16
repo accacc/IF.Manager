@@ -1,20 +1,20 @@
 ﻿using IF.CodeGeneration.CSharp;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
+using IF.Manager.Service.CodeGen.Interface;
+
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace IF.Manager.Service.EF
 {
-    public class EFInsertCommandMethod
+    public class EFInsertCommandMethod: ICommandMethodGenerator
     {
 
         ModelClassTreeDto entityTree;
         IFCommand command;
         CSMethod method;
 
-        public EFInsertCommandMethod(string nameSpace, string name, ModelClassTreeDto entityTree, IFCommand command)
+        public EFInsertCommandMethod(string name, ModelClassTreeDto entityTree, IFCommand command)
         {
             this.entityTree = entityTree;
             this.command = command;

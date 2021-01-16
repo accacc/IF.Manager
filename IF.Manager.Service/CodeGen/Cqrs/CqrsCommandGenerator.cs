@@ -3,10 +3,14 @@ using IF.CodeGeneration.CSharp;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
+using IF.Manager.Service.CodeGen.EF;
+using IF.Manager.Service.CodeGen.Interface;
 using IF.Manager.Service.EF;
 using IF.Manager.Service.Model;
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,27 +37,75 @@ namespace IF.Manager.Service
         public async Task Generate()
         {
             string nameSpace = SolutionHelper.GetProcessNamaspace(process);
+            var rootCommands = process.Commands.Where(c => !c.ParentId.HasValue).ToList();
+            await Recursive(nameSpace,rootCommands);
 
-            foreach (var command in process.Commands)
+        }
+
+        private async Task Recursive(string nameSpace,List<IFCommand> commmands)
+        {
+
+           
+            foreach (var command in commmands)
             {
-                await GenerateCommand(nameSpace, command);
+                if (command.Childrens.Any())
+                {
+                    await GenerateParentCommand(nameSpace, command);
+
+                    await Recursive(nameSpace, command.Childrens.ToList());
+                }
+                else
+                {
+                    await GenerateChildCommand(nameSpace, command);
+                }
             }
 
 
         }
 
-        private async Task GenerateCommand(string nameSpace, IFCommand command)
+        private async Task GenerateParentCommand(string nameSpace, IFCommand command)
         {
+
             var entityTree = await entityService.GetEntityTree(command.Model.EntityId);
+
             ModelGenerator modelGenerator = new ModelGenerator(fileSystem);
 
             modelGenerator.GenerateModels(command.Model, nameSpace, entityTree);
+
             GenerateCqrsCommandClass(command, process, entityTree);
 
             switch (command.CommandGetType)
             {
                 case Core.Data.CommandType.Insert:
-                    GenerateInsertCqrsHandlerClass(command, process, entityTree);
+                    MultiCommandGenerator method = new MultiCommandGenerator($"ExecuteCommand", entityTree, command);
+                    GenerateInsertCqrsHandlerClass(command, process, method);
+                    break;
+                case Core.Data.CommandType.Update:
+                    GenerateUpdateCqrsHandlerClass(command, process, entityTree);
+                    break;
+                case Core.Data.CommandType.Delete:
+                    GenerateDeleteCqrsHandlerClass(command, process, entityTree);
+                    break;
+                default:
+                    throw new ApplicationException("unknow command type");
+            }
+        }
+
+        private async Task GenerateChildCommand(string nameSpace, IFCommand command)
+        {
+            var entityTree = await entityService.GetEntityTree(command.Model.EntityId);
+
+            ModelGenerator modelGenerator = new ModelGenerator(fileSystem);
+
+            modelGenerator.GenerateModels(command.Model, nameSpace, entityTree);
+
+            GenerateCqrsCommandClass(command, process, entityTree);
+
+            switch (command.CommandGetType)
+            {
+                case Core.Data.CommandType.Insert:
+                    EFInsertCommandMethod method = new EFInsertCommandMethod($"ExecuteCommand", entityTree, command);
+                    GenerateInsertCqrsHandlerClass(command, process,method);
                     break;
                 case Core.Data.CommandType.Update:
                     GenerateUpdateCqrsHandlerClass(command, process, entityTree);
@@ -86,14 +138,12 @@ namespace IF.Manager.Service
 
         }
 
-        private void GenerateInsertCqrsHandlerClass(IFCommand command, IFProcess process, ModelClassTreeDto entityTree)
+        private void GenerateInsertCqrsHandlerClass(IFCommand command, IFProcess process,ICommandMethodGenerator method)
         {
 
             string nameSpace = SolutionHelper.GetProcessNamaspace(process);
 
-            CSClass commandHandlerClass = GetCommandHandlerClass(command, process, nameSpace);
-
-            EFInsertCommandMethod method = new EFInsertCommandMethod(nameSpace, $"ExecuteCommand", entityTree, command);
+            CSClass commandHandlerClass = GetCommandHandlerClass(command, process, nameSpace);           
 
             commandHandlerClass.Methods.Add(method.Build());
 

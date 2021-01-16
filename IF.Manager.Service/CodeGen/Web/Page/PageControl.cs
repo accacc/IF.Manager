@@ -16,16 +16,6 @@ namespace IF.Manager.Service.Web.Page
 
         public override void Generate()
         {
-            //var topPage = this.PageControlMap.GetTopPage();
-            //string pagePath =this.PageControlMap.GetPagePath();
-            //string pageNamespace =this.PageControlMap.GetPageNameSpace();
-
-            //PageView pageView = new PageView(topPage,pagePath,pageNamespace,this.PageControlMap);
-            //pageView.RenderPageView();           
-
-            //PageClass pageClass = new PageClass(topPage, pagePath,this.PageControlMap, pageNamespace,this.PageControlMap.IFPageControl.Name);
-            //pageClass.Generate();
-
             this.GeneratePageClass();
             this.GeneratePageView();
         }

@@ -1,8 +1,7 @@
 ﻿using IF.CodeGeneration.Core;
 using IF.CodeGeneration.CSharp;
 using IF.Manager.Contracts.Model;
-using System;
-using System.Collections.Generic;
+
 using System.Text;
 
 namespace IF.Manager.Service.Web.Page

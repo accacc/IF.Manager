@@ -1,12 +1,10 @@
 ﻿using IF.CodeGeneration.CSharp;
-using IF.Core.Exception;
 using IF.Manager.Contracts.Dto;
-using IF.Manager.Contracts.Enum;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Service.CodeGen.Rules.Filters;
 using IF.Manager.Service.EF;
+
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -139,7 +137,6 @@ namespace IF.Manager.Service
 
                     if (childTree.IsList)
                     {
-
                         builder.AppendLine($@"{name} = x.{childTree.Name}s.Select(a=> new {name}{{" + Environment.NewLine);
                     }
                     else
