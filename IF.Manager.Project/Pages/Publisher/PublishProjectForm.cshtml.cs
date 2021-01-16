@@ -26,26 +26,12 @@ namespace IF.Manager.Project.Pages
             this.entityService = entityService;
             this.projectService = projectService;
         }
-
-
-        //public void OnGetAsync(int ProcessId)
-        //{
-        //    this.Form = new PublishDto();
-        //    this.Form.ProcessId = ProcessId;
-
-        //}
-
-
         public void OnGetAsync(int ProjectId)
         {
             this.Form = new PublishDto();
             this.Form.ProjectId = ProjectId;
 
         }
-
-
-
-
         public async Task<PartialViewResult> OnPostAsync()
         {
 

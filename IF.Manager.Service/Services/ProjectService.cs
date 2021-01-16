@@ -384,7 +384,7 @@ namespace IF.Manager.Service
 
                 var process = await this.GetQuery<IFProcess>(p => p.Id == publish.ProcessId)
                     .Include(s => s.Project.Solution)
-                    .Include(s => s.Commands).ThenInclude(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
+                    .Include(s => s.Commands).ThenInclude(s=>s.Childrens).ThenInclude(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
                     .Include(s => s.Commands).ThenInclude(s => s.CommandFilterItems)
                     .Include(s => s.Queries).ThenInclude(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
                     .Include(s => s.Queries).ThenInclude(s => s.QueryFilterItems).ThenInclude(s=>s.EntityProperty)

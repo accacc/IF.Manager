@@ -36,29 +36,34 @@ namespace IF.Manager.Service
 
             foreach (var command in process.Commands)
             {
-                var entityTree = await entityService.GetEntityTree(command.Model.EntityId);
-                ModelGenerator modelGenerator = new ModelGenerator(fileSystem);
-                
-                modelGenerator.GenerateModels(command.Model, nameSpace, entityTree);
-                GenerateCqrsCommandClass(command, process, entityTree);
-
-                switch (command.CommandGetType)
-                {
-                    case Core.Data.CommandType.Insert:
-                        GenerateInsertCqrsHandlerClass(command, process, entityTree);
-                        break;
-                    case Core.Data.CommandType.Update:
-                        GenerateUpdateCqrsHandlerClass(command, process, entityTree);
-                        break;
-                    case Core.Data.CommandType.Delete:
-                        GenerateDeleteCqrsHandlerClass(command, process, entityTree);
-                        break;
-                    default:
-                        throw new ApplicationException("unknow command type");
-                }
+                await GenerateCommand(nameSpace, command);
             }
 
 
+        }
+
+        private async Task GenerateCommand(string nameSpace, IFCommand command)
+        {
+            var entityTree = await entityService.GetEntityTree(command.Model.EntityId);
+            ModelGenerator modelGenerator = new ModelGenerator(fileSystem);
+
+            modelGenerator.GenerateModels(command.Model, nameSpace, entityTree);
+            GenerateCqrsCommandClass(command, process, entityTree);
+
+            switch (command.CommandGetType)
+            {
+                case Core.Data.CommandType.Insert:
+                    GenerateInsertCqrsHandlerClass(command, process, entityTree);
+                    break;
+                case Core.Data.CommandType.Update:
+                    GenerateUpdateCqrsHandlerClass(command, process, entityTree);
+                    break;
+                case Core.Data.CommandType.Delete:
+                    GenerateDeleteCqrsHandlerClass(command, process, entityTree);
+                    break;
+                default:
+                    throw new ApplicationException("unknow command type");
+            }
         }
 
         private void GenerateDeleteCqrsHandlerClass(IFCommand command, IFProcess process, ModelClassTreeDto entityTree)
