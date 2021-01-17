@@ -1,6 +1,5 @@
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
-using IF.Manager.Service.Model;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -21,7 +20,6 @@ namespace IF.Manager.Command.Pages.Multi
 
         private readonly IClassService classService;
         private readonly ICommandService commandService;
-        private readonly IModelService modelService;
         
 
         [BindProperty, Required]
@@ -32,11 +30,10 @@ namespace IF.Manager.Command.Pages.Multi
         public int CommandId { get; set; }
 
 
-        public CommandMultiModel(IClassService entityService, ICommandService commandService, IModelService modelService)
+        public CommandMultiModel(IClassService entityService, ICommandService commandService)
         {
             this.classService = entityService;
             this.commandService = commandService;
-            this.modelService = modelService;
         }
 
 
@@ -120,12 +117,6 @@ namespace IF.Manager.Command.Pages.Multi
             foreach (var data in entities)
             {
                 SelectListItem item = new SelectListItem();
-
-                //if (this.CommandId == data.Id)
-                //{
-                //    item.Selected = true;
-                //}
-
                 item.Text = data.Name;
                 item.Value = data.Id.ToString();
                 items.Add(item);
@@ -144,12 +135,6 @@ namespace IF.Manager.Command.Pages.Multi
             foreach (var data in entities)
             {
                 SelectListItem item = new SelectListItem();
-
-                //if (this.CommandId == data.Id)
-                //{
-                //    item.Selected = true;
-                //}
-
                 item.Text = data.Name;
                 item.Value = data.Id.ToString();
                 items.Add(item);

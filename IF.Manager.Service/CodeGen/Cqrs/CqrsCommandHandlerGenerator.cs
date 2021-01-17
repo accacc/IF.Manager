@@ -3,6 +3,7 @@ using IF.CodeGeneration.CSharp;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
+using IF.Manager.Service.CodeGen.Cqrs;
 using IF.Manager.Service.CodeGen.EF;
 using IF.Manager.Service.CodeGen.Interface;
 using IF.Manager.Service.EF;
@@ -16,14 +17,14 @@ using System.Threading.Tasks;
 
 namespace IF.Manager.Service
 {
-    public class CqrsCommandGenerator
+    public class CqrsCommandHandlerGenerator
     {
         private readonly IEntityService entityService;
         private readonly FileSystemCodeFormatProvider fileSystem;
         string generatedBasePath;
         IFProcess process;
 
-        public CqrsCommandGenerator(IEntityService entityService, IFProcess process)
+        public CqrsCommandHandlerGenerator(IEntityService entityService, IFProcess process)
         {
             this.entityService = entityService;
             this.process = process;
@@ -72,7 +73,10 @@ namespace IF.Manager.Service
 
             modelGenerator.GenerateModels(command.Model, nameSpace, entityTree);
 
-            GenerateCqrsCommandClass(command, process, entityTree);
+            CqrsCommandClassGenerator commandClassGenerator = new CqrsCommandClassGenerator(command, process, entityTree, fileSystem);
+
+            commandClassGenerator.Generate();
+
 
             switch (command.CommandGetType)
             {
@@ -99,7 +103,10 @@ namespace IF.Manager.Service
 
             modelGenerator.GenerateModels(command.Model, nameSpace, entityTree);
 
-            GenerateCqrsCommandClass(command, process, entityTree);
+            CqrsCommandClassGenerator commandClassGenerator = new CqrsCommandClassGenerator(command, process, entityTree, fileSystem);
+
+            commandClassGenerator.Generate();
+
 
             switch (command.CommandGetType)
             {
@@ -191,34 +198,7 @@ namespace IF.Manager.Service
             return commandHandlerClass;
         }
 
-        private void GenerateCqrsCommandClass(IFCommand command, IFProcess process, ModelClassTreeDto entityTree)
-        {
-            CSClass commandClass = new CSClass();
-            commandClass.BaseClass = "BaseCommand";
-            commandClass.Name = $"{command.Name}Command";
-
-            CSProperty modelProperty = new CSProperty(null, "public", "Data", false);
-            modelProperty.PropertyTypeString = $"{command.Model.Name}";
-            commandClass.Properties.Add(modelProperty);
-
-            string nameSpace = SolutionHelper.GetProcessNamaspace(process);
-
-            string classes = "";
-            classes += "using IF.Core.Data;";
-            classes += Environment.NewLine;
-            classes += "using System.Collections.Generic;";
-            classes += Environment.NewLine;
-            classes += Environment.NewLine;
-            classes += "namespace " + nameSpace;
-            classes += Environment.NewLine;
-            classes += "{";
-            classes += Environment.NewLine;
-            classes += @commandClass.GenerateCode().Template;
-            classes += Environment.NewLine;
-            classes += "}";
-
-            fileSystem.FormatCode(classes, "cs", commandClass.Name);
-        }
+       
     }
 
 

@@ -396,7 +396,7 @@ namespace IF.Manager.Service
                 CqrsQueryGenerator queryGenerator = new CqrsQueryGenerator(entityService, modelService,process);
                 await queryGenerator.Generate();
 
-                CqrsCommandGenerator commandGenerator = new CqrsCommandGenerator(entityService,process);
+                CqrsCommandHandlerGenerator commandGenerator = new CqrsCommandHandlerGenerator(entityService,process);
                 await commandGenerator.Generate();
 
                 DirectoryHelper.MoveDirectory(DirectoryHelper.GetTempProcessDirectory(process), DirectoryHelper.GetNewProcessDirectory(process));
