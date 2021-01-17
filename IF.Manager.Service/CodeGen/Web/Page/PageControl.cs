@@ -1,7 +1,7 @@
 ﻿using IF.CodeGeneration.CSharp;
 using IF.Core.Exception;
-using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
