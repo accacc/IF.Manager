@@ -40,8 +40,10 @@ namespace IF.Manager.Command.Pages.Multi
         }
 
 
-        public async Task OnGet(int Id)
+        public async Task OnGet(int Id,int? ParentId)
         {
+
+            if (ParentId.HasValue) Id = ParentId.Value;
 
             this.Form = await this.commandService.GetCommandMultiItems(Id);
             
