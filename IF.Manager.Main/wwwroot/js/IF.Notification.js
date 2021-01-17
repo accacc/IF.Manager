@@ -4,24 +4,6 @@
 
 $(document).ready(function () {
 
-    //toastr.options = {
-    //    "closeButton": true,
-    //    "debug": false,
-    //    "progressBar": false,
-    //    "positionClass": "toast-top-center",
-    //    "onclick": null,
-    //    "showDuration": "400",
-    //    "hideDuration": "1000",
-    //    "timeOut": "7000",
-    //    //"extendedTimeOut": "1000",
-    //    "showEasing": "swing",
-    //    "hideEasing": "linear",
-    //    "showMethod": "fadeIn",
-    //    "hideMethod": "fadeOut",
-    //    "timeOut": "0",
-    //    "extendedTimeOut": "0",
-    //};
-
     toastr.options = {
         "closeButton": true,
         "debug": false,
@@ -52,12 +34,21 @@ $(document).ready(function () {
 function handleAjaxMessages() {
     $(document).ajaxSuccess(function (event, request) {
         checkAndHandleMessageFromHeader(request);
-    }).ajaxError(function (event, request) {        
+    }).ajaxError(function (event, request) {
+        toastr.error("Error");
+        debugger;
         if (request.responseText !== undefined && request.responseText !== '') {
-            var messageContext = $.parseJSON(request.responseText);
-            displayMessage(messageContext, "error");
+            try {
+                messageContext = $.parseJSON(request.responseText);
+                displayMessage(messageContext, "error");
+            } catch (e) {
+                ShowMessage(request.responseText, "error");
+                alert(request.responseText);
+            }
+
+           
         }
-        
+
     });
 }
 
@@ -71,9 +62,9 @@ function checkAndHandleMessageFromHeader(request) {
 }
 
 function decode_utf8(s) {
-    
-      return decodeURIComponent(escape(s));
-    
+
+    return decodeURIComponent(escape(s));
+
 }
 
 
@@ -88,32 +79,36 @@ function displayMessage(context, messageType) {
 
     $.each(context.Messages, function (i, message) {
 
-
-        message = unicodeToChar(message);
-
-
-        messageType = messageType.toLowerCase();
-
-        var title = "Message";
-
-        if (messageType === "success") {
-            //alert("ok");
-            title = "Success";
-            toastr.success(message);
-
-        } else if (messageType === "warning") {
-            title = "Warning";
-            toastr.warning(message);
-        } else if (messageType === "error") {
-            title = "Error";
-            toastr.error(message);
-        } else {
-            title = "Error";
-            toastr.error(message);
-        }
+        ShowMessage(message, messageType);
 
     });
 }
 
+function ShowMessage(message,messageType) {
+    message = unicodeToChar(message);
+    messageType = messageType.toLowerCase();
 
+    if (messageType === "success") {
+        title = "Success";
+        toastr.success(message);
 
+    } else if (messageType === "warning") {
+        title = "Warning";
+        toastr.warning(message);
+    } else if (messageType === "error") {
+        title = "Error";
+        toastr.error(message);
+    } else {
+        title = "Error";
+        toastr.error(message);
+    }
+}
+
+function isJson(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}

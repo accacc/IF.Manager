@@ -12,6 +12,14 @@ namespace IF.Manager.Contracts.Dto
         public IFPageControl    PageControl { get; set; }
     }
 
+    public class CommandControlTreeDto : TreeDto<CommandControlTreeDto>
+    {
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+
+    }
+
     public class ClassControlTreeDto : TreeDto<ClassControlTreeDto>
     {
         public string Name { get; set; }

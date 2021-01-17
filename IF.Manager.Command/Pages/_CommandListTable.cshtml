@@ -61,21 +61,39 @@
             Filters
         </a>
     </td>
+    @if (item.ParentId == null)
+    {
+        <td>
 
-    <td>
+            <a class="btn btn-primary"
+               href="@Url.Page("/Multi/CommandMultiForm", new { Id = item.Id })"
+               if-ajax="true"
+               if-ajax-method="get"
+               if-ajax-insertion-mode="replace"
+               if-ajax-show-dialog="true"
+               if-ajax-modal-id="@Guid.NewGuid()">
+                Multi Command
+            </a>
+        </td>
 
-        <a class="btn btn-primary"
-           href="@Url.Page("/Multi/CommandMultiForm",new { Id = item.Id })"
-           if-ajax="true"
-           if-ajax-method="get"
-           if-ajax-insertion-mode="replace"
-           if-ajax-show-dialog="true"
-           if-ajax-modal-id="@Guid.NewGuid()">
-            Multi Command
-        </a>
-    </td>
+        <td>
+            <a class="btn btn-primary"
+               href="@Url.Page("/CommandListIndex", "CommandTreeList", new { Id = item.Id })"
+               if-ajax="true"
+               if-ajax-method="get"
+               if-ajax-insertion-mode="replace"
+               if-ajax-show-dialog="true"
+               if-ajax-modal-id="CommandTreeListModal">
+                Tree
+            </a>
+        </td>
 
-
+    }
+    else
+    {
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    }
 
 </tr>
         }

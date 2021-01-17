@@ -1,3 +1,4 @@
+using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 
@@ -12,13 +13,13 @@ namespace IF.Manager.Command.Pages
 {
     public class CommandListIndexModel : PageModel
     {
-        private readonly ICommandService CommandService;
+        private readonly ICommandService commandService;
 
         public List<IFCommand> CommandList { get; set; }
 
         public CommandListIndexModel(ICommandService CommandService)
         {
-            this.CommandService = CommandService;
+            this.commandService = CommandService;
         }
         public async Task OnGetAsync()
         {
@@ -39,7 +40,36 @@ namespace IF.Manager.Command.Pages
 
         private async Task SetModel()
         {
-            this.CommandList = await this.CommandService.GetCommandList();
+            this.CommandList = await this.commandService.GetCommandList();
+        }
+
+        public async Task<PartialViewResult> OnGetCommandTreeListAsync(int Id)
+        {
+            CommandMapModel model = new CommandMapModel();
+
+            model.IsModal = true;
+
+            var command = await this.commandService.GetCommand(Id);
+
+            if (command != null)
+            {
+                var tree = await this.commandService.GetCommandTreeList(command.Id);
+
+
+                model.Tree = tree;
+                model.CommandId = command.Id;
+            }
+            else
+            {
+                model.Tree = new List<CommandControlTreeDto>();
+            }
+
+
+            return new PartialViewResult
+            {
+                ViewName = "Multi/_CommandTreeMain",
+                ViewData = new ViewDataDictionary<CommandMapModel>(ViewData, model)
+            };
         }
     }
 }

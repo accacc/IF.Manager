@@ -1,4 +1,6 @@
-﻿using IF.Core.Exception;
+﻿using IF.Core.Data;
+using IF.Core.Exception;
+using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
@@ -20,6 +22,38 @@ namespace IF.Manager.Service.Services
         public CommandService(ManagerDbContext dbContext) : base(dbContext)
         {
 
+        }
+
+
+        public async Task<List<CommandControlTreeDto>> GetCommandTreeList(int ParentId)
+        {
+            List<CommandControlTreeDto> tree = null;
+
+            try
+            {
+                var list = await this.GetQuery<IFCommand>().Select
+
+               (map => new CommandControlTreeDto
+               {
+
+                   Name = map.Name,
+                   Id = map.Id,
+                   ParentId = map.ParentId,
+
+               }).ToListAsync();
+
+                var parents = list.Where(c => c.ParentId == ParentId).ToList();
+
+
+                tree = list.ToTree(parents);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+            return tree;
         }
 
         public async Task AddCommand(IFCommand form)

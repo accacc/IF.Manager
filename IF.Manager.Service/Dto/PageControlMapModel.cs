@@ -10,6 +10,15 @@ namespace IF.Manager.Contracts.Dto
         public List<PageControlTreeDto> Tree { get; set; }
     }
 
+    public class CommandMapModel
+    {
+
+        public bool IsModal { get; set; }
+        public int? CommandId { get; set; }
+        public List<CommandControlTreeDto> Tree { get; set; }
+    }
+
+
     public class ClassMapModel
     {
 

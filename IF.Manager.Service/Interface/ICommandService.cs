@@ -1,4 +1,5 @@
 ﻿using IF.Core.Persistence;
+using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Service.Model;
 
@@ -11,6 +12,7 @@ namespace IF.Manager.Contracts.Services
     {
         Task<List<IFCommandFilterItem>> GetCommandFilterItems(int CommandId);
 
+        Task<List<CommandControlTreeDto>> GetCommandTreeList(int ParentId);
         Task AddCommand(IFCommand form);
 
         Task<IFCommand> GetCommand(int id);

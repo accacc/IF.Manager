@@ -70,9 +70,7 @@ function GetAjaxOptions(element) {
 
 
     if (ajaxOptions.antiForgeryToken !== undefined) {
-        //alert(ajaxOptions.antiForgeryToken);
         ajaxOptions.data["__RequestVerificationToken"] = ajaxOptions.antiForgeryToken;
-
     }
 
 
@@ -91,8 +89,6 @@ var IFAjax = {
         if (IFAjax.ajaxOptions.confirm && !window.confirm(IFAjax.ajaxOptions.confirm)) {
             return;
         }
-
-        debugger;
 
         $.ajax({
             url: IFAjax.ajaxOptions.url,
@@ -142,8 +138,6 @@ var IFAjax = {
                 }
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                //alert(xhr.status);
-                //alert(thrownError);
                 if (!isUndefined(IFAjax.ajaxOptions.onErrorFunc)) {
                     getFunction(IFAjax.ajaxOptions.onErrorFunc, []).apply(this, []);
                 }
