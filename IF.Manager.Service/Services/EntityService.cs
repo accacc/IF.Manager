@@ -504,15 +504,17 @@ namespace IF.Manager.Service
 
                                 string name = DirectoryHelper.AddAsLastWord(entity.Name, "Entity");
 
-
-
-                                relatedEntity.Properties.Add(new IFEntityProperty()
+                                var foreignKeyProperty = new IFEntityProperty()
                                 {
                                     //Caglar:Foreign Key
                                     Name = $"{name}Id",
                                     Type = "int"
 
-                                });
+                                };
+
+                                relatedEntity.Properties.Add(foreignKeyProperty);
+
+                                relation.ForeignKeyIFEntityProperty = foreignKeyProperty;
 
                             }
                             break;
