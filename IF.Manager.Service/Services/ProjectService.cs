@@ -393,8 +393,8 @@ namespace IF.Manager.Service
                     .SingleOrDefaultAsync();
 
 
-                CqrsQueryGenerator queryGenerator = new CqrsQueryGenerator(entityService, modelService,process);
-                await queryGenerator.Generate();
+                //CqrsQueryGenerator queryGenerator = new CqrsQueryGenerator(entityService, modelService,process);
+                //await queryGenerator.Generate();
 
                 CqrsCommandHandlerGenerator commandGenerator = new CqrsCommandHandlerGenerator(entityService,process);
                 await commandGenerator.Generate();

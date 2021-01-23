@@ -40,6 +40,11 @@ namespace IF.Manager.Contracts.Dto
             return IsModelProperty;
         }
 
+        //public static bool IsModelProperty(ModelClassTreeDto childEntityTree, IFModel model)
+        //{
+        //    return childEntityTree.ParentId == model.EntityId;
+        //}
+
 
         public string Type { get; set; }
         public bool IsRelation { get; set; }

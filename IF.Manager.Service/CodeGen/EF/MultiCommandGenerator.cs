@@ -31,9 +31,6 @@ namespace IF.Manager.Service.CodeGen.EF
             this.method.Parameters.Add(new CsMethodParameter() { Name = "command", Type = command.Name + "Command" });
 
 
-            this.method.Body += $"{entityTree.Name} entity = new {entityTree.Name}();" + Environment.NewLine;
-
-
             foreach (var command in this.command.Childrens)
             {
                 this.method.Body +=  $"await dispatcher.CommandAsync(command.{command.Model.Name});" + Environment.NewLine;

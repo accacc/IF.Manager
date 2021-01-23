@@ -20,8 +20,7 @@ namespace IF.Manager.Service
 
         public void Build(ModelClassTreeDto entityTree)
         {
-            this.Usings.Add("System");
-            this.Usings.Add("System.Collections.Generic");
+           
 
             foreach (var childEntityTree in entityTree.Childs)
             {               

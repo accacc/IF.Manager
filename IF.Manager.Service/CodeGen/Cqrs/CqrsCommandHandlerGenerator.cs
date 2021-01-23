@@ -47,7 +47,7 @@ namespace IF.Manager.Service
         {
 
            
-            foreach (var command in commmands)
+            foreach (var command in commmands.Where(c=>c.Name == "IcraMultiDataCommand"))
             {
                 if (command.Childrens.Any())
                 {
