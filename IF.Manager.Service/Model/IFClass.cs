@@ -8,7 +8,7 @@ using System.Text;
 
 namespace IF.Manager.Service.Model
 {
-    public class IFClass : Entity, ITreeClass<IFClass>
+    public class IFClass : Entity
     {
         public IFClass()
         {

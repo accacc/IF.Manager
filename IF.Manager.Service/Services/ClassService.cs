@@ -417,7 +417,7 @@ namespace IF.Manager.Service
         public async Task GenerateClass(int classId)
         {
 
-            var tree = await this.GetClassTreeList(classMapperId);
+            var tree = await this.GetClassTreeList(classId);
 
             var parent = tree.First();
 
