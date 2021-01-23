@@ -43,7 +43,7 @@ namespace IF.Manager.Service
 
             IFClass list = new IFClass();
 
-            mainClass.Childrens.Add(list);
+            mainClass.Childs.Add(list);
             var rootObject = types.Where(t => t.IsRoot).SingleOrDefault();
             var rchilds = rootObject.Fields.Select(s => s.MemberName).ToList();
             var rootChilds = types.Where(t => rchilds.Contains(t.AssignedName)).ToList();
@@ -68,7 +68,7 @@ namespace IF.Manager.Service
 
                         HandleType(field.Type, field.MemberName, property);
 
-                        @class.Childrens.Add(property);
+                        @class.Childs.Add(property);
 
                         if (field.Type.Type == JsonTypeEnum.Object || (field.Type.InternalType != null && field.Type.InternalType.Type == JsonTypeEnum.Object))
                         {
@@ -193,6 +193,9 @@ namespace IF.Manager.Service
         public async Task<IFClassMapper> GetClassMapper(int id)
         {
             var entity = await this.GetQuery<IFClassMapper>()
+                .Include(m=>m.IFClassMappings)
+                .Include(m => m.IFClass)
+                .Include(m => m.IFModel.Properties)
             .SingleOrDefaultAsync(k => k.Id == id);
 
             if (entity == null) { throw new BusinessException($"{nameof(IFClassMapper)} : No such entity exists"); }
@@ -246,7 +249,7 @@ namespace IF.Manager.Service
                 entity.IsPrimitive = false;
                 entity.ParentId = form.ParentId;
                 entity.Description = form.Description;
-                entity.Childrens = form.Childrens;
+                entity.Childs = form.Childs;
                 this.Add(entity);
 
                 await this.UnitOfWork.SaveChangesAsync();
@@ -383,10 +386,38 @@ namespace IF.Manager.Service
             }
         }
 
+
+        public async Task GenerateMapper(int classMapperId)
+        {
+
+            //var mapper = await this.GetClassMapper(classMapperId);
+
+            //StringBuilder builder = new StringBuilder();
+
+            //foreach (var mapping in mapper.IFClassMappings)
+            //{
+            //    var parantes =.ToParentPath();
+            //    builder.AppendLine(mapping.FromProperty.Parent.)
+            //}
+
+            //List<CSClass> allClass = new List<CSClass>();
+
+
+            //CSClass csClass = new CSClass();
+
+            //csClass.Usings.Add("System");
+            //csClass.Usings.Add("System.Collections.Generic");
+
+            
+
+
+          //  fileSystem.FormatCode(code.ToString(), "cs", parent.Name);
+        }
+
         public async Task GenerateClass(int classId)
         {
 
-            var tree = await this.GetClassTreeList(classId);
+            var tree = await this.GetClassTreeList(classMapperId);
 
             var parent = tree.First();
 
@@ -460,7 +491,7 @@ namespace IF.Manager.Service
 
             foreach (var item in list)
             {
-                item.Childrens = await GetChildrenByParentId(item.Id);
+                item.Childs = await GetChildrenByParentId(item.Id);
             }
 
             return list;
@@ -474,7 +505,7 @@ namespace IF.Manager.Service
 
             foreach (var t in threads)
             {
-                t.Childrens = await GetChildrenByParentId(t.Id);
+                t.Childs = await GetChildrenByParentId(t.Id);
 
 
                 children.Add(t);
@@ -496,7 +527,7 @@ namespace IF.Manager.Service
         {
             yield return @class;
 
-            foreach (var node in @class.Childrens.SelectMany(child => Flatten(child)))
+            foreach (var node in @class.Childs.SelectMany(child => Flatten(child)))
             {
                 yield return node;
             }

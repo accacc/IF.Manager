@@ -61,6 +61,19 @@
         </a>
     </td>
 
+    <td>
+
+        <a class="btn btn-primary"
+           href="@Url.Page("/Mapper/ClassMapperIndex","Generate",new { ClassMapId = item.Id})"
+           if-ajax="true"
+           if-ajax-method="post"
+           if-ajax-mode="replace"
+           if-ajax-update-id="ClassMapperListDiv"
+           if-anti-forgery-token="@Context.GetAntiforgeryToken()">
+            Generate Map
+        </a>
+    </td>
+
 
 </tr>
         }

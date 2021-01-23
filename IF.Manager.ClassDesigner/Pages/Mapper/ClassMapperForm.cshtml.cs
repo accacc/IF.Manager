@@ -74,6 +74,34 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper
                 ViewData = new ViewDataDictionary<List<IFClassMapper>>(ViewData, list)
             };
         }
+
+
+
+        public async Task<PartialViewResult> OnGetShow()
+        {
+
+
+            QueryFilterMapModel model = await GetTreeModel();
+
+            ShowFilterModel showFilterModel = new ShowFilterModel();
+
+
+            FilterContext filterContext = new FilterContext();
+            filterContext.FilterItems = model.Tree.ToList();
+            FilterRuleEngine filterRuleEngine = new FilterRuleEngine(filterContext);
+            filterRuleEngine.Execute();
+
+            showFilterModel.Filter = filterRuleEngine.GetFilter();
+
+            return new PartialViewResult
+            {
+                ViewName = "_ShowFilter",
+                ViewData = new ViewDataDictionary<ShowFilterModel>(ViewData, showFilterModel)
+            };
+
+        }
+
+
         private async Task SetModels()
         {
             var entities = await this.modelService.GetModelList();

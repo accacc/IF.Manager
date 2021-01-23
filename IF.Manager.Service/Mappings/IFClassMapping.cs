@@ -19,7 +19,7 @@ namespace IF.Manager.Service.Mappings
             builder.Property(x => x.Type).IsRequired();
 
             builder.HasOne(x => x.Parent)
-            .WithMany(x => x.Childrens)
+            .WithMany(x => x.Childs)
             .HasForeignKey(x => x.ParentId)
             .IsRequired(false)
             .OnDelete(DeleteBehavior.Restrict);

@@ -45,7 +45,31 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper
 
         }
 
-       
+        public async Task<PartialViewResult> OnPostGenerateAsync(int ClassMapId)
+        {
+            try
+            {
+                await this.classService.GenerateMapper(ClassMapId);
+            }
+            catch (System.Exception ex)
+            {
+
+                throw;
+            }
+
+            this.ClassMapperList = await this.classService.GetClassMapperList();
+
+
+            return new PartialViewResult
+            {
+                ViewName = "_ClassMapperListTable",
+                ViewData = new ViewDataDictionary<List<IFClassMapper>>(ViewData, this.ClassMapperList)
+            };
+
+
+        }
+
+
     }
 }
 
