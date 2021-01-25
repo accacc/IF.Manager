@@ -47,7 +47,11 @@ namespace IF.Manager.Service
         {
 
            
-            foreach (var command in commmands.Where(c=>c.Name == "IcraMultiDataCommand"))
+            foreach (var command in commmands.Where(c=>c.Name == "IcraMultiDataCommand"
+            || c.Name == "AlacakliMultiDataCommand"
+            || c.Name == "BorcluMultiDataCommand"
+            || c.Name == "icraDataCommand"
+            ))
             {
                 if (command.Childrens.Any())
                 {
@@ -180,18 +184,26 @@ namespace IF.Manager.Service
             repositoryProperty.IsReadOnly = true;
             commandHandlerClass.Properties.Add(repositoryProperty);
 
+            var dispatcher = new CSProperty("private", "dispatcher", false);
+            dispatcher.PropertyTypeString = $"IDispatcher";
+            dispatcher.IsReadOnly = true;
+            commandHandlerClass.Properties.Add(dispatcher);
+
+
 
             CSMethod constructorMethod = new CSMethod(commandHandlerClass.Name, "", "public");
             constructorMethod.Parameters.Add(new CsMethodParameter() { Name = "repository", Type = "IRepository" });
+            constructorMethod.Parameters.Add(new CsMethodParameter() { Name = "dispatcher", Type = "IDispatcher" });
             StringBuilder methodBody = new StringBuilder();
-            methodBody.AppendFormat("this.repository = repository;");
+            methodBody.AppendLine("this.repository = repository;");
+            methodBody.AppendLine("this.dispatcher = dispatcher;");
             methodBody.AppendLine();
             constructorMethod.Body = methodBody.ToString();
             commandHandlerClass.Methods.Add(constructorMethod);
 
             CSMethod handleMethod = new CSMethod("HandleAsync", "void", "public");
             handleMethod.IsAsync = true;
-            handleMethod.Parameters.Add(new CsMethodParameter() { Name = "command", Type = $"{commandName}Command" });
+            handleMethod.Parameters.Add(new CsMethodParameter() { Name = "command", Type = $"{commandName}" });
             handleMethod.Body += $"await this.ExecuteCommand(command);" + Environment.NewLine;
 
             commandHandlerClass.Methods.Add(handleMethod);

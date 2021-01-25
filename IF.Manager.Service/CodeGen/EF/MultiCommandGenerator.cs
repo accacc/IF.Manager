@@ -28,13 +28,18 @@ namespace IF.Manager.Service.CodeGen.EF
         public CSMethod Build()
         {
             this.method.IsAsync = true;
-            this.method.Parameters.Add(new CsMethodParameter() { Name = "command", Type = command.Name + "Command" });
+            this.method.Parameters.Add(new CsMethodParameter() { Name = "command", Type = command.Name  });
 
 
             foreach (var command in this.command.Childrens)
             {
-                this.method.Body +=  $"await dispatcher.CommandAsync(command.{command.Model.Name});" + Environment.NewLine;
+                this.method.Body += $"var {command.Name} = new {command.Name}();" + Environment.NewLine;
+                this.method.Body += $"{command.Name}.Data = command.Data;" + Environment.NewLine;
+                this.method.Body += $"await dispatcher.CommandAsync({command.Name});" + Environment.NewLine;
+
             }
+
+
 
             return this.method;
         }

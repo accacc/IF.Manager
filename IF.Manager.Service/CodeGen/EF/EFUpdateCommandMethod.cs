@@ -26,7 +26,7 @@ namespace IF.Manager.Service.EF
         public CSMethod Build()
         {
             this.method.IsAsync = true;
-            this.method.Parameters.Add(new CsMethodParameter() { Name = "command", Type = command.Name + "Command" });
+            this.method.Parameters.Add(new CsMethodParameter() { Name = "command", Type = command.Name});
 
 
             this.method.Body += $"var entity = await this.repository.GetQuery<{entityTree.Name}>().SingleOrDefaultAsync(k => k.Id == command.Data.Id);" + Environment.NewLine + Environment.NewLine;

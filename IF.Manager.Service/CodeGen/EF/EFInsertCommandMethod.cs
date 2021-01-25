@@ -28,7 +28,7 @@ namespace IF.Manager.Service.EF
         public CSMethod Build()
         {
             this.method.IsAsync = true;
-            this.method.Parameters.Add(new CsMethodParameter() { Name = "command", Type = command.Name + "Command" });
+            this.method.Parameters.Add(new CsMethodParameter() { Name = "command", Type = command.Name });
 
 
             this.method.Body += $"{entityTree.Name} entity = new {entityTree.Name}();" + Environment.NewLine;

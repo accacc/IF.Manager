@@ -27,7 +27,7 @@ namespace IF.Manager.Service.CodeGen.Cqrs
         {
             CSClass commandClass = new CSClass();
             commandClass.BaseClass = "BaseCommand";
-            commandClass.Name = $"{command.Name}Command";
+            commandClass.Name = $"{command.Name}";
 
             CSProperty modelProperty = new CSProperty(null, "public", "Data", false);
             modelProperty.PropertyTypeString = $"{command.Model.Name}";

@@ -124,7 +124,7 @@ namespace IF.Manager.Service.WebApi
         private CSMethod UpdateMethodGenerate(IFCommand command)
         {
             CSMethod postMethod = new CSMethod($"{command.Name}", "IActionResult", "public");
-            postMethod.Parameters.Add(new CsMethodParameter() { Type = $"{command.Name}Command", Name = "command", Attirubite = "FromBody" });
+            postMethod.Parameters.Add(new CsMethodParameter() { Type = $"{command.Name}", Name = "command", Attirubite = "FromBody" });
             postMethod.IsAsync = true;
             postMethod.Attirubites.Add("HttpPost");
             postMethod.Attirubites.Add($"Route(\"api/{process.Name}Controller/{command.Name}\")");
@@ -141,7 +141,7 @@ namespace IF.Manager.Service.WebApi
         public CSMethod AddMethodGenerate(IFCommand command)
         {
             CSMethod postMethod = new CSMethod($"{command.Name}", "IActionResult", "public");
-            postMethod.Parameters.Add(new CsMethodParameter() { Type = $"{command.Name}Command", Name = "command", Attirubite = "FromBody" });
+            postMethod.Parameters.Add(new CsMethodParameter() { Type = $"{command.Name}", Name = "command", Attirubite = "FromBody" });
             postMethod.IsAsync = true;
             postMethod.Attirubites.Add("HttpPost");
             postMethod.Attirubites.Add($"Route(\"api/{process.Name}Controller/{command.Name}\")");
