@@ -7,16 +7,27 @@ using System.Text;
 
 namespace IF.Manager.Service.Model
 {
-    public class ModelGenerator
+
+    public interface IModelGenerator
+    {
+        void Generate();
+    }
+
+    public class ModelGenerator:IModelGenerator
     {
 
         FileSystemCodeFormatProvider fileSystem;
-        public ModelGenerator(FileSystemCodeFormatProvider fileSystem)
+        IFModel model; string nameSpace; ModelClassTreeDto entityTree;
+        
+        public ModelGenerator(FileSystemCodeFormatProvider fileSystem, IFModel model, string nameSpace, ModelClassTreeDto entityTree)
         {
             this.fileSystem = fileSystem;
+            this.model = model;
+            this.nameSpace = nameSpace;
+            this.entityTree = entityTree;
         }
 
-        public void GenerateModels(IFModel model, string nameSpace, ModelClassTreeDto entityTree)
+        public void Generate()
         {
             List<ModelClass> alls = new List<ModelClass>();
 

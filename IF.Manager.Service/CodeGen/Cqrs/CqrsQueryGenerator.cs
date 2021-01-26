@@ -36,8 +36,8 @@ namespace IF.Manager.Service.Services
 
                 //var properties = await this.modelService.GetModelPropertyList(query.ModelId);
 
-                ModelGenerator modelGenerator = new ModelGenerator(fileSystem);
-                modelGenerator.GenerateModels(query.Model, nameSpace, entityTree);
+                ModelGenerator modelGenerator = new ModelGenerator(fileSystem, query.Model, nameSpace, entityTree);
+                modelGenerator.Generate();
 
                 CqrsQueryHandlerGenerator handlerGenerator = new CqrsQueryHandlerGenerator();
                 handlerGenerator.GenerateCqrsHandlerClass(query, entityTree, fileSystem);

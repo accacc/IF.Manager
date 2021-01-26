@@ -38,7 +38,13 @@ namespace IF.Manager.Service
         public async Task Generate()
         {
             string nameSpace = SolutionHelper.GetProcessNamaspace(process);
-            var rootCommands = process.Commands.Where(c => !c.ParentId.HasValue).ToList();
+            var rootCommands = process.Commands
+                .Where(c => c.Name == "IcraMultiDataCommand"
+            //|| c.Name == "AlacakliMultiDataCommand"
+            //|| c.Name == "BorcluMultiDataCommand"
+            //|| c.Name == "icraDataCommand"
+            )
+                .Where(c => !c.ParentId.HasValue).ToList();
             await Recursive(nameSpace,rootCommands);
 
         }
@@ -47,17 +53,16 @@ namespace IF.Manager.Service
         {
 
            
-            foreach (var command in commmands.Where(c=>c.Name == "IcraMultiDataCommand"
-            || c.Name == "AlacakliMultiDataCommand"
-            || c.Name == "BorcluMultiDataCommand"
-            || c.Name == "icraDataCommand"
-            ))
+            foreach (var command in commmands)
             {
-                if (command.Childrens.Any())
+
+                var childs = command.Childrens.Where(c => c.Name == "icraDataCommand").ToList();
+
+                if (childs.Any())
                 {
                     await GenerateParentCommand(nameSpace, command);
 
-                    await Recursive(nameSpace, command.Childrens.ToList());
+                    await Recursive(nameSpace, childs);
                 }
                 else
                 {
@@ -73,9 +78,9 @@ namespace IF.Manager.Service
 
             var entityTree = await entityService.GetEntityTree(command.Model.EntityId);
 
-            ModelGenerator modelGenerator = new ModelGenerator(fileSystem);
+            ModelGenerator modelGenerator = new ModelGenerator(fileSystem, command.Model, nameSpace, entityTree);
 
-            modelGenerator.GenerateModels(command.Model, nameSpace, entityTree);
+            modelGenerator.Generate();
 
             CqrsCommandClassGenerator commandClassGenerator = new CqrsCommandClassGenerator(command, process, entityTree, fileSystem);
 
@@ -103,9 +108,9 @@ namespace IF.Manager.Service
         {
             var entityTree = await entityService.GetEntityTree(command.Model.EntityId);
 
-            ModelGenerator modelGenerator = new ModelGenerator(fileSystem);
+            ModelGenerator modelGenerator = new ModelGenerator(fileSystem, command.Model, nameSpace, entityTree);
 
-            modelGenerator.GenerateModels(command.Model, nameSpace, entityTree);
+            modelGenerator.Generate();
 
             CqrsCommandClassGenerator commandClassGenerator = new CqrsCommandClassGenerator(command, process, entityTree, fileSystem);
 
