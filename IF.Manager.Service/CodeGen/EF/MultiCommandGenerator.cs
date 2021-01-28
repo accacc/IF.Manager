@@ -34,8 +34,9 @@ namespace IF.Manager.Service.CodeGen.EF
             foreach (var command in this.command.Childrens)
             {
                 this.method.Body += $"var {command.Name} = new {command.Name}();" + Environment.NewLine;
-                this.method.Body += $"{command.Name}.Data = command.Data;" + Environment.NewLine;
+                this.method.Body += $"{command.Name}.Data = command.Data.{command.Model.Name};" + Environment.NewLine;
                 this.method.Body += $"await dispatcher.CommandAsync({command.Name});" + Environment.NewLine;
+                this.method.Body += Environment.NewLine;
 
             }
 

@@ -1,4 +1,8 @@
-﻿using IF.CodeGeneration.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+using IF.CodeGeneration.Core;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Service.CodeGen.Interface;
@@ -7,47 +11,54 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace IF.Manager.Service.Model
+
+namespace IF.Manager.Service.CodeGen.Model
 {
 
- 
-
-    public class ModelGenerator:IModelGenerator
+    public class MultiCommandModelGenerator : IModelGenerator
     {
 
         FileSystemCodeFormatProvider fileSystem;
-        IFModel model; string nameSpace; ModelClassTreeDto entityTree;
-        
-        public ModelGenerator(FileSystemCodeFormatProvider fileSystem, IFModel model, string nameSpace, ModelClassTreeDto entityTree)
+        IFModel model; string nameSpace;
+        //ModelClassTreeDto entityTree;
+        IFCommand command;
+
+        public MultiCommandModelGenerator(FileSystemCodeFormatProvider fileSystem, IFModel model, string nameSpace, IFCommand command)
         {
             this.fileSystem = fileSystem;
             this.model = model;
             this.nameSpace = nameSpace;
-            this.entityTree = entityTree;
+           // this.entityTree = entityTree;
+            this.command = command;
         }
 
         public void Generate()
         {
-            List<ModelClass> alls = new List<ModelClass>();
+            List<MultiModelClass> alls = new List<MultiModelClass>();
 
             string name = DirectoryHelper.AddAsLastWord(model.Name, "DataModel");
 
-            ModelClass modelClass = new ModelClass(nameSpace, name, model);
+            if(command.Childrens.Any() && command.Parent!=null)
+            {
+                name = name + "Multi";
+            }
+
+            MultiModelClass modelClass = new MultiModelClass(nameSpace, name, command);
 
             modelClass.Usings.Add("System");
             modelClass.Usings.Add("System.Collections.Generic");
 
-            modelClass.Build(entityTree.Childs);
+            modelClass.Build();
 
             alls.Add(modelClass);
 
-            var relations = entityTree.Childs.Where(c => c.IsRelation).ToList();
+           // var relations = command.Childrens
 
-            if (relations.Any())
-            {
-                GenerateRelatedModels(relations, alls, model, nameSpace);
+            //if (relations.Any())
+            //{
+            //    GenerateRelatedModels(relations, alls, model, nameSpace);
 
-            }
+            //}
 
             StringBuilder builder = new StringBuilder();
 
@@ -57,8 +68,8 @@ namespace IF.Manager.Service.Model
 
                 this.fileSystem.FormatCode(builder.ToString(), "cs", name);
             }
-        }     
-        private void GenerateRelatedModels(List<ModelClassTreeDto> relations,List<ModelClass> alls, IFModel model, string nameSpace)
+        }
+        private void GenerateRelatedModels(List<ModelClassTreeDto> relations, List<ModelClass> alls, IFModel model, string nameSpace)
         {
             foreach (var relation in relations)
             {
@@ -76,15 +87,15 @@ namespace IF.Manager.Service.Model
                     alls.Add(modelClass);
                 }
 
-                modelClass.Build(relation.Childs);
+                modelClass.Build(relation.Childs.Where(c=>c.IsRelation).ToList());
 
                 //this.fileSystem.FormatCode(modelClass.GenerateCode(), "cs");
 
-                if (relation.Childs.Any(c => c.IsRelation))
-                {
-                    GenerateRelatedModels(relation.Childs.Where(c => c.IsRelation).ToList(),alls ,model, nameSpace);
+                //if (relation.Childs.Any(c => c.IsRelation))
+                //{
+                //    GenerateRelatedModels(relation.Childs.Where(c => c.IsRelation).ToList(), alls, model, nameSpace);
 
-                }
+                //}
             }
 
 

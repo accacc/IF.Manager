@@ -387,6 +387,7 @@ namespace IF.Manager.Service
                     .Include(s=>s.Commands).ThenInclude(c=>c.Parent)
                     .Include(s => s.Commands).ThenInclude(s=>s.Childrens)
                     .Include(s => s.Commands).ThenInclude(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
+                    .Include(s => s.Commands).ThenInclude(s => s.Model.Entity.Relations)
                     .Include(s => s.Commands).ThenInclude(s => s.CommandFilterItems)
                     .Include(s => s.Queries).ThenInclude(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
                     .Include(s => s.Queries).ThenInclude(s => s.QueryFilterItems).ThenInclude(s=>s.EntityProperty)

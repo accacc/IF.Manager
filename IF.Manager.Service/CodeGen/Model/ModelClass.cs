@@ -1,30 +1,33 @@
 ﻿using IF.CodeGeneration.CSharp;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
+using System.Linq;
+
+using System.Collections.Generic;
 
 namespace IF.Manager.Service
 {
-    public class ModelClass: CSClass
+    public class ModelClass : CSClass
     {
 
-        
+
         IFModel model;
-        
-        public ModelClass(string nameSpace,string name,IFModel model)
-        {            
+
+        public ModelClass(string nameSpace, string name, IFModel model)
+        {
             this.model = model;
             this.Name = $"{name}";
-            this.NameSpace = nameSpace;            
+            this.NameSpace = nameSpace;
         }
 
 
-        public void Build(ModelClassTreeDto entityTree)
+        public void Build(IList<ModelClassTreeDto> entityTree)
         {
-           
 
-            foreach (var childEntityTree in entityTree.Childs)
-            {               
-                bool IsModelProperty = ModelClassTreeDto.IsModelProperty(childEntityTree,model);
+
+            foreach (var childEntityTree in entityTree)
+            {
+                bool IsModelProperty = ModelClassTreeDto.IsModelProperty(childEntityTree, model);
 
                 if (IsModelProperty)
                 {
@@ -37,7 +40,7 @@ namespace IF.Manager.Service
                         name = $"{name}";
                         type = name;
 
-                        if(childEntityTree.IsList)
+                        if (childEntityTree.IsList)
                         {
                             type = $"IEnumerable<{name}>";
                         }
@@ -58,6 +61,8 @@ namespace IF.Manager.Service
 
         }
 
-        
+
     }
+
+  
 }

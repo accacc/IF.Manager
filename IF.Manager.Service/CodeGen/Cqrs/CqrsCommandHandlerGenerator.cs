@@ -6,6 +6,7 @@ using IF.Manager.Contracts.Services;
 using IF.Manager.Service.CodeGen.Cqrs;
 using IF.Manager.Service.CodeGen.EF;
 using IF.Manager.Service.CodeGen.Interface;
+using IF.Manager.Service.CodeGen.Model;
 using IF.Manager.Service.EF;
 using IF.Manager.Service.Model;
 
@@ -56,7 +57,20 @@ namespace IF.Manager.Service
             foreach (var command in commmands)
             {
 
-                var childs = command.Childrens.Where(c => c.Name == "icraDataCommand").ToList();
+
+                if (command.Name == "AlacakliMultiDataCommand")
+                {
+
+                }
+
+                var childs = command.Childrens.Where(c => c.Name == "icraDataCommand"
+             || c.Name == "AlacakliMultiDataCommand"
+             || c.Name == "IcraAlacakli"
+             || c.Name == "TelefonIcraAlacakli"
+             || c.Name == "AdresIcraAlacakli"
+                || c.Name == "BorcluMultiDataCommand"
+
+                ).ToList();
 
                 if (childs.Any())
                 {
@@ -66,6 +80,12 @@ namespace IF.Manager.Service
                 }
                 else
                 {
+                    if(command.Name== "AdresIcraAlacakli")
+                    {
+
+                    }
+
+
                     await GenerateChildCommand(nameSpace, command);
                 }
             }
@@ -78,7 +98,7 @@ namespace IF.Manager.Service
 
             var entityTree = await entityService.GetEntityTree(command.Model.EntityId);
 
-            ModelGenerator modelGenerator = new ModelGenerator(fileSystem, command.Model, nameSpace, entityTree);
+            MultiCommandModelGenerator modelGenerator = new MultiCommandModelGenerator(fileSystem, command.Model, nameSpace, command);
 
             modelGenerator.Generate();
 
@@ -182,7 +202,7 @@ namespace IF.Manager.Service
             commandHandlerClass.Usings.Add($"{SolutionHelper.GetCoreNamespace(command.Process.Project)}");
 
 
-            commandHandlerClass.InheritedInterfaces.Add($"ICommandHandlerAsync<{commandName}Command>");
+            commandHandlerClass.InheritedInterfaces.Add($"ICommandHandlerAsync<{commandName}>");
 
             var repositoryProperty = new CSProperty("private", "repository", false);
             repositoryProperty.PropertyTypeString = $"IRepository";
