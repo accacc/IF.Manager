@@ -4,6 +4,7 @@ using IF.Manager.Service.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text;
 
 namespace IF.Manager.Contracts.Model
@@ -46,6 +47,31 @@ namespace IF.Manager.Contracts.Model
         public ICollection<IFCommandFilterItem> CommandFilterItems { get; set; }
 
         public ICollection<IFPageAction> Actions { get; set; }
+
+
+        public bool IsMultiCommand()
+        {
+
+            return this.Childrens.Any();
+        }
+        public bool IsList()
+        {
+            if (this.Parent == null) return false;
+
+            var relation = this.Parent.Model.Entity.Relations.SingleOrDefault(r => r.Relation.Name == this.Model.Entity.Name);
+
+            if (relation != null)
+            {
+
+                if (relation.Type == Contracts.Enum.EntityRelationType.ManyToMany ||
+                        relation.Type == Contracts.Enum.EntityRelationType.OneToMany)
+                {
+                    return true;
+                }
+            }
+
+            return false; ;
+        }
 
 
     }

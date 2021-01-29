@@ -20,7 +20,6 @@ namespace IF.Manager.Service.CodeGen.Model
 
         FileSystemCodeFormatProvider fileSystem;
         IFModel model; string nameSpace;
-        //ModelClassTreeDto entityTree;
         IFCommand command;
 
         public MultiCommandModelGenerator(FileSystemCodeFormatProvider fileSystem, IFModel model, string nameSpace, IFCommand command)
@@ -28,7 +27,6 @@ namespace IF.Manager.Service.CodeGen.Model
             this.fileSystem = fileSystem;
             this.model = model;
             this.nameSpace = nameSpace;
-           // this.entityTree = entityTree;
             this.command = command;
         }
 
@@ -38,7 +36,7 @@ namespace IF.Manager.Service.CodeGen.Model
 
             string name = DirectoryHelper.AddAsLastWord(model.Name, "DataModel");
 
-            if(command.Childrens.Any() && command.Parent!=null)
+            if(command.IsMultiCommand())
             {
                 name = name + "Multi";
             }
@@ -52,14 +50,6 @@ namespace IF.Manager.Service.CodeGen.Model
 
             alls.Add(modelClass);
 
-           // var relations = command.Childrens
-
-            //if (relations.Any())
-            //{
-            //    GenerateRelatedModels(relations, alls, model, nameSpace);
-
-            //}
-
             StringBuilder builder = new StringBuilder();
 
             foreach (var cls in alls)
@@ -69,36 +59,6 @@ namespace IF.Manager.Service.CodeGen.Model
                 this.fileSystem.FormatCode(builder.ToString(), "cs", name);
             }
         }
-        private void GenerateRelatedModels(List<ModelClassTreeDto> relations, List<ModelClass> alls, IFModel model, string nameSpace)
-        {
-            foreach (var relation in relations)
-            {
-                bool IsModelProperty = ModelClassTreeDto.IsModelProperty(relation, model);
-
-                if (!IsModelProperty) continue;
-
-                string name = DirectoryHelper.AddAsLastWord(relation.Name, "DataModel");
-
-                ModelClass modelClass = new ModelClass(nameSpace, name, model);
-
-                if (!alls.Any(a => a.Name == modelClass.Name))
-                {
-
-                    alls.Add(modelClass);
-                }
-
-                modelClass.Build(relation.Childs.Where(c=>c.IsRelation).ToList());
-
-                //this.fileSystem.FormatCode(modelClass.GenerateCode(), "cs");
-
-                //if (relation.Childs.Any(c => c.IsRelation))
-                //{
-                //    GenerateRelatedModels(relation.Childs.Where(c => c.IsRelation).ToList(), alls, model, nameSpace);
-
-                //}
-            }
-
-
-        }
+       
     }
 }

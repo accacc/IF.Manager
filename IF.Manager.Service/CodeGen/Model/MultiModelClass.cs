@@ -26,18 +26,19 @@ namespace IF.Manager.Service.CodeGen.Model
             foreach (var childCommand in command.Childrens)
             {
                 string name = childCommand.Model.Name;
-                string type = childCommand.Model.Name;
 
-                var relation = command.Model.Entity.Relations.SingleOrDefault(r => r.Relation.Name == childCommand.Model.Entity.Name);
-
-                if (relation != null)
+                if (childCommand.IsMultiCommand())
                 {
+                    name = name + "Multi";
+                }
 
-                    if (relation.Type == Contracts.Enum.EntityRelationType.ManyToMany ||
-                            relation.Type == Contracts.Enum.EntityRelationType.OneToMany)
-                    {
-                        type = $"IEnumerable<{name}>";
-                    }
+                bool isList = childCommand.IsList();
+
+                string type = name; ;
+
+                if (isList)
+                {
+                    type = $"IEnumerable<{name}>";
                 }
 
                 var p = new CSProperty("public", name, false);

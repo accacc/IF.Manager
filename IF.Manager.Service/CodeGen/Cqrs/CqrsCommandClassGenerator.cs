@@ -6,6 +6,7 @@ using IF.Manager.Service.CodeGen.Interface;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace IF.Manager.Service.CodeGen.Cqrs
@@ -30,7 +31,31 @@ namespace IF.Manager.Service.CodeGen.Cqrs
             commandClass.Name = $"{command.Name}";
 
             CSProperty modelProperty = new CSProperty(null, "public", "Data", false);
-            modelProperty.PropertyTypeString = $"{command.Model.Name}";
+
+           
+
+            string propertyName = command.Model.Name;
+
+            if (command.IsMultiCommand())
+            {
+                propertyName = propertyName + "Multi";
+            }
+
+            bool isList = command.IsList();
+
+            if (isList)
+            {
+                modelProperty.PropertyTypeString = $"IEnumerable<{propertyName}>";
+            }
+            else
+            {
+
+                modelProperty.PropertyTypeString = $"{propertyName}";
+            }
+
+
+            
+
             commandClass.Properties.Add(modelProperty);
 
             string nameSpace = SolutionHelper.GetProcessNamaspace(process);

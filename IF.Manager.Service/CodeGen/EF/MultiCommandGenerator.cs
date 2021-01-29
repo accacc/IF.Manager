@@ -33,8 +33,15 @@ namespace IF.Manager.Service.CodeGen.EF
 
             foreach (var command in this.command.Childrens)
             {
+                string modelName = command.Model.Name;
+
+                if (command.IsMultiCommand())
+                {
+                    modelName = modelName + "Multi";
+                }
+
                 this.method.Body += $"var {command.Name} = new {command.Name}();" + Environment.NewLine;
-                this.method.Body += $"{command.Name}.Data = command.Data.{command.Model.Name};" + Environment.NewLine;
+                this.method.Body += $"{command.Name}.Data = command.Data.{modelName};" + Environment.NewLine;
                 this.method.Body += $"await dispatcher.CommandAsync({command.Name});" + Environment.NewLine;
                 this.method.Body += Environment.NewLine;
 
