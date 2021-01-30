@@ -4,10 +4,11 @@ using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
-using IF.Manager.Service.Services;
 using IF.Manager.Service.WebApi;
 using IF.Persistence.EF;
+
 using Microsoft.EntityFrameworkCore;
+
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;

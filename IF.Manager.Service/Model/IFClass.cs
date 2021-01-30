@@ -46,5 +46,38 @@ namespace IF.Manager.Service.Model
 
         public int Level { get; set; }
 
+        public List<IFClass> GetParentPages()
+        {
+
+            List<IFClass> paths = new List<IFClass>();
+
+            if (this.Parent == null)
+            {
+                return paths;
+            }
+
+            var page = this;
+
+            while (page != null)
+            {
+
+                if (page.Parent == null) break;
+
+               
+                    page = page.Parent;
+                    paths.Add(page);
+                
+
+
+            }
+
+            paths.Reverse();
+
+            return paths;
+        }
+
     }
+
+ 
 }
+

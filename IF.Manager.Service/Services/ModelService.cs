@@ -79,7 +79,7 @@ namespace IF.Manager.Service.Services
                                     Id = x.Id,
                                     Name = x.Name,
 
-                                }).ToListAsync();
+                                }).OrderBy(m=>m.Name).ToListAsync();
 
             return data;
         }
@@ -160,7 +160,9 @@ namespace IF.Manager.Service.Services
                                     ModelPropertyId = x.Id
 
 
-                                }).ToListAsync();
+                                })
+                                .OrderBy(m => m.EntityName)
+                                .ToListAsync();
 
             return data;
         }

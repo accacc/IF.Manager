@@ -82,18 +82,18 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper
 
         private async Task SetModels()
         {
-            var entities = await this.modelService.GetModelList();
+            var models = await this.modelService.GetModelList();
 
 
             List<SelectListItem> items = new List<SelectListItem>();
 
 
-            foreach (var entity in entities)
+            foreach (var model in models)
             {
                 SelectListItem item = new SelectListItem();
 
-                item.Text = entity.Name;
-                item.Value = entity.Id.ToString();
+                item.Text = model.Name;
+                item.Value = model.Id.ToString();
                 items.Add(item);
             }
 
@@ -103,16 +103,16 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper
 
         private async Task SetClasses()
         {
-            var entities = await this.classService.GetClassList();
+            var classes = await this.classService.GetClassList();
 
             List<SelectListItem> items = new List<SelectListItem>();
 
-            foreach (var entity in entities)
+            foreach (var @class in classes)
             {
                 SelectListItem item = new SelectListItem();
 
-                item.Text = entity.Name;
-                item.Value = entity.Id.ToString();
+                item.Text = @class.Name;
+                item.Value = @class.Id.ToString();
                 items.Add(item);
             }
 

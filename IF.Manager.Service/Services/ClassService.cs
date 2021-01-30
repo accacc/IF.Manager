@@ -4,6 +4,7 @@ using IF.CodeGeneration.CSharp;
 using IF.Core.Data;
 using IF.Core.Exception;
 using IF.Manager.Contracts.Dto;
+using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
 using IF.Manager.Service.Model;
@@ -194,8 +195,9 @@ namespace IF.Manager.Service
         {
             var entity = await this.GetQuery<IFClassMapper>()
                 .Include(m=>m.IFClassMappings)
-                .Include(m => m.IFClass)
+                .Include(m => m.IFClass.Parent).ThenInclude(c=>c.Childs)
                 .Include(m => m.IFModel.Properties)
+                .Include(m=>m.IFModel.Entity.Properties)
             .SingleOrDefaultAsync(k => k.Id == id);
 
             if (entity == null) { throw new BusinessException($"{nameof(IFClassMapper)} : No such entity exists"); }
@@ -231,7 +233,9 @@ namespace IF.Manager.Service
         {
 
 
-            var list = await this.GetQuery<IFClass>(c => c.ParentId == null).ToListAsync();
+            var list = await this.GetQuery<IFClass>(c => c.ParentId == null)
+                .OrderBy(c=>c.Name)
+                .ToListAsync();
 
             return list;
         }
@@ -390,15 +394,26 @@ namespace IF.Manager.Service
         public async Task GenerateMapper(int classMapperId)
         {
 
-            //var mapper = await this.GetClassMapper(classMapperId);
 
-            //StringBuilder builder = new StringBuilder();
 
-            //foreach (var mapping in mapper.IFClassMappings)
-            //{
-            //    var parantes =.ToParentPath();
-            //    builder.AppendLine(mapping.FromProperty.Parent.)
-            //}
+            var command = await this.GetQuery<IFCommand>(p => p.Id == 6)
+                .Include(c => c.Parent)
+                .Include(s => s.Childrens)
+                .Include(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
+                .Include(s => s.Model.Entity.Relations)
+
+                .SingleOrDefaultAsync();
+
+
+
+            var mapper = await this.GetClassMapper(classMapperId);
+
+            StringBuilder builder = new StringBuilder();
+
+            foreach (var mapping in mapper.IFClassMappings)
+            {
+                var classPath = mapping.IFClassMapper.IFClass.GetParentPages();
+            }
 
             //List<CSClass> allClass = new List<CSClass>();
 
@@ -408,10 +423,83 @@ namespace IF.Manager.Service
             //csClass.Usings.Add("System");
             //csClass.Usings.Add("System.Collections.Generic");
 
-            
 
 
-          //  fileSystem.FormatCode(code.ToString(), "cs", parent.Name);
+
+            fileSystem.FormatCode(builder.ToString(), "cs", mapper.Name);
+        }
+
+        private async Task Recursive(string nameSpace, List<IFCommand> commmands)
+        {
+
+
+            foreach (var command in commmands)
+            {
+
+
+                if (command.Name == "AlacakliMultiDataCommand")
+                {
+
+                }
+
+                var childs = command.Childrens.Where(c => c.Name == "icraDataCommand"
+             || c.Name == "AlacakliMultiDataCommand"
+             || c.Name == "IcraAlacakli"
+             || c.Name == "TelefonIcraAlacakli"
+             || c.Name == "AdresIcraAlacakli"
+                || c.Name == "BorcluMultiDataCommand"
+                || c.Name == "IcraBorclu"
+                || c.Name == "AdresBorcluTelefonDataCommand"
+                || c.Name == "TelefonBorcluIcraDataCommand"
+
+                ).ToList();
+
+                if (childs.Any())
+                {
+                    await GenerateParentClass(command);
+
+                    await Recursive(nameSpace, childs);
+                }
+                else
+                {
+                    if (command.Name == "AdresIcraAlacakli")
+                    {
+
+                    }
+
+
+                    await GenerateChildCommand(nameSpace, command);
+                }
+            }
+
+
+        }
+
+        private async Task GenerateParentClass(IFCommand command)
+        {
+
+            //var entityTree = await entityService.GetEntityTree(command.Model.EntityId);
+
+            //MultiCommandModelGenerator modelGenerator = new MultiCommandModelGenerator(fileSystem, command.Model, nameSpace, command);
+
+            //modelGenerator.Generate();
+
+            //CqrsCommandClassGenerator commandClassGenerator = new CqrsCommandClassGenerator(command, process, entityTree, fileSystem);
+
+            //commandClassGenerator.Generate();
+        }
+
+        private async Task GenerateChildCommand(string nameSpace, IFCommand command)
+        {
+            //var entityTree = await entityService.GetEntityTree(command.Model.EntityId);
+
+            //ModelGenerator modelGenerator = new ModelGenerator(fileSystem, command.Model, nameSpace, entityTree);
+
+            //modelGenerator.Generate();
+
+            //CqrsCommandClassGenerator commandClassGenerator = new CqrsCommandClassGenerator(command, process, entityTree, fileSystem);
+
+            //commandClassGenerator.Generate();
         }
 
         public async Task GenerateClass(int classId)
