@@ -69,6 +69,9 @@ namespace IF.Manager.Service
              || c.Name == "TelefonIcraAlacakli"
              || c.Name == "AdresIcraAlacakli"
                 || c.Name == "BorcluMultiDataCommand"
+                || c.Name == "IcraBorclu"
+                || c.Name == "AdresBorcluTelefonDataCommand"
+                || c.Name == "TelefonBorcluIcraDataCommand"
 
                 ).ToList();
 

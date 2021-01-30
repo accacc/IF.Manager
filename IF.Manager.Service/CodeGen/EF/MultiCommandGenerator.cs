@@ -31,23 +31,54 @@ namespace IF.Manager.Service.CodeGen.EF
             this.method.Parameters.Add(new CsMethodParameter() { Name = "command", Type = command.Name  });
 
 
+            bool IsList = false;
+
+            if(command.Parent!=null)
+            {
+                IsList = command.IsList();
+            }
+
+            string modelPropertyName = "command.Data";
+
+            if (IsList)
+            {
+                modelPropertyName = "item";
+                this.method.Body += " foreach (var item in command.Data)";
+                this.method.Body += Environment.NewLine;
+                this.method.Body += "{";
+                this.method.Body += Environment.NewLine;
+            }
+
+
             foreach (var command in this.command.Childrens)
             {
                 string modelName = command.Model.Name;
 
-                if (command.IsMultiCommand())
+                bool IsMulti = command.IsMultiCommand();
+               
+              
+
+                if (IsMulti)
                 {
                     modelName = modelName + "Multi";
                 }
 
+              
+
                 this.method.Body += $"var {command.Name} = new {command.Name}();" + Environment.NewLine;
-                this.method.Body += $"{command.Name}.Data = command.Data.{modelName};" + Environment.NewLine;
+                this.method.Body += $"{command.Name}.Data = {modelPropertyName}.{modelName};" + Environment.NewLine;
                 this.method.Body += $"await dispatcher.CommandAsync({command.Name});" + Environment.NewLine;
                 this.method.Body += Environment.NewLine;
 
             }
 
 
+            if (IsList)
+            {
+                this.method.Body += Environment.NewLine;
+                this.method.Body += Environment.NewLine;
+                this.method.Body += "}";
+            }
 
             return this.method;
         }
