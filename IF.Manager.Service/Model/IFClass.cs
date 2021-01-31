@@ -12,7 +12,7 @@ namespace IF.Manager.Service.Model
     {
         public IFClass()
         {
-            this.Childs = new List<IFClass>();
+            this.Childrens = new List<IFClass>();
         }
 
         [Key]
@@ -21,7 +21,7 @@ namespace IF.Manager.Service.Model
 
         public IFClass Parent { get; set; }
 
-        public ICollection<IFClass> Childs { get; set; }
+        public ICollection<IFClass> Childrens { get; set; }
 
         public string Name { get; set; }
 

@@ -48,6 +48,10 @@ namespace IF.Manager.Contracts.Model
 
         public ICollection<IFPageAction> Actions { get; set; }
 
+        //public bool IsMutli { get; set; }
+
+        //public bool IsList { get; set; }
+
 
         public bool IsMultiCommand()
         {
@@ -71,6 +75,53 @@ namespace IF.Manager.Contracts.Model
             }
 
             return false; ;
+        }
+
+
+        public string GetPagePath()
+        {
+            var pagePath = "";
+            var parents = this.GetModelParentPath();
+
+            foreach (var parent in parents)
+            {
+                    pagePath += parent.Name + ".";
+            }
+            if (parents.Any())
+            {
+
+                pagePath = pagePath.Remove(pagePath.Length - 1);
+            }
+            return pagePath;
+        }
+        public List<IFModel> GetModelParentPath()
+        {
+
+            List<IFModel> paths = new List<IFModel>();
+
+            if (this.Parent == null)
+            {
+                return paths;
+            }
+
+            var page = this;
+
+            while (page != null)
+            {
+
+                if (page.Parent == null) break;
+
+
+                page = page.Parent;
+                paths.Add(page.Model);
+
+
+
+            }
+
+            paths.Reverse();
+
+            return paths;
         }
 
 

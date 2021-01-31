@@ -33,6 +33,6 @@ namespace IF.Manager.Contracts.Services
         Task<List<IFClass>> GetTreeList2(int classId);
         Task DeleteClass(int ıd);
         Task UpdateClassMapping(List<IFClassMapping> form,int classMapId);
-        Task GenerateMapper(int classMapId);
+        Task<string> GenerateMapper(int classMapId);
     }
 }

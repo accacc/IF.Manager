@@ -23,7 +23,56 @@ namespace IF.Manager.Service.Services
             this.classService = classService;
         }
 
-        public async Task SaveModel(ModelUpdateDto modelDto, int modelId)
+
+        public async Task SaveModel(ModelUpdateDto dtos, int modelId)
+        {
+            try
+            {
+                var model = await this.GetQuery<IFModel>()
+               .Include(e => e.Properties)
+               .SingleOrDefaultAsync(k => k.Id == modelId);
+
+                if (model == null) { throw new BusinessException(" No such entity exists"); }
+
+                var list = dtos.GetProperties();
+
+                for (int i = 0; i < model.Properties.Count; i++)
+                {
+                    if (!list.Any(d => d.ModelPropertyId == model.Properties.ElementAt(i).Id))
+                    {
+                        this.Delete(model.Properties.ElementAt(i));
+                    }
+                }
+
+                foreach (var property in list)
+                {
+
+                    if (property.ModelPropertyId <= 0)
+                    {
+                        IFModelProperty modelProperty = new IFModelProperty();
+                        modelProperty.EntityId = property.EntityId;
+                        modelProperty.EntityPropertyId = property.EntityPropertyId;
+                        model.Properties.Add(modelProperty);
+                    }
+                    else
+                    {
+                        IFModelProperty modelProperty = new IFModelProperty();
+                        modelProperty.EntityId = property.EntityId;
+                        modelProperty.EntityPropertyId = property.EntityPropertyId;
+                        this.Update(modelProperty);
+                    }
+                }
+
+                await UnitOfWork.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task SaveModel2(ModelUpdateDto modelDto, int modelId)
         {
             IFModel model = await this.GetQuery<IFModel>(m => m.Id == modelId)
                 .Include(m => m.Properties)

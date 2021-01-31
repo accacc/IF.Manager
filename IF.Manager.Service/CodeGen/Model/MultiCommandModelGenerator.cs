@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-using IF.CodeGeneration.Core;
-using IF.Manager.Contracts.Dto;
+﻿using IF.CodeGeneration.Core;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Service.CodeGen.Interface;
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 

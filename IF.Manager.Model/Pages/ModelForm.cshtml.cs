@@ -56,16 +56,24 @@ namespace IF.Manager.Model.Pages
         public async Task<PartialViewResult> OnPostUpdateAsync()
         {
 
-            await this.modelService.UpdateModel(this.Form);
-
-
-            var list = await this.modelService.GetModelList();
-
-            return new PartialViewResult
+            try
             {
-                ViewName = "_ModelListTable",
-                ViewData = new ViewDataDictionary<List<ModelDto>>(ViewData, list)
-            };
+                await this.modelService.UpdateModel(this.Form);
+
+
+                var list = await this.modelService.GetModelList();
+
+                return new PartialViewResult
+                {
+                    ViewName = "_ModelListTable",
+                    ViewData = new ViewDataDictionary<List<ModelDto>>(ViewData, list)
+                };
+            }
+            catch (System.Exception ex)
+            {
+
+                throw;
+            }
         }
 
         private async Task SetFromDefaults()
