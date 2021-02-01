@@ -224,9 +224,6 @@ namespace IF.Manager.Service
 
         public async Task<List<EntityDto>> GetEntityList()
         {
-
-
-
             var list = await GetQuery<IFEntity>()
                 .Include(e => e.Group)
                 .Include(e => e.Properties)
@@ -506,7 +503,6 @@ namespace IF.Manager.Service
 
                                 var foreignKeyProperty = new IFEntityProperty()
                                 {
-                                    //Caglar:Foreign Key
                                     Name = $"{name}Id",
                                     Type = "int"
 
@@ -643,9 +639,6 @@ namespace IF.Manager.Service
                 entity.Name = name;
                 entity.IsAudited = false;
 
-
-
-
                 foreach (var column in table.Columns)
                 {
                     IFEntityProperty property = new IFEntityProperty();
@@ -660,8 +653,6 @@ namespace IF.Manager.Service
                     {
                         property.Type = "Int16";
                     }
-
-
 
                     property.IsNullable = column.Nullable;
                     entity.Properties.Add(property);
