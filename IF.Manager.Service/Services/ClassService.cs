@@ -399,77 +399,55 @@ namespace IF.Manager.Service
 
             var parent = tree.First();
 
-            //List<CSClass> allClass = new List<CSClass>();
-
-
-            CSClass csClass = new CSClass();
-
-            csClass.Usings.Add("System");
-            csClass.Usings.Add("System.Collections.Generic");
             int level = 0;
             StringBuilder builder = new StringBuilder();
-            GenerateClassTree2(parent, csClass, builder,level);
-
-
-
-            //foreach (var @class in allClass)
-            //{
-            //    code.AppendLine(@class.GenerateCode().Template);
-            //}
-
+            GenerateClassTree2(parent, builder,level);
 
         //    fileSystem.FormatCode(code.ToString(), "cs", parent.Name);
 
             return builder.ToString();
         }
 
-        private static void GenerateClassTree2(ClassControlTreeDto mainClass, CSClass csClass, StringBuilder  builder,int level)
+        private static void GenerateClassTree2(ClassControlTreeDto mainClass, StringBuilder builder, int level)
         {
 
             level++;
             string indent = new String(' ', level * 4);
 
-            csClass.Name = mainClass.Type;
 
-            //foreach (var property in command.Model.Properties)
-            //{
-            //    string name = property.Model.Name;
-            //    builder.AppendLine($"{indent} {modelPropertyName}.{command.Model.Name} = {property.EntityProperty.Name}");
-
-            //}
             foreach (var child in mainClass.Childs)
             {
                 if (child.IsPrimitive)
                 {
-                    //CSProperty property = new CSProperty("public", child.Name, child.IsNullable);
-                    //property.PropertyTypeString = child.Type;
-                    //property.GenericType = child.GenericType;
-                    //csClass.Properties.Add(property);
-
                     builder.AppendLine($"{indent} {child.Name}");
                 }
                 else
                 {
-                    //CSProperty property = new CSProperty("public", child.Name, false);
-                    //property.PropertyTypeString = child.Type;
-                    //property.GenericType = child.GenericType;
-                    //csClass.Properties.Add(property);
-
-
                     builder.AppendLine($"{indent} {child.Name}");
 
-                    CSClass childClass = new CSClass();
-                   
-                    GenerateClassTree2(child, childClass, builder,level);
+                    if (child.GenericType == "List")
+                    {
+                        builder.AppendLine($" {indent} foreach (var item in command.Data)");
+                        builder.AppendLine();
+                        builder.AppendLine($"{indent}{{");
+                        builder.AppendLine(indent);
+                    }
+
+                    GenerateClassTree2(child, builder, level);
+
+                    if (child.GenericType == "List")
+                    {
+                        builder.AppendLine();
+                        builder.AppendLine();
+                        builder.AppendLine($"{indent}}}");
+                    }
 
                 }
 
+
             }
 
-
         }
-
-
 
         public async Task<string> GenerateMapper2(int classMapperId)
         {
