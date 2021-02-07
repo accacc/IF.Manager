@@ -2,6 +2,7 @@
 using IF.Manager.Contracts.Enum;
 using IF.Manager.Contracts.Model;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace IF.Manager.Contracts.Dto
 {
@@ -35,6 +36,53 @@ namespace IF.Manager.Contracts.Dto
         public bool IsPrimitive { get; set; }
 
         public bool IsNullable { get; set; }
+
+
+        public string GetPath()
+        {
+            var pagePath = "";
+            var parents = this.GetParentPath();
+
+            foreach (var parent in parents)
+            {
+                pagePath += parent.Name + ".";
+            }
+            if (parents.Any())
+            {
+
+                pagePath = pagePath.Remove(pagePath.Length - 1);
+            }
+            return pagePath;
+        }
+        public List<ClassControlTreeDto> GetParentPath()
+        {
+
+            List<ClassControlTreeDto> paths = new List<ClassControlTreeDto>();
+
+            if (this.Parent == null)
+            {
+                return paths;
+            }
+
+            var @class = this;
+
+            while (@class != null)
+            {
+
+                if (@class.Parent == null) break;
+
+
+                @class = @class.Parent;
+                paths.Add(@class);
+
+
+
+            }
+
+            paths.Reverse();
+
+            return paths;
+        }
     }
 
     public class QueryFilterTreeDto : TreeDto<QueryFilterTreeDto>

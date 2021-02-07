@@ -275,7 +275,14 @@ namespace IF.Manager.Service
 
             try
             {
-                var list = await this.GetQuery<IFClass>().Select
+                var list = await this.GetQuery<IFClass>(c=>c.Id == 702 
+                
+                || c.ParentId == 702
+                || c.ParentId == 703
+                || c.ParentId == 707
+                || c.Id != 708
+                )
+                    .Select
 
                (map => new ClassControlTreeDto
                {
@@ -399,41 +406,94 @@ namespace IF.Manager.Service
 
             var parent = tree.First();
 
+           
+
             int level = 0;
             StringBuilder builder = new StringBuilder();
-            GenerateClassTree2(parent, builder,level);
+
+            var allMappers = await this.GetQuery<IFClassMapper>(m => m.IFClassId == 702)
+                .Include(m => m.IFModel)
+                .Include(m => m.IFClass)
+                .Include(m => m.IFClassMappings).ThenInclude(m => m.FromProperty)
+                .Include(m => m.IFClassMappings).ThenInclude(m => m.ToProperty)//.Model.Commands).ThenInclude(c=>c.Parent).ThenInclude(c=>c.Childrens)
+                .ToListAsync();
+
+            var command = this.GetQuery<IFCommand>(c => c.Id == 6)
+                .Include(c => c.Parent)
+                .Include(c => c.Childrens)
+                .Include(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
+                .Include(s => s.Model.Entity.Relations).SingleOrDefault();
+
+            var parentMap = allMappers.Where(m=>m.IFModelId == command.ModelId).SingleOrDefault();
+
+
+           // var command = this.GetQuery<IFCommand>(c => c.Model.Id == parentMap.IFModel.Id).SingleOrDefault();
+
+            if(command!=null)
+            {
+
+                var name = parentMap.IFModel.Name;
+
+                builder.AppendLine($"{name} {name} = new {name}();");
+            }
+
+           
+
+            GenerateClassTree2(parent, builder,level,allMappers,command);
 
         //    fileSystem.FormatCode(code.ToString(), "cs", parent.Name);
 
             return builder.ToString();
         }
 
-        private static void GenerateClassTree2(ClassControlTreeDto mainClass, StringBuilder builder, int level)
+        private static void GenerateClassTree2(ClassControlTreeDto mainClass, StringBuilder builder, int level,List<IFClassMapper> mappers,IFCommand command)
         {
 
             level++;
             string indent = new String(' ', level * 4);
 
 
-            foreach (var child in mainClass.Childs)
+            foreach (var child in mainClass.Childs.OrderByDescending(c=>c.IsPrimitive))
             {
+
+                string classPropertyName = child.GetPath();
+                string rSide = "";
+
+                var mapper = mappers.SelectMany(m => m.IFClassMappings.Where(c => c.FromProperty.Id == child.Id)).SingleOrDefault();
+               
+
+
+
+
                 if (child.IsPrimitive)
                 {
-                    builder.AppendLine($"{indent} {child.Name}");
+                  // rSide = mapper.IFClassMapper.IFModel
+                    builder.AppendLine($"{indent} {rSide} = {classPropertyName}.{child.Name}");
                 }
                 else
                 {
-                    builder.AppendLine($"{indent} {child.Name}");
+                    if (child.GenericType == "List")
+                    {
+                        builder.AppendLine($"{indent} {rSide} = new List<{child.Type}>()");
+                    }
+                    else
+                    {
+                        builder.AppendLine($"{indent} {rSide} = new {child.Type}();");
+                    }
+
+                
 
                     if (child.GenericType == "List")
                     {
-                        builder.AppendLine($" {indent} foreach (var item in command.Data)");
+                        var foreachName = child.GetPath() + "." + child.Name;
+
+                        builder.AppendLine($" {indent} foreach (var item in {foreachName})");
                         builder.AppendLine();
                         builder.AppendLine($"{indent}{{");
                         builder.AppendLine(indent);
                     }
 
-                    GenerateClassTree2(child, builder, level);
+                    GenerateClassTree2(child, builder, level,mappers,command);
 
                     if (child.GenericType == "List")
                     {
