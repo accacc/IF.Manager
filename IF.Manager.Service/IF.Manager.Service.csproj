@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="JsonCSharpClassGeneratorLib\obj\**" />
+    <EmbeddedResource Remove="JsonCSharpClassGeneratorLib\obj\**" />
+    <None Remove="JsonCSharpClassGeneratorLib\obj\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Migrations\20201106201935_1106-1.cs" />
     <Compile Remove="Migrations\20201106201935_1106-1.Designer.cs" />
     <Compile Remove="Migrations\20201106202749_1106-1.cs" />

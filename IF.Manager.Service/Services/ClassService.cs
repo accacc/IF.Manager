@@ -453,11 +453,11 @@ namespace IF.Manager.Service
             return builder.ToString();
         }
 
-        private IFCommand FindModelRecursive(IFCommand commmand,int? modelId)
+        private IFCommand FindModelRecursive(IFCommand parent,int? modelId)
         {
 
 
-            foreach (var command in commmand.Childrens)
+            foreach (var command in parent.Childrens)
             {
 
                 if(command.ModelId == modelId)
@@ -468,7 +468,7 @@ namespace IF.Manager.Service
                 if (command.Childrens.Any())
                 {
 
-                    FindModelRecursive(commmand,modelId);
+                    FindModelRecursive(command,modelId);
                 }
             }
 
@@ -491,21 +491,32 @@ namespace IF.Manager.Service
 
                 //var mappersa = mappers.SelectMany(m => m.IFClassMappings.Where(c => c.FromProperty.Id == child.Id)).ToList();
 
-                var mapper = mappers.SelectMany(m => m.IFClassMappings.Where(c => c.FromProperty.Id == child.Id)).SingleOrDefault();
-
-                var currentCommand =  FindModelRecursive(command, mapper.IFClassMapper.IFModelId);
-
-                var path = namer + "." +currentCommand.GetModelPath();
-
+               
 
 
                 if (child.IsPrimitive)
                 {
-                  // rSide = mapper.IFClassMapper.IFModel
+
+                    var mapper = mappers.SelectMany(m => m.IFClassMappings.Where(c => c.FromProperty.Id == child.Id)).SingleOrDefault();
+
+                    var currentCommand = FindModelRecursive(command, mapper.IFClassMapper.IFModelId);
+
+                    var path = namer + "." + currentCommand.GetModelPath();
+
+                    // rSide = mapper.IFClassMapper.IFModel
                     builder.AppendLine($"{indent} {path}.{rSide} = {classPropertyName}.{child.Name}");
                 }
                 else
                 {
+
+                    var mapper = mappers.SelectMany(m => m.IFClassMappings.Where(c => c.FromProperty.Id == child.Childs.First().Id)).SingleOrDefault();
+
+                    var currentCommand = FindModelRecursive(command, mapper.IFClassMapper.IFModelId);
+
+                    var path = currentCommand.GetModelPath();
+                    rSide = currentCommand.Model.Name;
+
+
                     string multi = "";
 
                     if (currentCommand.IsMultiCommand())
