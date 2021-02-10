@@ -78,7 +78,7 @@ namespace IF.Manager.Contracts.Model
         }
 
 
-        public string GetPagePath()
+        public string GetModelPath()
         {
             var pagePath = "";
             var parents = this.GetModelParentPath();
