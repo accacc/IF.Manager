@@ -8,6 +8,7 @@ using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
 using IF.Manager.Service.Model;
+using IF.Manager.Service.Services;
 using IF.Persistence.EF;
 
 using Microsoft.EntityFrameworkCore;
@@ -453,24 +454,56 @@ namespace IF.Manager.Service
             return builder.ToString();
         }
 
-        private IFCommand FindModelRecursive(IFCommand parent,int? modelId)
+        private IFCommand FindModelRecursive(IFCommand parent,IFClassMapping mapper)
         {
 
+            var list = parent.FlattenHierarchy(x => x.Childrens);
 
-            foreach (var command in parent.Childrens)
+            var commands = list.Where(l => l.ModelId == mapper.IFClassMapper.IFModelId && !l.IsMultiCommand()).ToList();
+
+            if(commands.Any())
             {
-
-                if(command.ModelId == modelId)
+                if(commands.Count == 1)
                 {
-                    return command;
+                    var command = commands.First();
+                    if (command != null)
+                    {
+                        return command;
+                    }
                 }
-
-                if (command.Childrens.Any())
+                else
                 {
-
-                    FindModelRecursive(command,modelId);
+                        return commands.First();
                 }
             }
+
+
+            //if (parent.ModelId == modelId)
+            //{
+            //    return parent;
+            //}
+
+
+            //foreach (var command in parent.Childrens)
+            //{
+
+            //    if(command.ModelId == modelId)
+            //    {
+            //        return command;
+            //    }
+
+            //    if (command.Childrens.Any())
+            //    {
+
+            //      var current =   FindModelRecursive(command,modelId);
+
+            //        if(current!=null)
+            //        {
+            //            return current;
+
+            //        }
+            //    }
+            //}
 
             throw new BusinessException("Model bulunamadı");
         }
@@ -491,69 +524,77 @@ namespace IF.Manager.Service
 
                 //var mappersa = mappers.SelectMany(m => m.IFClassMappings.Where(c => c.FromProperty.Id == child.Id)).ToList();
 
-               
 
 
-                if (child.IsPrimitive)
+
+                try
                 {
-
-                    var mapper = mappers.SelectMany(m => m.IFClassMappings.Where(c => c.FromProperty.Id == child.Id)).SingleOrDefault();
-
-                    var currentCommand = FindModelRecursive(command, mapper.IFClassMapper.IFModelId);
-
-                    var path = namer + "." + currentCommand.GetModelPath();
-
-                    // rSide = mapper.IFClassMapper.IFModel
-                    builder.AppendLine($"{indent} {path}.{rSide} = {classPropertyName}.{child.Name}");
-                }
-                else
-                {
-
-                    var mapper = mappers.SelectMany(m => m.IFClassMappings.Where(c => c.FromProperty.Id == child.Childs.First().Id)).SingleOrDefault();
-
-                    var currentCommand = FindModelRecursive(command, mapper.IFClassMapper.IFModelId);
-
-                    var path = currentCommand.GetModelPath();
-                    rSide = currentCommand.Model.Name;
-
-
-                    string multi = "";
-
-                    if (currentCommand.IsMultiCommand())
+                    if (child.IsPrimitive)
                     {
-                        multi =  "Multi";
-                    }
 
-                    if (child.GenericType == "List")
-                    {
-                        builder.AppendLine($"{indent} {path}.{rSide}.DataModel.{multi} = new List<{child.Type}>()");
+                        var mapper = mappers.SelectMany(m => m.IFClassMappings.Where(c => c.FromProperty.Id == child.Id)).SingleOrDefault();
+
+                        var currentCommand = FindModelRecursive(command, mapper);
+
+                        var path = namer + "." + currentCommand.GetModelPath();
+
+                        // rSide = mapper.IFClassMapper.IFModel
+                        builder.AppendLine($"{indent} {path}.{rSide} = {classPropertyName}.{child.Name}");
                     }
                     else
                     {
-                        builder.AppendLine($"{indent} {path}.{rSide}.DataModel.{multi} = new {child.Type}();");
+
+                        var mapper = mappers.SelectMany(m => m.IFClassMappings.Where(c => c.FromProperty.Id == child.Childs.First().Id)).SingleOrDefault();
+
+                        var currentCommand = FindModelRecursive(command, mapper);
+
+                        var path = currentCommand.GetModelPath();
+                        rSide = currentCommand.Model.Name;
+
+
+                        string multi = "";
+
+                        if (currentCommand.IsMultiCommand())
+                        {
+                            multi = "Multi";
+                        }
+
+                        if (child.GenericType == "List")
+                        {
+                            builder.AppendLine($"{indent} {path}.{rSide}.DataModel.{multi} = new List<{child.Type}>()");
+                        }
+                        else
+                        {
+                            builder.AppendLine($"{indent} {path}.{rSide}.DataModel.{multi} = new {child.Type}();");
+                        }
+
+
+
+                        if (child.GenericType == "List")
+                        {
+                            var foreachName = child.GetPath() + "." + child.Name;
+
+                            builder.AppendLine($" {indent} foreach (var item in {foreachName})");
+                            builder.AppendLine();
+                            builder.AppendLine($"{indent}{{");
+                            builder.AppendLine(indent);
+                        }
+
+                        GenerateClassTree2(child, builder, level, mappers, command, namer);
+
+                        if (child.GenericType == "List")
+                        {
+                            builder.AppendLine();
+                            builder.AppendLine();
+                            builder.AppendLine($"{indent}}}");
+                        }
+
                     }
+                }
+                catch (Exception ex)
+                {
 
-                
-
-                    if (child.GenericType == "List")
-                    {
-                        var foreachName = child.GetPath() + "." + child.Name;
-
-                        builder.AppendLine($" {indent} foreach (var item in {foreachName})");
-                        builder.AppendLine();
-                        builder.AppendLine($"{indent}{{");
-                        builder.AppendLine(indent);
-                    }
-
-                    GenerateClassTree2(child, builder, level,mappers,command,namer);
-
-                    if (child.GenericType == "List")
-                    {
-                        builder.AppendLine();
-                        builder.AppendLine();
-                        builder.AppendLine($"{indent}}}");
-                    }
-
+                    throw;
                 }
 
 
