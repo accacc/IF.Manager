@@ -197,10 +197,10 @@ namespace IF.Manager.Service
         public async Task<IFClassMapper> GetClassMapper(int id)
         {
             var entity = await this.GetQuery<IFClassMapper>()
-                .Include(m=>m.IFClassMappings)
-                .Include(m => m.IFClass.Parent).ThenInclude(c=>c.Childrens)
+                .Include(m => m.IFClassMappings)
+                .Include(m => m.IFClass.Parent).ThenInclude(c => c.Childrens)
                 .Include(m => m.IFModel.Properties)
-                .Include(m=>m.IFModel.Entity.Properties)
+                .Include(m => m.IFModel.Entity.Properties)
             .SingleOrDefaultAsync(k => k.Id == id);
 
             if (entity == null) { throw new BusinessException($"{nameof(IFClassMapper)} : No such entity exists"); }
@@ -237,7 +237,7 @@ namespace IF.Manager.Service
 
 
             var list = await this.GetQuery<IFClass>(c => c.ParentId == null)
-                .OrderBy(c=>c.Name)
+                .OrderBy(c => c.Name)
                 .ToListAsync();
 
             return list;
@@ -276,8 +276,8 @@ namespace IF.Manager.Service
 
             try
             {
-                var list = await this.GetQuery<IFClass>(c=>c.Id == 702 
-                
+                var list = await this.GetQuery<IFClass>(c => c.Id == 702
+
                 || c.ParentId == 702
                 || c.ParentId == 703
                 || c.ParentId == 707
@@ -413,81 +413,88 @@ namespace IF.Manager.Service
             int level = 0;
             StringBuilder builder = new StringBuilder();
 
-            var allMappers = await this.GetQuery<IFClassMapper>(m => m.IFClassId == 702)
-                .Include(m => m.IFModel)
-                .Include(m => m.IFClass)
-                .Include(m => m.IFClassMappings).ThenInclude(m => m.FromProperty)
-                .Include(m => m.IFClassMappings).ThenInclude(m => m.ToProperty)//.Model.Commands).ThenInclude(c=>c.Parent).ThenInclude(c=>c.Childrens)
-                .ToListAsync();
+            //var allMappers = await this.GetQuery<IFClassMapper>(m => m.IFClassId == 702)
+            //    .Include(m => m.IFModel)
+            //    .Include(m => m.IFClass)
+            //    .Include(m => m.IFClassMappings).ThenInclude(m => m.FromProperty)
+            //    .Include(m => m.IFClassMappings).ThenInclude(m => m.ToProperty)//.Model.Commands).ThenInclude(c=>c.Parent).ThenInclude(c=>c.Childrens)
+            //    .ToListAsync();
 
             var command = this.GetQuery<IFCommand>(c => c.Id == 6)
-                .Include(c => c.Childrens).ThenInclude(c=>c.Childrens).ThenInclude(c => c.Childrens)
-
-                .Include(c => c.Parent).ThenInclude(c=>c.Parent).ThenInclude(c => c.Parent)
+                   .Include(s => s.IFClassMapper.IFClassMappings)
+                .Include(c => c.Childrens).ThenInclude(c => c.Childrens).ThenInclude(c => c.Childrens)
+                .Include(c => c.Parent).ThenInclude(c => c.Parent).ThenInclude(c => c.Parent)
                 .Include(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
-                .Include(s => s.Model.Entity.Relations).SingleOrDefault();
+                .Include(s => s.Model.Entity.Relations)
+             
+                .SingleOrDefault();
 
-            var parentMap = allMappers.Where(m=>m.IFModelId == command.ModelId).SingleOrDefault();
 
 
             // var command = this.GetQuery<IFCommand>(c => c.Model.Id == parentMap.IFModel.Id).SingleOrDefault();
-            string name ="";
-            if(command!=null)
+            string name = "";
+            if (command != null)
             {
 
-                name = parentMap.IFModel.Name;
+                name = command.Model.Name;
 
                 builder.AppendLine($"{name} {name} = new {name}();");
             }
 
-           
 
-            GenerateClassTree2(parent, builder,level,allMappers,command,name);
 
-          var me =   new CSMethod("MapMe", "void", "public");
+            GenerateClassTree2(parent, builder, level, command, name);
+
+            var me = new CSMethod("MapMe", "void", "public");
             me.Body = builder.ToString();
             cSClass.Methods.Add(me);
 
 
-           fileSystem.FormatCode(cSClass.GenerateCode(), "cs");
+            fileSystem.FormatCode(cSClass.GenerateCode(), "cs");
 
             return builder.ToString();
         }
 
-        private IFCommand FindModelRecursive(IFCommand parent,IFClassMapping mapper,ClassControlTreeDto classControlTree)
+        private IFCommand FindModelRecursive(IFCommand commands, ClassControlTreeDto classControlTree)
         {
 
-            var list = parent.FlattenHierarchy(x => x.Childrens);
+            var list = commands.FlattenHierarchy(x => x.Childrens);
 
-            var commands = list.Where(l => l.ModelId == mapper.IFClassMapper.IFModelId && !l.IsMultiCommand()).ToList();
+            var command = list.Where(l => l.IFClassMapper.IFClassMappings.Any(c=>c.FromPropertyId == classControlTree.Id && !l.IsMultiCommand())).SingleOrDefault();
 
-            if(commands.Any())
+            if (command == null)
             {
-                if(commands.Count == 1)
-                {
-                    var command = commands.First();
-                    if (command != null)
-                    {
-                        return command;
-                    }
-                }
-                else
-                {
-                        return commands.First();
-                }
+                throw new BusinessException("Command da mapper bulunamadı:1122");
             }
 
-            throw new BusinessException("Model bulunamadı");
+            return command;
+            //if(commands.Any())
+            //{
+            //    if(commands.Count == 1)
+            //    {
+            //        var command = commands.First();
+            //        if (command != null)
+            //        {
+            //            return command;
+            //        }
+            //    }
+            //    else
+            //    {
+            //            return commands.First();
+            //    }
+            //}
+
+
         }
 
-        private void GenerateClassTree2(ClassControlTreeDto mainClass, StringBuilder builder, int level,List<IFClassMapper> mappers,IFCommand command,string namer)
+        private void GenerateClassTree2(ClassControlTreeDto mainClass, StringBuilder builder, int level, IFCommand command, string namer)
         {
 
             level++;
             string indent = new String(' ', level * 4);
 
 
-            foreach (var child in mainClass.Childs.OrderByDescending(c=>c.IsPrimitive))
+            foreach (var child in mainClass.Childs.OrderByDescending(c => c.IsPrimitive))
             {
 
                 string classPropertyName = child.GetPath();
@@ -504,16 +511,16 @@ namespace IF.Manager.Service
                     if (child.IsPrimitive)
                     {
 
-                        var mapper = mappers.SelectMany(m => m.IFClassMappings.Where(c => c.FromProperty.Id == child.Id)).SingleOrDefault();
+                        //var mapper = //mappers.SelectMany(m => m.IFClassMappings.Where(c => c.FromProperty.Id == child.Id)).SingleOrDefault();
 
 
-                        //burda bir modeli bir class a map ediyoruz,ayni class farkli class larin altinda oldugu zaman onun kontrolu yapilmali buda class in ismi ile aratarak oluyor
-                        if(mapper == null)
-                        {
-                            mapper = mappers.SelectMany(m => m.IFClassMappings.Where(c => c.FromProperty.Name == child.Name)).SingleOrDefault();
-                        }
+                        ////burda bir modeli bir class a map ediyoruz,ayni class farkli class larin altinda oldugu zaman onun kontrolu yapilmali buda class in ismi ile aratarak oluyor
+                        //if (mapper == null)
+                        //{
+                        //    mapper = //mappers.SelectMany(m => m.IFClassMappings.Where(c => c.FromProperty.Name == child.Name)).SingleOrDefault();
+                        //}
 
-                        var currentCommand = FindModelRecursive(command, mapper,child);
+                        var currentCommand = FindModelRecursive(command,  child);
 
                         var path = namer + "." + currentCommand.GetModelPath();
 
@@ -523,9 +530,9 @@ namespace IF.Manager.Service
                     else
                     {
 
-                        var mapper = mappers.SelectMany(m => m.IFClassMappings.Where(c => c.FromProperty.Id == child.Childs.First().Id)).SingleOrDefault();
+                        // var mapper = mappers.SelectMany(m => m.IFClassMappings.Where(c => c.FromProperty.Id == child.Childs.First().Id)).SingleOrDefault();
 
-                        var currentCommand = FindModelRecursive(command, mapper,child);
+                        var currentCommand = FindModelRecursive(command, child);
 
                         var path = currentCommand.GetModelPath();
                         rSide = currentCommand.Model.Name;
@@ -559,7 +566,7 @@ namespace IF.Manager.Service
                             builder.AppendLine(indent);
                         }
 
-                        GenerateClassTree2(child, builder, level, mappers, command, namer);
+                        GenerateClassTree2(child, builder, level, command, namer);
 
                         if (child.GenericType == "List")
                         {
@@ -603,17 +610,17 @@ namespace IF.Manager.Service
             StringBuilder builder = new StringBuilder();
 
             var mapper = await this.GetClassMapper(classMapperId);
-            
+
             int level = 0;
             //await Recursive("aaa", process.First().Commands.ToList(), builder,level);
-          
+
 
             fileSystem.FormatCode(builder.ToString(), "cs", "mapper");
 
             return builder.ToString();
         }
 
-        private async Task Recursive(string nameSpace, List<IFCommand> commmands, StringBuilder builder,int level)
+        private async Task Recursive(string nameSpace, List<IFCommand> commmands, StringBuilder builder, int level)
         {
             foreach (var command in commmands)
             {
@@ -623,17 +630,17 @@ namespace IF.Manager.Service
                 if (childs.Any())
                 {
                     level++;
-                    await Recursive(nameSpace, childs, builder,level);
-                }               
+                    await Recursive(nameSpace, childs, builder, level);
+                }
 
-                GenerateParentClass(command,builder, level);
-                
+                GenerateParentClass(command, builder, level);
+
             }
 
 
         }
 
-        private void GenerateParentClass(IFCommand command,StringBuilder builder, int level)
+        private void GenerateParentClass(IFCommand command, StringBuilder builder, int level)
         {
             string indent = new String(' ', level * 4);
 
@@ -646,7 +653,7 @@ namespace IF.Manager.Service
 
             var path = command.GetModelPath();
 
-            string modelPropertyName = path ;
+            string modelPropertyName = path;
 
             if (IsList)
             {
@@ -674,7 +681,7 @@ namespace IF.Manager.Service
             }
         }
 
-        private async Task GenerateChildCommand(string nameSpace, IFCommand command,StringBuilder builder)
+        private async Task GenerateChildCommand(string nameSpace, IFCommand command, StringBuilder builder)
         {
             var entityTree = await entityService.GetEntityTree(command.Model.EntityId);
 

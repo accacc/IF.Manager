@@ -17,7 +17,7 @@
 
     foreach (var entity in mappers)
     {
-        if (entity.Value == Model.IFClassMappingId.ToString())
+        if (entity.Value == Model.IFClassMapperId.ToString())
         {
             entity.Selected = true;
         }
@@ -38,7 +38,7 @@
     <td>
         <div class="form-group">
 
-            @Html.DropDownList($"Form[{index}].IFMapperId", mappers, "Select", new { @class = "form-control" })
+            @Html.DropDownList($"Form[{index}].IFClassMapperId", mappers, "Select", new { @class = "form-control" })
         </div>
     </td>
 

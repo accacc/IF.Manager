@@ -1,11 +1,9 @@
 ﻿using IF.Core.Data;
 using IF.Manager.Service.Model;
 
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 
 namespace IF.Manager.Contracts.Model
 {
@@ -27,9 +25,9 @@ namespace IF.Manager.Contracts.Model
 
         public ICollection<IFCommand> Childrens { get; set; }
 
-        public int? IFClassMappingId { get; set; }
+        public int? IFClassMapperId { get; set; }
 
-        public IFClassMapping IFClassMapping { get; set; }
+        public IFClassMapper IFClassMapper { get; set; }
 
         public CommandType CommandGetType { get; set; }
 
