@@ -250,7 +250,7 @@ namespace IF.Manager.Service.Services
                     {
                         var command = this.GetQuery<IFCommand>().SingleOrDefault(p => p.Id == item.Id);
                         command.ParentId = commandId;
-                        command.IFMapperId = item.IFMapperId;
+                        command.IFClassMappingId = item.IFClassMappingId;
                         this.Update(command);
                     }
                 }

@@ -454,7 +454,7 @@ namespace IF.Manager.Service
             return builder.ToString();
         }
 
-        private IFCommand FindModelRecursive(IFCommand parent,IFClassMapping mapper)
+        private IFCommand FindModelRecursive(IFCommand parent,IFClassMapping mapper,ClassControlTreeDto classControlTree)
         {
 
             var list = parent.FlattenHierarchy(x => x.Childrens);
@@ -476,34 +476,6 @@ namespace IF.Manager.Service
                         return commands.First();
                 }
             }
-
-
-            //if (parent.ModelId == modelId)
-            //{
-            //    return parent;
-            //}
-
-
-            //foreach (var command in parent.Childrens)
-            //{
-
-            //    if(command.ModelId == modelId)
-            //    {
-            //        return command;
-            //    }
-
-            //    if (command.Childrens.Any())
-            //    {
-
-            //      var current =   FindModelRecursive(command,modelId);
-
-            //        if(current!=null)
-            //        {
-            //            return current;
-
-            //        }
-            //    }
-            //}
 
             throw new BusinessException("Model bulunamadı");
         }
@@ -534,7 +506,14 @@ namespace IF.Manager.Service
 
                         var mapper = mappers.SelectMany(m => m.IFClassMappings.Where(c => c.FromProperty.Id == child.Id)).SingleOrDefault();
 
-                        var currentCommand = FindModelRecursive(command, mapper);
+
+                        //burda bir modeli bir class a map ediyoruz,ayni class farkli class larin altinda oldugu zaman onun kontrolu yapilmali buda class in ismi ile aratarak oluyor
+                        if(mapper == null)
+                        {
+                            mapper = mappers.SelectMany(m => m.IFClassMappings.Where(c => c.FromProperty.Name == child.Name)).SingleOrDefault();
+                        }
+
+                        var currentCommand = FindModelRecursive(command, mapper,child);
 
                         var path = namer + "." + currentCommand.GetModelPath();
 
@@ -546,7 +525,7 @@ namespace IF.Manager.Service
 
                         var mapper = mappers.SelectMany(m => m.IFClassMappings.Where(c => c.FromProperty.Id == child.Childs.First().Id)).SingleOrDefault();
 
-                        var currentCommand = FindModelRecursive(command, mapper);
+                        var currentCommand = FindModelRecursive(command, mapper,child);
 
                         var path = currentCommand.GetModelPath();
                         rSide = currentCommand.Model.Name;

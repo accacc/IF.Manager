@@ -27,9 +27,9 @@ namespace IF.Manager.Contracts.Model
 
         public ICollection<IFCommand> Childrens { get; set; }
 
-        public int? IFMapperId { get; set; }
+        public int? IFClassMappingId { get; set; }
 
-        public IFCommand IFMapper { get; set; }
+        public IFClassMapping IFClassMapping { get; set; }
 
         public CommandType CommandGetType { get; set; }
 
