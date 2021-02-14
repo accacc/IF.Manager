@@ -6,20 +6,26 @@
     List<SelectListItem> mappers = ViewData["mappers"] as List<SelectListItem>;
     var index = Guid.NewGuid();
 
-    foreach (var entity in commands)
+    
+
+    foreach (var command in commands)
     {
-        if (entity.Value == Model.Id.ToString())
+        command.Selected = false;
+        if (command.Value == Model.Id.ToString())
         {
-            entity.Selected = true;
+            command.Selected = true;
         }
     }
 
 
-    foreach (var entity in mappers)
+    foreach (var mapper in mappers)
     {
-        if (entity.Value == Model.IFClassMapperId.ToString())
+        mapper.Selected = false;
+        if (!Model.IFClassMapperId.HasValue) { continue; };
+
+        if (mapper.Value == Model.IFClassMapperId.ToString())
         {
-            entity.Selected = true;
+            mapper.Selected = true;
         }
     }
 

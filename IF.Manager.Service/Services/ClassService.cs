@@ -419,18 +419,27 @@ namespace IF.Manager.Service
             //    .Include(m => m.IFClassMappings).ThenInclude(m => m.FromProperty)
             //    .Include(m => m.IFClassMappings).ThenInclude(m => m.ToProperty)//.Model.Commands).ThenInclude(c=>c.Parent).ThenInclude(c=>c.Childrens)
             //    .ToListAsync();
+            //TODO:Caglar performans dusuk sonra baska cozum bul
+            //var command = this.GetQuery<IFCommand>(c => c.Id == 6)
+            //       .Include(s => s.IFClassMapper.IFClassMappings)
+            //    .Include(c => c.Childrens).ThenInclude(c => c.Childrens).ThenInclude(c => c.Childrens)
+            //    .Include(c => c.Parent).ThenInclude(c => c.Parent).ThenInclude(c => c.Parent)
+            //    .Include(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
+            //    .Include(s => s.Model.Entity.Relations)
 
-            var command = this.GetQuery<IFCommand>(c => c.Id == 6)
-                   .Include(s => s.IFClassMapper.IFClassMappings)
-                .Include(c => c.Childrens).ThenInclude(c => c.Childrens).ThenInclude(c => c.Childrens)
-                .Include(c => c.Parent).ThenInclude(c => c.Parent).ThenInclude(c => c.Parent)
+            //    .SingleOrDefault();
+
+            List<IFCommand> commands = await this.GetQuery<IFCommand>().AsNoTracking()
+                .Include(s => s.IFClassMapper.IFClassMappings)
+               .Include(c => c.Childrens)
+                .Include(c => c.Parent)
                 .Include(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
                 .Include(s => s.Model.Entity.Relations)
-             
-                .SingleOrDefault();
+                                                        .ToListAsync();
 
+          var command = commands.Where(c => c.Id == 6).SingleOrDefault();
 
-
+            command.Childrens = await GetCommandChildrensByParentId(6);
             // var command = this.GetQuery<IFCommand>(c => c.Model.Id == parentMap.IFModel.Id).SingleOrDefault();
             string name = "";
             if (command != null)
@@ -459,8 +468,23 @@ namespace IF.Manager.Service
         {
 
             var list = commands.FlattenHierarchy(x => x.Childrens);
+            IFCommand command = null;
 
-            var command = list.Where(l => l.IFClassMapper.IFClassMappings.Any(c=>c.FromPropertyId == classControlTree.Id && !l.IsMultiCommand())).SingleOrDefault();
+
+            foreach (var item in list)
+            {
+                if (item.IsMultiCommand()) continue;
+
+                foreach (var item2 in item.IFClassMapper.IFClassMappings)
+                {
+                    if(item2.FromPropertyId == classControlTree.Id)
+                    {
+                        command = item;
+                    }
+                }
+            }
+
+           // var command = list.Where(l => l.IFClassMapper.IFClassMappings.Any(c=>c.FromPropertyId == classControlTree.Id && !l.IsMultiCommand())).SingleOrDefault();
 
             if (command == null)
             {
@@ -532,7 +556,9 @@ namespace IF.Manager.Service
 
                         // var mapper = mappers.SelectMany(m => m.IFClassMappings.Where(c => c.FromProperty.Id == child.Childs.First().Id)).SingleOrDefault();
 
-                        var currentCommand = FindModelRecursive(command, child);
+                        var currentCommand = FindModelRecursive(command, child.Childs.First());
+
+                        currentCommand = currentCommand.Parent;
 
                         var path = currentCommand.GetModelPath();
                         rSide = currentCommand.Model.Name;
@@ -775,6 +801,28 @@ namespace IF.Manager.Service
             }
 
             return list;
+        }
+
+        private async Task<List<IFCommand>> GetCommandChildrensByParentId(int parentId)
+        {
+            var children = new List<IFCommand>();
+
+            var threads = await this.GetQuery<IFCommand>(x => x.ParentId == parentId).AsNoTracking()
+                .Include(s => s.IFClassMapper.IFClassMappings)
+               .Include(c => c.Childrens)
+                .Include(c => c.Parent)
+                .Include(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
+                .Include(s => s.Model.Entity.Relations).ToListAsync();
+
+            foreach (var t in threads)
+            {
+                t.Childrens = await GetCommandChildrensByParentId(t.Id);
+
+
+                children.Add(t);
+            }
+
+            return children;
         }
 
         private async Task<List<IFClass>> GetChildrenByParentId(int parentId)
