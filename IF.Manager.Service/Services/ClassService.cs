@@ -810,7 +810,7 @@ namespace IF.Manager.Service
             var threads = await this.GetQuery<IFCommand>(x => x.ParentId == parentId).AsNoTracking()
                 .Include(s => s.IFClassMapper.IFClassMappings)
                .Include(c => c.Childrens)
-                .Include(c => c.Parent)
+                .Include(c => c.Parent.Model)
                 .Include(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
                 .Include(s => s.Model.Entity.Relations).ToListAsync();
 
