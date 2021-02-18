@@ -20,15 +20,17 @@ namespace IF.Manager.Service
         private readonly IEntityService entityService;
         private readonly IModelService modelService;
         private readonly FileSystemCodeFormatProvider fileSystem;
+        private readonly IClassService classService;
         private readonly VsManager vs;
         private readonly VsHelper vsHelper;
 
 
 
-        public ProjectService(ManagerDbContext dbContext, IEntityService entityService, IModelService modelService) : base(dbContext)
+        public ProjectService(ManagerDbContext dbContext, IEntityService entityService, IModelService modelService, IClassService classService) : base(dbContext)
         {
             this.entityService = entityService;
             this.modelService = modelService;
+            this.classService = classService;
             this.fileSystem = new FileSystemCodeFormatProvider(DirectoryHelper.GetTempGeneratedDirectoryName());
             this.vs = new VsManager();
             this.vsHelper = new VsHelper(DirectoryHelper.GetTempGeneratedDirectoryName());
@@ -400,8 +402,12 @@ namespace IF.Manager.Service
                 //CqrsQueryGenerator queryGenerator = new CqrsQueryGenerator(entityService, modelService,process);
                 //await queryGenerator.Generate();
 
-                CqrsCommandHandlerGenerator commandGenerator = new CqrsCommandHandlerGenerator(entityService,process);
+                CqrsCommandHandlerGenerator commandGenerator = new CqrsCommandHandlerGenerator(entityService, process);
                 await commandGenerator.Generate();
+
+                await classService.GenerateClass(process, 702);
+                await  classService.GenerateMapper(process,1);
+               
 
                 DirectoryHelper.MoveDirectory(DirectoryHelper.GetTempProcessDirectory(process), DirectoryHelper.GetNewProcessDirectory(process));
 

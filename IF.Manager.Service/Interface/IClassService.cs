@@ -1,8 +1,10 @@
 ﻿using IF.Core.Persistence;
 using IF.Manager.Contracts.Dto;
+using IF.Manager.Contracts.Model;
 using IF.Manager.Service.Model;
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace IF.Manager.Contracts.Services
@@ -24,7 +26,7 @@ namespace IF.Manager.Contracts.Services
         Task<List<ClassControlTreeDto>> GetClassTreeList(int ParentId);
         Task<List<IFClassMapping>> GetClassMappings(int classMapId);
         Task<IFClassMapper> GetClassMapper(int ıd);
-        Task GenerateClass(int classId);
+        Task GenerateClass(IFProcess process, int classId);
         Task<List<ClassControlTreeDto>> GetClassPropertyList(int classId    );
         Task AddClassMapper(IFClassMapper form);
         Task UpdateClassMapper(IFClassMapper form);
@@ -33,6 +35,6 @@ namespace IF.Manager.Contracts.Services
         Task<List<IFClass>> GetTreeList2(int classId);
         Task DeleteClass(int ıd);
         Task UpdateClassMapping(List<IFClassMapping> form,int classMapId);
-        Task<string> GenerateMapper(int classMapId);
+        Task<string> GenerateMapper(IFProcess process, int classMapId);
     }
 }

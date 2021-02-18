@@ -46,7 +46,7 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper
         {
             try
             {
-                var result = await this.classService.GenerateMapper(ClassMapId);
+               // var result = await this.classService.GenerateMapper(ClassMapId);
             }
             catch (System.Exception ex)
             {

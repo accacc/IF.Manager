@@ -33,7 +33,7 @@ namespace IF.Manager.ClassDesigner.Pages
         {
             try
             {
-                await this.classService.GenerateClass(ClassId);
+                //await this.classService.GenerateClass(ClassId);
             }
             catch (System.Exception ex)
             {

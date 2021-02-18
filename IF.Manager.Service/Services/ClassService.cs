@@ -30,7 +30,7 @@ namespace IF.Manager.Service
         private readonly IEntityService entityService;
         public ClassService(ManagerDbContext dbContext, IEntityService entityService) : base(dbContext)
         {
-            this.fileSystem = new FileSystemCodeFormatProvider(DirectoryHelper.GetTempGeneratedDirectoryName());
+           
             this.entityService = entityService;
         }
 
@@ -400,37 +400,28 @@ namespace IF.Manager.Service
             }
         }
 
-        public async Task<string> GenerateMapper(int classMapperId)
+        public async Task<string> GenerateMapper(IFProcess process,int classMapperId)
         {
+
+            var fileSystem = new FileSystemCodeFormatProvider(DirectoryHelper.GetTempProcessDirectory(process));
 
             var tree = await this.GetClassTreeList(702);
 
             var parent = tree.First();
 
+            string nameSpace = SolutionHelper.GetProcessNamaspace(process);
+
             CSClass cSClass = new CSClass();
             cSClass.Name = "Mapper";
+            cSClass.Usings.Add(nameSpace);
 
             int level = 0;
+
             StringBuilder builder = new StringBuilder();
 
-            //var allMappers = await this.GetQuery<IFClassMapper>(m => m.IFClassId == 702)
-            //    .Include(m => m.IFModel)
-            //    .Include(m => m.IFClass)
-            //    .Include(m => m.IFClassMappings).ThenInclude(m => m.FromProperty)
-            //    .Include(m => m.IFClassMappings).ThenInclude(m => m.ToProperty)//.Model.Commands).ThenInclude(c=>c.Parent).ThenInclude(c=>c.Childrens)
-            //    .ToListAsync();
-            //TODO:Caglar performans dusuk sonra baska cozum bul
-            //var command = this.GetQuery<IFCommand>(c => c.Id == 6)
-            //       .Include(s => s.IFClassMapper.IFClassMappings)
-            //    .Include(c => c.Childrens).ThenInclude(c => c.Childrens).ThenInclude(c => c.Childrens)
-            //    .Include(c => c.Parent).ThenInclude(c => c.Parent).ThenInclude(c => c.Parent)
-            //    .Include(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
-            //    .Include(s => s.Model.Entity.Relations)
-
-            //    .SingleOrDefault();
-
             List<IFCommand> commands = await this.GetQuery<IFCommand>().AsNoTracking()
-                .Include(s => s.IFClassMapper.IFClassMappings)
+                .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.FromProperty)
+                .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.ToProperty)
                .Include(c => c.Childrens)
                 .Include(c => c.Parent)
                 .Include(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
@@ -442,10 +433,11 @@ namespace IF.Manager.Service
             command.Childrens = await GetCommandChildrensByParentId(6);
             // var command = this.GetQuery<IFCommand>(c => c.Model.Id == parentMap.IFModel.Id).SingleOrDefault();
             string name = "";
+
             if (command != null)
             {
 
-                name = command.Model.Name;
+                name = command.Model.Name +"Multi";
 
                 builder.AppendLine($"{name} {name} = new {name}();");
             }
@@ -456,6 +448,7 @@ namespace IF.Manager.Service
 
             var me = new CSMethod("MapMe", "void", "public");
             me.Body = builder.ToString();
+            me.Parameters.Add(new CsMethodParameter() { Name = parent.Name, Type = parent.Type });
             cSClass.Methods.Add(me);
 
 
@@ -515,52 +508,53 @@ namespace IF.Manager.Service
         {
 
             level++;
+
             string indent = new String(' ', level * 4);
 
 
             foreach (var child in mainClass.Childs.OrderByDescending(c => c.IsPrimitive))
             {
 
-                string classPropertyName = child.GetPath();
+              
                 string rSide = "";
-
-
-                //var mappersa = mappers.SelectMany(m => m.IFClassMappings.Where(c => c.FromProperty.Id == child.Id)).ToList();
-
-
-
 
                 try
                 {
                     if (child.IsPrimitive)
                     {
 
-                        //var mapper = //mappers.SelectMany(m => m.IFClassMappings.Where(c => c.FromProperty.Id == child.Id)).SingleOrDefault();
-
-
-                        ////burda bir modeli bir class a map ediyoruz,ayni class farkli class larin altinda oldugu zaman onun kontrolu yapilmali buda class in ismi ile aratarak oluyor
-                        //if (mapper == null)
-                        //{
-                        //    mapper = //mappers.SelectMany(m => m.IFClassMappings.Where(c => c.FromProperty.Name == child.Name)).SingleOrDefault();
-                        //}
+                        string classPropertyName = child.GetPath();
 
                         var currentCommand = FindModelRecursive(command,  child);
 
-                        var path = namer + "." + currentCommand.GetModelPath();
+                        var mapper = currentCommand.IFClassMapper.IFClassMappings.Where(m=>m.FromProperty.Id == child.Id).SingleOrDefault();
 
-                        // rSide = mapper.IFClassMapper.IFModel
-                        builder.AppendLine($"{indent} {path}.{rSide} = {classPropertyName}.{child.Name}");
+                        var path = currentCommand.GetModelPath();
+
+                        builder.AppendLine($"{indent} {namer}{path}.{rSide} = {classPropertyName}.{mapper.FromProperty.Name}");
                     }
                     else
                     {
 
-                        // var mapper = mappers.SelectMany(m => m.IFClassMappings.Where(c => c.FromProperty.Id == child.Childs.First().Id)).SingleOrDefault();
+                      
 
                         var currentCommand = FindModelRecursive(command, child.Childs.First());
 
                         currentCommand = currentCommand.Parent;
 
-                        var path = currentCommand.GetModelPath();
+                        string path = ".";
+
+                        if(currentCommand.Parent == null)
+                        {
+                            path = currentCommand.GetModelPath();
+                        }
+                        else
+                        {
+                            path += currentCommand.GetModelPath();
+                        }
+
+                        
+                        
                         rSide = currentCommand.Model.Name;
 
 
@@ -573,11 +567,11 @@ namespace IF.Manager.Service
 
                         if (child.GenericType == "List")
                         {
-                            builder.AppendLine($"{indent} {path}.{rSide}.DataModel.{multi} = new List<{child.Type}>()");
+                            builder.AppendLine($"{indent} {path}{rSide}.{multi} = new List<{rSide}>()");
                         }
                         else
                         {
-                            builder.AppendLine($"{indent} {path}.{rSide}.DataModel.{multi} = new {child.Type}();");
+                            builder.AppendLine($"{indent} {path}{rSide}.{multi} = new {rSide}();");
                         }
 
 
@@ -720,8 +714,10 @@ namespace IF.Manager.Service
             //commandClassGenerator.Generate();
         }
 
-        public async Task GenerateClass(int classId)
+        public async Task GenerateClass(IFProcess process, int classId)
         {
+
+            var fileSystem = new FileSystemCodeFormatProvider(DirectoryHelper.GetTempProcessDirectory(process));
 
             var tree = await this.GetClassTreeList(classId);
 
@@ -808,7 +804,8 @@ namespace IF.Manager.Service
             var children = new List<IFCommand>();
 
             var threads = await this.GetQuery<IFCommand>(x => x.ParentId == parentId).AsNoTracking()
-                .Include(s => s.IFClassMapper.IFClassMappings)
+                 .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.FromProperty)
+                .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.ToProperty)
                .Include(c => c.Childrens)
                 .Include(c => c.Parent.Model)
                 .Include(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
