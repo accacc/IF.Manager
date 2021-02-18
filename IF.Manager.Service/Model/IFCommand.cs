@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace IF.Manager.Contracts.Model
 {
-    public class IFCommand:Entity
+    public class IFCommand : Entity
     {
 
         [Key]
@@ -79,20 +79,58 @@ namespace IF.Manager.Contracts.Model
         public string GetModelPath()
         {
             var pagePath = "";
-            var parents = this.GetModelParentPath();
+            var parents = this.GetParents();
 
             foreach (var parent in parents)
             {
-                    pagePath += parent.Name + ".";
+                string name = parent.Model.Name;
+
+                if(parent.IsMultiCommand())
+                {
+                    name += "Multi";
+                }
+
+                pagePath += name + ".";
             }
+
+
             if (parents.Any())
             {
-
                 pagePath = pagePath.Remove(pagePath.Length - 1);
             }
             return pagePath;
         }
-        public List<IFModel> GetModelParentPath()
+
+        public List<IFCommand> GetParents()
+        {
+
+            List<IFCommand> paths = new List<IFCommand>();
+
+            if (this.Parent == null)
+            {
+                return paths;
+            }
+
+            var command = this;
+
+            while (command != null)
+            {
+
+                if (command.Parent == null) break;
+
+
+                command = command.Parent;
+                paths.Add(command);
+
+
+
+            }
+
+            paths.Reverse();
+
+            return paths;
+        }
+        public List<IFModel> GetModelParents()
         {
 
             List<IFModel> paths = new List<IFModel>();
@@ -102,16 +140,16 @@ namespace IF.Manager.Contracts.Model
                 return paths;
             }
 
-            var page = this;
+            var command = this;
 
-            while (page != null)
+            while (command != null)
             {
 
-                if (page.Parent == null) break;
+                if (command.Parent == null) break;
 
 
-                page = page.Parent;
-                paths.Add(page.Model);
+                command = command.Parent;
+                paths.Add(command.Model);
 
 
 

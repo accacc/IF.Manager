@@ -421,7 +421,7 @@ namespace IF.Manager.Service
 
             List<IFCommand> commands = await this.GetQuery<IFCommand>().AsNoTracking()
                 .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.FromProperty)
-                .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.ToProperty)
+                .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.ToProperty.EntityProperty)
                .Include(c => c.Childrens)
                 .Include(c => c.Parent)
                 .Include(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
@@ -517,6 +517,7 @@ namespace IF.Manager.Service
 
               
                 string rSide = "";
+                string multi = "";
 
                 try
                 {
@@ -531,7 +532,28 @@ namespace IF.Manager.Service
 
                         var path = currentCommand.GetModelPath();
 
-                        builder.AppendLine($"{indent} {namer}{path}.{rSide} = {classPropertyName}.{mapper.FromProperty.Name}");
+                        rSide = currentCommand.Model.Name;
+
+
+                     
+
+                        if (currentCommand.IsMultiCommand())
+                        {
+                            multi = "Multi";
+                        }
+
+                        if (child.GenericType == "List")
+                        {
+                            builder.AppendLine($"{indent} {path}.{rSide}{multi} = new List<{rSide}{multi}>();");
+                        }
+                        else
+                        {
+                            builder.AppendLine($"{indent} {path}.{rSide}{multi}.{mapper.ToProperty.EntityProperty.Name} = {classPropertyName}.{mapper.FromProperty.Name};");
+                        }
+
+                      
+
+
                     }
                     else
                     {
@@ -540,9 +562,9 @@ namespace IF.Manager.Service
 
                         var currentCommand = FindModelRecursive(command, child.Childs.First());
 
-                        currentCommand = currentCommand.Parent;
+                        //currentCommand = currentCommand.Parent;
 
-                        string path = ".";
+                        string path = "";
 
                         if(currentCommand.Parent == null)
                         {
@@ -553,12 +575,9 @@ namespace IF.Manager.Service
                             path += currentCommand.GetModelPath();
                         }
 
-                        
-                        
+                        //path = namer + "." + path;
+
                         rSide = currentCommand.Model.Name;
-
-
-                        string multi = "";
 
                         if (currentCommand.IsMultiCommand())
                         {
@@ -567,11 +586,11 @@ namespace IF.Manager.Service
 
                         if (child.GenericType == "List")
                         {
-                            builder.AppendLine($"{indent} {path}{rSide}.{multi} = new List<{rSide}>()");
+                            builder.AppendLine($"{indent} {path}.{rSide}{multi} = new List<{rSide}{multi}>();");
                         }
                         else
                         {
-                            builder.AppendLine($"{indent} {path}{rSide}.{multi} = new {rSide}();");
+                            builder.AppendLine($"{indent} {path}.{rSide}{multi} = new {rSide}{multi}();");
                         }
 
 
@@ -805,7 +824,7 @@ namespace IF.Manager.Service
 
             var threads = await this.GetQuery<IFCommand>(x => x.ParentId == parentId).AsNoTracking()
                  .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.FromProperty)
-                .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.ToProperty)
+                .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.ToProperty.EntityProperty)
                .Include(c => c.Childrens)
                 .Include(c => c.Parent.Model)
                 .Include(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
