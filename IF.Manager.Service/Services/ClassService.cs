@@ -422,7 +422,7 @@ namespace IF.Manager.Service
             List<IFCommand> commands = await this.GetQuery<IFCommand>().AsNoTracking()
                 .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.FromProperty)
                 .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.ToProperty.EntityProperty)
-               .Include(c => c.Childrens)
+               .Include(c => c.Childrens).ThenInclude(p=>p.Parent)
                 .Include(c => c.Parent)
                 .Include(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
                 .Include(s => s.Model.Entity.Relations)
@@ -431,7 +431,7 @@ namespace IF.Manager.Service
           var command = commands.Where(c => c.Id == 6).SingleOrDefault();
 
             command.Childrens = await GetCommandChildrensByParentId(6);
-            // var command = this.GetQuery<IFCommand>(c => c.Model.Id == parentMap.IFModel.Id).SingleOrDefault();
+
             string name = "";
 
             if (command != null)
@@ -477,31 +477,12 @@ namespace IF.Manager.Service
                 }
             }
 
-           // var command = list.Where(l => l.IFClassMapper.IFClassMappings.Any(c=>c.FromPropertyId == classControlTree.Id && !l.IsMultiCommand())).SingleOrDefault();
-
             if (command == null)
             {
                 throw new BusinessException("Command da mapper bulunamadı:1122");
             }
 
             return command;
-            //if(commands.Any())
-            //{
-            //    if(commands.Count == 1)
-            //    {
-            //        var command = commands.First();
-            //        if (command != null)
-            //        {
-            //            return command;
-            //        }
-            //    }
-            //    else
-            //    {
-            //            return commands.First();
-            //    }
-            //}
-
-
         }
 
         private void GenerateClassTree2(ClassControlTreeDto mainClass, StringBuilder builder, int level, IFCommand command, string namer)
@@ -626,113 +607,7 @@ namespace IF.Manager.Service
             }
 
         }
-
-        public async Task<string> GenerateMapper2(int classMapperId)
-        {
-
-
-
-            var command = await this.GetQuery<IFClass>(p => p.Id == 702)
-                .Include(c => c.Parent)
-                .Include(s => s.Childrens)
-                .SingleOrDefaultAsync();
-
-
-            var process = await this.GetQuery<IFProcess>(p => p.Commands.Any(c => c.Id == 6))
-                   .Include(s => s.Project.Solution)
-                   .Include(s => s.Commands).ThenInclude(c => c.Parent)
-                   .Include(s => s.Commands).ThenInclude(s => s.Childrens)
-                   .Include(s => s.Commands).ThenInclude(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
-                   .Include(s => s.Commands).ThenInclude(s => s.Model.Entity.Relations)
-                   .ToListAsync();
-
-            StringBuilder builder = new StringBuilder();
-
-            var mapper = await this.GetClassMapper(classMapperId);
-
-            int level = 0;
-            //await Recursive("aaa", process.First().Commands.ToList(), builder,level);
-
-
-            fileSystem.FormatCode(builder.ToString(), "cs", "mapper");
-
-            return builder.ToString();
-        }
-
-        private async Task Recursive(string nameSpace, List<IFCommand> commmands, StringBuilder builder, int level)
-        {
-            foreach (var command in commmands)
-            {
-
-                var childs = command.Childrens.ToList();
-
-                if (childs.Any())
-                {
-                    level++;
-                    await Recursive(nameSpace, childs, builder, level);
-                }
-
-                GenerateParentClass(command, builder, level);
-
-            }
-
-
-        }
-
-        private void GenerateParentClass(IFCommand command, StringBuilder builder, int level)
-        {
-            string indent = new String(' ', level * 4);
-
-            bool IsList = false;
-
-            if (command.Parent != null)
-            {
-                IsList = command.IsList();
-            }
-
-            var path = command.GetModelPath();
-
-            string modelPropertyName = path;
-
-            if (IsList)
-            {
-                builder.AppendLine($" {indent} foreach (var item in command.Data)");
-                builder.AppendLine();
-                builder.AppendLine($"{indent}{{");
-                builder.AppendLine(indent);
-            }
-
-            bool isList = command.IsList();
-
-            foreach (var property in command.Model.Properties)
-            {
-                string name = property.Model.Name;
-                builder.AppendLine($"{indent} {modelPropertyName}.{command.Model.Name} = {property.EntityProperty.Name}");
-
-            }
-
-
-            if (IsList)
-            {
-                builder.AppendLine();
-                builder.AppendLine();
-                builder.AppendLine($"{indent}}}");
-            }
-        }
-
-        private async Task GenerateChildCommand(string nameSpace, IFCommand command, StringBuilder builder)
-        {
-            var entityTree = await entityService.GetEntityTree(command.Model.EntityId);
-
-            //ModelGenerator modelGenerator = new ModelGenerator(fileSystem, command.Model, nameSpace, entityTree);
-
-            //modelGenerator.Generate();
-
-            //CqrsCommandClassGenerator commandClassGenerator = new CqrsCommandClassGenerator(command, process, entityTree, fileSystem);
-
-            //commandClassGenerator.Generate();
-        }
-
+       
         public async Task GenerateClass(IFProcess process, int classId)
         {
 
@@ -825,7 +700,7 @@ namespace IF.Manager.Service
             var threads = await this.GetQuery<IFCommand>(x => x.ParentId == parentId).AsNoTracking()
                  .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.FromProperty)
                 .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.ToProperty.EntityProperty)
-               .Include(c => c.Childrens)
+               .Include(c => c.Childrens).ThenInclude(c=>c.Parent)
                 .Include(c => c.Parent.Model)
                 .Include(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
                 .Include(s => s.Model.Entity.Relations).ToListAsync();
