@@ -38,7 +38,7 @@ namespace IF.Manager.Service.CodeGen.Model
 
                 if (isList)
                 {
-                    type = $"IEnumerable<{name}>";
+                    type = $"List<{name}>";
                 }
 
                 var p = new CSProperty("public", name, false);

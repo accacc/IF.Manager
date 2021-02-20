@@ -414,12 +414,13 @@ namespace IF.Manager.Service
             CSClass cSClass = new CSClass();
             cSClass.Name = "Mapper";
             cSClass.Usings.Add(nameSpace);
+            cSClass.Usings.Add("System.Collections.Generic");
 
             int level = 0;
 
             StringBuilder builder = new StringBuilder();
 
-            List<IFCommand> commands = await this.GetQuery<IFCommand>().AsNoTracking()
+            List<IFCommand> commands = await this.GetQuery<IFCommand>()
                 .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.FromProperty)
                 .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.ToProperty.EntityProperty)
                .Include(c => c.Childrens).ThenInclude(p=>p.Parent)
@@ -497,8 +498,8 @@ namespace IF.Manager.Service
             {
 
               
-                string rSide = "";
-                string multi = "";
+                string modelName = "";
+                string multiName = "";
 
                 try
                 {
@@ -513,23 +514,31 @@ namespace IF.Manager.Service
 
                         var path = currentCommand.GetModelPath();
 
-                        rSide = currentCommand.Model.Name;
+                        modelName = currentCommand.Model.Name;
 
-
-                     
+                       //if(child.Parent.GenericType == "List")
+                       // {
+                       //     modelName += "item" + level;
+                       // }
 
                         if (currentCommand.IsMultiCommand())
                         {
-                            multi = "Multi";
+                            multiName = "Multi";
                         }
 
-                        if (child.GenericType == "List")
+                        //if (child.GenericType == "List")
+                        //{
+                        //    builder.AppendLine($"{indent} {path}.{rSide}{multi} = new List<{rSide}{multi}>();");
+                        //}
+                        //else
+
+                        if (child.Parent.GenericType == "List")
                         {
-                            builder.AppendLine($"{indent} {path}.{rSide}{multi} = new List<{rSide}{multi}>();");
+                            builder.AppendLine($"{indent} {modelName}{multiName}{level-1}.{mapper.ToProperty.EntityProperty.Name} = item{level - 1}.{mapper.FromProperty.Name};");
                         }
                         else
                         {
-                            builder.AppendLine($"{indent} {path}.{rSide}{multi}.{mapper.ToProperty.EntityProperty.Name} = {classPropertyName}.{mapper.FromProperty.Name};");
+                            builder.AppendLine($"{indent} {path}.{modelName}{multiName}.{mapper.ToProperty.EntityProperty.Name} = {classPropertyName}.{mapper.FromProperty.Name};");
                         }
 
                       
@@ -558,20 +567,20 @@ namespace IF.Manager.Service
 
                         //path = namer + "." + path;
 
-                        rSide = currentCommand.Model.Name;
+                        modelName = currentCommand.Model.Name;
 
                         if (currentCommand.IsMultiCommand())
                         {
-                            multi = "Multi";
+                            multiName = "Multi";
                         }
 
                         if (child.GenericType == "List")
                         {
-                            builder.AppendLine($"{indent} {path}.{rSide}{multi} = new List<{rSide}{multi}>();");
+                            builder.AppendLine($"{indent} {path}.{modelName}{multiName} = new List<{modelName}{multiName}>();");
                         }
                         else
                         {
-                            builder.AppendLine($"{indent} {path}.{rSide}{multi} = new {rSide}{multi}();");
+                            builder.AppendLine($"{indent} {path}.{modelName}{multiName} = new {modelName}{multiName}();");
                         }
 
 
@@ -580,9 +589,11 @@ namespace IF.Manager.Service
                         {
                             var foreachName = child.GetPath() + "." + child.Name;
 
-                            builder.AppendLine($" {indent} foreach (var item in {foreachName})");
-                            builder.AppendLine();
+                            builder.AppendLine($" {indent} foreach (var item{level} in {foreachName})");
                             builder.AppendLine($"{indent}{{");
+                            builder.AppendLine();
+                            builder.AppendLine();
+                            builder.AppendLine($"{indent} {modelName}{multiName} {modelName}{multiName}{level}= new {modelName}{multiName}();");
                             builder.AppendLine(indent);
                         }
 
@@ -592,6 +603,7 @@ namespace IF.Manager.Service
                         {
                             builder.AppendLine();
                             builder.AppendLine();
+                            builder.AppendLine($"{indent} {path}.{modelName}{multiName}.Add({modelName}{multiName}{level});");
                             builder.AppendLine($"{indent}}}");
                         }
 
@@ -697,7 +709,7 @@ namespace IF.Manager.Service
         {
             var children = new List<IFCommand>();
 
-            var threads = await this.GetQuery<IFCommand>(x => x.ParentId == parentId).AsNoTracking()
+            var threads = await this.GetQuery<IFCommand>(x => x.ParentId == parentId)
                  .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.FromProperty)
                 .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.ToProperty.EntityProperty)
                .Include(c => c.Childrens).ThenInclude(c=>c.Parent)
