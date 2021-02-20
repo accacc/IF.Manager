@@ -595,6 +595,8 @@ namespace IF.Manager.Service
                             builder.AppendLine();
                             builder.AppendLine($"{indent} {modelName}{multiName} {modelName}{multiName}{level}= new {modelName}{multiName}();");
                             builder.AppendLine(indent);
+                            builder.AppendLine();
+                            builder.AppendLine();
                         }
 
                         GenerateClassTree2(child, builder, level, command, namer);
@@ -605,6 +607,8 @@ namespace IF.Manager.Service
                             builder.AppendLine();
                             builder.AppendLine($"{indent} {path}.{modelName}{multiName}.Add({modelName}{multiName}{level});");
                             builder.AppendLine($"{indent}}}");
+                            builder.AppendLine();
+                            builder.AppendLine();
                         }
 
                     }
