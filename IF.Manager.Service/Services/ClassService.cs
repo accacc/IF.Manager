@@ -548,7 +548,10 @@ namespace IF.Manager.Service
                     else
                     {
 
-                      
+
+                        builder.AppendLine();
+                        builder.AppendLine();
+
 
                         var currentCommand = FindModelRecursive(command, child.Childs.First());
 
@@ -574,6 +577,37 @@ namespace IF.Manager.Service
                             multiName = "Multi";
                         }
 
+                        if(modelName== "AlacakliDataModel")
+                        {
+                            continue;
+                        }
+
+
+                        builder.AppendLine();
+                        builder.AppendLine();
+
+
+                        if (currentCommand.Parent.IsMultiCommand() && currentCommand.Parent.Parent !=null)
+                        {
+
+                            if (currentCommand.Parent.Childrens.First().Id == currentCommand.Id)
+                            {
+                                if (currentCommand.Parent.IsList())
+                                {
+                                    builder.AppendLine($"{indent} {currentCommand.Parent.GetModelPath()}.{currentCommand.Parent.Model.Name}Multi = new List<{currentCommand.Parent.Model.Name}{multiName}>();");
+                                }
+                                else
+                                {
+                                    builder.AppendLine($"{indent} {currentCommand.Parent.GetModelPath()}.{currentCommand.Parent.Model.Name}Multi = new {currentCommand.Parent.Model.Name}Multi();");
+                                }
+                            }
+
+                        }
+
+
+                        builder.AppendLine();
+                        builder.AppendLine();
+
                         if (child.GenericType == "List")
                         {
                             builder.AppendLine($"{indent} {path}.{modelName}{multiName} = new List<{modelName}{multiName}>();");
@@ -584,11 +618,15 @@ namespace IF.Manager.Service
                         }
 
 
+                        builder.AppendLine();
+                        builder.AppendLine();
+
 
                         if (child.GenericType == "List")
                         {
                             var foreachName = child.GetPath() + "." + child.Name;
-
+                            builder.AppendLine();
+                            builder.AppendLine();
                             builder.AppendLine($" {indent} foreach (var item{level} in {foreachName})");
                             builder.AppendLine($"{indent}{{");
                             builder.AppendLine();
