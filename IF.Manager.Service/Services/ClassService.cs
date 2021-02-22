@@ -538,7 +538,7 @@ namespace IF.Manager.Service
                         }
                         else
                         {
-                            builder.AppendLine($"{indent} {path}.{modelName}{multiName}.{mapper.ToProperty.EntityProperty.Name} = {classPropertyName}.{mapper.FromProperty.Name};");
+                            builder.AppendLine($"{indent} {modelName}{multiName}.{mapper.ToProperty.EntityProperty.Name} = {classPropertyName}.{mapper.FromProperty.Name};");
                         }
 
                       
@@ -577,7 +577,7 @@ namespace IF.Manager.Service
                             multiName = "Multi";
                         }
 
-                        if(modelName== "AlacakliDataModel")
+                        if(modelName== "AlacakliIcraDataModel")
                         {
                             continue;
                         }
@@ -586,6 +586,7 @@ namespace IF.Manager.Service
                         builder.AppendLine();
                         builder.AppendLine();
 
+                        bool IsMultiList = false;
 
                         if (currentCommand.Parent.IsMultiCommand() && currentCommand.Parent.Parent !=null)
                         {
@@ -594,7 +595,8 @@ namespace IF.Manager.Service
                             {
                                 if (currentCommand.Parent.IsList())
                                 {
-                                    builder.AppendLine($"{indent} {currentCommand.Parent.GetModelPath()}.{currentCommand.Parent.Model.Name}Multi = new List<{currentCommand.Parent.Model.Name}{multiName}>();");
+                                    builder.AppendLine($"{indent} {currentCommand.Parent.GetModelPath()}.{currentCommand.Parent.Model.Name}Multi = new List<{currentCommand.Parent.Model.Name}Multi>();");
+                                    IsMultiList = true;
                                 }
                                 else
                                 {
@@ -608,18 +610,26 @@ namespace IF.Manager.Service
                         builder.AppendLine();
                         builder.AppendLine();
 
-                        if (child.GenericType == "List")
+                        if (!IsMultiList)
                         {
-                            builder.AppendLine($"{indent} {path}.{modelName}{multiName} = new List<{modelName}{multiName}>();");
-                        }
-                        else
-                        {
-                            builder.AppendLine($"{indent} {path}.{modelName}{multiName} = new {modelName}{multiName}();");
+
+                            if (child.GenericType == "List")
+                            {
+
+                                builder.AppendLine($"{indent} List<{modelName}{multiName}> {modelName}{multiName} = new List<{modelName}{multiName}>();");
+                            }
+                            else
+                            {
+                                builder.AppendLine($"{indent} {modelName}{multiName} {modelName}{multiName} = new {modelName}{multiName}();");
+                            }
+
                         }
 
 
                         builder.AppendLine();
                         builder.AppendLine();
+
+
 
 
                         if (child.GenericType == "List")
@@ -631,6 +641,17 @@ namespace IF.Manager.Service
                             builder.AppendLine($"{indent}{{");
                             builder.AppendLine();
                             builder.AppendLine();
+
+
+                            if(IsMultiList)
+                            {
+                                builder.AppendLine($"{indent}  {currentCommand.Parent.Model.Name}Multi {currentCommand.Parent.Model.Name}Multi = new {currentCommand.Parent.Model.Name}Multi();");
+                            }
+
+
+                            builder.AppendLine();
+                            builder.AppendLine();
+
                             builder.AppendLine($"{indent} {modelName}{multiName} {modelName}{multiName}{level}= new {modelName}{multiName}();");
                             builder.AppendLine(indent);
                             builder.AppendLine();
@@ -644,6 +665,9 @@ namespace IF.Manager.Service
                             builder.AppendLine();
                             builder.AppendLine();
                             builder.AppendLine($"{indent} {path}.{modelName}{multiName}.Add({modelName}{multiName}{level});");
+
+
+
                             builder.AppendLine($"{indent}}}");
                             builder.AppendLine();
                             builder.AppendLine();
