@@ -630,11 +630,33 @@ namespace IF.Manager.Service
                         builder.AppendLine();
 
 
-
+                      
 
                         if (child.GenericType == "List")
                         {
-                            var foreachName = child.GetPath() + "." + child.Name;
+                            bool IsFirstLoop = true;
+
+                            var parents = child.GetParentPath();
+
+                            foreach (var parent in parents)
+                            {
+                                if(parent.GenericType == "List")
+                                {
+                                    IsFirstLoop = false;
+                                }
+                            }
+
+                            string foreachName = "";
+
+                            if(!IsFirstLoop)
+                            {
+                                foreachName = "item" + (level - 1) + "." + child.Name;
+                            }
+                            else
+                            {
+                                foreachName = child.GetPath() + "." + child.Name;
+                            }
+                            
                             builder.AppendLine();
                             builder.AppendLine();
                             builder.AppendLine($" {indent} foreach (var item{level} in {foreachName})");
@@ -664,7 +686,7 @@ namespace IF.Manager.Service
                         {
                             builder.AppendLine();
                             builder.AppendLine();
-                            builder.AppendLine($"{indent} {path}.{modelName}{multiName}.Add({modelName}{multiName}{level});");
+                            builder.AppendLine($"{indent} {modelName}{multiName}.Add({modelName}{multiName}{level});");
 
 
 
