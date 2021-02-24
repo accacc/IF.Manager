@@ -505,7 +505,7 @@ namespace IF.Manager.Service
                 {
                     if (child.IsPrimitive)
                     {
-                        continue;
+
                         string classPropertyName = child.GetPath();
 
                         var currentCommand = FindModelRecursive(command,  child);
@@ -577,9 +577,10 @@ namespace IF.Manager.Service
                             multiName = "Multi";
                         }
 
-                        if (child.Name == "BorcluAdres")
-                        {
-                        }
+                        //if(modelName== "AlacakliIcraDataModel")
+                        //{
+                        //    continue;
+                        //}
 
 
                         builder.AppendLine();
@@ -594,12 +595,12 @@ namespace IF.Manager.Service
                             {
                                 if (currentCommand.Parent.IsList())
                                 {
-                                    builder.AppendLine($"{indent} {currentCommand.Parent.Model.Name}.{currentCommand.Parent.Model.Name}Multi = new List<{currentCommand.Parent.Model.Name}Multi>();");
+                                    builder.AppendLine($"{indent} {currentCommand.Parent.GetModelPath()}.{currentCommand.Parent.Model.Name}Multi = new List<{currentCommand.Parent.Model.Name}Multi>();");
                                     IsMultiList = true;
                                 }
                                 else
                                 {
-                                    builder.AppendLine($"{indent} {currentCommand.Parent.Model.Name}Multi {currentCommand.Parent.Model.Name}Multi = new {currentCommand.Parent.Model.Name}Multi();");
+                                    builder.AppendLine($"{indent} {currentCommand.Parent.GetModelPath()}.{currentCommand.Parent.Model.Name}Multi = new {currentCommand.Parent.Model.Name}Multi();");
                                 }
                             }
 
@@ -614,21 +615,12 @@ namespace IF.Manager.Service
 
                             if (child.GenericType == "List")
                             {
-                              
-                                builder.AppendLine($"{indent} List<{modelName}{multiName}> {modelName}{multiName} = new List<{modelName}{multiName}>();");
 
-                               
+                                builder.AppendLine($"{indent} List<{modelName}{multiName}> {modelName}{multiName} = new List<{modelName}{multiName}>();");
                             }
                             else
                             {
                                 builder.AppendLine($"{indent} {modelName}{multiName} {modelName}{multiName} = new {modelName}{multiName}();");
-                            }
-
-
-                          //if (command.Parent!=null)
-                            {
-
-                                builder.AppendLine($"{indent} {currentCommand.Parent.Model.Name}Multi.{modelName}{multiName} = {modelName}{multiName};");
                             }
 
                         }
@@ -642,11 +634,6 @@ namespace IF.Manager.Service
 
                         if (child.GenericType == "List")
                         {
-                            if(child.Name == "BorcluAdres")
-                            {
-
-                            }
-
                             bool IsFirstLoop = true;
 
                             var parents = child.GetParentPath();
@@ -693,15 +680,9 @@ namespace IF.Manager.Service
 
                             if (IsMultiList)
                             {
-                                if (child.GenericType == "List")
-                                {
-                                    builder.AppendLine($"{indent} {currentCommand.Parent.Model.Name}Multi.{modelName}= new {modelName}{multiName}();");
-                                }
-                                else
-                                {
 
-                                    builder.AppendLine($"{indent} {currentCommand.Parent.Model.Name}Multi.{modelName}= new {modelName}{multiName}();");
-                                }
+                                builder.AppendLine($"{indent} {currentCommand.Parent.Model.Name}Multi.{modelName}= new {modelName}{multiName}();");
+
                             }
 
 
