@@ -577,10 +577,10 @@ namespace IF.Manager.Service
                             multiName = "Multi";
                         }
 
-                        if(modelName== "AlacakliIcraDataModel")
-                        {
-                            continue;
-                        }
+                        //if(modelName== "AlacakliIcraDataModel")
+                        //{
+                        //    continue;
+                        //}
 
 
                         builder.AppendLine();
@@ -668,6 +668,8 @@ namespace IF.Manager.Service
                             if(IsMultiList)
                             {
                                 builder.AppendLine($"{indent}  {currentCommand.Parent.Model.Name}Multi {currentCommand.Parent.Model.Name}Multi = new {currentCommand.Parent.Model.Name}Multi();");
+
+
                             }
 
 
@@ -675,6 +677,16 @@ namespace IF.Manager.Service
                             builder.AppendLine();
 
                             builder.AppendLine($"{indent} {modelName}{multiName} {modelName}{multiName}{level}= new {modelName}{multiName}();");
+
+                            if (IsMultiList)
+                            {
+
+                                builder.AppendLine($"{indent} {currentCommand.Parent.Model.Name}Multi.{modelName}= new {modelName}{multiName}();");
+
+                            }
+
+
+
                             builder.AppendLine(indent);
                             builder.AppendLine();
                             builder.AppendLine();
