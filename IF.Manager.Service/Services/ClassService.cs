@@ -30,7 +30,7 @@ namespace IF.Manager.Service
         private readonly IEntityService entityService;
         public ClassService(ManagerDbContext dbContext, IEntityService entityService) : base(dbContext)
         {
-           
+
             this.entityService = entityService;
         }
 
@@ -400,7 +400,7 @@ namespace IF.Manager.Service
             }
         }
 
-        public async Task<string> GenerateMapper(IFProcess process,int classMapperId)
+        public async Task<string> GenerateMapper(IFProcess process, int classMapperId)
         {
 
             var fileSystem = new FileSystemCodeFormatProvider(DirectoryHelper.GetTempProcessDirectory(process));
@@ -423,13 +423,13 @@ namespace IF.Manager.Service
             List<IFCommand> commands = await this.GetQuery<IFCommand>()
                 .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.FromProperty)
                 .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.ToProperty.EntityProperty)
-               .Include(c => c.Childrens).ThenInclude(p=>p.Parent)
+               .Include(c => c.Childrens).ThenInclude(p => p.Parent)
                 .Include(c => c.Parent)
                 .Include(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
                 .Include(s => s.Model.Entity.Relations)
                                                         .ToListAsync();
 
-          var command = commands.Where(c => c.Id == 6).SingleOrDefault();
+            var command = commands.Where(c => c.Id == 6).SingleOrDefault();
 
             command.Childrens = await GetCommandChildrensByParentId(6);
 
@@ -438,7 +438,7 @@ namespace IF.Manager.Service
             if (command != null)
             {
 
-                name = command.Model.Name +"Multi";
+                name = command.Model.Name + "Multi";
 
                 builder.AppendLine($"{name} {name} = new {name}();");
             }
@@ -471,7 +471,7 @@ namespace IF.Manager.Service
 
                 foreach (var item2 in item.IFClassMapper.IFClassMappings)
                 {
-                    if(item2.FromPropertyId == classControlTree.Id)
+                    if (item2.FromPropertyId == classControlTree.Id)
                     {
                         command = item;
                     }
@@ -497,7 +497,7 @@ namespace IF.Manager.Service
             foreach (var child in mainClass.Childs.OrderByDescending(c => c.IsPrimitive))
             {
 
-              
+
                 string modelName = "";
                 string multiName = "";
 
@@ -505,21 +505,21 @@ namespace IF.Manager.Service
                 {
                     if (child.IsPrimitive)
                     {
-
+                        continue;
                         string classPropertyName = child.GetPath();
 
-                        var currentCommand = FindModelRecursive(command,  child);
+                        var currentCommand = FindModelRecursive(command, child);
 
-                        var mapper = currentCommand.IFClassMapper.IFClassMappings.Where(m=>m.FromProperty.Id == child.Id).SingleOrDefault();
+                        var mapper = currentCommand.IFClassMapper.IFClassMappings.Where(m => m.FromProperty.Id == child.Id).SingleOrDefault();
 
                         var path = currentCommand.GetModelPath();
 
                         modelName = currentCommand.Model.Name;
 
-                       //if(child.Parent.GenericType == "List")
-                       // {
-                       //     modelName += "item" + level;
-                       // }
+                        //if(child.Parent.GenericType == "List")
+                        // {
+                        //     modelName += "item" + level;
+                        // }
 
                         if (currentCommand.IsMultiCommand())
                         {
@@ -534,14 +534,14 @@ namespace IF.Manager.Service
 
                         if (child.Parent.GenericType == "List")
                         {
-                            builder.AppendLine($"{indent} {modelName}{multiName}{level-1}.{mapper.ToProperty.EntityProperty.Name} = item{level - 1}.{mapper.FromProperty.Name};");
+                            builder.AppendLine($"{indent} {modelName}{multiName}{level - 1}.{mapper.ToProperty.EntityProperty.Name} = item{level - 1}.{mapper.FromProperty.Name};");
                         }
                         else
                         {
                             builder.AppendLine($"{indent} {modelName}{multiName}.{mapper.ToProperty.EntityProperty.Name} = {classPropertyName}.{mapper.FromProperty.Name};");
                         }
 
-                      
+
 
 
                     }
@@ -559,7 +559,7 @@ namespace IF.Manager.Service
 
                         string path = "";
 
-                        if(currentCommand.Parent == null)
+                        if (currentCommand.Parent == null)
                         {
                             path = currentCommand.GetModelPath();
                         }
@@ -577,10 +577,9 @@ namespace IF.Manager.Service
                             multiName = "Multi";
                         }
 
-                        //if(modelName== "AlacakliIcraDataModel")
-                        //{
-                        //    continue;
-                        //}
+                        if (child.Name == "BorcluAdres")
+                        {
+                        }
 
 
                         builder.AppendLine();
@@ -588,19 +587,25 @@ namespace IF.Manager.Service
 
                         bool IsMultiList = false;
 
-                        if (currentCommand.Parent.IsMultiCommand() && currentCommand.Parent.Parent !=null)
+                        if (currentCommand.Parent.IsMultiCommand() && currentCommand.Parent.Parent != null)
                         {
 
                             if (currentCommand.Parent.Childrens.First().Id == currentCommand.Id)
                             {
                                 if (currentCommand.Parent.IsList())
                                 {
-                                    builder.AppendLine($"{indent} {currentCommand.Parent.GetModelPath()}.{currentCommand.Parent.Model.Name}Multi = new List<{currentCommand.Parent.Model.Name}Multi>();");
+                                    builder.AppendLine($"{indent} {currentCommand.Parent.Model.Name}.{currentCommand.Parent.Model.Name}Multi = new List<{currentCommand.Parent.Model.Name}Multi>();");
                                     IsMultiList = true;
                                 }
                                 else
                                 {
-                                    builder.AppendLine($"{indent} {currentCommand.Parent.GetModelPath()}.{currentCommand.Parent.Model.Name}Multi = new {currentCommand.Parent.Model.Name}Multi();");
+                                    builder.AppendLine($"{indent} {currentCommand.Parent.Model.Name}Multi {currentCommand.Parent.Model.Name}Multi = new {currentCommand.Parent.Model.Name}Multi();");
+                                }
+
+                                if(currentCommand.Parent.Parent!=null)
+                                {
+
+                                    builder.AppendLine($"{currentCommand.Parent.Parent.Model.Name}Multi.{currentCommand.Parent.Model.Name}Multi = {currentCommand.Parent.Model.Name}Multi;");
                                 }
                             }
 
@@ -617,30 +622,56 @@ namespace IF.Manager.Service
                             {
 
                                 builder.AppendLine($"{indent} List<{modelName}{multiName}> {modelName}{multiName} = new List<{modelName}{multiName}>();");
+
+
                             }
                             else
                             {
                                 builder.AppendLine($"{indent} {modelName}{multiName} {modelName}{multiName} = new {modelName}{multiName}();");
                             }
 
+
+                            //if (command.Parent!=null)
+                            {
+
+                                builder.AppendLine($"{indent} {currentCommand.Parent.Model.Name}Multi.{modelName}{multiName} = {modelName}{multiName};");
+                            }
+
+
                         }
 
+                        //var prnts = currentCommand.GetParents();
+
+
+                        //foreach (var item in prnts)
+                        //{
+                        //    {
+
+                        //        builder.AppendLine($"{indent} {item.Model.Name}Multi.{modelName}{multiName} = {modelName}{multiName};");
+                        //    }
+                        //}
+
 
                         builder.AppendLine();
                         builder.AppendLine();
 
 
-                      
+
 
                         if (child.GenericType == "List")
                         {
+                            if (child.Name == "BorcluAdres")
+                            {
+
+                            }
+
                             bool IsFirstLoop = true;
 
                             var parents = child.GetParentPath();
 
                             foreach (var parent in parents)
                             {
-                                if(parent.GenericType == "List")
+                                if (parent.GenericType == "List")
                                 {
                                     IsFirstLoop = false;
                                 }
@@ -648,7 +679,7 @@ namespace IF.Manager.Service
 
                             string foreachName = "";
 
-                            if(!IsFirstLoop)
+                            if (!IsFirstLoop)
                             {
                                 foreachName = "item" + (level - 1) + "." + child.Name;
                             }
@@ -656,7 +687,7 @@ namespace IF.Manager.Service
                             {
                                 foreachName = child.GetPath() + "." + child.Name;
                             }
-                            
+
                             builder.AppendLine();
                             builder.AppendLine();
                             builder.AppendLine($" {indent} foreach (var item{level} in {foreachName})");
@@ -665,7 +696,7 @@ namespace IF.Manager.Service
                             builder.AppendLine();
 
 
-                            if(IsMultiList)
+                            if (IsMultiList)
                             {
                                 builder.AppendLine($"{indent}  {currentCommand.Parent.Model.Name}Multi {currentCommand.Parent.Model.Name}Multi = new {currentCommand.Parent.Model.Name}Multi();");
 
@@ -680,9 +711,15 @@ namespace IF.Manager.Service
 
                             if (IsMultiList)
                             {
+                                if (child.GenericType == "List")
+                                {
+                                    builder.AppendLine($"{indent} {currentCommand.Parent.Model.Name}Multi.{modelName}= new {modelName}{multiName}();");
+                                }
+                                else
+                                {
 
-                                builder.AppendLine($"{indent} {currentCommand.Parent.Model.Name}Multi.{modelName}= new {modelName}{multiName}();");
-
+                                    builder.AppendLine($"{indent} {currentCommand.Parent.Model.Name}Multi.{modelName}= new {modelName}{multiName}();");
+                                }
                             }
 
 
@@ -719,7 +756,7 @@ namespace IF.Manager.Service
             }
 
         }
-       
+
         public async Task GenerateClass(IFProcess process, int classId)
         {
 
@@ -812,7 +849,7 @@ namespace IF.Manager.Service
             var threads = await this.GetQuery<IFCommand>(x => x.ParentId == parentId)
                  .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.FromProperty)
                 .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.ToProperty.EntityProperty)
-               .Include(c => c.Childrens).ThenInclude(c=>c.Parent)
+               .Include(c => c.Childrens).ThenInclude(c => c.Parent)
                 .Include(c => c.Parent.Model)
                 .Include(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
                 .Include(s => s.Model.Entity.Relations).ToListAsync();
