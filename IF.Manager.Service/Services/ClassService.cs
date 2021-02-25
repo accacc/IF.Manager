@@ -505,7 +505,7 @@ namespace IF.Manager.Service
                 {
                     if (child.IsPrimitive)
                     {
-                        continue;
+                        
                         string classPropertyName = child.GetPath();
 
                         var currentCommand = FindModelRecursive(command, child);
@@ -594,7 +594,7 @@ namespace IF.Manager.Service
                             {
                                 if (currentCommand.Parent.IsList())
                                 {
-                                    builder.AppendLine($"{indent} {currentCommand.Parent.Model.Name}.{currentCommand.Parent.Model.Name}Multi = new List<{currentCommand.Parent.Model.Name}Multi>();");
+                                    builder.AppendLine($"{indent} var {currentCommand.Parent.Model.Name}Multis = new List<{currentCommand.Parent.Model.Name}Multi>();");
                                     IsMultiList = true;
                                 }
                                 else
@@ -604,8 +604,11 @@ namespace IF.Manager.Service
 
                                 if(currentCommand.Parent.Parent!=null)
                                 {
+                                    string lastName = "Multi";
 
-                                    builder.AppendLine($"{currentCommand.Parent.Parent.Model.Name}Multi.{currentCommand.Parent.Model.Name}Multi = {currentCommand.Parent.Model.Name}Multi;");
+                                    if (currentCommand.Parent.IsList()) lastName = "Multis";
+
+                                        builder.AppendLine($"{currentCommand.Parent.Parent.Model.Name}Multi.{currentCommand.Parent.Model.Name}Multi = {currentCommand.Parent.Model.Name}{lastName};");
                                 }
                             }
 
@@ -629,6 +632,7 @@ namespace IF.Manager.Service
                             {
                                 builder.AppendLine($"{indent} {modelName}{multiName} {modelName}{multiName} = new {modelName}{multiName}();");
                             }
+
 
 
                             //if (command.Parent!=null)
@@ -735,10 +739,22 @@ namespace IF.Manager.Service
                         {
                             builder.AppendLine();
                             builder.AppendLine();
-                            builder.AppendLine($"{indent} {modelName}{multiName}.Add({modelName}{multiName}{level});");
 
 
+                            if (currentCommand.Parent.IsMultiCommand() && currentCommand.Parent.Parent != null)
+                            {
 
+                                if (currentCommand.Parent.Childrens.First().Id == currentCommand.Id)
+                                {
+                                        builder.AppendLine($"{indent} {currentCommand.Parent.Model.Name}Multis.Add({currentCommand.Parent.Model.Name}Multi);");
+                                }
+
+                            }
+                            else
+                            {
+
+                                builder.AppendLine($"{indent} {modelName}{multiName}.Add({modelName}{multiName}{level});");
+                            }
                             builder.AppendLine($"{indent}}}");
                             builder.AppendLine();
                             builder.AppendLine();
