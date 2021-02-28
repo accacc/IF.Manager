@@ -26,17 +26,15 @@ namespace IF.Manager.Service
 {
     public class ClassService : GenericRepository, IClassService
     {
-        private readonly FileSystemCodeFormatProvider fileSystem;
         private readonly IEntityService entityService;
         public ClassService(ManagerDbContext dbContext, IEntityService entityService) : base(dbContext)
         {
-
             this.entityService = entityService;
         }
 
         public async Task JsonToClass(string name, string json)
         {
-            JsonClassGenerator gen = GetTypes(name, json);
+            JsonClassGenerator gen = GetJsonTypes(name, json);
 
             var types = gen.Types;
 
@@ -51,16 +49,16 @@ namespace IF.Manager.Service
             var rootObject = types.Where(t => t.IsRoot).SingleOrDefault();
             var rchilds = rootObject.Fields.Select(s => s.MemberName).ToList();
             var rootChilds = types.Where(t => rchilds.Contains(t.AssignedName)).ToList();
-            GenerateClasses(list, rootChilds, types);
+            GenerateJsonToClass(list, rootChilds, types);
 
             await this.AddClass(mainClass);
         }
 
-        private void GenerateClasses(IFClass @class, List<JsonType> rootChilds, IList<JsonType> types)
+        private void GenerateJsonToClass(IFClass @class, List<JsonType> rootChilds, IList<JsonType> types)
         {
             foreach (var type in rootChilds)
             {
-                HandleType(type, type.AssignedName, @class);
+                HandleJsonType(type, type.AssignedName, @class);
 
                 if (type.Type == JsonTypeEnum.Object)
                 {
@@ -70,13 +68,13 @@ namespace IF.Manager.Service
                     {
                         IFClass property = new IFClass();
 
-                        HandleType(field.Type, field.MemberName, property);
+                        HandleJsonType(field.Type, field.MemberName, property);
 
                         @class.Childrens.Add(property);
 
                         if (field.Type.Type == JsonTypeEnum.Object || (field.Type.InternalType != null && field.Type.InternalType.Type == JsonTypeEnum.Object))
                         {
-                            GenerateClasses(property, types.Where(t => t.AssignedName == field.MemberName).ToList(), types);
+                            GenerateJsonToClass(property, types.Where(t => t.AssignedName == field.MemberName).ToList(), types);
 
                         }
                     }
@@ -84,7 +82,7 @@ namespace IF.Manager.Service
             }
         }
 
-        private void HandleType(JsonType item, string name, IFClass cls)
+        private void HandleJsonType(JsonType item, string name, IFClass cls)
         {
             cls.Name = name;
             cls.Type = item.Type.ToString();
@@ -120,7 +118,7 @@ namespace IF.Manager.Service
             }
         }
 
-        private JsonClassGenerator GetTypes(string jsondata, string name)
+        private JsonClassGenerator GetJsonTypes(string jsondata, string name)
         {
             var gen = new JsonClassGenerator();
             gen.Example = jsondata;
@@ -253,7 +251,7 @@ namespace IF.Manager.Service
                 entity.Type = type;
                 entity.Name = form.Name;
                 entity.GenericType = form.GenericType;
-                entity.IsPrimitive = false;
+               // entity.IsPrimitive = false;
                 entity.ParentId = form.ParentId;
                 entity.Description = form.Description;
                 entity.Childrens = form.Childrens;
@@ -370,8 +368,8 @@ namespace IF.Manager.Service
                         property.Name = dto.Name;
                         property.Id = dto.Id;
                         property.Type = dto.Type;
-                        property.GenericType = dto.GenericType;
-                        property.IsPrimitive = true;
+                        //property.GenericType = dto.GenericType;
+                        //property.IsPrimitive = true;
                         property.ParentId = classId;
                         property.IsNullable = dto.IsNullable;
                         property.Description = dto.Description;
@@ -381,11 +379,11 @@ namespace IF.Manager.Service
                     {
                         var property = await this.GetQuery<IFClass>(p => p.Id == dto.Id && p.ParentId == classId).SingleOrDefaultAsync();
                         property.Name = dto.Name;
-                        property.IsPrimitive = true;
+                        //property.IsPrimitive = true;
                         property.ParentId = classId;
                         property.Description = dto.Description;
                         property.Type = property.Type;
-                        property.GenericType = dto.GenericType;
+                       // property.GenericType = dto.GenericType;
                         property.IsNullable = dto.IsNullable;
                         this.Update(property);
                     }
@@ -400,21 +398,16 @@ namespace IF.Manager.Service
             }
         }
 
-        public async Task<string> GenerateMapper(IFProcess process, int classMapperId)
+        public async Task<string> GenerateClassToModelMapper(IFProcess process, int classId,int commandId)
         {
 
             var fileSystem = new FileSystemCodeFormatProvider(DirectoryHelper.GetTempProcessDirectory(process));
 
-            var tree = await this.GetClassTreeList(702);
+            var classTree = await this.GetClassTreeList(classId);
 
-            var parent = tree.First();
+            var parentClass = classTree.First();
 
-            string nameSpace = SolutionHelper.GetProcessNamaspace(process);
-
-            CSClass cSClass = new CSClass();
-            cSClass.Name = "Mapper";
-            cSClass.Usings.Add(nameSpace);
-            cSClass.Usings.Add("System.Collections.Generic");
+            string nameSpace = SolutionHelper.GetProcessNamaspace(process);         
 
             int level = 0;
 
@@ -429,9 +422,14 @@ namespace IF.Manager.Service
                 .Include(s => s.Model.Entity.Relations)
                                                         .ToListAsync();
 
-            var command = commands.Where(c => c.Id == 6).SingleOrDefault();
+            var command = commands.Where(c => c.Id == commandId).SingleOrDefault();
 
-            command.Childrens = await GetCommandChildrensByParentId(6);
+            command.Childrens = await GetCommandChildrensByParentId(commandId);
+
+            CSClass cSClass = new CSClass();
+            cSClass.Name = command.IFClassMapper.Name;
+            cSClass.Usings.Add(nameSpace);
+            cSClass.Usings.Add("System.Collections.Generic");
 
             string name = "";
 
@@ -445,12 +443,14 @@ namespace IF.Manager.Service
 
 
 
-            GenerateClassTree2(parent, builder, level, command, name);
+            GenerateMapperMethodBody(parentClass, builder, level, command);
 
-            var me = new CSMethod("MapMe", "void", "public");
-            me.Body = builder.ToString();
-            me.Parameters.Add(new CsMethodParameter() { Name = parent.Name, Type = parent.Type });
-            cSClass.Methods.Add(me);
+            builder.AppendLine($"return {name};");
+
+            var mapperMethod = new CSMethod(command.IFClassMapper.Name+"Map", command.Model.Name + "Multi", "public");
+            mapperMethod.Body = builder.ToString();
+            mapperMethod.Parameters.Add(new CsMethodParameter() { Name = parentClass.Name, Type = parentClass.Type });
+            cSClass.Methods.Add(mapperMethod);
 
 
             fileSystem.FormatCode(cSClass.GenerateCode(), "cs");
@@ -486,13 +486,12 @@ namespace IF.Manager.Service
             return command;
         }
 
-        private void GenerateClassTree2(ClassControlTreeDto mainClass, StringBuilder builder, int level, IFCommand command, string namer)
+        private void GenerateMapperMethodBody(ClassControlTreeDto mainClass, StringBuilder builder, int level, IFCommand command)
         {
 
             level++;
 
             string indent = new String(' ', level * 4);
-
 
             foreach (var child in mainClass.Childs.OrderByDescending(c => c.IsPrimitive))
             {
@@ -516,21 +515,10 @@ namespace IF.Manager.Service
 
                         modelName = currentCommand.Model.Name;
 
-                        //if(child.Parent.GenericType == "List")
-                        // {
-                        //     modelName += "item" + level;
-                        // }
-
                         if (currentCommand.IsMultiCommand())
                         {
                             multiName = "Multi";
                         }
-
-                        //if (child.GenericType == "List")
-                        //{
-                        //    builder.AppendLine($"{indent} {path}.{rSide}{multi} = new List<{rSide}{multi}>();");
-                        //}
-                        //else
 
                         if (child.Parent.GenericType == "List")
                         {
@@ -540,10 +528,6 @@ namespace IF.Manager.Service
                         {
                             builder.AppendLine($"{indent} {modelName}{multiName}.{mapper.ToProperty.EntityProperty.Name} = {classPropertyName}.{mapper.FromProperty.Name};");
                         }
-
-
-
-
                     }
                     else
                     {
@@ -555,8 +539,6 @@ namespace IF.Manager.Service
 
                         var currentCommand = FindModelRecursive(command, child.Childs.First());
 
-                        //currentCommand = currentCommand.Parent;
-
                         string path = "";
 
                         if (currentCommand.Parent == null)
@@ -567,8 +549,6 @@ namespace IF.Manager.Service
                         {
                             path += currentCommand.GetModelPath();
                         }
-
-                        //path = namer + "." + path;
 
                         modelName = currentCommand.Model.Name;
 
@@ -602,13 +582,13 @@ namespace IF.Manager.Service
                                     builder.AppendLine($"{indent} {currentCommand.Parent.Model.Name}Multi {currentCommand.Parent.Model.Name}Multi = new {currentCommand.Parent.Model.Name}Multi();");
                                 }
 
-                                if(currentCommand.Parent.Parent!=null)
+                                if (currentCommand.Parent.Parent != null)
                                 {
                                     string lastName = "Multi";
 
                                     if (currentCommand.Parent.IsList()) lastName = "Multis";
 
-                                        builder.AppendLine($"{currentCommand.Parent.Parent.Model.Name}Multi.{currentCommand.Parent.Model.Name}Multi = {currentCommand.Parent.Model.Name}{lastName};");
+                                    builder.AppendLine($"{currentCommand.Parent.Parent.Model.Name}Multi.{currentCommand.Parent.Model.Name}Multi = {currentCommand.Parent.Model.Name}{lastName};");
                                 }
                             }
 
@@ -623,52 +603,23 @@ namespace IF.Manager.Service
 
                             if (child.GenericType == "List")
                             {
-
                                 builder.AppendLine($"{indent} List<{modelName}{multiName}> {modelName}{multiName} = new List<{modelName}{multiName}>();");
-
-
                             }
                             else
                             {
                                 builder.AppendLine($"{indent} {modelName}{multiName} {modelName}{multiName} = new {modelName}{multiName}();");
                             }
 
-
-
-                            //if (command.Parent!=null)
-                            {
-
-                                builder.AppendLine($"{indent} {currentCommand.Parent.Model.Name}Multi.{modelName}{multiName} = {modelName}{multiName};");
-                            }
-
+                            builder.AppendLine($"{indent} {currentCommand.Parent.Model.Name}Multi.{modelName}{multiName} = {modelName}{multiName};");
 
                         }
 
-                        //var prnts = currentCommand.GetParents();
-
-
-                        //foreach (var item in prnts)
-                        //{
-                        //    {
-
-                        //        builder.AppendLine($"{indent} {item.Model.Name}Multi.{modelName}{multiName} = {modelName}{multiName};");
-                        //    }
-                        //}
-
-
                         builder.AppendLine();
                         builder.AppendLine();
-
-
 
 
                         if (child.GenericType == "List")
                         {
-                            if (child.Name == "BorcluAdres")
-                            {
-
-                            }
-
                             bool IsFirstLoop = true;
 
                             var parents = child.GetParentPath();
@@ -703,8 +654,6 @@ namespace IF.Manager.Service
                             if (IsMultiList)
                             {
                                 builder.AppendLine($"{indent}  {currentCommand.Parent.Model.Name}Multi {currentCommand.Parent.Model.Name}Multi = new {currentCommand.Parent.Model.Name}Multi();");
-
-
                             }
 
 
@@ -726,14 +675,12 @@ namespace IF.Manager.Service
                                 }
                             }
 
-
-
                             builder.AppendLine(indent);
                             builder.AppendLine();
                             builder.AppendLine();
                         }
 
-                        GenerateClassTree2(child, builder, level, command, namer);
+                        GenerateMapperMethodBody(child, builder, level, command);
 
                         if (child.GenericType == "List")
                         {
@@ -873,8 +820,6 @@ namespace IF.Manager.Service
             foreach (var t in threads)
             {
                 t.Childrens = await GetCommandChildrensByParentId(t.Id);
-
-
                 children.Add(t);
             }
 
@@ -885,33 +830,31 @@ namespace IF.Manager.Service
         {
             var children = new List<IFClass>();
 
-            var threads = await this.GetQuery<IFClass>(x => x.ParentId == parentId).ToListAsync();
+            var items = await this.GetQuery<IFClass>(x => x.ParentId == parentId).ToListAsync();
 
-            foreach (var t in threads)
+            foreach (var item in items)
             {
-                t.Childrens = await GetChildrenByParentId(t.Id);
-
-
-                children.Add(t);
+                item.Childrens = await GetChildrenByParentId(item.Id);
+                children.Add(item);
             }
 
             return children;
         }
 
-        public async Task<List<IFClass>> GetTreeList2(int classId)
+        public async Task<List<IFClass>> GetClassFlattenList(int classId)
         {
             var list = await GetClassTree(classId);
 
-            var flat = Flatten(list.First());
+            var flat = MakeClassFlatten(list.First());
 
             return flat.ToList();
 
         }
-        private IEnumerable<IFClass> Flatten(IFClass @class)
+        private IEnumerable<IFClass> MakeClassFlatten(IFClass @class)
         {
             yield return @class;
 
-            foreach (var node in @class.Childrens.SelectMany(child => Flatten(child)))
+            foreach (var node in @class.Childrens.SelectMany(child => MakeClassFlatten(child)))
             {
                 yield return node;
             }
@@ -919,7 +862,7 @@ namespace IF.Manager.Service
 
         public async Task DeleteClass(int id)
         {
-            var list = await GetTreeList2(id);
+            var list = await GetClassFlattenList(id);
 
             foreach (var item in list)
             {
@@ -953,7 +896,6 @@ namespace IF.Manager.Service
                     if (dto.Id <= 0)
                     {
                         IFClassMapping property = new IFClassMapping();
-                        //property.IsList = dto.IsList;
                         property.IFClassMapperId = classMapId;
                         property.FromPropertyId = dto.FromPropertyId;
                         property.ToPropertyId = dto.ToPropertyId;
@@ -962,7 +904,6 @@ namespace IF.Manager.Service
                     else
                     {
                         var property = entity.IFClassMappings.SingleOrDefault(p => p.Id == dto.Id);
-                        //property.IsList = dto.IsList;
                         property.IFClassMapperId = classMapId;
                         property.FromPropertyId = dto.FromPropertyId;
                         property.ToPropertyId = dto.ToPropertyId;

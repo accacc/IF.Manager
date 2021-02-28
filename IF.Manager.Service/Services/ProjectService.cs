@@ -387,8 +387,9 @@ namespace IF.Manager.Service
 
                 var process = await this.GetQuery<IFProcess>(p => p.Id == publish.ProcessId)
                     .Include(s => s.Project.Solution)
-                    .Include(s=>s.Commands).ThenInclude(c=>c.Parent)
-                    .Include(s => s.Commands).ThenInclude(s=>s.Childrens)
+                    .Include(s => s.Commands).ThenInclude(c => c.Parent)
+                    .Include(s => s.Commands).ThenInclude(c => c.Childrens)
+                    .Include(s => s.Commands).ThenInclude(s=>s.IFClassMapper)
                     .Include(s => s.Commands).ThenInclude(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
                     .Include(s => s.Commands).ThenInclude(s => s.Model.Entity.Relations)
                     .Include(s => s.Commands).ThenInclude(s => s.CommandFilterItems)
@@ -402,11 +403,11 @@ namespace IF.Manager.Service
                 //CqrsQueryGenerator queryGenerator = new CqrsQueryGenerator(entityService, modelService,process);
                 //await queryGenerator.Generate();
 
-                CqrsCommandHandlerGenerator commandGenerator = new CqrsCommandHandlerGenerator(entityService, process);
+                CqrsCommandHandlerGenerator commandGenerator = new CqrsCommandHandlerGenerator(entityService,classService ,process);
                 await commandGenerator.Generate();
 
-                await classService.GenerateClass(process, 702);
-                await  classService.GenerateMapper(process,1);
+                //await classService.GenerateClass(process, 702);
+                //await  classService.GenerateMapper(process,1);
                
 
                 DirectoryHelper.MoveDirectory(DirectoryHelper.GetTempProcessDirectory(process), DirectoryHelper.GetNewProcessDirectory(process));

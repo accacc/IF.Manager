@@ -119,7 +119,7 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper.Mapping
         private async Task SetClasses(int classId)
         {
 
-            List<IFClass> classes = await this.classService.GetTreeList2(classId);
+            List<IFClass> classes = await this.classService.GetClassFlattenList(classId);
 
 
             List<SelectListItem> items = new List<SelectListItem>();

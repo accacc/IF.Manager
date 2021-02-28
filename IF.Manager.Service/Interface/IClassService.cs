@@ -25,16 +25,16 @@ namespace IF.Manager.Contracts.Services
 
         Task<List<ClassControlTreeDto>> GetClassTreeList(int ParentId);
         Task<List<IFClassMapping>> GetClassMappings(int classMapId);
-        Task<IFClassMapper> GetClassMapper(int ıd);
+        Task<IFClassMapper> GetClassMapper(int Id);
         Task GenerateClass(IFProcess process, int classId);
-        Task<List<ClassControlTreeDto>> GetClassPropertyList(int classId    );
+        Task<List<ClassControlTreeDto>> GetClassPropertyList(int classId);
         Task AddClassMapper(IFClassMapper form);
         Task UpdateClassMapper(IFClassMapper form);
         Task<List<IFClass>> GetClassTree(int classId);
 
-        Task<List<IFClass>> GetTreeList2(int classId);
+        Task<List<IFClass>> GetClassFlattenList(int classId);
         Task DeleteClass(int ıd);
         Task UpdateClassMapping(List<IFClassMapping> form,int classMapId);
-        Task<string> GenerateMapper(IFProcess process, int classMapId);
+        Task<string> GenerateClassToModelMapper(IFProcess process, int classId, int commandId);
     }
 }

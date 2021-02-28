@@ -21,13 +21,15 @@ namespace IF.Manager.Service
     public class CqrsCommandHandlerGenerator
     {
         private readonly IEntityService entityService;
+        private readonly IClassService classService;
         private readonly FileSystemCodeFormatProvider fileSystem;
         string generatedBasePath;
         IFProcess process;
 
-        public CqrsCommandHandlerGenerator(IEntityService entityService, IFProcess process)
+        public CqrsCommandHandlerGenerator(IEntityService entityService, IClassService classService, IFProcess process)
         {
             this.entityService = entityService;
+            this.classService = classService;
             this.process = process;
 
             generatedBasePath = DirectoryHelper.GetTempProcessDirectory(process);
@@ -46,11 +48,18 @@ namespace IF.Manager.Service
             //|| c.Name == "icraDataCommand"
             )
                 .Where(c => !c.ParentId.HasValue).ToList();
-            await Recursive(nameSpace,rootCommands);
+            await GenerateCommands(nameSpace,rootCommands);
+
+            foreach (var command in rootCommands)
+            {
+
+                await classService.GenerateClass(process, command.IFClassMapper.IFClassId.Value);
+                await classService.GenerateClassToModelMapper(process, command.IFClassMapper.IFClassId.Value, command.Id);
+            }
 
         }
 
-        private async Task Recursive(string nameSpace,List<IFCommand> commmands)
+        private async Task GenerateCommands(string nameSpace,List<IFCommand> commmands)
         {
 
            
@@ -79,7 +88,7 @@ namespace IF.Manager.Service
                 {
                     await GenerateParentCommand(nameSpace, command);
 
-                    await Recursive(nameSpace, childs);
+                    await GenerateCommands(nameSpace, childs);
                 }
                 else
                 {
@@ -108,6 +117,7 @@ namespace IF.Manager.Service
             CqrsCommandClassGenerator commandClassGenerator = new CqrsCommandClassGenerator(command, process, entityTree, fileSystem);
 
             commandClassGenerator.Generate();
+
 
 
             switch (command.CommandGetType)
