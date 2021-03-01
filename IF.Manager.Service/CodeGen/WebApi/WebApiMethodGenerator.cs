@@ -1,9 +1,7 @@
 ﻿using IF.CodeGeneration.Core;
 using IF.CodeGeneration.CSharp;
 using IF.Manager.Contracts.Model;
-using IF.Manager.Contracts.Services;
-using System;
-using System.Collections.Generic;
+
 using System.Text;
 
 namespace IF.Manager.Service.WebApi
@@ -36,6 +34,7 @@ namespace IF.Manager.Service.WebApi
             controllerClass.Usings.Add("IF.Core.Data");
             controllerClass.Usings.Add("Microsoft.AspNetCore.Mvc");
             controllerClass.Usings.Add("System.Threading.Tasks");
+            controllerClass.Usings.Add("IF.Web.Mvc.Exception");
             controllerClass.Usings.Add(SolutionHelper.GetProcessNamaspace(process));
 
             var dispatcherProperty = new CSProperty("private", "dispatcher", false);
@@ -99,6 +98,8 @@ namespace IF.Manager.Service.WebApi
 
 
             StringBuilder getMethodBody = new StringBuilder();
+            ModelValidation(getMethodBody);
+
             getMethodBody.AppendLine($"var response = await dispatcher.QueryAsync<{query.Name}Request, {query.Name}Response>(request);");
             getMethodBody.AppendLine($"return Ok(response);");
             getMethod.Body = getMethodBody.ToString();
@@ -115,6 +116,9 @@ namespace IF.Manager.Service.WebApi
 
 
             StringBuilder getMethodBody = new StringBuilder();
+            
+            ModelValidation(getMethodBody);
+
             getMethodBody.AppendLine($"var response = await dispatcher.QueryAsync<{query.Name}Request, {query.Name}Response>(request);");
             getMethodBody.AppendLine($"return Ok(response);");
             getMethod.Body = getMethodBody.ToString();
@@ -124,12 +128,32 @@ namespace IF.Manager.Service.WebApi
         private CSMethod UpdateMethodGenerate(IFCommand command)
         {
             CSMethod postMethod = new CSMethod($"{command.Name}", "IActionResult", "public");
-            postMethod.Parameters.Add(new CsMethodParameter() { Type = $"{command.Name}", Name = "command", Attirubite = "FromBody" });
+
+            AddCommandParameters(command, postMethod);
+
             postMethod.IsAsync = true;
             postMethod.Attirubites.Add("HttpPost");
             postMethod.Attirubites.Add($"Route(\"api/{process.Name}Controller/{command.Name}\")");
 
             StringBuilder postMethodBody = new StringBuilder();
+
+            ModelValidation(postMethodBody);
+
+            if (command.IsMultiCommand() && command.Parent == null)
+            {
+                //IcraMultiDataCommand command = new IcraMultiDataCommand();
+
+                //IcramultiDummyIFClassMapper mapper = new IcramultiDummyIFClassMapper();
+
+                //command.Data = mapper.IcramultiDummyIFClassMapperMap(icara);
+
+                postMethodBody.AppendLine($"{command.Name} command = new {command.Name}();");
+                postMethodBody.AppendLine($"{command.IFClassMapper.Name} mapper = new {command.IFClassMapper.Name}();");
+
+                postMethodBody.AppendLine($"command.Data = mapper.{command.IFClassMapper.Name}Map({command.IFClassMapper.IFClass.Name});");
+
+            }
+
             postMethodBody.AppendLine($"await dispatcher.CommandAsync(command);");
             postMethodBody.AppendLine($"return Ok(command);");
 
@@ -141,12 +165,32 @@ namespace IF.Manager.Service.WebApi
         public CSMethod AddMethodGenerate(IFCommand command)
         {
             CSMethod postMethod = new CSMethod($"{command.Name}", "IActionResult", "public");
-            postMethod.Parameters.Add(new CsMethodParameter() { Type = $"{command.Name}", Name = "command", Attirubite = "FromBody" });
+
+            AddCommandParameters(command, postMethod);
+
             postMethod.IsAsync = true;
             postMethod.Attirubites.Add("HttpPost");
             postMethod.Attirubites.Add($"Route(\"api/{process.Name}Controller/{command.Name}\")");
 
             StringBuilder postMethodBody = new StringBuilder();
+
+            ModelValidation(postMethodBody);
+
+            if (command.IsMultiCommand() && command.Parent == null)
+            {
+                //IcraMultiDataCommand command = new IcraMultiDataCommand();
+
+                //IcramultiDummyIFClassMapper mapper = new IcramultiDummyIFClassMapper();
+
+                //command.Data = mapper.IcramultiDummyIFClassMapperMap(icara);
+
+                postMethodBody.AppendLine($"{command.Name} command = new {command.Name}();");
+                postMethodBody.AppendLine($"{command.IFClassMapper.Name} mapper = new {command.IFClassMapper.Name}();");
+
+                postMethodBody.AppendLine($"command.Data = mapper.{command.IFClassMapper.Name}Map({command.IFClassMapper.IFClass.Name});");
+
+            }
+
             postMethodBody.AppendLine($"await dispatcher.CommandAsync(command);");
             postMethodBody.AppendLine($"return Ok(command);");
 
@@ -155,13 +199,25 @@ namespace IF.Manager.Service.WebApi
 
             return postMethod;
 
-            
 
-            //this.fileSystem.FormatCode(methods, vsFile.FileExtension, vsFile.FileName);            
-
-            
         }
 
+        private static void ModelValidation(StringBuilder postMethodBody)
+        {
+            postMethodBody.AppendLine("if(!ModelState.IsValid){throw new ModelStateException(ModelState);}");
+        }
 
+        private static void AddCommandParameters(IFCommand command, CSMethod postMethod)
+        {
+            if (command.IsMultiCommand() && command.Parent == null)
+            {
+                postMethod.Parameters.Add(new CsMethodParameter() { Type = $"{command.IFClassMapper.IFClass.Type}", Name = command.IFClassMapper.IFClass.Name, Attirubite = "FromBody" });
+            }
+            else
+            {
+
+                postMethod.Parameters.Add(new CsMethodParameter() { Type = $"{command.Name}", Name = "command", Attirubite = "FromBody" });
+            }
+        }
     }
 }

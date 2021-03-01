@@ -504,7 +504,7 @@ namespace IF.Manager.Service
                 {
                     if (child.IsPrimitive)
                     {
-                        
+
                         string classPropertyName = child.GetPath();
 
                         var currentCommand = FindModelRecursive(command, child);
@@ -691,9 +691,9 @@ namespace IF.Manager.Service
                             if (currentCommand.Parent.IsMultiCommand() && currentCommand.Parent.Parent != null && currentCommand.Parent.Childrens.First().Id == currentCommand.Id)
                             {
 
-                                        builder.AppendLine($"{indent} {currentCommand.Parent.Model.Name}Multis.Add({currentCommand.Parent.Model.Name}Multi);");
+                                builder.AppendLine($"{indent} {currentCommand.Parent.Model.Name}Multis.Add({currentCommand.Parent.Model.Name}Multi);");
                             }
-                          else
+                            else
                             {
 
                                 builder.AppendLine($"{indent} {modelName}{multiName}.Add({modelName}{multiName}{level});");

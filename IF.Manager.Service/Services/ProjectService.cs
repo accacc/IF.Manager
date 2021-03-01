@@ -390,7 +390,7 @@ namespace IF.Manager.Service
                     .Include(s => s.Project.Solution)
                     .Include(s => s.Commands).ThenInclude(c => c.Parent)
                     .Include(s => s.Commands).ThenInclude(c => c.Childrens)
-                    .Include(s => s.Commands).ThenInclude(s=>s.IFClassMapper)
+                    .Include(s => s.Commands).ThenInclude(s=>s.IFClassMapper.IFClass)
                     .Include(s => s.Commands).ThenInclude(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
                     .Include(s => s.Commands).ThenInclude(s => s.Model.Entity.Relations)
                     .Include(s => s.Commands).ThenInclude(s => s.CommandFilterItems)
