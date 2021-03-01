@@ -688,20 +688,18 @@ namespace IF.Manager.Service
                             builder.AppendLine();
 
 
-                            if (currentCommand.Parent.IsMultiCommand() && currentCommand.Parent.Parent != null)
+                            if (currentCommand.Parent.IsMultiCommand() && currentCommand.Parent.Parent != null && currentCommand.Parent.Childrens.First().Id == currentCommand.Id)
                             {
 
-                                if (currentCommand.Parent.Childrens.First().Id == currentCommand.Id)
-                                {
                                         builder.AppendLine($"{indent} {currentCommand.Parent.Model.Name}Multis.Add({currentCommand.Parent.Model.Name}Multi);");
-                                }
-
                             }
-                            else
+                          else
                             {
 
                                 builder.AppendLine($"{indent} {modelName}{multiName}.Add({modelName}{multiName}{level});");
                             }
+
+
                             builder.AppendLine($"{indent}}}");
                             builder.AppendLine();
                             builder.AppendLine();

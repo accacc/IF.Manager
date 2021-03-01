@@ -4,6 +4,7 @@ using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
+using IF.Manager.Service.Services;
 using IF.Manager.Service.WebApi;
 using IF.Persistence.EF;
 
@@ -400,8 +401,8 @@ namespace IF.Manager.Service
                     .SingleOrDefaultAsync();
 
 
-                //CqrsQueryGenerator queryGenerator = new CqrsQueryGenerator(entityService, modelService,process);
-                //await queryGenerator.Generate();
+                CqrsQueryGenerator queryGenerator = new CqrsQueryGenerator(entityService, modelService,process);
+                await queryGenerator.Generate();
 
                 CqrsCommandHandlerGenerator commandGenerator = new CqrsCommandHandlerGenerator(entityService,classService ,process);
                 await commandGenerator.Generate();
