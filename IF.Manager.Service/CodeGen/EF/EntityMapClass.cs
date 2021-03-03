@@ -1,15 +1,16 @@
 ﻿using IF.CodeGeneration.CSharp;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
+
 using System.Text;
 
 namespace IF.Manager.Service
 {
-    public class EntityMapClass: CSClass
+    public class EntityMapClass : CSClass
     {
 
         public EntityDto EntityMetaData { get; set; }
-        public EntityMapClass(EntityDto entity,IFProject project)
+        public EntityMapClass(EntityDto entity, IFProject project)
         {
             this.EntityMetaData = entity;
             this.NameSpace = SolutionHelper.GetCoreBaseNamespace(project);
@@ -21,7 +22,7 @@ namespace IF.Manager.Service
         }
 
         public void Build()
-        {            
+        {
 
             CSMethod mapClassMethod = new CSMethod("Configure", "void", "public");
 
@@ -46,7 +47,24 @@ namespace IF.Manager.Service
             {
                 if (relation.ForeignKeyPropertyId.HasValue && relation.ForeignKeyPropertyId > 0)
                 {
-                    methodBody.AppendLine($"builder.HasMany(s => s.{relation.RelatedEntityName}s).WithOne(s => s.{relation.EntityName}).HasForeignKey(s => s.{relation.ForeignKeyPropertyName}).OnDelete(DeleteBehavior.Restrict);");
+
+
+                    switch (relation.EntityRelationType)
+                    {
+                        case Contracts.Enum.EntityRelationType.None:
+                            break;
+                        case Contracts.Enum.EntityRelationType.OneToMany:
+                            methodBody.AppendLine($"builder.HasMany(s => s.{relation.RelatedEntityName}s).WithOne(s => s.{relation.EntityName}).HasForeignKey(s => s.{relation.ForeignKeyPropertyName}).OnDelete(DeleteBehavior.Restrict);");
+
+                            break;
+                        case Contracts.Enum.EntityRelationType.OneToOne:
+                           methodBody.AppendLine($"builder.HasOne(s => s.{relation.RelatedEntityName}).WithOne(s => s.{relation.EntityName}).HasForeignKey<{relation.EntityName}>(s => s.{relation.ForeignKeyPropertyName});");
+                            break;
+                        case Contracts.Enum.EntityRelationType.ManyToMany:
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
 

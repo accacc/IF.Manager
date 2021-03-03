@@ -1,6 +1,7 @@
 ﻿using IF.CodeGeneration.CSharp;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,12 +13,11 @@ namespace IF.Manager.Service
 
         public List<EntityDto> Entities { get; set; }
 
-        
 
-        public DbContextClass(List<EntityDto> entities,IFProject project)
+
+        public DbContextClass(List<EntityDto> entities, IFProject project)
         {
             this.Entities = entities;
-            //this.ContextName = project.Name;
             this.NameSpace = SolutionHelper.GetCoreBaseNamespace(project);
             this.Name = $"{project.Name}DbContext";
             this.BaseClass = "DbContext";
@@ -38,7 +38,7 @@ namespace IF.Manager.Service
         {
             foreach (var entity in this.Entities)
             {
-                var p = new CSProperty("public", entity.Name,false);
+                var p = new CSProperty("public", entity.Name, false);
                 p.PropertyTypeString = $"DbSet<{entity.Name}>";
                 this.Properties.Add(p);
             }
@@ -68,7 +68,7 @@ namespace IF.Manager.Service
         {
             CSMethod consMethod = new CSMethod(this.Name, "", "public");
             consMethod.IsConstructor = true;
-            
+
             CsMethodParameter parameter = new CsMethodParameter();
             parameter.Name = "options";
             parameter.UseBase = true;

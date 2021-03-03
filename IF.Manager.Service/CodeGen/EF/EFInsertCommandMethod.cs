@@ -28,11 +28,10 @@ namespace IF.Manager.Service.EF
         public CSMethod Build()
         {
             this.method.IsAsync = true;
+
             this.method.Parameters.Add(new CsMethodParameter() { Name = "command", Type = command.Name });
 
-
-            bool IsList = command.IsList();
-            
+            bool IsList = command.IsList();            
 
             string modelPropertyName = "command.Data";
 
@@ -58,6 +57,7 @@ namespace IF.Manager.Service.EF
             }
 
             this.method.Body += $"await this.repository.UnitOfWork.SaveChangesAsync();" + Environment.NewLine;
+            //this.method.Body += $"{modelPropertyName}.Id = entity.Id;" + Environment.NewLine;
             this.method.Body += Environment.NewLine;
             return this.method;
         }
@@ -70,19 +70,18 @@ namespace IF.Manager.Service.EF
             foreach (var property in this.entityTree.Childs)
             {
 
-                if (property.IsRelation) continue;
+                if (property.IsRelation || property.Name == "Id") continue;
 
                 bool IsModelProperty = ModelClassTreeDto.IsModelProperty(property, command.Model);
 
                 if (!IsModelProperty) continue;
 
-                //CSProperty classProperty = new CSProperty("public", property.Name, false);
                 this.method.Body += $"entity.{property.Name} = {modelPropertyName}.{property.Name};" + Environment.NewLine;
             }
 
             this.method.Body += $"this.repository.Add(entity);" + Environment.NewLine;
           
-            this.method.Body += $"{modelPropertyName}.Id = entity.Id;" + Environment.NewLine;
+           
         }
 
 

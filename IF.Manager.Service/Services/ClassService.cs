@@ -557,7 +557,7 @@ namespace IF.Manager.Service
                             multiName = "Multi";
                         }
 
-                        if (child.Name == "BorcluAdres")
+                        if (child.Name == "Borclular")
                         {
                         }
 
@@ -662,17 +662,9 @@ namespace IF.Manager.Service
 
                             builder.AppendLine($"{indent} {modelName}{multiName} {modelName}{multiName}{level}= new {modelName}{multiName}();");
 
-                            if (IsMultiList)
+                            if (IsMultiList && child.GenericType == "List")
                             {
-                                if (child.GenericType == "List")
-                                {
-                                    builder.AppendLine($"{indent} {currentCommand.Parent.Model.Name}Multi.{modelName}= new {modelName}{multiName}();");
-                                }
-                                else
-                                {
-
-                                    builder.AppendLine($"{indent} {currentCommand.Parent.Model.Name}Multi.{modelName}= new {modelName}{multiName}();");
-                                }
+                                builder.AppendLine($"{indent} {currentCommand.Parent.Model.Name}Multi.{modelName}= {modelName}{multiName}{level};");
                             }
 
                             builder.AppendLine(indent);
