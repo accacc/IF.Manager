@@ -2,22 +2,21 @@
 
 @{
     Layout = null;
-    List<SelectListItem> primitives = ViewData["primitives"] as List<SelectListItem>; 
+    List<SelectListItem> primitives = ViewData["primitives"] as List<SelectListItem>;
     var index = Guid.NewGuid();
-    
+
 }
 
 <tr>
     <td>
         <div class="form-group">
-
             <input type="text" name="Form[@index].Name" value="@Model.Name" class="form-control" />
         </div>
     </td>
     <td>
         <div class="form-group">
 
-            <input type="text" name="Form[@index].Name" value="@Model.Description" class="form-control" />
+            <input type="text" name="Form[@index].Description" value="@Model.Description" class="form-control" />
         </div>
     </td>
     <td>
@@ -25,7 +24,7 @@
 
             @if (!String.IsNullOrWhiteSpace(Model.Type))
             {
-                @Model.Type
+                <input type="text" name="Form[@index].Type" value="@Model.Type" class="form-control" />
             }
             else
             {
@@ -41,7 +40,7 @@
         </div>
     </td>
 
-    
+
     <td>
         <input type="hidden" name="Form.Index" value="@index" />
         <input type="hidden" name="Form[@index].Id" value="@Model.Id" />

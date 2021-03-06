@@ -1,16 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Services;
-using IF.Manager.Service.Model;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace IF.Manager.ClassDesigner.Pages.Control
 {
@@ -29,10 +28,6 @@ namespace IF.Manager.ClassDesigner.Pages.Control
         [BindProperty(SupportsGet = true), Required]
         public int? ParentId { get; set; }
 
-
-        //[BindProperty(SupportsGet = true), Required]
-        //public int? TreeSelectedId { get; set; }
-
         public ClassChildFormModel(IClassService classService, IEntityService entityService)
         {
             this.classService = classService;
@@ -43,7 +38,7 @@ namespace IF.Manager.ClassDesigner.Pages.Control
         public async Task OnGet()
         {
             this.Form = await this.classService.GetClassPropertyList(this.ParentId.Value);
-            
+
             if (!this.Form.Any())
             {
                 SetEmptyForm();
@@ -53,24 +48,24 @@ namespace IF.Manager.ClassDesigner.Pages.Control
 
         }
 
-      
+
 
         public PartialViewResult OnGetEmptyFormItemPartialAsync()
         {
             SetFromDefaults();
 
-            var emptyFormItem = new ClassControlTreeDto();          
+            var emptyFormItem = new ClassControlTreeDto();
 
             return new PartialViewResult
             {
                 ViewName = "_ClassChildFormItem",
-                ViewData = new ViewDataDictionary<ClassControlTreeDto>(ViewData,emptyFormItem )
-            };            
+                ViewData = new ViewDataDictionary<ClassControlTreeDto>(ViewData, emptyFormItem)
+            };
         }
 
-       
 
-            public async Task<PartialViewResult> OnPostAddPrimitivePropertyAsync()
+
+        public async Task<PartialViewResult> OnPostAddPrimitivePropertyAsync()
         {
             await this.classService.UpdateClassProperties(this.Form, this.ParentId.Value);
 
@@ -139,13 +134,13 @@ namespace IF.Manager.ClassDesigner.Pages.Control
 
             foreach (var name in primitives)
             {
-                SelectListItem item = new SelectListItem();                
+                SelectListItem item = new SelectListItem();
 
                 item.Text = name;
                 item.Value = name;
                 primitiveList.Add(item);
             }
-            
+
             ViewData["primitives"] = primitiveList;
         }
 

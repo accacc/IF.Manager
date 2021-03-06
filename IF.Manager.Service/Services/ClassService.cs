@@ -148,7 +148,6 @@ namespace IF.Manager.Service
         public async Task<List<IFClassMapper>> GetClassMapperList()
         {
             var data = await this.GetQuery<IFClassMapper>().ToListAsync();
-
             return data;
         }
 
@@ -377,7 +376,7 @@ namespace IF.Manager.Service
                         //property.IsPrimitive = true;
                         property.ParentId = classId;
                         property.Description = dto.Description;
-                        property.Type = property.Type;
+                        property.Type = dto.Type;
                        // property.GenericType = dto.GenericType;
                         property.IsNullable = dto.IsNullable;
                         this.Update(property);
