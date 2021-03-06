@@ -34,24 +34,29 @@ namespace IF.Manager.Service
 
         public async Task JsonToClass(string name, string json)
         {
-            JsonClassGenerator gen = GetJsonTypes(name, json);
+            JsonClassGenerator jsonClassGenerator = GetJsonGenerator(name, json);
 
-            var types = gen.Types;
+            var jsonTypes = jsonClassGenerator.Types;
 
-            IFClass mainClass = new IFClass();
-            mainClass.Name = name;
-            mainClass.Type = name;
-            mainClass.IsPrimitive = true;
+            IFClass wrapperClass = new IFClass();
 
-            IFClass list = new IFClass();
+            wrapperClass.Name = name;
+            wrapperClass.Type = name;
+            wrapperClass.IsPrimitive = true;
 
-            mainClass.Childrens.Add(list);
-            var rootObject = types.Where(t => t.IsRoot).SingleOrDefault();
-            var rchilds = rootObject.Fields.Select(s => s.MemberName).ToList();
-            var rootChilds = types.Where(t => rchilds.Contains(t.AssignedName)).ToList();
-            GenerateJsonToClass(list, rootChilds, types);
+            IFClass rootClass = new IFClass();
 
-            await this.AddClass(mainClass);
+            wrapperClass.Childrens.Add(rootClass);
+
+            var rootJsonObject = jsonTypes.Where(t => t.IsRoot).SingleOrDefault();
+
+            var rootJsonObjectChildNames = rootJsonObject.Fields.Select(s => s.MemberName).ToList();
+
+            var rootJsonObjectChilds = jsonTypes.Where(t => rootJsonObjectChildNames.Contains(t.AssignedName)).ToList();
+
+            GenerateJsonToClass(rootClass, rootJsonObjectChilds, jsonTypes);
+
+            await this.AddClass(rootClass);
         }
 
         private void GenerateJsonToClass(IFClass @class, List<JsonType> rootChilds, IList<JsonType> types)
@@ -82,65 +87,62 @@ namespace IF.Manager.Service
             }
         }
 
-        private void HandleJsonType(JsonType item, string name, IFClass cls)
+        private void HandleJsonType(JsonType item, string name, IFClass @class)
         {
-            cls.Name = name;
-            cls.Type = item.Type.ToString();
-            cls.IsPrimitive = true;
-            cls.Description = name;
+            @class.Name = name;
+            @class.Type = item.Type.ToString();
+            @class.IsPrimitive = true;
+            @class.Description = name;
 
             if (item.Type == JsonTypeEnum.Array)
             {
-                cls.GenericType = "List";
+                @class.GenericType = "List";
 
                 if (item.InternalType.Type == JsonTypeEnum.Object)
                 {
-                    cls.Type = name;
+                    @class.Type = name;
                 }
             }
-
-            if (item.Type == JsonTypeEnum.Object)
+            else if (item.Type == JsonTypeEnum.Object)
             {
-                cls.IsPrimitive = false;
-                cls.Type = name;
+                @class.IsPrimitive = false;
+                @class.Type = name;
+            }
+            else if (item.Type == JsonTypeEnum.NullableSomething)
+            {
+                @class.Type = "string";
             }
 
-
-
-            if (item.Type == JsonTypeEnum.NullableSomething)
+            else if (item.Type == JsonTypeEnum.Integer)
             {
-                cls.Type = "string";
+                @class.Type = "int";
             }
-
-            if (item.Type == JsonTypeEnum.Integer)
+            else if (item.Type == JsonTypeEnum.Boolean)
             {
-                cls.Type = "int";
+                @class.Type = "bool";
             }
         }
 
-        private JsonClassGenerator GetJsonTypes(string jsondata, string name)
+        private JsonClassGenerator GetJsonGenerator(string name, string jsondata)
         {
-            var gen = new JsonClassGenerator();
-            gen.Example = jsondata;
-            gen.InternalVisibility = false;
-            gen.CodeWriter = new CSharpCodeWriter();
-            gen.ExplicitDeserialization = false;// chkExplicitDeserialization.Checked && gen.CodeWriter is CSharpCodeWriter;
-            gen.Namespace = "Example";//string.IsNullOrEmpty(edtNamespace.Text) ? null : edtNamespace.Text;
-            gen.NoHelperClass = false;
-            gen.SecondaryNamespace = null;
-            gen.TargetFolder = @"C:\Users\Lenovo\Desktop\Temp";
-            gen.UseProperties = true;
-            gen.MainClass = name;
-            gen.UsePascalCase = true;
-
-
-            gen.UseNestedClasses = false;
-            gen.ApplyObfuscationAttributes = false;
-            gen.SingleFile = true;
-            gen.ExamplesInDocumentation = false;
-
-            gen.GenerateClasses();
-            return gen;
+            var generator = new JsonClassGenerator();
+            generator.Example = jsondata;
+            generator.InternalVisibility = false;
+            generator.CodeWriter = new CSharpCodeWriter();
+            generator.ExplicitDeserialization = false;
+            generator.Namespace = "IF.Json";
+            generator.NoHelperClass = false;
+            generator.SecondaryNamespace = null;
+            generator.TargetFolder = @"C:\temp\generated\json";
+            generator.UseProperties = true;
+            generator.MainClass = name;
+            generator.UsePascalCase = true;
+            generator.UseNestedClasses = false;
+            generator.ApplyObfuscationAttributes = false;
+            generator.SingleFile = true;
+            generator.ExamplesInDocumentation = false;
+            generator.GenerateClasses();
+            return generator;
         }
 
         public async Task<List<IFClassMapper>> GetClassMapperList()
@@ -274,14 +276,7 @@ namespace IF.Manager.Service
 
             try
             {
-                var list = await this.GetQuery<IFClass>(c => c.Id == 702
-
-                || c.ParentId == 702
-                || c.ParentId == 703
-                || c.ParentId == 707
-                || c.Id != 708
-                )
-                    .Select
+                var list = await this.GetQuery<IFClass>().Select
 
                (map => new ClassControlTreeDto
                {

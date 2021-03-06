@@ -9,7 +9,7 @@ namespace IF.Manager.Service.Cqrs
 {
     public class CqrsRequestClass
     {
-        public void GenerateRequestClass(IFQuery query,FileSystemCodeFormatProvider fileSystem)
+        public void GenerateRequestClass(IFQuery query, FileSystemCodeFormatProvider fileSystem)
         {
 
             string nameSpace = SolutionHelper.GetProcessNamaspace(query.Process);
@@ -29,30 +29,13 @@ namespace IF.Manager.Service.Cqrs
 
             foreach (var queryFilterItem in query.QueryFilterItems)
             {
-                //if (queryFilterItem.IFPageParameterId.HasValue)
-                //{
-                //    var property = new CSProperty("public", queryFilterItem.IFPageParameter.Name, false);
-
-                //    property.PropertyTypeString = queryFilterItem.IFPageParameter.Type;
-
-                //    requestModelClass.Properties.Add(property);
-                //}
-                //else
-                //{
-                //    var property = new CSProperty("public", queryFilterItem.EntityProperty.Name, queryFilterItem.EntityProperty.IsNullable);
-
-                //    property.PropertyTypeString = queryFilterItem.EntityProperty.Type;
-
-                //    requestModelClass.Properties.Add(property);
-                //}
-
                 if (!String.IsNullOrWhiteSpace(queryFilterItem.Value))
                 {
                     if (queryFilterItem.Value.StartsWith("{") && queryFilterItem.Value.EndsWith("}"))
                     {
                         var formProperty = queryFilterItem.Value.Replace("{", "");
                         formProperty = formProperty.Replace("}", "");
-                        var property = new CSProperty("public",formProperty, queryFilterItem.IsNullCheck.Value);
+                        var property = new CSProperty("public", formProperty, queryFilterItem.IsNullCheck.Value);
 
                         property.PropertyTypeString = queryFilterItem.EntityProperty.Type;
 
@@ -90,18 +73,12 @@ namespace IF.Manager.Service.Cqrs
 
             CSProperty model = new CSProperty(null, "public", "Data", false);
 
-            
-            var  modelType = $"{query.Name}Filter";           
+
+            var modelType = $"{query.Name}Filter";
             model.PropertyTypeString = modelType;
             requestClass.Properties.Add(model);
             fileSystem.FormatCode(requestClass.GenerateCode(), "cs");
             fileSystem.FormatCode(requestModelClass.GenerateCode(), "cs");
-
-
-
-
-
-
         }
     }
 }

@@ -5,13 +5,10 @@ using IF.Manager.Contracts.Model;
 using IF.Manager.Service.CodeGen.Interface;
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace IF.Manager.Service.CodeGen.Cqrs
 {
-    public class CqrsCommandClassGenerator: ICqrsCommandClassGenerator
+    public class CqrsCommandClassGenerator : ICqrsCommandClassGenerator
     {
         IFCommand command;
         IFProcess process;
@@ -32,7 +29,7 @@ namespace IF.Manager.Service.CodeGen.Cqrs
 
             CSProperty modelProperty = new CSProperty(null, "public", "Data", false);
 
-           
+
 
             string propertyName = command.Model.Name;
 
@@ -54,7 +51,7 @@ namespace IF.Manager.Service.CodeGen.Cqrs
             }
 
 
-            
+
 
             commandClass.Properties.Add(modelProperty);
 

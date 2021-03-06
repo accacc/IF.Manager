@@ -41,13 +41,7 @@ namespace IF.Manager.Service
         public async Task Generate()
         {
             string nameSpace = SolutionHelper.GetProcessNamaspace(process);
-            var rootCommands = process.Commands
-                .Where(c => c.Name == "IcraMultiDataCommand"
-            //|| c.Name == "AlacakliMultiDataCommand"
-            //|| c.Name == "BorcluMultiDataCommand"
-            //|| c.Name == "icraDataCommand"
-            )
-                .Where(c => !c.ParentId.HasValue).ToList();
+            var rootCommands = process.Commands.Where(c => !c.ParentId.HasValue).ToList();
             await GenerateCommands(nameSpace,rootCommands);
 
             foreach (var command in rootCommands)
@@ -65,24 +59,7 @@ namespace IF.Manager.Service
            
             foreach (var command in commmands)
             {
-
-
-                if (command.Name == "AlacakliMultiDataCommand")
-                {
-
-                }
-
-                var childs = command.Childrens.Where(c => c.Name == "icraDataCommand"
-             || c.Name == "AlacakliMultiDataCommand"
-             || c.Name == "IcraAlacakli"
-             || c.Name == "TelefonIcraAlacakli"
-             || c.Name == "AdresIcraAlacakli"
-                || c.Name == "BorcluMultiDataCommand"
-                || c.Name == "IcraBorclu"
-                || c.Name == "AdresBorcluTelefonDataCommand"
-                || c.Name == "TelefonBorcluIcraDataCommand"
-
-                ).ToList();
+                var childs = command.Childrens.ToList();
 
                 if (childs.Any())
                 {
@@ -92,17 +69,9 @@ namespace IF.Manager.Service
                 }
                 else
                 {
-                    if(command.Name== "AdresIcraAlacakli")
-                    {
-
-                    }
-
-
                     await GenerateChildCommand(nameSpace, command);
                 }
             }
-
-
         }
 
         private async Task GenerateParentCommand(string nameSpace, IFCommand command)

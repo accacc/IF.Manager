@@ -170,9 +170,6 @@ namespace IF.Manager.Service
                     type = $"List<{relation.RelatedEntityName}>";
                     constructorMethodBody.AppendLine($"{relationName} = new {type}();");
                 }
-
-               
-
             }
 
             constructorMethod.Body = constructorMethodBody.ToString();

@@ -34,8 +34,6 @@ namespace IF.Manager.Service.Services
             {
                 var entityTree = await entityService.GetEntityTree(query.Model.EntityId);
 
-                //var properties = await this.modelService.GetModelPropertyList(query.ModelId);
-
                 ModelGenerator modelGenerator = new ModelGenerator(fileSystem, query.Model, nameSpace, entityTree);
                 modelGenerator.Generate();
 

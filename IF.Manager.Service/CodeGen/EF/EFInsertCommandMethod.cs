@@ -57,7 +57,6 @@ namespace IF.Manager.Service.EF
             }
 
             this.method.Body += $"await this.repository.UnitOfWork.SaveChangesAsync();" + Environment.NewLine;
-            //this.method.Body += $"{modelPropertyName}.Id = entity.Id;" + Environment.NewLine;
             this.method.Body += Environment.NewLine;
             return this.method;
         }

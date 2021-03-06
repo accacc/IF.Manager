@@ -1,15 +1,12 @@
 ﻿using IF.CodeGeneration.Core;
 using IF.CodeGeneration.CSharp;
 using IF.Manager.Contracts.Model;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace IF.Manager.Service.Cqrs
 {
     public class CqrsResponseClass
     {
-        public  void GenerateResponseClass(IFQuery query, FileSystemCodeFormatProvider fileSystem)
+        public void GenerateResponseClass(IFQuery query, FileSystemCodeFormatProvider fileSystem)
         {
             string nameSpace = SolutionHelper.GetProcessNamaspace(query.Process);
             CSClass responseClass = new CSClass();
