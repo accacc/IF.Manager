@@ -3,6 +3,7 @@
 using IF.Core.Data;
 using IF.Core.Exception;
 using IF.Manager.Contracts.Dto;
+using IF.Manager.Contracts.Enum;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
@@ -168,6 +169,7 @@ namespace IF.Manager.Service
                     child.Childs.Add(childProperty);
                 }
 
+                if (relation.Type == EntityRelationType.OneToOne) continue;
 
                 await this.ToTreeRelations(child);
 
@@ -214,6 +216,8 @@ namespace IF.Manager.Service
                     child.Childs.Add(childProperty);
                 }
 
+
+                if (relation.Type == EntityRelationType.OneToOne) continue;
 
                 await this.ToTreeReverseRelations(child);
 
@@ -465,7 +469,7 @@ namespace IF.Manager.Service
 
 
 
-        public async Task UpdateEntityRelations(List<EntityRelationDto> dtos, int entityId)
+        public async Task UpdateEntityRelations(List<EntityRelationDto> relationDtos, int entityId)
         {
             try
             {
@@ -473,28 +477,50 @@ namespace IF.Manager.Service
                    .Include(e => e.Relations)
                .SingleOrDefaultAsync(k => k.Id == entityId);
 
-                if (entity == null) { throw new BusinessException(" No such entity exists"); }
+                if (entity == null) { throw new BusinessException(" No such entity exists code:1111"); }
 
-                foreach (var dto in dtos)
+                foreach (var relationDto in relationDtos)
                 {
-                    if (dto.Id > 0) continue;
+                    if (relationDto.Id > 0) continue;
 
-                    IFEntityRelation relation = new IFEntityRelation();
-                    relation.EntityId = entityId;
-                    relation.RelationId = dto.IFRelatedEntityId;
-                    relation.Type = dto.EntityRelationType;
-                    relation.ForeignKeyIFEntityPropertyId = dto.ForeignKeyPropertyId;
-                    relation.Prefix = dto.Prefix;
+                   
 
-                    switch (dto.EntityRelationType)
+                    switch (relationDto.EntityRelationType)
                     {
                         case Contracts.Enum.EntityRelationType.None:
                             break;
                         case Contracts.Enum.EntityRelationType.OneToMany:
-                            await AddForeignKey(entity, dto, relation);
+
+                            IFEntityRelation relation = GenerateNewRelation(entityId, relationDto.IFRelatedEntityId,relationDto.EntityRelationType,relationDto.ForeignKeyPropertyId,relationDto.Prefix);
+
+                            await AddForeignKey(entity.Name,relationDto.IFRelatedEntityId,relation);
+
+                            DbContext.Entry(relation).State = EntityState.Added;
+
+
                             break;
                         case Contracts.Enum.EntityRelationType.OneToOne:
-                            await AddForeignKey(entity, dto, relation);
+
+                            IFEntityRelation relationOne = GenerateNewRelation(entityId, relationDto.IFRelatedEntityId, relationDto.EntityRelationType, relationDto.ForeignKeyPropertyId, relationDto.Prefix);
+
+                            await AddForeignKey(entity.Name,relationDto.IFRelatedEntityId, relationOne);
+
+                            DbContext.Entry(relationOne).State = EntityState.Added;
+
+
+                            IFEntityRelation relationTwo = GenerateNewRelation(relationDto.IFRelatedEntityId, entityId, relationDto.EntityRelationType, relationDto.ForeignKeyPropertyId, relationDto.Prefix);
+
+                            var entityTwo = await this.GetEntity(relationDto.IFRelatedEntityId);
+
+                            if (entityTwo == null) { throw new BusinessException(" No such entity exists code:1110"); }
+
+                            await AddForeignKey(entityTwo.Name,entityId, relationTwo);
+
+                            DbContext.Entry(relationTwo).State = EntityState.Added;
+
+
+
+
                             break;
                         case Contracts.Enum.EntityRelationType.ManyToMany:
                             break;
@@ -502,7 +528,7 @@ namespace IF.Manager.Service
                             break;
                     }
 
-                    DbContext.Entry(relation).State = EntityState.Added;
+                    
                 }
 
                 await UnitOfWork.SaveChangesAsync();
@@ -514,23 +540,59 @@ namespace IF.Manager.Service
             }
         }
 
-        private async Task AddForeignKey(IFEntity entity, EntityRelationDto dto, IFEntityRelation relation)
+        private static IFEntityRelation GenerateNewRelation(int entityId,int IFRelatedEntityId,EntityRelationType entityRelationType,int? ForeignKeyPropertyId, string prefix)
+        {
+            IFEntityRelation relation = new IFEntityRelation();
+            relation.EntityId = entityId;
+            relation.RelationId = IFRelatedEntityId;
+            relation.Type = entityRelationType;
+            relation.ForeignKeyIFEntityPropertyId = ForeignKeyPropertyId;
+            relation.Prefix = prefix;
+            return relation;
+        }
+
+        //private async Task AddForeignKey(int relatedEntityId, IFEntityRelation relation)
+        //{
+        //    if (!relation.ForeignKeyIFEntityPropertyId.HasValue || relation.ForeignKeyIFEntityPropertyId <= 0)
+        //    {
+        //        var relatedEntity = await this.GetQuery<IFEntity>()
+        //                                    .Include(e => e.Properties)
+        //                                    .SingleOrDefaultAsync(k => k.Id == relatedEntityId);
+
+        //        //if (entity == null) { throw new BusinessException("No such entity exists"); }
+
+        //        string name = relatedEntity.Name;
+
+        //        var foreignKeyProperty = new IFEntityProperty()
+        //        {
+        //            Name = $"{name}Id",
+        //            Type = "int",
+        //            IsNullable= true
+
+        //        };
+
+        //        relatedEntity.Properties.Add(foreignKeyProperty);
+
+        //        relation.ForeignKeyIFEntityProperty = foreignKeyProperty;
+
+        //    }
+        //}
+
+        private async Task AddForeignKey(string name, int relatedEntityId, IFEntityRelation relation)
         {
             if (!relation.ForeignKeyIFEntityPropertyId.HasValue || relation.ForeignKeyIFEntityPropertyId <= 0)
             {
                 var relatedEntity = await this.GetQuery<IFEntity>()
                                             .Include(e => e.Properties)
-                                            .SingleOrDefaultAsync(k => k.Id == dto.IFRelatedEntityId);
+                                            .SingleOrDefaultAsync(k => k.Id == relatedEntityId);
 
-                if (entity == null) { throw new BusinessException("No such entity exists"); }
-
-                string name = DirectoryHelper.AddAsLastWord(entity.Name, "Entity");
+                if (relatedEntity == null) { throw new BusinessException("No such entity exists"); }
 
                 var foreignKeyProperty = new IFEntityProperty()
                 {
                     Name = $"{name}Id",
                     Type = "int",
-                    IsNullable= true
+                    IsNullable = true
 
                 };
 

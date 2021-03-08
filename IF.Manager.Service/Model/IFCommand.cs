@@ -35,7 +35,7 @@ namespace IF.Manager.Contracts.Model
 
         public string Description { get; set; }
 
-        public int ModelId { get; set; }
+        public int? ModelId { get; set; }
 
         public IFModel Model { get; set; }
 
@@ -48,7 +48,7 @@ namespace IF.Manager.Contracts.Model
 
         //public bool IsMutli { get; set; }
 
-        //public bool IsList { get; set; }
+        public bool? IsList { get; set; }
 
 
         public bool IsMultiCommand()
@@ -56,23 +56,25 @@ namespace IF.Manager.Contracts.Model
 
             return this.Childrens.Any();
         }
-        public bool IsList()
+        public bool IsListCommand()
         {
-            if (this.Parent == null) return false;
 
-            var relation = this.Parent.Model.Entity.Relations.SingleOrDefault(r => r.Relation.Name == this.Model.Entity.Name);
+            return this.IsList.Value;
+            //if (this.Parent == null) return false;
 
-            if (relation != null)
-            {
+            //var relation = this.Parent.Model.Entity.Relations.SingleOrDefault(r => r.Relation.Name == this.Model.Entity.Name);
 
-                if (relation.Type == Contracts.Enum.EntityRelationType.ManyToMany ||
-                        relation.Type == Contracts.Enum.EntityRelationType.OneToMany)
-                {
-                    return true;
-                }
-            }
+            //if (relation != null)
+            //{
 
-            return false; ;
+            //    if (relation.Type == Contracts.Enum.EntityRelationType.ManyToMany ||
+            //            relation.Type == Contracts.Enum.EntityRelationType.OneToMany)
+            //    {
+            //        return true;
+            //    }
+            //}
+
+            //return false; ;
         }
 
 
@@ -85,7 +87,7 @@ namespace IF.Manager.Contracts.Model
             {
                 string name = parent.Model.Name;
 
-                if(parent.IsMultiCommand())
+                if (parent.IsMultiCommand())
                 {
                     name += "Multi";
                 }
@@ -115,15 +117,9 @@ namespace IF.Manager.Contracts.Model
 
             while (command != null)
             {
-
                 if (command.Parent == null) break;
-
-
                 command = command.Parent;
                 paths.Add(command);
-
-
-
             }
 
             paths.Reverse();
@@ -144,15 +140,9 @@ namespace IF.Manager.Contracts.Model
 
             while (command != null)
             {
-
                 if (command.Parent == null) break;
-
-
                 command = command.Parent;
                 paths.Add(command.Model);
-
-
-
             }
 
             paths.Reverse();

@@ -32,7 +32,7 @@ namespace IF.Manager.Service.CodeGen.Model
                     name = name + "Multi";
                 }
 
-                bool isList = childCommand.IsList();
+                bool isList = childCommand.IsListCommand();
 
                 string type = name; ;
 

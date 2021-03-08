@@ -452,32 +452,42 @@ namespace IF.Manager.Service
             return builder.ToString();
         }
 
-        private IFCommand FindModelRecursive(IFCommand commands, ClassControlTreeDto classControlTree)
+        private IFCommand FindCommandByClassMapping(IFCommand commands, ClassControlTreeDto classControlTree)
         {
 
-            var list = commands.FlattenHierarchy(x => x.Childrens);
-            IFCommand command = null;
+            var allCommands = commands.FlattenHierarchy(x => x.Childrens).ToList();
 
+            IFCommand currentCommand = null;
 
-            foreach (var item in list)
+            foreach (var command in allCommands)
             {
-                if (item.IsMultiCommand()) continue;
+                if (command.IsMultiCommand()) continue;
 
-                foreach (var item2 in item.IFClassMapper.IFClassMappings)
+                foreach (var classMapping in command.IFClassMapper.IFClassMappings)
                 {
-                    if (item2.FromPropertyId == classControlTree.Id)
+                    if (classControlTree.IsPrimitive)
                     {
-                        command = item;
+                        if (classMapping.FromPropertyId == classControlTree.Id)
+                        {
+                            currentCommand = command;
+                        }
+                    }
+                    else
+                    {
+                        if (classControlTree.Childs.Any(c=>c.Id == classMapping.FromPropertyId))
+                        {
+                            currentCommand = command;
+                        }
                     }
                 }
             }
 
-            if (command == null)
-            {
-                throw new BusinessException("Command da mapper bulunamadı:1122");
-            }
+            //if (command == null)
+            //{
+            //    throw new BusinessException("Command da mapper bulunamadı:1122");
+            //}
 
-            return command;
+            return currentCommand;
         }
 
         private void GenerateMapperMethodBody(ClassControlTreeDto mainClass, StringBuilder builder, int level, IFCommand command)
@@ -501,7 +511,9 @@ namespace IF.Manager.Service
 
                         string classPropertyName = child.GetPath();
 
-                        var currentCommand = FindModelRecursive(command, child);
+                        var currentCommand = FindCommandByClassMapping(command, child);
+
+                        if (currentCommand == null) continue;
 
                         var mapper = currentCommand.IFClassMapper.IFClassMappings.Where(m => m.FromProperty.Id == child.Id).SingleOrDefault();
 
@@ -531,7 +543,13 @@ namespace IF.Manager.Service
                         builder.AppendLine();
 
 
-                        var currentCommand = FindModelRecursive(command, child.Childs.First());
+                        var currentCommand = FindCommandByClassMapping(command, child);
+
+                        if (currentCommand == null)
+                        {
+
+                            continue;
+                        }
 
                         string path = "";
 
@@ -566,7 +584,7 @@ namespace IF.Manager.Service
 
                             if (currentCommand.Parent.Childrens.First().Id == currentCommand.Id)
                             {
-                                if (currentCommand.Parent.IsList())
+                                if (currentCommand.Parent.IsListCommand())
                                 {
                                     builder.AppendLine($"{indent} var {currentCommand.Parent.Model.Name}Multis = new List<{currentCommand.Parent.Model.Name}Multi>();");
                                     IsMultiList = true;
@@ -580,7 +598,7 @@ namespace IF.Manager.Service
                                 {
                                     string lastName = "Multi";
 
-                                    if (currentCommand.Parent.IsList()) lastName = "Multis";
+                                    if (currentCommand.Parent.IsListCommand()) lastName = "Multis";
 
                                     builder.AppendLine($"{currentCommand.Parent.Parent.Model.Name}Multi.{currentCommand.Parent.Model.Name}Multi = {currentCommand.Parent.Model.Name}{lastName};");
                                 }

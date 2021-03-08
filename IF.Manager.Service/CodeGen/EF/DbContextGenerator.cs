@@ -111,8 +111,11 @@ namespace IF.Manager.Service
 
             }
 
+            
+
             foreach (var relation in entity.ReverseRelations)
             {
+                if (relation.EntityRelationType == Contracts.Enum.EntityRelationType.OneToOne) continue;
 
                 var relationName = relation.RelatedEntityName;
                 var type = relation.RelatedEntityName;

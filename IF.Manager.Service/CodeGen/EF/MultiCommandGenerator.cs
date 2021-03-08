@@ -35,7 +35,7 @@ namespace IF.Manager.Service.CodeGen.EF
 
             if(command.Parent!=null)
             {
-                IsList = command.IsList();
+                IsList = command.IsListCommand();
             }
 
             string modelPropertyName = "command.Data";

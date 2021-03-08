@@ -97,7 +97,7 @@ namespace IF.Manager.Command.Pages.Filter
         {
             var Command = await this.commandService.GetCommand(Id);
 
-            var model = await this.modelService.GetModel(Command.ModelId);
+            var model = await this.modelService.GetModel(Command.ModelId.Value);
 
             var entities = await this.entityService.GetEntityAllRelations(model.EntityId);
 

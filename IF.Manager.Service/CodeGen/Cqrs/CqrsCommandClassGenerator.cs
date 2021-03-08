@@ -38,7 +38,7 @@ namespace IF.Manager.Service.CodeGen.Cqrs
                 propertyName = propertyName + "Multi";
             }
 
-            bool isList = command.IsList();
+            bool isList = command.IsListCommand();
 
             if (isList)
             {
