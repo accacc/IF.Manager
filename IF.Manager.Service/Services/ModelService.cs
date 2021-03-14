@@ -24,41 +24,43 @@ namespace IF.Manager.Service.Services
         }
 
 
-        public async Task SaveModel(ModelUpdateDto dtos, int modelId)
+
+
+        public async Task SaveModel(ModelUpdateDto dtos, int queryId)
         {
             try
             {
-                var model = await this.GetQuery<IFModel>()
+                var entity = await this.GetQuery<IFModel>()
                .Include(e => e.Properties)
-               .SingleOrDefaultAsync(k => k.Id == modelId);
+               .SingleOrDefaultAsync(k => k.Id == queryId);
 
-                if (model == null) { throw new BusinessException(" No such entity exists"); }
+                if (entity == null) { throw new BusinessException(" No such entity exists"); }
 
-                var list = dtos.GetProperties();
+                var selectedProperties = dtos.GetProperties();
 
-                for (int i = 0; i < model.Properties.Count; i++)
+                for (int i = 0; i < entity.Properties.Count; i++)
                 {
-                    if (!list.Any(d => d.ModelPropertyId == model.Properties.ElementAt(i).Id))
+                    if (!selectedProperties.Any(d => d.ModelPropertyId == entity.Properties.ElementAt(i).Id))
                     {
-                        this.Delete(model.Properties.ElementAt(i));
+                        this.Delete(entity.Properties.ElementAt(i));
                     }
                 }
 
-                foreach (var property in list)
+                foreach (var selectedProperty in selectedProperties)
                 {
 
-                    if (property.ModelPropertyId <= 0)
+                    if (selectedProperty.ModelPropertyId <= 0)
                     {
                         IFModelProperty modelProperty = new IFModelProperty();
-                        modelProperty.EntityId = property.EntityId;
-                        modelProperty.EntityPropertyId = property.EntityPropertyId;
-                        model.Properties.Add(modelProperty);
+                        modelProperty.EntityId = selectedProperty.EntityId;
+                        modelProperty.EntityPropertyId = selectedProperty.EntityPropertyId;
+                        entity.Properties.Add(modelProperty);
                     }
                     else
                     {
-                        IFModelProperty modelProperty = new IFModelProperty();
-                        modelProperty.EntityId = property.EntityId;
-                        modelProperty.EntityPropertyId = property.EntityPropertyId;
+                        var modelProperty = entity.Properties.SingleOrDefault(p => p.Id == selectedProperty.ModelPropertyId);
+                        modelProperty.EntityId = selectedProperty.EntityId;
+                        modelProperty.EntityPropertyId = selectedProperty.EntityPropertyId;
                         this.Update(modelProperty);
                     }
                 }
@@ -71,55 +73,6 @@ namespace IF.Manager.Service.Services
                 throw;
             }
         }
-
-        public async Task SaveModel2(ModelUpdateDto modelDto, int modelId)
-        {
-            IFModel model = await this.GetQuery<IFModel>(m => m.Id == modelId)
-                .Include(m => m.Properties)
-                .SingleOrDefaultAsync();
-
-            foreach (var property in model.Properties)
-            {
-                this.Delete(property);
-            }
-
-
-            foreach (var property in modelDto.GetProperties())
-            {
-                IFModelProperty modelProperty = new IFModelProperty();
-                modelProperty.EntityId = property.EntityId;
-                modelProperty.EntityPropertyId = property.EntityPropertyId;
-                model.Properties.Add(modelProperty);
-            }
-
-
-
-
-            await this.UnitOfWork.SaveChangesAsync();
-        }
-
-        public async Task ModelToClass(int modelId)
-        {
-            var model = await this.GetQuery<IFModel>(m => m.Id == modelId)
-                .Include(x => x.Properties)
-                .ThenInclude(p => p.EntityProperty).SingleOrDefaultAsync();
-
-            IFClass @class = new IFClass();
-
-            @class.Type = model.Name;
-            @class.Name = model.Name;
-            @class.IsPrimitive = false;
-            @class.IsNullable = false;
-
-
-            foreach (var property in model.Properties)
-            {
-
-            }
-
-
-        }
-
         public async Task<List<ModelDto>> GetModelList()
         {
             var data = await this.GetQuery<IFModel>()
@@ -128,7 +81,7 @@ namespace IF.Manager.Service.Services
                                     Id = x.Id,
                                     Name = x.Name,
 
-                                }).OrderBy(m=>m.Name).ToListAsync();
+                                }).OrderBy(m => m.Name).ToListAsync();
 
             return data;
         }

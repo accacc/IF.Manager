@@ -108,17 +108,17 @@ namespace IF.Manager.Service
             tree.Type = entity.Name;
 
 
-            var properties = await this.GetEntityPropertyList(entityId);
+            var entityProperties = await this.GetEntityPropertyList(entityId);
 
-            foreach (var property in properties)
+            foreach (var entityProperty in entityProperties)
             {
                 ModelClassTreeDto child = new ModelClassTreeDto();
-                child.Id = property.Id;
-                child.ClientId = $"{property.Id}-{entityId}";
-                child.Name = property.Name;
+                child.Id = entityProperty.Id;
+                child.ClientId = $"{entityProperty.Id}-{entityId}";
+                child.Name = entityProperty.Name;
                 child.ParentId = entityId;
-                child.Type = property.Type;
-                child.IsNullable = property.IsNullable;
+                child.Type = entityProperty.Type;
+                child.IsNullable = entityProperty.IsNullable;
                 tree.Childs.Add(child);
             }
 
@@ -154,17 +154,17 @@ namespace IF.Manager.Service
 
                 parent.Childs.Add(child);
 
-                var properties = await this.GetEntityPropertyList(child.Id);
+                var entityProperties = await this.GetEntityPropertyList(child.Id);
 
-                foreach (var property in properties)
+                foreach (var entityProperty in entityProperties)
                 {
                     ModelClassTreeDto childProperty = new ModelClassTreeDto();
-                    childProperty.Id = property.Id;
-                    childProperty.ClientId = $"{property.Id}-{child.Id}";
-                    childProperty.Name = property.Name;
-                    childProperty.Type = property.Type;
+                    childProperty.Id = entityProperty.Id;
+                    childProperty.ClientId = $"{entityProperty.Id}-{child.Id}";
+                    childProperty.Name = entityProperty.Name;
+                    childProperty.Type = entityProperty.Type;
                     childProperty.ParentId = child.Id;
-                    childProperty.IsNullable = property.IsNullable;
+                    childProperty.IsNullable = entityProperty.IsNullable;
 
                     child.Childs.Add(childProperty);
                 }

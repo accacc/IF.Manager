@@ -9,8 +9,6 @@ namespace IF.Manager.Contracts.Dto
         public int Id { get; set; }
         public string Values { get; set; }
 
-        //public int ModelId { get; set; }
-
         private List<ModelPropertyDto> Properties { get; set; }
 
         public List<ModelPropertyDto> GetProperties()
@@ -24,8 +22,14 @@ namespace IF.Manager.Contracts.Dto
                 var stringArray = property.Split('-');
 
                 ModelPropertyDto modelProperty = new ModelPropertyDto();
-                modelProperty.EntityId = Convert.ToInt32(stringArray[1]);
                 modelProperty.EntityPropertyId = Convert.ToInt32(stringArray[0]);
+                modelProperty.EntityId = Convert.ToInt32(stringArray[1]);
+
+                if (3 == stringArray.Length && 4 > stringArray.Length && stringArray[2] != null)
+                {
+                    modelProperty.ModelPropertyId = Convert.ToInt32(stringArray[2]);
+                }
+
                 this.Properties.Add(modelProperty);
             }
 
@@ -56,7 +60,6 @@ namespace IF.Manager.Contracts.Dto
         public string Name { get; set; }
 
         public string Description { get; set; }
-        //public List<EntityDto> Entities { get; set; }
     }
 
 

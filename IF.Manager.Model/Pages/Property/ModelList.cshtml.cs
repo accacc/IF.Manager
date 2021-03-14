@@ -55,8 +55,8 @@ namespace IF.Manager.Model.Pages.Property
 
                 var properties = await this.modelService.GetModelPropertyList(model.Id);
 
-                pageModel.Selecteds.AddRange(properties.Select(p => $"{p.EntityPropertyId}-{p.EntityId}").ToArray());
-
+                //pageModel.Selecteds.AddRange(properties.Select(p => $"{p.EntityPropertyId}-{p.EntityId}").ToArray());
+                pageModel.Selecteds.AddRange(properties.Select(p => $"{p.EntityPropertyId}-{p.EntityId}-{p.ModelPropertyId}").ToArray());
                 this.TreeList = pageModel;
             }
             catch (Exception ex)

@@ -7,9 +7,12 @@
 <ul>
     @foreach (var item in Model.EntityTree)
     {
-        if (Model.Selecteds.Contains(item.ClientId))
-        {
-            @: <li class="jstree-open" data-jstree='{"selected":true}' id="@item.ClientId">
+
+        var clientId = Model.Selecteds.SingleOrDefault(s => s.Contains(item.ClientId));
+
+            if (clientId!=null)
+            {
+                @: <li class="jstree-open" data-jstree='{"selected":true}' id="@clientId">
             }
             else
             {
