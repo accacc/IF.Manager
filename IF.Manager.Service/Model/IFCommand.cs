@@ -50,6 +50,8 @@ namespace IF.Manager.Contracts.Model
 
         public bool? IsList { get; set; }
 
+        public int? Sequence { get; set; }
+
 
         public bool IsMultiCommand()
         {

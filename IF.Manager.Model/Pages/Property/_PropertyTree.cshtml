@@ -8,7 +8,7 @@
     @foreach (var item in Model.EntityTree)
     {
 
-        var clientId = Model.Selecteds.SingleOrDefault(s => s.Contains(item.ClientId));
+        var clientId = Model.Selecteds.SingleOrDefault(s => s.StartsWith(item.ClientId));
 
             if (clientId!=null)
             {

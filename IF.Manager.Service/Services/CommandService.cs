@@ -39,10 +39,11 @@ namespace IF.Manager.Service.Services
                    Name = map.Name,
                    Id = map.Id,
                    ParentId = map.ParentId,
+                   SortOrder = map.Sequence
 
                }).ToListAsync();
 
-                var parents = list.Where(c => c.ParentId == ParentId).ToList();
+                var parents = list.OrderBy(p => p.SortOrder).Where(c => c.ParentId == ParentId).ToList();
 
 
                 tree = list.ToTree(parents);
