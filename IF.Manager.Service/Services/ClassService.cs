@@ -56,7 +56,7 @@ namespace IF.Manager.Service
 
             GenerateJsonToClass(rootClass, rootJsonObjectChilds, jsonTypes);
 
-            await this.AddClass(rootClass);
+            await this.AddClass(wrapperClass);
         }
 
         private void GenerateJsonToClass(IFClass @class, List<JsonType> rootChilds, IList<JsonType> types)
@@ -410,15 +410,16 @@ namespace IF.Manager.Service
             List<IFCommand> commands = await this.GetQuery<IFCommand>()
                 .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.FromProperty)
                 .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.ToProperty.EntityProperty)
-               .Include(c => c.Childrens).ThenInclude(p => p.Parent)
+                .Include(c => c.Childrens).ThenInclude(p => p.Parent)
                 .Include(c => c.Parent)
                 .Include(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
                 .Include(s => s.Model.Entity.Relations)
-                                                        .ToListAsync();
+                .ToListAsync();
 
             var command = commands.Where(c => c.Id == commandId).SingleOrDefault();
 
             command.Childrens = await GetCommandChildrensByParentId(commandId);
+            command.Childrens.OrderBy(c => c.Sequence);
 
             CSClass cSClass = new CSClass();
             cSClass.Name = command.IFClassMapper.Name;
@@ -442,8 +443,10 @@ namespace IF.Manager.Service
             builder.AppendLine($"return {name};");
 
             var mapperMethod = new CSMethod(command.IFClassMapper.Name+"Map", command.Model.Name + "Multi", "public");
+
             mapperMethod.Body = builder.ToString();
             mapperMethod.Parameters.Add(new CsMethodParameter() { Name = parentClass.Name, Type = parentClass.Type });
+
             cSClass.Methods.Add(mapperMethod);
 
 
@@ -542,6 +545,10 @@ namespace IF.Manager.Service
                         builder.AppendLine();
                         builder.AppendLine();
 
+                        if(child.Type == "BorcluTelefon")
+                        {
+                        
+                        }
 
                         var currentCommand = FindCommandByClassMapping(command, child);
 
