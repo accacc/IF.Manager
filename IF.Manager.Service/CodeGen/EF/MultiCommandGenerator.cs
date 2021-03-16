@@ -4,10 +4,11 @@ using IF.Manager.Contracts.Model;
 using IF.Manager.Service.CodeGen.Interface;
 
 using System;
+using System.Linq;
 
 namespace IF.Manager.Service.CodeGen.EF
 {
-   public class MultiCommandGenerator: ICommandMethodGenerator
+    public class MultiCommandGenerator : ICommandMethodGenerator
     {
 
         ModelClassTreeDto entityTree;
@@ -28,12 +29,12 @@ namespace IF.Manager.Service.CodeGen.EF
         public CSMethod Build()
         {
             this.method.IsAsync = true;
-            this.method.Parameters.Add(new CsMethodParameter() { Name = "command", Type = command.Name  });
+            this.method.Parameters.Add(new CsMethodParameter() { Name = "command", Type = command.Name });
 
 
             bool IsList = false;
 
-            if(command.Parent!=null)
+            if (command.Parent != null)
             {
                 IsList = command.IsListCommand();
             }
@@ -50,20 +51,22 @@ namespace IF.Manager.Service.CodeGen.EF
             }
 
 
-            foreach (var command in this.command.Childrens)
+            var childs = this.command.Childrens.OrderBy(c => c.Sequence).ToList();
+
+            foreach (var command in childs)
             {
                 string modelName = command.Model.Name;
 
                 bool IsMulti = command.IsMultiCommand();
-               
-              
+
+
 
                 if (IsMulti)
                 {
                     modelName = modelName + "Multi";
                 }
 
-              
+
 
                 this.method.Body += $"var {command.Name} = new {command.Name}();" + Environment.NewLine;
                 this.method.Body += $"{command.Name}.Data = {modelPropertyName}.{modelName};" + Environment.NewLine;

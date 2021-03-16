@@ -44,7 +44,7 @@ namespace IF.Manager.Service
             var rootCommands = process.Commands.Where(c => !c.ParentId.HasValue).ToList();
             await GenerateCommands(nameSpace,rootCommands);
 
-            foreach (var command in rootCommands)
+            foreach (var command in rootCommands.OrderBy(c=>c.Sequence))
             {
 
                 await classService.GenerateClass(process, command.IFClassMapper.IFClassId.Value);
@@ -53,13 +53,13 @@ namespace IF.Manager.Service
 
         }
 
-        private async Task GenerateCommands(string nameSpace,List<IFCommand> commmands)
+        private async Task GenerateCommands(string nameSpace, List<IFCommand> commmands)
         {
 
-           
+
             foreach (var command in commmands)
             {
-                var childs = command.Childrens.ToList();
+                var childs = command.Childrens.OrderBy(c => c.Sequence).ToList();
 
                 if (childs.Any())
                 {
