@@ -376,7 +376,7 @@ namespace IF.Manager.Service
                     if (dto.Id <= 0)
                     {
                         IFEntityProperty entityProperty = new IFEntityProperty();
-                        entityProperty.IsIdentity = dto.IsIdentity;
+                        //entityProperty.IsIdentity = dto.IsIdentity;
                         entityProperty.MaxValue = dto.MaxValue;
                         entityProperty.Name = dto.Name;
                         entityProperty.Id = dto.Id;
@@ -390,7 +390,7 @@ namespace IF.Manager.Service
                     else
                     {
                         var entityProperty = await this.GetQuery<IFEntityProperty>(p => p.Id == dto.Id).SingleOrDefaultAsync();
-                        entityProperty.IsIdentity = dto.IsIdentity;
+                        //entityProperty.IsIdentity = dto.IsIdentity;
                         entityProperty.MaxValue = dto.MaxValue;
                         entityProperty.Name = dto.Name;
                         entityProperty.Type = entityProperty.Type;

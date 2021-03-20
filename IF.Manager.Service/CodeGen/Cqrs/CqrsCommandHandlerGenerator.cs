@@ -53,11 +53,11 @@ namespace IF.Manager.Service
 
         }
 
-        private async Task GenerateCommands(string nameSpace, List<IFCommand> commmands)
+        private async Task GenerateCommands(string nameSpace, List<IFCommand> commands)
         {
 
 
-            foreach (var command in commmands)
+            foreach (var command in commands)
             {
                 var childs = command.Childrens.OrderBy(c => c.Sequence).ToList();
 
@@ -92,7 +92,7 @@ namespace IF.Manager.Service
             switch (command.CommandGetType)
             {
                 case Core.Data.CommandType.Insert:
-                    MultiCommandGenerator method = new MultiCommandGenerator($"ExecuteCommand", entityTree, command);
+                    MultiCommandGenerator method = new MultiCommandGenerator($"ExecuteCommand",  command);
                     GenerateInsertCqrsHandlerClass(command, process, method);
                     break;
                 case Core.Data.CommandType.Update:

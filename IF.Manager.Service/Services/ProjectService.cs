@@ -393,6 +393,7 @@ namespace IF.Manager.Service
                     .Include(s => s.Commands).ThenInclude(s=>s.IFClassMapper.IFClass)
                     .Include(s => s.Commands).ThenInclude(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
                     .Include(s => s.Commands).ThenInclude(s => s.Model.Entity.Relations)
+                    .Include(s => s.Commands).ThenInclude(s => s.Model.Entity.Relations).ThenInclude(s=>s.ForeignKeyIFEntityProperty)
                     .Include(s => s.Commands).ThenInclude(s => s.CommandFilterItems)
                     .Include(s => s.Queries).ThenInclude(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
                     .Include(s => s.Queries).ThenInclude(s => s.QueryFilterItems).ThenInclude(s=>s.EntityProperty)

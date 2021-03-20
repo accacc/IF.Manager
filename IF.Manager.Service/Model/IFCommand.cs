@@ -60,7 +60,6 @@ namespace IF.Manager.Contracts.Model
         }
         public bool IsListCommand()
         {
-
             return this.IsList.Value;
             //if (this.Parent == null) return false;
 
@@ -82,8 +81,16 @@ namespace IF.Manager.Contracts.Model
 
         public string GetModelPath()
         {
-            var pagePath = "";
             var parents = this.GetParents();
+
+            string pagePath = GeneratePaths(parents);
+
+            return pagePath;
+        }
+
+        private string GeneratePaths(List<IFCommand> parents)
+        {
+            var pagePath = "";
 
             foreach (var parent in parents)
             {
@@ -102,7 +109,24 @@ namespace IF.Manager.Contracts.Model
             {
                 pagePath = pagePath.Remove(pagePath.Length - 1);
             }
+
             return pagePath;
+        }
+
+        public string GetModelPathUpTheRoot()
+        {
+            var parents = this.GetParents();
+
+            parents = parents.Where(p => p.Parent != null).ToList();
+
+            string pagePath = GeneratePaths(parents);
+
+            return pagePath;
+        }
+
+        public bool IsMultiList()
+        {
+            return this.IsMultiCommand() && this.IsListCommand();
         }
 
         public List<IFCommand> GetParents()
