@@ -637,12 +637,12 @@ namespace IF.Manager.Service
         public async Task AddEntityGroup(EntityGroupDto form)
         {
             IFEntityGroup entity = new IFEntityGroup();
-            entity.Id = form.Id;
             entity.Name = form.Name;
             entity.Prefix = form.Prefix;
             this.Add(entity);
-            await this.UnitOfWork.SaveChangesAsync();
             form.Id = entity.Id;
+            await this.UnitOfWork.SaveChangesAsync();
+            
         }
 
         public async Task UpdateEntityGroup(EntityGroupDto form)

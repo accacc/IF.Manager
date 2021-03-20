@@ -141,10 +141,10 @@ namespace IF.Manager.Service.CodeGen.EF
                         }
 
 
-                        if (nextCommand.Childrens.Any())
-                        {
-                           // ForeignKeyDispatchNextCommands(currentCommand, nextCommand.Childrens.ToList(),parentCommand, methodBody);
-                        }
+                        //if (nextCommand.Childrens.Any())
+                        //{
+                        //   // ForeignKeyDispatchNextCommands(currentCommand, nextCommand.Childrens.ToList(),parentCommand, methodBody);
+                        //}
                     }
 
                 }

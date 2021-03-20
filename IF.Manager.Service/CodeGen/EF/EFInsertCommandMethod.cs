@@ -4,6 +4,8 @@ using IF.Manager.Contracts.Model;
 using IF.Manager.Service.CodeGen.Interface;
 
 using System;
+using System.Linq;
+using System.Text;
 
 namespace IF.Manager.Service.EF
 {
@@ -35,35 +37,50 @@ namespace IF.Manager.Service.EF
 
             string modelPropertyName = "command.Data";
 
+            StringBuilder methodBuilder = new StringBuilder();
+
             if (IsList)
             {
                 modelPropertyName = "item";
-                this.method.Body += " foreach (var item in command.Data)";
-                this.method.Body += Environment.NewLine;
-                this.method.Body += "{";
-                this.method.Body += Environment.NewLine;
+                methodBuilder.AppendLine(" foreach (var item in command.Data)");
+                methodBuilder.AppendLine("{");
             }
 
-            GenerateMethodBody(modelPropertyName);
+            GenerateMethodBody(modelPropertyName,methodBuilder);
 
           
 
             if (IsList)
             {
-                this.method.Body += Environment.NewLine;
-                this.method.Body += Environment.NewLine;
-                this.method.Body += "}";
-                this.method.Body += Environment.NewLine;
+                methodBuilder.AppendLine();
+                methodBuilder.AppendLine();
+                methodBuilder.AppendLine("}");
+                methodBuilder.AppendLine();
             }
 
-            this.method.Body += $"await this.repository.UnitOfWork.SaveChangesAsync();" + Environment.NewLine;
-            this.method.Body += Environment.NewLine;
+            methodBuilder.AppendLine($"await this.repository.UnitOfWork.SaveChangesAsync();");
+            methodBuilder.AppendLine();
+
+
+            if(IsList)
+            {
+
+
+
+            }
+            else
+            {
+                var primaryKey = this.command.Model.Properties.SingleOrDefault(p => p.EntityProperty.IsIdentity);
+                methodBuilder.AppendLine($"command.Data.{primaryKey.EntityProperty.Name} = entity.{primaryKey.EntityProperty.Name}");
+            }
+
+
             return this.method;
         }
 
-        private void GenerateMethodBody(string modelPropertyName)
+        private void GenerateMethodBody(string modelPropertyName,StringBuilder methodBuilder)
         {
-            this.method.Body += $"{entityTree.Name} entity = new {entityTree.Name}();" + Environment.NewLine;
+            methodBuilder.AppendLine($"{entityTree.Name} entity = new {entityTree.Name}();");
 
 
             foreach (var property in this.entityTree.Childs)
@@ -75,10 +92,10 @@ namespace IF.Manager.Service.EF
 
                 if (!IsModelProperty) continue;
 
-                this.method.Body += $"entity.{property.Name} = {modelPropertyName}.{property.Name};" + Environment.NewLine;
+                methodBuilder.AppendLine($"entity.{property.Name} = {modelPropertyName}.{property.Name};");
             }
 
-            this.method.Body += $"this.repository.Add(entity);" + Environment.NewLine;
+            methodBuilder.AppendLine($"this.repository.Add(entity);");
           
            
         }
