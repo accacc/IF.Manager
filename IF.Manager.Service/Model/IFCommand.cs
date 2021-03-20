@@ -58,25 +58,25 @@ namespace IF.Manager.Contracts.Model
 
             return this.Childrens.Any();
         }
-        public bool IsListCommand()
-        {
-            return this.IsList.Value;
-            //if (this.Parent == null) return false;
+        //public bool IsListCommand()
+        //{
+        //    return this.IsList.Value;
+        //    //if (this.Parent == null) return false;
 
-            //var relation = this.Parent.Model.Entity.Relations.SingleOrDefault(r => r.Relation.Name == this.Model.Entity.Name);
+        //    //var relation = this.Parent.Model.Entity.Relations.SingleOrDefault(r => r.Relation.Name == this.Model.Entity.Name);
 
-            //if (relation != null)
-            //{
+        //    //if (relation != null)
+        //    //{
 
-            //    if (relation.Type == Contracts.Enum.EntityRelationType.ManyToMany ||
-            //            relation.Type == Contracts.Enum.EntityRelationType.OneToMany)
-            //    {
-            //        return true;
-            //    }
-            //}
+        //    //    if (relation.Type == Contracts.Enum.EntityRelationType.ManyToMany ||
+        //    //            relation.Type == Contracts.Enum.EntityRelationType.OneToMany)
+        //    //    {
+        //    //        return true;
+        //    //    }
+        //    //}
 
-            //return false; ;
-        }
+        //    //return false; ;
+        //}
 
 
         public string GetModelPath()
@@ -124,9 +124,10 @@ namespace IF.Manager.Contracts.Model
             return pagePath;
         }
 
-        public bool IsMultiList()
+        public bool IsMultiList
         {
-            return this.IsMultiCommand() && this.IsListCommand();
+            get { return this.IsMultiCommand() && this.IsList.Value; }
+
         }
 
         public List<IFCommand> GetParents()

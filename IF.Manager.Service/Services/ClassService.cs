@@ -591,7 +591,7 @@ namespace IF.Manager.Service
 
                             if (currentCommand.Parent.Childrens.First().Id == currentCommand.Id)
                             {
-                                if (currentCommand.Parent.IsListCommand())
+                                if (currentCommand.Parent.IsList.Value)
                                 {
                                     builder.AppendLine($"{indent} var {currentCommand.Parent.Model.Name}Multis = new List<{currentCommand.Parent.Model.Name}Multi>();");
                                     IsMultiList = true;
@@ -605,7 +605,7 @@ namespace IF.Manager.Service
                                 {
                                     string lastName = "Multi";
 
-                                    if (currentCommand.Parent.IsListCommand()) lastName = "Multis";
+                                    if (currentCommand.Parent.IsList.Value) lastName = "Multis";
 
                                     builder.AppendLine($"{currentCommand.Parent.Parent.Model.Name}Multi.{currentCommand.Parent.Model.Name}Multi = {currentCommand.Parent.Model.Name}{lastName};");
                                 }

@@ -31,7 +31,7 @@ namespace IF.Manager.Service.EF
 
             this.method.Parameters.Add(new CsMethodParameter() { Name = "command", Type = command.Name });
 
-            bool IsList = command.IsListCommand();            
+            bool IsList = command.IsList.Value;            
 
             string modelPropertyName = "command.Data";
 

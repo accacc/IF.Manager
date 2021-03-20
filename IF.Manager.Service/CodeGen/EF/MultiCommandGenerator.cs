@@ -24,10 +24,17 @@ namespace IF.Manager.Service.CodeGen.EF
             this.method = new CSMethod(name, "void", "public");
             this.method.IsAsync = true;
         }
-        private void ForeignKeyDispatchNextCommands(IFCommand currentCommand, List<IFCommand> nextCommands, IFCommand parentCommand,StringBuilder methodBody)
+        private void ForeignKeyDispatchNextCommands(IFCommand currentCommand, List<IFCommand> nextCommands, IFCommand parentCommand,StringBuilder methodBody, int level)
         {
+
+            level++;
+
+            string indent = new String(' ', level * 4);
+
             if (currentCommand.Model.Entity.Relations.Any())
             {
+
+              
 
 
                 foreach (var nextCommand in nextCommands)
@@ -35,7 +42,7 @@ namespace IF.Manager.Service.CodeGen.EF
 
                     if (nextCommand.IsMultiCommand() && nextCommand.Childrens.Any())
                     {
-                        ForeignKeyDispatchNextCommands(currentCommand, nextCommand.Childrens.ToList(),parentCommand, methodBody);
+                        ForeignKeyDispatchNextCommands(currentCommand, nextCommand.Childrens.ToList(),parentCommand, methodBody,level);
                     }
                     else
                     {
@@ -73,39 +80,41 @@ namespace IF.Manager.Service.CodeGen.EF
 
                           
 
-                            if (nextCommand.IsListCommand() || nextCommand.Parent.IsMultiList())
+                            if (nextCommand.IsList.Value || nextCommand.Parent.IsMultiList)
                             {
 
                                 string foreachName = nextCommand.Model.Name;
-                                string leftPropertyModelName = nextCommand.Model.Name;
+                                string leftPropertyModelName = nextCommand.Model.Name+".";
                                 string rightPropertyModelName = currentCommand.Model.Name;
 
 
-                                if (nextCommand.Parent.IsMultiList())
+                                if (nextCommand.Parent.IsMultiList && !nextCommand.IsList.Value)
                                 {
-                                    foreachName = nextCommand.Parent.Model.Name + "Multi";
+                                    foreachName = "command.Data." + nextCommand.Model.Name + "Multi";
+                                    rightPropertyModelName = " command.Data." + rightPropertyModelName;
+                                }
+                                
+                                if(!nextCommand.Parent.IsMultiList && nextCommand.IsList.Value)
+                                {
+                                    foreachName = "command.Data." + nextCommand.Model.Name;
+                                    leftPropertyModelName = "";
+                                    rightPropertyModelName = " command.Data." + rightPropertyModelName;
                                 }
 
-                                //if(nextCommand.Parent.IsMultiCommand() && nextCommand.IsListCommand())
-                                //{
-                                //    leftPropertyModelName = "";
-                                //    rightPropertyModelName = "";
-                                //}
+                                if(nextCommand.Parent.IsMultiList && nextCommand.IsList.Value)
+                                {
+                                    foreachName = $"item{level - 1}.{nextCommand.Model.Name}";
+                                    leftPropertyModelName = "";
+                                    rightPropertyModelName = $"item0.{rightPropertyModelName}";
 
-                                methodBody.AppendLine($"foreach (var subItem in command.Data.{foreachName})");
+                                }
+
+                                methodBody.AppendLine($"foreach (var item{level} in {foreachName})");
                                 methodBody.AppendLine($"{{");
 
-                                methodBody.AppendLine($"subItem.{foreignProperty.EntityProperty.Name} = command.Data.{rightPropertyModelName}.{primaryKeyProperty.EntityProperty.Name};");
+                                methodBody.AppendLine($"item{level}.{leftPropertyModelName}{foreignProperty.EntityProperty.Name} = {rightPropertyModelName}.{primaryKeyProperty.EntityProperty.Name};");
                                 methodBody.AppendLine($"}}");
                             }
-                            //else if(nextCommand.Parent.IsMultiList())
-                            //{
-                            //    methodBody.AppendLine($"foreach (var subItem in command.Data.{nextCommand.GetModelPathUpTheRoot()})");
-                            //    methodBody.AppendLine($"{{");
-
-                            //    methodBody.AppendLine($"subItem.{nextCommand.GetModelPathUpTheRoot()}.{foreignProperty.EntityProperty.Name} = command.Data.{currentModelPath}{currentCommand.Model.Name}.{primaryKeyProperty.EntityProperty.Name};");
-                            //    methodBody.AppendLine($"}}");
-                            //}
                             else
                             {
 
@@ -151,6 +160,8 @@ namespace IF.Manager.Service.CodeGen.EF
 
         public CSMethod Build()
         {
+
+            int level = 0;
             this.method.IsAsync = true;
             this.method.Parameters.Add(new CsMethodParameter() { Name = "command", Type = parentCommand.Name });
 
@@ -159,7 +170,7 @@ namespace IF.Manager.Service.CodeGen.EF
 
             if (parentCommand.Parent != null)
             {
-                IsList = parentCommand.IsListCommand();
+                IsList = parentCommand.IsList.Value;
             }
 
             string modelPropertyName = "command.Data";
@@ -168,8 +179,8 @@ namespace IF.Manager.Service.CodeGen.EF
 
             if (IsList)
             {
-                modelPropertyName = "item";
-                methodBuilder.AppendLine(" foreach (var item in command.Data))");
+                modelPropertyName = $"item{level}";
+                methodBuilder.AppendLine($" foreach (var item{level} in command.Data)");
                 methodBuilder.AppendLine("{");
             }
 
@@ -177,7 +188,7 @@ namespace IF.Manager.Service.CodeGen.EF
             var childCommands = this.parentCommand.Childrens.OrderBy(c => c.Sequence).ToList();
 
             int i = 0;
-
+         
 
             foreach (var childCommand in childCommands)
             {
@@ -201,7 +212,7 @@ namespace IF.Manager.Service.CodeGen.EF
 
                 if (!childCommand.IsMultiCommand())
                 {
-                    ForeignKeyDispatchNextCommands(childCommand, nextCommands, parentCommand, methodBuilder);
+                    ForeignKeyDispatchNextCommands(childCommand, nextCommands, parentCommand, methodBuilder,level);
                 }
                 i++;
             }
