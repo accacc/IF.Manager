@@ -252,7 +252,7 @@ namespace IF.Manager.Service
                 entity.Type = type;
                 entity.Name = form.Name;
                 entity.GenericType = form.GenericType;
-               // entity.IsPrimitive = false;
+                // entity.IsPrimitive = false;
                 entity.ParentId = form.ParentId;
                 entity.Description = form.Description;
                 entity.Childrens = form.Childrens;
@@ -377,7 +377,7 @@ namespace IF.Manager.Service
                         property.ParentId = classId;
                         property.Description = dto.Description;
                         property.Type = dto.Type;
-                       // property.GenericType = dto.GenericType;
+                        // property.GenericType = dto.GenericType;
                         property.IsNullable = dto.IsNullable;
                         this.Update(property);
                     }
@@ -392,7 +392,7 @@ namespace IF.Manager.Service
             }
         }
 
-        public async Task<string> GenerateClassToModelMapper(IFProcess process, int classId,int commandId)
+        public async Task<string> GenerateClassToModelMapper(IFProcess process, int classId, int commandId)
         {
 
             var fileSystem = new FileSystemCodeFormatProvider(DirectoryHelper.GetTempProcessDirectory(process));
@@ -401,7 +401,7 @@ namespace IF.Manager.Service
 
             var parentClass = classTree.First();
 
-            string nameSpace = SolutionHelper.GetProcessNamaspace(process);         
+            string nameSpace = SolutionHelper.GetProcessNamaspace(process);
 
             int level = 0;
 
@@ -442,7 +442,7 @@ namespace IF.Manager.Service
 
             builder.AppendLine($"return {name};");
 
-            var mapperMethod = new CSMethod(command.IFClassMapper.Name+"Map", command.Model.Name + "Multi", "public");
+            var mapperMethod = new CSMethod(command.IFClassMapper.Name + "Map", command.Model.Name + "Multi", "public");
 
             mapperMethod.Body = builder.ToString();
             mapperMethod.Parameters.Add(new CsMethodParameter() { Name = parentClass.Name, Type = parentClass.Type });
@@ -477,7 +477,7 @@ namespace IF.Manager.Service
                     }
                     else
                     {
-                        if (classControlTree.Childs.Any(c=>c.Id == classMapping.FromPropertyId))
+                        if (classControlTree.Childs.Any(c => c.Id == classMapping.FromPropertyId))
                         {
                             currentCommand = command;
                         }
@@ -545,9 +545,9 @@ namespace IF.Manager.Service
                         builder.AppendLine();
                         builder.AppendLine();
 
-                        if(child.Type == "BorcluTelefon")
+                        if (child.Type == "BorcluTelefon")
                         {
-                        
+
                         }
 
                         var currentCommand = FindCommandByClassMapping(command, child);

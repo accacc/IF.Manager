@@ -7,6 +7,7 @@ using IF.Manager.Contracts.Enum;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
+using IF.Manager.Service.CodeGen;
 using IF.Manager.Service.Dto;
 using IF.Persistence.EF;
 
@@ -692,76 +693,9 @@ namespace IF.Manager.Service
             return entity;
         }
 
-        public async Task AddDbFirst(List<DatabaseTable> tableSchemas, List<TableDbFirstDto> tables)
-        {
-            foreach (var table in tableSchemas)
-            {
+       
 
-                if (await EntityIsExistByName(table.Name))
-                {
-                    throw new BusinessException($"{table.Name} Entity already exist");
-                }
-
-                string entityName = DirectoryHelper.AddAsLastWord(table.Name, "Entity");
-
-                IFEntity entity = new IFEntity();
-
-                entity.Description = entityName;
-                entity.Name = entityName;
-                entity.IsAudited = false;
-
-                foreach (var column in table.Columns)
-                {
-                    IFEntityProperty property = new IFEntityProperty();
-
-                    property.IsIdentity = column.IsPrimaryKey;
-
-
-                    property.Name = column.Name;
-                    property.Type = GetPrimitiveByDotnet(column.NetDataType());
-
-                    if (column.DbDataType == "smallint")
-                    {
-                        property.Type = "Int16";
-                    }
-
-                    property.IsNullable = column.Nullable;
-                    entity.Properties.Add(property);
-                }
-
-                if (!entity.Properties.Any(p => p.IsIdentity))
-                {
-                    var info = tables.SingleOrDefault(i => i.Table == table.Name);
-
-                    if (info != null && info.PrimaryKey != null)
-                    {
-                        var primaryColumn = entity.Properties.SingleOrDefault(e => e.Name == info.PrimaryKey);
-
-                        if (primaryColumn != null) primaryColumn.IsIdentity = true;
-
-                    }
-
-                }
-
-
-                this.Add(entity);
-            }
-
-            await UnitOfWork.SaveChangesAsync();
-        }
-
-        public string GetPrimitiveByDotnet(Type type)
-        {
-
-            if (type.Name == "String") { return "string"; }
-            if (type.Name == "Int32") { return "int"; }
-            if (type.Name == "Int64") { return "long"; }
-            if (type.Name == "Boolean") { return "bool"; }
-            if (type.Name == "DateTime") { return "DateTime"; }
-            if (type.Name == "Decimal") { return "decimal"; }
-
-            throw new ApplicationException($"Tip bulunamadi {type.Name}");
-        }
+      
         public string[] GetPrimitives()
         {
 
@@ -775,24 +709,7 @@ namespace IF.Manager.Service
 
         }
 
-        public List<DatabaseTable> GetAllTableSchemas(string ConnectionString)
-        {
-            List<DatabaseTable> list = new List<DatabaseTable>();
-
-            using (var connection = new SqlConnection(ConnectionString))
-            {
-                var dr = new DatabaseSchemaReader.DatabaseReader(connection);
-
-                var schema = dr.ReadAll();
-
-                foreach (var table in schema.Tables)
-                {
-                    list.Add(table);
-                }
-            }
-
-            return list;
-        }
+        
     }
 
 

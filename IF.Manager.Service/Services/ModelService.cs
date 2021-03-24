@@ -26,23 +26,23 @@ namespace IF.Manager.Service.Services
 
 
 
-        public async Task SaveModel(ModelUpdateDto dtos, int queryId)
+        public async Task SaveModel(ModelUpdateDto dtos, int modelId)
         {
             try
             {
-                var entity = await this.GetQuery<IFModel>()
+                var modelEntity = await this.GetQuery<IFModel>()
                .Include(e => e.Properties)
-               .SingleOrDefaultAsync(k => k.Id == queryId);
+               .SingleOrDefaultAsync(k => k.Id == modelId);
 
-                if (entity == null) { throw new BusinessException(" No such entity exists"); }
+                if (modelEntity == null) { throw new BusinessException(" No such entity exists"); }
 
                 var selectedProperties = dtos.GetProperties();
 
-                for (int i = 0; i < entity.Properties.Count; i++)
+                for (int i = 0; i < modelEntity.Properties.Count; i++)
                 {
-                    if (!selectedProperties.Any(d => d.ModelPropertyId == entity.Properties.ElementAt(i).Id))
+                    if (!selectedProperties.Any(d => d.ModelPropertyId == modelEntity.Properties.ElementAt(i).Id))
                     {
-                        this.Delete(entity.Properties.ElementAt(i));
+                        this.Delete(modelEntity.Properties.ElementAt(i));
                     }
                 }
 
@@ -54,11 +54,11 @@ namespace IF.Manager.Service.Services
                         IFModelProperty modelProperty = new IFModelProperty();
                         modelProperty.EntityId = selectedProperty.EntityId;
                         modelProperty.EntityPropertyId = selectedProperty.EntityPropertyId;
-                        entity.Properties.Add(modelProperty);
+                        modelEntity.Properties.Add(modelProperty);
                     }
                     else
                     {
-                        var modelProperty = entity.Properties.SingleOrDefault(p => p.Id == selectedProperty.ModelPropertyId);
+                        var modelProperty = modelEntity.Properties.SingleOrDefault(p => p.Id == selectedProperty.ModelPropertyId);
                         modelProperty.EntityId = selectedProperty.EntityId;
                         modelProperty.EntityPropertyId = selectedProperty.EntityPropertyId;
                         this.Update(modelProperty);
@@ -92,7 +92,6 @@ namespace IF.Manager.Service.Services
             string name = DirectoryHelper.AddAsLastWord(form.Name, "DataModel");
 
             IFModel entity = new IFModel();
-            entity.Id = form.Id;
             entity.Name = name;
             entity.EntityId = form.EntityId;
             entity.Description = form.Description;

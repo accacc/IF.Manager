@@ -36,8 +36,9 @@ namespace IF.Manager.Contracts.Services
         Task<EntityGroupDto> GetEntityGroup(int id);
         Task UpdateEntityGroup(EntityGroupDto form);
         Task<List<EntityGroupDto>> GetEntityGroupList();
-        Task AddDbFirst(List<DatabaseTable> tableSchemas, List<TableDbFirstDto> tables, GenerateOptions generateOptions);
-        List<DatabaseTable> GetAllTableSchemas(string ConnectionString);
+
+        Task<bool> EntityIsExistByName(string name);
+
 
 
     }

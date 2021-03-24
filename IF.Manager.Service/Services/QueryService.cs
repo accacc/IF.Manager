@@ -63,22 +63,22 @@ namespace IF.Manager.Service.Services
 
         public async Task AddQuery(QueryDto form)
         {
-            IFQuery entity = new IFQuery();
+            IFQuery queryEntity = new IFQuery();
 
             string name = DirectoryHelper.AddAsLastWord(form.Name, "DataQuery");
 
-            entity.Id = form.Id;
-            entity.Name = name;
-            entity.ModelId = form.ModelId;
-            entity.ProcessId = form.ProcessId;
-            entity.Description = form.Description;
-            entity.QueryGetType = form.QueryGetType;
-            entity.PageNumber = form.PageNumber;
-            entity.PageSize = form.PageSize;
-            entity.IsQueryOverride = form.IsQueryOverride;
-            this.Add(entity);
+            queryEntity.Id = form.Id;
+            queryEntity.Name = name;
+            queryEntity.ModelId = form.ModelId;
+            queryEntity.ProcessId = form.ProcessId;
+            queryEntity.Description = form.Description;
+            queryEntity.QueryGetType = form.QueryGetType;
+            queryEntity.PageNumber = form.PageNumber;
+            queryEntity.PageSize = form.PageSize;
+            queryEntity.IsQueryOverride = form.IsQueryOverride;
+            this.Add(queryEntity);
             await this.UnitOfWork.SaveChangesAsync();
-            form.Id = entity.Id;
+            form.Id = queryEntity.Id;
         }
 
         public async Task UpdateQuery(QueryDto form)

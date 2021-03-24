@@ -4,6 +4,7 @@ using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Service.CodeGen;
 using IF.Manager.Service.Dto;
+using IF.Manager.Service.Interface;
 using IF.Web.Mvc.Extensions;
 
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +26,7 @@ namespace IF.Manager.Entity.Pages.DbFirst
     public class FormModel : PageModel
     {
 
-        private readonly IEntityService entityService;
+        private readonly IDbFirstService entityService;
         private readonly IProjectService projectService;
 
 
@@ -45,7 +46,7 @@ namespace IF.Manager.Entity.Pages.DbFirst
         [BindProperty, Required]
         public bool DeleteOperation { get; set; }
 
-        public FormModel(IEntityService entityService, IProjectService projectService)
+        public FormModel(IDbFirstService entityService, IProjectService projectService)
         {
             this.entityService = entityService;
             this.projectService = projectService;
