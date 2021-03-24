@@ -2,6 +2,7 @@
 using IF.Core.Persistence;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Service;
+using IF.Manager.Service.CodeGen;
 using IF.Manager.Service.Dto;
 
 using System;
@@ -35,6 +36,9 @@ namespace IF.Manager.Contracts.Services
         Task<EntityGroupDto> GetEntityGroup(int id);
         Task UpdateEntityGroup(EntityGroupDto form);
         Task<List<EntityGroupDto>> GetEntityGroupList();
-        Task AddDbFirst(List<DatabaseTable> mytables, List<TableDbFirstDto> infos);
+        Task AddDbFirst(List<DatabaseTable> tableSchemas, List<TableDbFirstDto> tables, GenerateOptions generateOptions);
+        List<DatabaseTable> GetAllTableSchemas(string ConnectionString);
+
+
     }
 }

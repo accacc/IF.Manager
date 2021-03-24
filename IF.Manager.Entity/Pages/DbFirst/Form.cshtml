@@ -28,6 +28,21 @@
         </div>
     </div>
 
+    <div>
+        <div class="col-md-3">
+            <input name="SelectOperation" type="checkbox" value="true" />
+        </div>
+        <div class="col-md-3">
+            <input name="InsertOperation" type="checkbox" value="true" />
+        </div>
+        <div class="col-md-3">
+            <input name="UpdateOperation" type="checkbox" value="true" />
+        </div>
+        <div class="col-md-3">
+            <input name="DeleteOperation" type="checkbox" value="true" />
+        </div>
+
+    </div>
     <div class="row">
         <div class="col-md-6">
             <button type="submit" class="btn btn-primary"
@@ -47,6 +62,17 @@
                 Save
 
             </button>
+
+            &nbsp;
+            @*<a class="btn btn-primary"
+                   href="@Url.Page("/DbFirst","BasicCrudForm")"
+                   if-ajax="true"
+                   if-ajax-method="get"
+                   if-ajax-insertion-mode="replace"
+                   if-ajax-show-dialog="true"
+                   if-ajax-modal-id="ClassTreeListModal">
+                    Generate Basic Crud
+                </a>*@
         </div>
     </div>
 
@@ -59,7 +85,7 @@
 
     <script>
 
-     
+
 
     $('#IFProjectId').on('change', function () {
 
@@ -71,7 +97,7 @@
             data: { IFProjectId: this.value },
             success: function (data) {
                 $("#ConnectionString").val(data);
-               
+
             }
         });
 

@@ -10,6 +10,7 @@ using IF.Manager.Persistence.EF;
 using IF.Manager.Service.Dto;
 using IF.Persistence.EF;
 
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 using System;
@@ -691,9 +692,9 @@ namespace IF.Manager.Service
             return entity;
         }
 
-        public async Task AddDbFirst(List<DatabaseTable> mytables, List<TableDbFirstDto> infos)
+        public async Task AddDbFirst(List<DatabaseTable> tableSchemas, List<TableDbFirstDto> tables)
         {
-            foreach (var table in mytables)
+            foreach (var table in tableSchemas)
             {
 
                 if (await EntityIsExistByName(table.Name))
@@ -701,11 +702,12 @@ namespace IF.Manager.Service
                     throw new BusinessException($"{table.Name} Entity already exist");
                 }
 
-                string name = DirectoryHelper.AddAsLastWord(table.Name, "Entity");
+                string entityName = DirectoryHelper.AddAsLastWord(table.Name, "Entity");
 
                 IFEntity entity = new IFEntity();
-                entity.Description = name;
-                entity.Name = name;
+
+                entity.Description = entityName;
+                entity.Name = entityName;
                 entity.IsAudited = false;
 
                 foreach (var column in table.Columns)
@@ -729,7 +731,7 @@ namespace IF.Manager.Service
 
                 if (!entity.Properties.Any(p => p.IsIdentity))
                 {
-                    var info = infos.SingleOrDefault(i => i.Table == table.Name);
+                    var info = tables.SingleOrDefault(i => i.Table == table.Name);
 
                     if (info != null && info.PrimaryKey != null)
                     {
@@ -771,6 +773,25 @@ namespace IF.Manager.Service
                 "bool"
             };
 
+        }
+
+        public List<DatabaseTable> GetAllTableSchemas(string ConnectionString)
+        {
+            List<DatabaseTable> list = new List<DatabaseTable>();
+
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                var dr = new DatabaseSchemaReader.DatabaseReader(connection);
+
+                var schema = dr.ReadAll();
+
+                foreach (var table in schema.Tables)
+                {
+                    list.Add(table);
+                }
+            }
+
+            return list;
         }
     }
 
