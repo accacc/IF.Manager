@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace IF.Manager.Persistence.EF.Migrations
+namespace IF.Manager.Service.Migrations
 {
     [DbContext(typeof(ManagerDbContext))]
     partial class ManagerDbContextModelSnapshot : ModelSnapshot

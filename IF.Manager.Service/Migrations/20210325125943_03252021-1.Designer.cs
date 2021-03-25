@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace IF.Manager.Persistence.EF.Migrations
+namespace IF.Manager.Service.Migrations
 {
     [DbContext(typeof(ManagerDbContext))]
-    [Migration("20200807115449_87-1")]
-    partial class _871
+    [Migration("20210325125943_03252021-1")]
+    partial class _032520211
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,24 +35,35 @@ namespace IF.Manager.Persistence.EF.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("FormModelId")
+                    b.Property<int?>("IFClassMapperId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ModelId")
+                    b.Property<bool?>("IsList")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ModelId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProcessId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Sequence")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FormModelId");
+                    b.HasIndex("IFClassMapperId");
 
                     b.HasIndex("ModelId");
+
+                    b.HasIndex("ParentId");
 
                     b.HasIndex("ProcessId");
 
@@ -84,9 +95,6 @@ namespace IF.Manager.Persistence.EF.Migrations
                     b.Property<int?>("IFEntityId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("IFFormModelId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
 
@@ -96,11 +104,7 @@ namespace IF.Manager.Persistence.EF.Migrations
 
                     b.HasIndex("EntityPropertyId");
 
-                    b.HasIndex("FormModelPropertyId");
-
                     b.HasIndex("IFEntityId");
-
-                    b.HasIndex("IFFormModelId");
 
                     b.ToTable("IFCommandFilterItem");
                 });
@@ -203,13 +207,16 @@ namespace IF.Manager.Persistence.EF.Migrations
                     b.Property<int>("EntityId")
                         .HasColumnType("int");
 
-                    b.Property<int>("From")
+                    b.Property<int?>("ForeignKeyIFEntityPropertyId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsDbFirst")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Prefix")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RelationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("To")
                         .HasColumnType("int");
 
                     b.Property<int>("Type")
@@ -219,52 +226,11 @@ namespace IF.Manager.Persistence.EF.Migrations
 
                     b.HasIndex("EntityId");
 
+                    b.HasIndex("ForeignKeyIFEntityPropertyId");
+
                     b.HasIndex("RelationId");
 
                     b.ToTable("IFEntityRelation");
-                });
-
-            modelBuilder.Entity("IF.Manager.Contracts.Model.IFFormModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("IFFormModel");
-                });
-
-            modelBuilder.Entity("IF.Manager.Contracts.Model.IFFormModelProperty", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("FormModelId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsNullable")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FormModelId");
-
-                    b.ToTable("IFFormModelProperty");
                 });
 
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFLanguageEntity", b =>
@@ -398,6 +364,51 @@ namespace IF.Manager.Persistence.EF.Migrations
                     b.HasDiscriminator<string>("Discriminator").HasValue("IFPageControl");
                 });
 
+            modelBuilder.Entity("IF.Manager.Contracts.Model.IFPageControlItemModelProperty", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("IFModelPropertyId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IFPageFormItemId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IFQueryId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("NameIFModelPropertyId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ObjectId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Sequence")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ValueIFModelPropertyId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IFModelPropertyId");
+
+                    b.HasIndex("IFPageFormItemId");
+
+                    b.HasIndex("IFQueryId");
+
+                    b.HasIndex("NameIFModelPropertyId");
+
+                    b.HasIndex("ObjectId");
+
+                    b.HasIndex("ValueIFModelPropertyId");
+
+                    b.ToTable("IFPageControlItemModelProperty");
+                });
+
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFPageControlMap", b =>
                 {
                     b.Property<int>("Id")
@@ -409,6 +420,9 @@ namespace IF.Manager.Persistence.EF.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Sequence")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -439,33 +453,6 @@ namespace IF.Manager.Persistence.EF.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("IFPageFormItem");
-                });
-
-            modelBuilder.Entity("IF.Manager.Contracts.Model.IFPageFormItemModelProperty", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("IFModelPropertyId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IFPageFormId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IFPageFormItemId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IFModelPropertyId");
-
-                    b.HasIndex("IFPageFormId");
-
-                    b.HasIndex("IFPageFormItemId");
-
-                    b.ToTable("IFPageFormItemModelProperty");
                 });
 
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFPageFormLayout", b =>
@@ -665,8 +652,8 @@ namespace IF.Manager.Persistence.EF.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("FormModelId")
-                        .HasColumnType("int");
+                    b.Property<bool>("IsQueryOverride")
+                        .HasColumnType("bit");
 
                     b.Property<int>("ModelId")
                         .HasColumnType("int");
@@ -688,8 +675,6 @@ namespace IF.Manager.Persistence.EF.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FormModelId");
 
                     b.HasIndex("ModelId");
 
@@ -720,10 +705,13 @@ namespace IF.Manager.Persistence.EF.Migrations
                     b.Property<int?>("IFEntityId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("IFFormModelId")
+                    b.Property<int?>("IFPageParameterId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("IFPageParameterId")
+                    b.Property<bool?>("IsNullCheck")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ParentId")
                         .HasColumnType("int");
 
                     b.Property<int>("QueryId")
@@ -736,13 +724,11 @@ namespace IF.Manager.Persistence.EF.Migrations
 
                     b.HasIndex("EntityPropertyId");
 
-                    b.HasIndex("FormModelPropertyId");
-
                     b.HasIndex("IFEntityId");
 
-                    b.HasIndex("IFFormModelId");
-
                     b.HasIndex("IFPageParameterId");
+
+                    b.HasIndex("ParentId");
 
                     b.HasIndex("QueryId");
 
@@ -796,6 +782,100 @@ namespace IF.Manager.Persistence.EF.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("IFSolution");
+                });
+
+            modelBuilder.Entity("IF.Manager.Service.Model.IFClass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GenericType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsNullable")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPrimitive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
+
+                    b.ToTable("IFClass");
+                });
+
+            modelBuilder.Entity("IF.Manager.Service.Model.IFClassMapper", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("IFClassId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IFModelId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsList")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IFClassId");
+
+                    b.HasIndex("IFModelId");
+
+                    b.ToTable("IFClassMapper");
+                });
+
+            modelBuilder.Entity("IF.Manager.Service.Model.IFClassMapping", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("FromPropertyId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IFClassMapperId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ToPropertyId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FromPropertyId");
+
+                    b.HasIndex("IFClassMapperId");
+
+                    b.HasIndex("ToPropertyId");
+
+                    b.ToTable("IFClassMapping");
                 });
 
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFPage", b =>
@@ -879,9 +959,14 @@ namespace IF.Manager.Persistence.EF.Migrations
                         .HasColumnName("IFPageForm_IFModelId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("IFQueryId")
+                        .HasColumnType("int");
+
                     b.HasIndex("FormLayoutId");
 
                     b.HasIndex("IFModelId");
+
+                    b.HasIndex("IFQueryId");
 
                     b.HasDiscriminator().HasValue("IFPageForm");
                 });
@@ -893,11 +978,16 @@ namespace IF.Manager.Persistence.EF.Migrations
                     b.Property<int?>("GridLayoutId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("IFFilterPageFormId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("QueryId")
                         .HasColumnName("IFPageGrid_QueryId")
                         .HasColumnType("int");
 
                     b.HasIndex("GridLayoutId");
+
+                    b.HasIndex("IFFilterPageFormId");
 
                     b.HasIndex("QueryId");
 
@@ -913,6 +1003,7 @@ namespace IF.Manager.Persistence.EF.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("IFQueryId")
+                        .HasColumnName("IFPageListView_IFQueryId")
                         .HasColumnType("int");
 
                     b.HasIndex("FormLayoutId");
@@ -920,25 +1011,6 @@ namespace IF.Manager.Persistence.EF.Migrations
                     b.HasIndex("IFQueryId");
 
                     b.HasDiscriminator().HasValue("IFPageListView");
-                });
-
-            modelBuilder.Entity("IF.Manager.Contracts.Model.IFPageNameValueControl", b =>
-                {
-                    b.HasBaseType("IF.Manager.Contracts.Model.IFPageControl");
-
-                    b.Property<int>("IFQueryId")
-                        .HasColumnName("IFPageNameValueControl_IFQueryId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NamePropertyId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ValuePropertyId")
-                        .HasColumnType("int");
-
-                    b.HasIndex("IFQueryId");
-
-                    b.HasDiscriminator().HasValue("IFPageNameValueControl");
                 });
 
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFPageNavigation", b =>
@@ -963,17 +1035,19 @@ namespace IF.Manager.Persistence.EF.Migrations
 
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFCommand", b =>
                 {
-                    b.HasOne("IF.Manager.Contracts.Model.IFFormModel", "FormModel")
-                        .WithMany("Commands")
-                        .HasForeignKey("FormModelId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.HasOne("IF.Manager.Service.Model.IFClassMapper", "IFClassMapper")
+                        .WithMany()
+                        .HasForeignKey("IFClassMapperId");
 
                     b.HasOne("IF.Manager.Contracts.Model.IFModel", "Model")
                         .WithMany("Commands")
                         .HasForeignKey("ModelId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("IF.Manager.Contracts.Model.IFCommand", "Parent")
+                        .WithMany("Childrens")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("IF.Manager.Contracts.Model.IFProcess", "Process")
                         .WithMany("Commands")
@@ -996,18 +1070,9 @@ namespace IF.Manager.Persistence.EF.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("IF.Manager.Contracts.Model.IFFormModelProperty", "FormModelProperty")
-                        .WithMany("CommandFilterItems")
-                        .HasForeignKey("FormModelPropertyId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("IF.Manager.Contracts.Model.IFEntity", null)
                         .WithMany("CommandFilterItems")
                         .HasForeignKey("IFEntityId");
-
-                    b.HasOne("IF.Manager.Contracts.Model.IFFormModel", null)
-                        .WithMany("CommandFilterItems")
-                        .HasForeignKey("IFFormModelId");
                 });
 
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFEntity", b =>
@@ -1034,18 +1099,13 @@ namespace IF.Manager.Persistence.EF.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("IF.Manager.Contracts.Model.IFEntityProperty", "ForeignKeyIFEntityProperty")
+                        .WithMany()
+                        .HasForeignKey("ForeignKeyIFEntityPropertyId");
+
                     b.HasOne("IF.Manager.Contracts.Model.IFEntity", "Relation")
                         .WithMany("ReverseRelations")
                         .HasForeignKey("RelationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("IF.Manager.Contracts.Model.IFFormModelProperty", b =>
-                {
-                    b.HasOne("IF.Manager.Contracts.Model.IFFormModel", "FormModel")
-                        .WithMany("Properties")
-                        .HasForeignKey("FormModelId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -1101,6 +1161,44 @@ namespace IF.Manager.Persistence.EF.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("IF.Manager.Contracts.Model.IFPageControlItemModelProperty", b =>
+                {
+                    b.HasOne("IF.Manager.Contracts.Model.IFModelProperty", "IFModelProperty")
+                        .WithMany()
+                        .HasForeignKey("IFModelPropertyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("IF.Manager.Contracts.Model.IFPageFormItem", "IFPageFormItem")
+                        .WithMany("ModelProperties")
+                        .HasForeignKey("IFPageFormItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("IF.Manager.Contracts.Model.IFQuery", "IFQuery")
+                        .WithMany()
+                        .HasForeignKey("IFQueryId");
+
+                    b.HasOne("IF.Manager.Contracts.Model.IFModelProperty", "NameIFModelProperty")
+                        .WithMany()
+                        .HasForeignKey("NameIFModelPropertyId");
+
+                    b.HasOne("IF.Manager.Contracts.Model.IFPageForm", "IFPageForm")
+                        .WithMany("IFPageFormItemModelProperties")
+                        .HasForeignKey("ObjectId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("IF.Manager.Contracts.Model.IFPageGrid", "IFPageGrid")
+                        .WithMany("IFPageFormItemModelProperties")
+                        .HasForeignKey("ObjectId")
+                        .HasConstraintName("FK_IFPageControlItemModelProperty_IFPageControl_ObjectId1")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("IF.Manager.Contracts.Model.IFModelProperty", "ValueIFModelProperty")
+                        .WithMany()
+                        .HasForeignKey("ValueIFModelPropertyId");
+                });
+
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFPageControlMap", b =>
                 {
                     b.HasOne("IF.Manager.Contracts.Model.IFPageControl", "IFPageControl")
@@ -1113,27 +1211,6 @@ namespace IF.Manager.Persistence.EF.Migrations
                         .WithMany("Childrens")
                         .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("IF.Manager.Contracts.Model.IFPageFormItemModelProperty", b =>
-                {
-                    b.HasOne("IF.Manager.Contracts.Model.IFModelProperty", "IFModelProperty")
-                        .WithMany()
-                        .HasForeignKey("IFModelPropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("IF.Manager.Contracts.Model.IFPageForm", "IFPageForm")
-                        .WithMany("IFPageFormItemModelProperties")
-                        .HasForeignKey("IFPageFormId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("IF.Manager.Contracts.Model.IFPageFormItem", "IFPageFormItem")
-                        .WithMany("ModelProperties")
-                        .HasForeignKey("IFPageFormItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFPageGridLayout", b =>
@@ -1149,12 +1226,20 @@ namespace IF.Manager.Persistence.EF.Migrations
                 {
                     b.HasOne("IF.Manager.Contracts.Model.IFPage", "IFPage")
                         .WithMany("IFPageParameters")
-                        .HasForeignKey("ObjectId");
+                        .HasForeignKey("ObjectId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("IF.Manager.Contracts.Model.IFPageGrid", "IFPageGrid")
+                        .WithMany("IFPageParameters")
+                        .HasForeignKey("ObjectId")
+                        .HasConstraintName("FK_IFPageParameter_IFPageControl_ObjectId1")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("IF.Manager.Contracts.Model.IFPageListView", "IFPageListView")
                         .WithMany("IFPageParameters")
                         .HasForeignKey("ObjectId")
-                        .HasConstraintName("FK_IFPageParameter_IFPageControl_ObjectId1");
+                        .HasConstraintName("FK_IFPageParameter_IFPageControl_ObjectId2")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFProcess", b =>
@@ -1192,12 +1277,6 @@ namespace IF.Manager.Persistence.EF.Migrations
 
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFQuery", b =>
                 {
-                    b.HasOne("IF.Manager.Contracts.Model.IFFormModel", "FormModel")
-                        .WithMany("Queries")
-                        .HasForeignKey("FormModelId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("IF.Manager.Contracts.Model.IFModel", "Model")
                         .WithMany("Queries")
                         .HasForeignKey("ModelId")
@@ -1219,22 +1298,17 @@ namespace IF.Manager.Persistence.EF.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("IF.Manager.Contracts.Model.IFFormModelProperty", "FormModelProperty")
-                        .WithMany("QueryFilterItems")
-                        .HasForeignKey("FormModelPropertyId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("IF.Manager.Contracts.Model.IFEntity", null)
                         .WithMany("QueryFilterItems")
                         .HasForeignKey("IFEntityId");
 
-                    b.HasOne("IF.Manager.Contracts.Model.IFFormModel", null)
-                        .WithMany("QueryFilterItems")
-                        .HasForeignKey("IFFormModelId");
-
                     b.HasOne("IF.Manager.Contracts.Model.IFPageParameter", "IFPageParameter")
                         .WithMany()
                         .HasForeignKey("IFPageParameterId");
+
+                    b.HasOne("IF.Manager.Contracts.Model.IFQueryFilterItem", "Parent")
+                        .WithMany("Childrens")
+                        .HasForeignKey("ParentId");
 
                     b.HasOne("IF.Manager.Contracts.Model.IFQuery", "Query")
                         .WithMany("QueryFilterItems")
@@ -1256,6 +1330,42 @@ namespace IF.Manager.Persistence.EF.Migrations
                         .HasForeignKey("QueryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("IF.Manager.Service.Model.IFClass", b =>
+                {
+                    b.HasOne("IF.Manager.Service.Model.IFClass", "Parent")
+                        .WithMany("Childrens")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("IF.Manager.Service.Model.IFClassMapper", b =>
+                {
+                    b.HasOne("IF.Manager.Service.Model.IFClass", "IFClass")
+                        .WithMany()
+                        .HasForeignKey("IFClassId");
+
+                    b.HasOne("IF.Manager.Contracts.Model.IFModel", "IFModel")
+                        .WithMany()
+                        .HasForeignKey("IFModelId");
+                });
+
+            modelBuilder.Entity("IF.Manager.Service.Model.IFClassMapping", b =>
+                {
+                    b.HasOne("IF.Manager.Service.Model.IFClass", "FromProperty")
+                        .WithMany()
+                        .HasForeignKey("FromPropertyId");
+
+                    b.HasOne("IF.Manager.Service.Model.IFClassMapper", "IFClassMapper")
+                        .WithMany("IFClassMappings")
+                        .HasForeignKey("IFClassMapperId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("IF.Manager.Contracts.Model.IFModelProperty", "ToProperty")
+                        .WithMany()
+                        .HasForeignKey("ToPropertyId");
                 });
 
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFPage", b =>
@@ -1309,6 +1419,10 @@ namespace IF.Manager.Persistence.EF.Migrations
                         .WithMany("PageForms")
                         .HasForeignKey("IFModelId")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("IF.Manager.Contracts.Model.IFQuery", "IFQuery")
+                        .WithMany()
+                        .HasForeignKey("IFQueryId");
                 });
 
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFPageGrid", b =>
@@ -1317,6 +1431,10 @@ namespace IF.Manager.Persistence.EF.Migrations
                         .WithMany("PageGrids")
                         .HasForeignKey("GridLayoutId")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("IF.Manager.Contracts.Model.IFPageForm", "IFFilterPageForm")
+                        .WithMany()
+                        .HasForeignKey("IFFilterPageFormId");
 
                     b.HasOne("IF.Manager.Contracts.Model.IFQuery", "Query")
                         .WithMany("Grids")
@@ -1335,15 +1453,6 @@ namespace IF.Manager.Persistence.EF.Migrations
                     b.HasOne("IF.Manager.Contracts.Model.IFQuery", "IFQuery")
                         .WithMany("ListViews")
                         .HasForeignKey("IFQueryId");
-                });
-
-            modelBuilder.Entity("IF.Manager.Contracts.Model.IFPageNameValueControl", b =>
-                {
-                    b.HasOne("IF.Manager.Contracts.Model.IFQuery", "IFQuery")
-                        .WithMany()
-                        .HasForeignKey("IFQueryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFPageNavigation", b =>

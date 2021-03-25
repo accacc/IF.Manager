@@ -18,12 +18,11 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace IF.Manager.Service.Services
 {
-    public class DbFirstService: GenericRepository, IDbFirstService
+    public class DbFirstService : GenericRepository, IDbFirstService
     {
         private readonly IEntityService entityService;
         private readonly IProjectService projectService;
@@ -99,7 +98,7 @@ namespace IF.Manager.Service.Services
             var selectGetModel = GenerateModel(modelName, entity);
             this.Add(selectGetModel);
             await this.UnitOfWork.SaveChangesAsync();
-            await AddQuery(process, modelName, selectGetModel,getType);
+            await AddQuery(process, modelName, selectGetModel, getType);
         }
 
         private async Task AddCommand(ProcessDto process, string modelName, IFModel selectGetModel, CommandType getType)
@@ -109,8 +108,9 @@ namespace IF.Manager.Service.Services
             command.Description = modelName;
             command.ModelId = selectGetModel.Id;
             command.ProcessId = process.Id;
+            command.IsList = false;
             command.CommandGetType = getType;
-            
+
 
             await this.commandService.AddCommand(command);
         }
@@ -133,7 +133,7 @@ namespace IF.Manager.Service.Services
         private IFModel GenerateModel(string Name, IFEntity entity)
         {
             IFModel model = new IFModel();
-            model.Name = Name;
+            model.Name = Name + "DataModel";
             model.Description = Name;
             model.EntityId = entity.Id;
 
@@ -159,7 +159,7 @@ namespace IF.Manager.Service.Services
                     throw new BusinessException($"{entityName} Entity already exist");
                 }
 
-                
+
 
                 IFEntity entity = new IFEntity();
 
@@ -175,6 +175,7 @@ namespace IF.Manager.Service.Services
 
 
                     property.Name = column.Name;
+
                     property.Type = GetPrimitiveByDotnet(column.NetDataType());
 
                     if (column.DbDataType == "smallint")
@@ -204,8 +205,8 @@ namespace IF.Manager.Service.Services
                 this.Add(entity);
             }
 
-                await UnitOfWork.SaveChangesAsync();
-            
+            await UnitOfWork.SaveChangesAsync();
+
         }
 
         public string GetPrimitiveByDotnet(Type type)

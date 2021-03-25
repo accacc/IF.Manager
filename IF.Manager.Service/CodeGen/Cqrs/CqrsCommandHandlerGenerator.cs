@@ -42,13 +42,16 @@ namespace IF.Manager.Service
         {
             string nameSpace = SolutionHelper.GetProcessNamaspace(process);
             var rootCommands = process.Commands.Where(c => !c.ParentId.HasValue).ToList();
+           
             await GenerateCommands(nameSpace,rootCommands);
 
             foreach (var command in rootCommands.OrderBy(c=>c.Sequence))
             {
-
-                await classService.GenerateClass(process, command.IFClassMapper.IFClassId.Value);
-                await classService.GenerateClassToModelMapper(process, command.IFClassMapper.IFClassId.Value, command.Id);
+                if (command.IFClassMapper != null)
+                {
+                    await classService.GenerateClass(process, command.IFClassMapper.IFClassId.Value);
+                    await classService.GenerateClassToModelMapper(process, command.IFClassMapper.IFClassId.Value, command.Id);
+                }
             }
 
         }
@@ -138,7 +141,7 @@ namespace IF.Manager.Service
 
         private void GenerateDeleteCqrsHandlerClass(IFCommand command, IFProcess process, ModelClassTreeDto entityTree)
         {
-            throw new NotImplementedException();
+           // throw new NotImplementedException();
         }
 
         private void GenerateUpdateCqrsHandlerClass(IFCommand command, IFProcess process, ModelClassTreeDto entityTree)
@@ -148,7 +151,7 @@ namespace IF.Manager.Service
 
             CSClass commandHandlerClass = GetCommandHandlerClass(command, process, nameSpace);
 
-            EFUpdateCommandMethod method = new EFUpdateCommandMethod(nameSpace, $"ExecuteCommand", entityTree, command);
+            EFUpdateCommandMethod method = new EFUpdateCommandMethod($"ExecuteCommand", entityTree, command);
 
             commandHandlerClass.Methods.Add(method.Build());
 

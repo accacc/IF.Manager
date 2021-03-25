@@ -121,6 +121,7 @@ namespace IF.Manager.Service
                 child.ParentId = entityId;
                 child.Type = entityProperty.Type;
                 child.IsNullable = entityProperty.IsNullable;
+                child.IsIdentity = entityProperty.IsIdentity;
                 tree.Childs.Add(child);
             }
 
@@ -167,6 +168,7 @@ namespace IF.Manager.Service
                     childProperty.Type = entityProperty.Type;
                     childProperty.ParentId = child.Id;
                     childProperty.IsNullable = entityProperty.IsNullable;
+                    child.IsIdentity = entityProperty.IsIdentity;
 
                     child.Childs.Add(childProperty);
                 }
@@ -203,17 +205,18 @@ namespace IF.Manager.Service
 
                 parent.Childs.Add(child);
 
-                var properties = await this.GetEntityPropertyList(child.Id);
+                var entityProperties = await this.GetEntityPropertyList(child.Id);
 
-                foreach (var property in properties)
+                foreach (var entityProperty in entityProperties)
                 {
                     ModelClassTreeDto childProperty = new ModelClassTreeDto();
-                    childProperty.Id = property.Id;
-                    childProperty.ClientId = $"{property.Id}-{child.Id}";
-                    childProperty.Name = property.Name;
-                    childProperty.Type = property.Type;
+                    childProperty.Id = entityProperty.Id;
+                    childProperty.ClientId = $"{entityProperty.Id}-{child.Id}";
+                    childProperty.Name = entityProperty.Name;
+                    childProperty.Type = entityProperty.Type;
                     childProperty.ParentId = child.Id;
-                    childProperty.IsNullable = property.IsNullable;
+                    childProperty.IsNullable = entityProperty.IsNullable;
+                    childProperty.IsIdentity = entityProperty.IsIdentity;
 
                     child.Childs.Add(childProperty);
                 }

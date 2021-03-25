@@ -1,6 +1,8 @@
 ﻿using IF.CodeGeneration.CSharp;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
+using System.Linq;
+
 using System;
 
 namespace IF.Manager.Service.EF
@@ -12,7 +14,7 @@ namespace IF.Manager.Service.EF
         IFCommand command;
         CSMethod method;
 
-        public EFUpdateCommandMethod(string nameSpace, string name, ModelClassTreeDto entityTree, IFCommand command)
+        public EFUpdateCommandMethod(string name, ModelClassTreeDto entityTree, IFCommand command)
         {
             this.entityTree = entityTree;
             this.command = command;
@@ -26,10 +28,11 @@ namespace IF.Manager.Service.EF
         public CSMethod Build()
         {
             this.method.IsAsync = true;
-            this.method.Parameters.Add(new CsMethodParameter() { Name = "command", Type = command.Name});
+            this.method.Parameters.Add(new CsMethodParameter() { Name = "command", Type = command.Name });
 
+            var identityProperty = entityTree.Childs.SingleOrDefault(c => c.IsIdentity);
 
-            this.method.Body += $"var entity = await this.repository.GetQuery<{entityTree.Name}>().SingleOrDefaultAsync(k => k.Id == command.Data.Id);" + Environment.NewLine + Environment.NewLine;
+            this.method.Body += $"var entity = await this.repository.GetQuery<{entityTree.Name}>().SingleOrDefaultAsync(k => k.{identityProperty.Name} == command.Data.{identityProperty.Name});" + Environment.NewLine + Environment.NewLine;
             this.method.Body += $"if (entity == null){{ throw new BusinessException(\"{entityTree.Name} : No such entity exists\");}}" + Environment.NewLine + Environment.NewLine;
 
 
@@ -41,7 +44,6 @@ namespace IF.Manager.Service.EF
 
                 if (!IsModelProperty) continue;
 
-                //CSProperty classProperty = new CSProperty("public", property.Name, false);
                 this.method.Body += $"entity.{property.Name} = command.Data.{property.Name};" + Environment.NewLine;
             }
 
@@ -53,7 +55,7 @@ namespace IF.Manager.Service.EF
             return this.method;
         }
 
-        
+
 
 
     }

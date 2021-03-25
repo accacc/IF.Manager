@@ -1,10 +1,8 @@
 ﻿using IF.Core.Data;
-using IF.Core.Security;
 using IF.Manager.Contracts.Model;
-using System;
+
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace IF.Manager.Contracts.Dto
 {
@@ -40,12 +38,6 @@ namespace IF.Manager.Contracts.Dto
             return IsModelProperty;
         }
 
-        //public static bool IsModelProperty(ModelClassTreeDto childEntityTree, IFModel model)
-        //{
-        //    return childEntityTree.ParentId == model.EntityId;
-        //}
-
-
         public string Type { get; set; }
         public bool IsRelation { get; set; }
 
@@ -53,13 +45,13 @@ namespace IF.Manager.Contracts.Dto
 
         public string ClientId { get; set; }
 
-        
+
         public string Name { get; set; }
-        
+
 
         public bool IsNullable { get; set; }
 
-        
+        public bool IsIdentity { get; set; }
 
 
     }
