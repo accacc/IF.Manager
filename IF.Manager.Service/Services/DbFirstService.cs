@@ -53,9 +53,9 @@ namespace IF.Manager.Service.Services
                 await AddEntities(tableSchemas, tables);
 
                 ProcessDto process = new ProcessDto();
-                process.Description = "test";
-                process.ProjectId = 1;
-                process.Name = "Test";
+                process.Description = generateOptions.ProcessName;
+                process.ProjectId = generateOptions.ProjectId;
+                process.Name = generateOptions.ProcessName;
 
                 await this.projectService.AddProcess(process);
 
