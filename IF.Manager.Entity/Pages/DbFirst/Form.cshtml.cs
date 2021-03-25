@@ -60,6 +60,9 @@ namespace IF.Manager.Entity.Pages.DbFirst
         [BindProperty(SupportsGet = true), Required]
         public string ConnectionString { get; set; }
 
+        [BindProperty(SupportsGet = true), Required]
+        public string ProcessName { get; set; }
+
 
         public async Task OnGet()
         {
@@ -129,6 +132,8 @@ namespace IF.Manager.Entity.Pages.DbFirst
             generateOptions.SelectOperation = this.SelectOperation;
             generateOptions.UpdateOperation = this.UpdateOperation;
             generateOptions.InsertOperation = this.InsertOperation;
+            generateOptions.ProjectId = this.IFProjectId;
+            generateOptions.ProcessName = this.ProcessName;
 
             try
             {

@@ -11,6 +11,7 @@ namespace IF.Manager.Contracts.Services
     public interface IProjectService: IRepository
     {
 
+        Task<bool> ProcessIsExistByName(string name);
         Task AddProject(IFProject form);
         
         Task<IFProject> GetProject(int id);

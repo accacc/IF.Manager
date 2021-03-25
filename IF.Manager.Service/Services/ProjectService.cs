@@ -14,6 +14,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+
+
 namespace IF.Manager.Service
 {
     public class ProjectService : GenericRepository, IProjectService
@@ -154,8 +156,6 @@ namespace IF.Manager.Service
 
         public async Task<List<IFSolution>> GetSolutionList()
         {
-
-
             var solutions = await this.GetQuery<IFSolution>()
 
                                 .Include(s => s.Projects).ThenInclude(s => s.IFPages)
@@ -165,6 +165,29 @@ namespace IF.Manager.Service
             return solutions;
         }
 
+
+        public async Task<bool> ProcessIsExistByName(string name)
+        {
+
+            bool isExist = false;
+            try
+            {
+              
+                IFProcess entity = await this.GetQuery<IFProcess>(s => s.Name == name).SingleOrDefaultAsync();
+
+                if (entity != null)
+                {
+                    isExist = true;
+                }
+            }
+            catch (System.Exception ex)
+            {
+
+                throw;
+            }
+
+            return isExist;
+        }
 
         public async Task AddProcess(ProcessDto form)
         {
@@ -290,10 +313,6 @@ namespace IF.Manager.Service
                 throw;
             }
 
-            //publish.ProjectId = process.ProjectId;
-            //publish.SolutionId = process.Project.SolutionId;
-
-            //await this.AddPublish(publish);
 
         }
 

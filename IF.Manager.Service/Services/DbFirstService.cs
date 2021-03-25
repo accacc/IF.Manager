@@ -40,8 +40,16 @@ namespace IF.Manager.Service.Services
 
         public async Task AddDbFirst(List<DatabaseTable> tableSchemas, List<TableDbFirstDto> tables, GenerateOptions generateOptions)
         {
+
+            if (await this.projectService.ProcessIsExistByName(generateOptions.ProcessName))
+            {
+                throw new BusinessException($"{generateOptions.ProcessName} Process already exist " + ErrorCodes.ProcessNotExist);
+            }
+
             try
             {
+
+
                 await AddEntities(tableSchemas, tables);
 
                 ProcessDto process = new ProcessDto();
@@ -91,7 +99,7 @@ namespace IF.Manager.Service.Services
             var selectGetModel = GenerateModel(modelName, entity);
             this.Add(selectGetModel);
             await this.UnitOfWork.SaveChangesAsync();
-            await AddQeury(process, modelName, selectGetModel,getType);
+            await AddQuery(process, modelName, selectGetModel,getType);
         }
 
         private async Task AddCommand(ProcessDto process, string modelName, IFModel selectGetModel, CommandType getType)
@@ -108,7 +116,7 @@ namespace IF.Manager.Service.Services
         }
 
 
-        private async Task AddQeury(ProcessDto process, string modelName, IFModel selectGetModel, QueryGetType getType)
+        private async Task AddQuery(ProcessDto process, string modelName, IFModel selectGetModel, QueryGetType getType)
         {
             QueryDto queryDto = new QueryDto();
             queryDto.Name = modelName;
@@ -143,13 +151,14 @@ namespace IF.Manager.Service.Services
         {
             foreach (var table in tableSchemas)
             {
+                string entityName = DirectoryHelper.AddAsLastWord(table.Name, "Entity");
 
-                if (await this.entityService.EntityIsExistByName(table.Name))
+                if (await this.entityService.EntityIsExistByName(entityName))
                 {
-                    throw new BusinessException($"{table.Name} Entity already exist");
+                    throw new BusinessException($"{entityName} Entity already exist");
                 }
 
-                string entityName = DirectoryHelper.AddAsLastWord(table.Name, "Entity");
+                
 
                 IFEntity entity = new IFEntity();
 
