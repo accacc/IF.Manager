@@ -142,6 +142,7 @@ namespace IF.Manager.Service.Services
                 IFModelProperty modelProperty = new IFModelProperty();
                 modelProperty.EntityId = entity.Id;
                 modelProperty.EntityPropertyId = property.Id;
+                model.Properties.Add(modelProperty);
             }
 
             return model;
