@@ -173,7 +173,6 @@ namespace IF.Manager.Service.Services
 
                     property.IsIdentity = column.IsPrimaryKey;
 
-
                     property.Name = column.Name;
 
                     property.Type = GetPrimitiveByDotnet(column.NetDataType());
