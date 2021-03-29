@@ -421,10 +421,10 @@ namespace IF.Manager.Service
                     .SingleOrDefaultAsync();
 
 
-                CqrsQueryGenerator queryGenerator = new CqrsQueryGenerator(entityService, modelService,process);
+                CqrsQueryGenerator queryGenerator = new CqrsQueryGenerator(entityService,process);
                 await queryGenerator.Generate();
 
-                CqrsCommandHandlerGenerator commandGenerator = new CqrsCommandHandlerGenerator(entityService,classService ,process);
+                CqrsCommandGenerator commandGenerator = new CqrsCommandGenerator(entityService,classService ,process);
                 await commandGenerator.Generate();
 
                 //await classService.GenerateClass(process, 702);

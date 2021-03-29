@@ -4,8 +4,6 @@ using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Service.CodeGen.Cqrs;
-using IF.Manager.Service.CodeGen.EF;
-using IF.Manager.Service.CodeGen.Interface;
 using IF.Manager.Service.CodeGen.Model;
 using IF.Manager.Service.EF;
 using IF.Manager.Service.Model;
@@ -18,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace IF.Manager.Service
 {
-    public class CqrsCommandHandlerGenerator
+    public class CqrsCommandGenerator
     {
         private readonly IEntityService entityService;
         private readonly IClassService classService;
@@ -26,7 +24,7 @@ namespace IF.Manager.Service
         string generatedBasePath;
         IFProcess process;
 
-        public CqrsCommandHandlerGenerator(IEntityService entityService, IClassService classService, IFProcess process)
+        public CqrsCommandGenerator(IEntityService entityService, IClassService classService, IFProcess process)
         {
             this.entityService = entityService;
             this.classService = classService;
@@ -95,8 +93,11 @@ namespace IF.Manager.Service
             switch (command.CommandGetType)
             {
                 case Core.Data.CommandType.Insert:
-                    MultiCommandGenerator method = new MultiCommandGenerator($"ExecuteCommand",  command);
-                    GenerateInsertCqrsHandlerClass(command, process, method);
+                    //MultiCommandGenerator method = new MultiCommandGenerator($"ExecuteCommand",  command);
+                    //GenerateInsertCqrsHandlerClass(command, process, method);
+
+                    CqrsInsertCommandHandlerGenerator cqrsInsertCommandHandler = new CqrsInsertCommandHandlerGenerator(process,command);
+                    cqrsInsertCommandHandler.GenerateMultiInsertCqrsHandlerClass();
                     break;
                 case Core.Data.CommandType.Update:
                     GenerateUpdateCqrsHandlerClass(command, process, entityTree);
@@ -125,8 +126,9 @@ namespace IF.Manager.Service
             switch (command.CommandGetType)
             {
                 case Core.Data.CommandType.Insert:
-                    EFInsertCommandMethod method = new EFInsertCommandMethod($"ExecuteCommand", entityTree, command);
-                    GenerateInsertCqrsHandlerClass(command, process,method);
+                   
+                    CqrsInsertCommandHandlerGenerator cqrsInsertCommandHandler = new CqrsInsertCommandHandlerGenerator(process,command);
+                    cqrsInsertCommandHandler.GenerateInsertCqrsHandlerClass(entityTree);
                     break;
                 case Core.Data.CommandType.Update:
                     GenerateUpdateCqrsHandlerClass(command, process, entityTree);
@@ -159,24 +161,25 @@ namespace IF.Manager.Service
 
         }
 
-        private void GenerateInsertCqrsHandlerClass(IFCommand command, IFProcess process,ICommandMethodGenerator method)
-        {
+        //private void GenerateInsertCqrsHandlerClass(IFCommand command, IFProcess process,ICommandMethodGenerator method)
+        //{
 
-            string nameSpace = SolutionHelper.GetProcessNamaspace(process);
+        //    string nameSpace = SolutionHelper.GetProcessNamaspace(process);
 
-            CSClass commandHandlerClass = GetCommandHandlerClass(command, process, nameSpace);           
+        //    CSClass commandHandlerClass = GetCommandHandlerClass(command, process, nameSpace);           
 
-            commandHandlerClass.Methods.Add(method.Build());
+        //    commandHandlerClass.Methods.Add(method.Build());
 
-            fileSystem.FormatCode(commandHandlerClass.GenerateCode(), "cs");
+        //    fileSystem.FormatCode(commandHandlerClass.GenerateCode(), "cs");
 
 
-        }
+        //}
 
         private static CSClass GetCommandHandlerClass(IFCommand command, IFProcess process, string nameSpace)
         {
             string commandName = $"{command.Name}";
             CSClass commandHandlerClass = new CSClass();
+            //if (command.IsAfterExecuteOverride || command.IsBeforeExecuteOverride) commandHandlerClass.IsPartial = true;
             commandHandlerClass.Name = $"{commandName}CommandHandler";
             commandHandlerClass.NameSpace = nameSpace + ".Commands.Cqrs";
             commandHandlerClass.Usings.Add("IF.Core.Data");

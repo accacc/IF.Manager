@@ -11,15 +11,13 @@ namespace IF.Manager.Service.Services
     {
 
         private readonly IEntityService entityService;
-        private readonly IModelService modelService;
         private readonly FileSystemCodeFormatProvider fileSystem;
         string generatedBasePath;
         IFProcess process;
 
-        public CqrsQueryGenerator(IEntityService entityService, IModelService modelService, IFProcess process)
+        public CqrsQueryGenerator(IEntityService entityService,IFProcess process)
         {
             this.entityService = entityService;
-            this.modelService = modelService;
             this.process = process;
             generatedBasePath = generatedBasePath = DirectoryHelper.GetTempProcessDirectory(process);
             this.fileSystem = new FileSystemCodeFormatProvider(generatedBasePath);

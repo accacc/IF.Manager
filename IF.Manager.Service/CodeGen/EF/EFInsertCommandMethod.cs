@@ -9,7 +9,7 @@ using System.Text;
 
 namespace IF.Manager.Service.EF
 {
-    public class EFInsertCommandMethod: ICommandMethodGenerator
+    public class EFInsertCommandMethod : ICommandMethodGenerator
     {
 
         ModelClassTreeDto entityTree;
@@ -33,7 +33,7 @@ namespace IF.Manager.Service.EF
 
             this.method.Parameters.Add(new CsMethodParameter() { Name = "command", Type = command.Name });
 
-            bool IsList = command.IsList.Value;            
+            bool IsList = command.IsList.Value;
 
             string modelPropertyName = "command.Data";
 
@@ -46,9 +46,9 @@ namespace IF.Manager.Service.EF
                 methodBuilder.AppendLine("{");
             }
 
-            GenerateMethodBody(modelPropertyName,methodBuilder);
+            GenerateMethodBody(modelPropertyName, methodBuilder);
 
-          
+
 
             if (IsList)
             {
@@ -62,13 +62,7 @@ namespace IF.Manager.Service.EF
             methodBuilder.AppendLine();
 
 
-            if(IsList)
-            {
-
-
-
-            }
-            else
+            if (!IsList)
             {
                 var primaryKey = this.command.Model.Properties.SingleOrDefault(p => p.EntityProperty.IsIdentity);
                 methodBuilder.AppendLine($"command.Data.{primaryKey.EntityProperty.Name} = entity.{primaryKey.EntityProperty.Name}");
@@ -78,7 +72,7 @@ namespace IF.Manager.Service.EF
             return this.method;
         }
 
-        private void GenerateMethodBody(string modelPropertyName,StringBuilder methodBuilder)
+        private void GenerateMethodBody(string modelPropertyName, StringBuilder methodBuilder)
         {
             methodBuilder.AppendLine($"{entityTree.Name} entity = new {entityTree.Name}();");
 
@@ -96,8 +90,8 @@ namespace IF.Manager.Service.EF
             }
 
             methodBuilder.AppendLine($"this.repository.Add(entity);");
-          
-           
+
+
         }
 
 
