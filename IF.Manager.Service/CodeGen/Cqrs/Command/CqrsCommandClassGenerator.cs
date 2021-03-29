@@ -46,11 +46,8 @@ namespace IF.Manager.Service.CodeGen.Cqrs
             }
             else
             {
-
                 modelProperty.PropertyTypeString = $"{propertyName}";
             }
-
-
 
 
             commandClass.Properties.Add(modelProperty);

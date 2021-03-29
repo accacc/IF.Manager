@@ -7,17 +7,17 @@ using IF.Manager.Service.EF;
 
 namespace IF.Manager.Service
 {
-    public class CqrsInsertCommandHandlerGenerator: CqrsBaseCommandHandlerGenerator
+    public class CqrsInsertCommandHandlerGenerator : CqrsBaseCommandHandlerGenerator
     {
 
-        public CqrsInsertCommandHandlerGenerator(IFProcess process,IFCommand command):base(process, command)
+        public CqrsInsertCommandHandlerGenerator(IFProcess process, IFCommand command) : base(process, command)
         {
         }
-       
+
 
         public void GenerateInsertCqrsHandlerClass(ModelClassTreeDto entityTree)
         {
-    
+
             CSClass commandHandlerClass = GetCommandHandlerClass();
 
             EFInsertCommandMethod method = new EFInsertCommandMethod($"ExecuteCommand", entityTree, command);
@@ -26,11 +26,11 @@ namespace IF.Manager.Service
 
             base.fileSystem.FormatCode(commandHandlerClass.GenerateCode(), "cs");
 
-           // if (command.IsBeforeExecuteOverride || command.IsAfterExecuteOverride)
-            {
-                CqrsCommandOverrideClassGenerator overrideClassGenerator = new CqrsCommandOverrideClassGenerator(command, base.fileSystem);
-                overrideClassGenerator.Generate();
-            }
+            CqrsCommandContextClassGenerator commandContextClassGenerator = new CqrsCommandContextClassGenerator(command, fileSystem);
+
+            commandContextClassGenerator.Generate();
+            CqrsCommandOverrideClassGenerator overrideClassGenerator = new CqrsCommandOverrideClassGenerator(command, base.fileSystem);
+            overrideClassGenerator.Generate();
 
 
         }

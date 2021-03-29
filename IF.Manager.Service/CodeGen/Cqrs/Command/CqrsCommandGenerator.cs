@@ -93,9 +93,6 @@ namespace IF.Manager.Service
             switch (command.CommandGetType)
             {
                 case Core.Data.CommandType.Insert:
-                    //MultiCommandGenerator method = new MultiCommandGenerator($"ExecuteCommand",  command);
-                    //GenerateInsertCqrsHandlerClass(command, process, method);
-
                     CqrsInsertCommandHandlerGenerator cqrsInsertCommandHandler = new CqrsInsertCommandHandlerGenerator(process,command);
                     cqrsInsertCommandHandler.GenerateMultiInsertCqrsHandlerClass();
                     break;
@@ -160,20 +157,6 @@ namespace IF.Manager.Service
             fileSystem.FormatCode(commandHandlerClass.GenerateCode(), "cs");
 
         }
-
-        //private void GenerateInsertCqrsHandlerClass(IFCommand command, IFProcess process,ICommandMethodGenerator method)
-        //{
-
-        //    string nameSpace = SolutionHelper.GetProcessNamaspace(process);
-
-        //    CSClass commandHandlerClass = GetCommandHandlerClass(command, process, nameSpace);           
-
-        //    commandHandlerClass.Methods.Add(method.Build());
-
-        //    fileSystem.FormatCode(commandHandlerClass.GenerateCode(), "cs");
-
-
-        //}
 
         private static CSClass GetCommandHandlerClass(IFCommand command, IFProcess process, string nameSpace)
         {

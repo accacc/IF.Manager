@@ -3,7 +3,6 @@ using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Service.CodeGen.Interface;
 
-using System;
 using System.Linq;
 using System.Text;
 
@@ -37,51 +36,64 @@ namespace IF.Manager.Service.EF
 
             string modelPropertyName = "command.Data";
 
-            StringBuilder methodBuilder = new StringBuilder();
+            StringBuilder methodBodyBuilder = new StringBuilder();
+
+            methodBodyBuilder.AppendLine($"{command.Name}Context context = new  {command.Name}Context();");
+            methodBodyBuilder.AppendLine($"context.Command = command;");
+            methodBodyBuilder.AppendLine($"context.Model = command.Data;");
+            methodBodyBuilder.AppendLine();
 
             if (IsList)
             {
                 modelPropertyName = "item";
-                methodBuilder.AppendLine(" foreach (var item in command.Data)");
-                methodBuilder.AppendLine("{");
+                methodBodyBuilder.AppendLine(" foreach (var item in command.Data)");
+                methodBodyBuilder.AppendLine("{");
             }
 
-            GenerateMethodBody(modelPropertyName, methodBuilder);
+            GenerateMethodBody(modelPropertyName, methodBodyBuilder);
 
 
 
             if (IsList)
             {
-                methodBuilder.AppendLine();
-                methodBuilder.AppendLine();
-                methodBuilder.AppendLine("}");
-                methodBuilder.AppendLine();
+                methodBodyBuilder.AppendLine();
+                methodBodyBuilder.AppendLine();
+                methodBodyBuilder.AppendLine("}");
+                methodBodyBuilder.AppendLine();
             }
 
-           
+            methodBodyBuilder.AppendLine();
+
 
             //if(command.IsBeforeExecuteOverride)
             {
-                methodBuilder.AppendLine($"this.BeforeExecute(commmand);");
+                methodBodyBuilder.AppendLine($"await this.BeforeExecute(context);");
             }
 
-            methodBuilder.AppendLine($"await this.repository.UnitOfWork.SaveChangesAsync();");
+            methodBodyBuilder.AppendLine();
 
 
-            methodBuilder.AppendLine();
+            methodBodyBuilder.AppendLine($"await this.repository.UnitOfWork.SaveChangesAsync();");
+
+            methodBodyBuilder.AppendLine();
+
+
+            methodBodyBuilder.AppendLine();
 
 
             //if(command.IsAfterExecuteOverride)
             {
-                methodBuilder.AppendLine($"this.AfterExecute(commmand);");
+                methodBodyBuilder.AppendLine($"await this.AfterExecute(context);");
             }
 
             if (!IsList)
             {
                 var primaryKey = this.command.Model.Properties.SingleOrDefault(p => p.EntityProperty.IsIdentity);
-                methodBuilder.AppendLine($"command.Data.{primaryKey.EntityProperty.Name} = entity.{primaryKey.EntityProperty.Name}");
+                methodBodyBuilder.AppendLine($"command.Data.{primaryKey.EntityProperty.Name} = entity.{primaryKey.EntityProperty.Name};");
             }
 
+
+            this.method.Body = methodBodyBuilder.ToString();
 
             return this.method;
         }
@@ -99,9 +111,9 @@ namespace IF.Manager.Service.EF
             return this.method;
         }
 
-        private void GenerateMethodBody(string modelPropertyName, StringBuilder methodBuilder)
+        private void GenerateMethodBody(string modelPropertyName, StringBuilder methodBodyBuilder)
         {
-            methodBuilder.AppendLine($"{entityTree.Name} entity = new {entityTree.Name}();");
+            methodBodyBuilder.AppendLine($"{entityTree.Name} entity = new {entityTree.Name}();");
 
 
             foreach (var property in this.entityTree.Childs)
@@ -113,10 +125,13 @@ namespace IF.Manager.Service.EF
 
                 if (!IsModelProperty) continue;
 
-                methodBuilder.AppendLine($"entity.{property.Name} = {modelPropertyName}.{property.Name};");
+                methodBodyBuilder.AppendLine($"entity.{property.Name} = {modelPropertyName}.{property.Name};");
             }
+            
+            methodBodyBuilder.AppendLine($"context.Entity = entity;");
 
-            methodBuilder.AppendLine($"this.repository.Add(entity);");
+
+            methodBodyBuilder.AppendLine($"this.repository.Add(entity);");
 
 
         }

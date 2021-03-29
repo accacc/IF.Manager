@@ -46,9 +46,7 @@ namespace IF.Manager.Service.CodeGen.Cqrs.Command
 
             method.IsAsync = true;
 
-            method.Parameters.Add(new CsMethodParameter() { Name = "command", Type = command.Name });
-
-
+            method.Parameters.Add(new CsMethodParameter() { Name = "context", Type =$"{command.Name}Context" });
 
             overClass.Methods.Add(method);
         }
@@ -59,9 +57,7 @@ namespace IF.Manager.Service.CodeGen.Cqrs.Command
 
             method.IsAsync = true;
 
-            method.Parameters.Add(new CsMethodParameter() { Name = "command", Type = command.Name });
-
-
+            method.Parameters.Add(new CsMethodParameter() { Name = "context", Type = $"{command.Name}Context" });
 
             overClass.Methods.Add(method);
         }
