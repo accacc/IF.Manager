@@ -25,14 +25,18 @@ namespace IF.Manager.Service
             commandHandlerClass.Methods.Add(method.Build());
 
             base.fileSystem.FormatCode(commandHandlerClass.GenerateCode(), "cs");
+           
+            GenerateCommandContextClass();
 
+        }
+
+        private void GenerateCommandContextClass()
+        {
             CqrsCommandContextClassGenerator commandContextClassGenerator = new CqrsCommandContextClassGenerator(command, fileSystem);
 
             commandContextClassGenerator.Generate();
             CqrsCommandOverrideClassGenerator overrideClassGenerator = new CqrsCommandOverrideClassGenerator(command, base.fileSystem);
             overrideClassGenerator.Generate();
-
-
         }
 
         public void GenerateMultiInsertCqrsHandlerClass()
@@ -43,12 +47,11 @@ namespace IF.Manager.Service
 
             MultiCommandGenerator method = new MultiCommandGenerator($"ExecuteCommand", command);
 
-
             commandHandlerClass.Methods.Add(method.Build());
 
             base.fileSystem.FormatCode(commandHandlerClass.GenerateCode(), "cs");
 
-
+            GenerateCommandContextClass();
         }
 
 
