@@ -39,8 +39,8 @@ namespace IF.Manager.Contracts.Model
 
         public IFModel Model { get; set; }
 
-        public bool IsBeforeExecuteOverride { get; set; }
-        public bool IsAfterExecuteOverride { get; set; }
+        //public bool IsBeforeExecuteOverride { get; set; }
+        //public bool IsAfterExecuteOverride { get; set; }
 
         public IFProcess Process { get; set; }
 

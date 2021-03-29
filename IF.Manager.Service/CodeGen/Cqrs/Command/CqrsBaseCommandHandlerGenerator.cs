@@ -27,7 +27,8 @@ namespace IF.Manager.Service.CodeGen.Cqrs.Command
         {
             string commandName = $"{command.Name}";
             CSClass commandHandlerClass = new CSClass();
-            if (command.IsAfterExecuteOverride || command.IsBeforeExecuteOverride) commandHandlerClass.IsPartial = true;
+            //if (command.IsAfterExecuteOverride || command.IsBeforeExecuteOverride)
+            commandHandlerClass.IsPartial = true;
             commandHandlerClass.Name = $"{commandName}CommandHandler";
             commandHandlerClass.NameSpace = nameSpace + ".Commands.Cqrs";
             commandHandlerClass.Usings.Add("IF.Core.Data");

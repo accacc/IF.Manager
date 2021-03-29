@@ -58,9 +58,23 @@ namespace IF.Manager.Service.EF
                 methodBuilder.AppendLine();
             }
 
+           
+
+            //if(command.IsBeforeExecuteOverride)
+            {
+                methodBuilder.AppendLine($"this.BeforeExecute(commmand);");
+            }
+
             methodBuilder.AppendLine($"await this.repository.UnitOfWork.SaveChangesAsync();");
+
+
             methodBuilder.AppendLine();
 
+
+            //if(command.IsAfterExecuteOverride)
+            {
+                methodBuilder.AppendLine($"this.AfterExecute(commmand);");
+            }
 
             if (!IsList)
             {
@@ -68,6 +82,19 @@ namespace IF.Manager.Service.EF
                 methodBuilder.AppendLine($"command.Data.{primaryKey.EntityProperty.Name} = entity.{primaryKey.EntityProperty.Name}");
             }
 
+
+            return this.method;
+        }
+
+        public CSMethod BuildOverridenQuery(string name)
+        {
+            this.method.Name = name;
+
+            StringBuilder builder = new StringBuilder();
+
+            builder.AppendLine("throw new NotImplementedException();");
+
+            this.method.Body = builder.ToString();
 
             return this.method;
         }

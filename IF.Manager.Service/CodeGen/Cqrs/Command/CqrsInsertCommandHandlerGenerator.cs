@@ -1,21 +1,9 @@
-﻿using IF.CodeGeneration.Core;
-using IF.CodeGeneration.CSharp;
+﻿using IF.CodeGeneration.CSharp;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
-using IF.Manager.Contracts.Services;
-using IF.Manager.Service.CodeGen.Cqrs;
 using IF.Manager.Service.CodeGen.Cqrs.Command;
 using IF.Manager.Service.CodeGen.EF;
-using IF.Manager.Service.CodeGen.Interface;
-using IF.Manager.Service.CodeGen.Model;
 using IF.Manager.Service.EF;
-using IF.Manager.Service.Model;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IF.Manager.Service
 {
@@ -37,6 +25,12 @@ namespace IF.Manager.Service
             commandHandlerClass.Methods.Add(method.Build());
 
             base.fileSystem.FormatCode(commandHandlerClass.GenerateCode(), "cs");
+
+           // if (command.IsBeforeExecuteOverride || command.IsAfterExecuteOverride)
+            {
+                CqrsCommandOverrideClassGenerator overrideClassGenerator = new CqrsCommandOverrideClassGenerator(command, base.fileSystem);
+                overrideClassGenerator.Generate();
+            }
 
 
         }
