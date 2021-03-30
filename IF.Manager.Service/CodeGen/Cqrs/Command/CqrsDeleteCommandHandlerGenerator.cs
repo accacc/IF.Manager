@@ -2,15 +2,14 @@
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Service.CodeGen.Cqrs.Command;
-using IF.Manager.Service.CodeGen.EF;
 using IF.Manager.Service.EF;
 
 namespace IF.Manager.Service
 {
-    public class CqrsInsertCommandHandlerGenerator : CqrsBaseCommandHandlerGenerator
+    public class CqrsDeleteCommandHandlerGenerator : CqrsBaseCommandHandlerGenerator
     {
 
-        public CqrsInsertCommandHandlerGenerator(IFProcess process, IFCommand command) : base(process, command)
+        public CqrsDeleteCommandHandlerGenerator(IFProcess process, IFCommand command) : base(process, command)
         {
         }
 
@@ -20,7 +19,7 @@ namespace IF.Manager.Service
 
             CSClass commandHandlerClass = GetCommandHandlerClass();
 
-            EFInsertCommandMethod method = new EFInsertCommandMethod($"ExecuteCommand", entityTree, command);
+            EFDeleteCommandMethod method = new EFDeleteCommandMethod($"ExecuteCommand", entityTree, command);
 
             commandHandlerClass.Methods.Add(method.Build());
 
@@ -31,7 +30,8 @@ namespace IF.Manager.Service
         }
 
        
-      
+
+       
 
 
 

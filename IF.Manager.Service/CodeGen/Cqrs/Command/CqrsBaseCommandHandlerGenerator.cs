@@ -1,6 +1,7 @@
 ﻿using IF.CodeGeneration.Core;
 using IF.CodeGeneration.CSharp;
 using IF.Manager.Contracts.Model;
+using IF.Manager.Service.CodeGen.EF;
 
 using System;
 using System.Text;
@@ -70,6 +71,30 @@ namespace IF.Manager.Service.CodeGen.Cqrs.Command
 
             commandHandlerClass.Methods.Add(handleMethod);
             return commandHandlerClass;
+        }
+
+        protected void GenerateCommandContextClass()
+        {
+            CqrsCommandContextClassGenerator commandContextClassGenerator = new CqrsCommandContextClassGenerator(command, fileSystem);
+
+            commandContextClassGenerator.Generate();
+            CqrsCommandOverrideClassGenerator overrideClassGenerator = new CqrsCommandOverrideClassGenerator(command, fileSystem);
+            overrideClassGenerator.Generate();
+        }
+
+        public void GenerateMultiInsertCqrsHandlerClass()
+        {
+
+
+            CSClass commandHandlerClass = GetCommandHandlerClass();
+
+            MultiCommandGenerator method = new MultiCommandGenerator($"ExecuteCommand", command);
+
+            commandHandlerClass.Methods.Add(method.Build());
+
+            fileSystem.FormatCode(commandHandlerClass.GenerateCode(), "cs");
+
+            GenerateCommandContextClass();
         }
     }
 }

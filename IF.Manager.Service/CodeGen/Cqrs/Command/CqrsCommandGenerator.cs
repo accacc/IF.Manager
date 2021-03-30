@@ -125,13 +125,14 @@ namespace IF.Manager.Service
                 case Core.Data.CommandType.Insert:
                    
                     CqrsInsertCommandHandlerGenerator cqrsInsertCommandHandler = new CqrsInsertCommandHandlerGenerator(process,command);
-                    cqrsInsertCommandHandler.GenerateInsertCqrsHandlerClass(entityTree);
+                    cqrsInsertCommandHandler.Generate(entityTree);
                     break;
                 case Core.Data.CommandType.Update:
                     GenerateUpdateCqrsHandlerClass(command, process, entityTree);
                     break;
                 case Core.Data.CommandType.Delete:
-                    GenerateDeleteCqrsHandlerClass(command, process, entityTree);
+                    CqrsDeleteCommandHandlerGenerator cqrsDeleteCommandHandler = new CqrsDeleteCommandHandlerGenerator(process, command);
+                    cqrsDeleteCommandHandler.Generate(entityTree);
                     break;
                 default:
                     throw new ApplicationException("unknow command type");
