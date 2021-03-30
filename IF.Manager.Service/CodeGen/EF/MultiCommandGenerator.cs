@@ -165,7 +165,7 @@ namespace IF.Manager.Service.CodeGen.EF
 
 
 
-                            if (nextCommand.IsList.Value || nextCommand.Parent.IsMultiList)
+                            if (nextCommand.IsList.Value || nextCommand.Parent.IsMultiList())
                             {
 
                                 string foreachName = nextCommand.Model.Name;
@@ -173,20 +173,20 @@ namespace IF.Manager.Service.CodeGen.EF
                                 string rightPropertyModelName = currentCommand.Model.Name;
 
 
-                                if (nextCommand.Parent.IsMultiList && !nextCommand.IsList.Value)
+                                if (nextCommand.Parent.IsMultiList() && !nextCommand.IsList.Value)
                                 {
                                     foreachName = "command.Data." + nextCommand.Model.Name + "Multi";
                                     rightPropertyModelName = " command.Data." + rightPropertyModelName;
                                 }
 
-                                if (!nextCommand.Parent.IsMultiList && nextCommand.IsList.Value)
+                                if (!nextCommand.Parent.IsMultiList() && nextCommand.IsList.Value)
                                 {
                                     foreachName = "command.Data." + nextCommand.Model.Name;
                                     leftPropertyModelName = "";
                                     rightPropertyModelName = " command.Data." + rightPropertyModelName;
                                 }
 
-                                if (nextCommand.Parent.IsMultiList && nextCommand.IsList.Value)
+                                if (nextCommand.Parent.IsMultiList() && nextCommand.IsList.Value)
                                 {
                                     foreachName = $"item{level - 1}.{nextCommand.Model.Name}";
                                     leftPropertyModelName = "";

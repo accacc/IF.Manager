@@ -127,9 +127,9 @@ namespace IF.Manager.Contracts.Model
             return pagePath;
         }
 
-        public bool IsMultiList
+        public bool IsMultiList()
         {
-            get { return this.IsMultiCommand() && this.IsList.Value; }
+            return this.IsMultiCommand() && this.IsList.Value;
 
         }
 

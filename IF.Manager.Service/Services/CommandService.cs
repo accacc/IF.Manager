@@ -67,6 +67,7 @@ namespace IF.Manager.Service.Services
             entity.ProcessId = form.ProcessId;
             entity.CommandGetType = form.CommandGetType;
             entity.Description = form.Description;
+            entity.IsList = form.IsList;
 
             this.Add(entity);
 
@@ -90,7 +91,7 @@ namespace IF.Manager.Service.Services
                 entity.ModelId = form.ModelId;
                 entity.CommandGetType = form.CommandGetType;
                 entity.ProcessId = form.ProcessId;
-
+                entity.IsList = form.IsList;
                 this.Update(entity);
                 await this.UnitOfWork.SaveChangesAsync();
             }
@@ -105,16 +106,7 @@ namespace IF.Manager.Service.Services
         {
             var entity = await this.GetQuery<IFCommand>()
 
-            .Select(x => new IFCommand
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Description = x.Description,
-                ModelId = x.ModelId,
-                ProcessId = x.ProcessId,
-                CommandGetType = x.CommandGetType,
-
-            }).SingleOrDefaultAsync(k => k.Id == id);
+           .SingleOrDefaultAsync(k => k.Id == id);
 
             if (entity == null) { throw new BusinessException("Command : No such entity exists"); }
 
