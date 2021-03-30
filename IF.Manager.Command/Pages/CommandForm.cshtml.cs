@@ -1,4 +1,3 @@
-using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 
@@ -15,15 +14,17 @@ namespace IF.Manager.Command.Pages
 {
     public class CommandFormModel : PageModel
     {
-        private readonly ICommandService CommandService;
+        private readonly ICommandService commandService;
         private readonly IModelService modelService;
         private readonly IProjectService projectService;
+        private readonly IClassService classService;
 
-        public CommandFormModel(ICommandService CommandService, IModelService modelService, IProjectService projectService)
+        public CommandFormModel(ICommandService commandService, IModelService modelService, IProjectService projectService, IClassService classService)
         {
-            this.CommandService = CommandService;
+            this.commandService = commandService;
             this.modelService = modelService;
             this.projectService = projectService;
+            this.classService = classService;
         }
 
         [BindProperty, Required]
@@ -36,7 +37,7 @@ namespace IF.Manager.Command.Pages
 
         public async Task OnGetUpdateAsync(int Id)
         {
-            this.Form = await this.CommandService.GetCommand(Id);
+            this.Form = await this.commandService.GetCommand(Id);
             await this.SetFromDefaults();
 
         }
@@ -46,7 +47,7 @@ namespace IF.Manager.Command.Pages
 
             try
             {
-                await this.CommandService.AddCommand(this.Form);
+                await this.commandService.AddCommand(this.Form);
             }
             catch (System.Exception ex)
             {
@@ -55,7 +56,7 @@ namespace IF.Manager.Command.Pages
             }
 
 
-            var list = await this.CommandService.GetCommandList();
+            var list = await this.commandService.GetCommandList();
 
             return new PartialViewResult
             {
@@ -69,7 +70,7 @@ namespace IF.Manager.Command.Pages
 
             try
             {
-                await this.CommandService.UpdateCommand(this.Form);
+                await this.commandService.UpdateCommand(this.Form);
             }
             catch (System.Exception ex)
             {
@@ -78,7 +79,7 @@ namespace IF.Manager.Command.Pages
             }
 
 
-            var list = await this.CommandService.GetCommandList();
+            var list = await this.commandService.GetCommandList();
 
             return new PartialViewResult
             {
@@ -92,6 +93,7 @@ namespace IF.Manager.Command.Pages
         {
             await SetModels();
             await SetProceses();
+            await SetMappers();
 
 
         }
@@ -143,6 +145,24 @@ namespace IF.Manager.Command.Pages
             }
 
             ViewData["models"] = items;
+        }
+
+        private async Task SetMappers()
+        {
+            var entities = await this.classService.GetClassMapperList();
+
+            List<SelectListItem> items = new List<SelectListItem>();
+
+
+            foreach (var data in entities)
+            {
+                SelectListItem item = new SelectListItem();
+                item.Text = data.Name;
+                item.Value = data.Id.ToString();
+                items.Add(item);
+            }
+
+            ViewData["mappers"] = items;
         }
 
 

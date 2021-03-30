@@ -68,6 +68,7 @@ namespace IF.Manager.Service.Services
             entity.CommandGetType = form.CommandGetType;
             entity.Description = form.Description;
             entity.IsList = form.IsList;
+            entity.IFClassMapperId = form.IFClassMapperId;
 
             this.Add(entity);
 
@@ -92,6 +93,7 @@ namespace IF.Manager.Service.Services
                 entity.CommandGetType = form.CommandGetType;
                 entity.ProcessId = form.ProcessId;
                 entity.IsList = form.IsList;
+                entity.IFClassMapperId = form.IFClassMapperId;
                 this.Update(entity);
                 await this.UnitOfWork.SaveChangesAsync();
             }

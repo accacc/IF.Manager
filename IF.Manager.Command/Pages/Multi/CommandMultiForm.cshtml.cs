@@ -103,11 +103,11 @@ namespace IF.Manager.Command.Pages.Multi
         private async Task SetFromDefaults(int Id)
         {
             this.CommandId = Id;
-            await SetCommands();
             await SetMappers();
+            await SetCommands();
         }
 
-        private async Task SetCommands()
+        private async Task SetMappers()
         {
             var entities = await this.classService.GetClassMapperList();
 
@@ -125,7 +125,7 @@ namespace IF.Manager.Command.Pages.Multi
             ViewData["mappers"] = items;
         }
 
-        private async Task SetMappers()
+        private async Task SetCommands()
         {
             var entities = await this.commandService.GetCommandList();
 

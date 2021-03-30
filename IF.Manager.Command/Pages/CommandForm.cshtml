@@ -3,8 +3,11 @@
 
 @{
     Layout = "_ModalLayout";
-    List<SelectListItem> groups = ViewData["models"] as List<SelectListItem>;
+    List<SelectListItem> models = ViewData["models"] as List<SelectListItem>;
     List<SelectListItem> process = ViewData["process"] as List<SelectListItem>;
+    List<SelectListItem> mappers = ViewData["mappers"] as List<SelectListItem>;
+
+
 }
 
 
@@ -24,7 +27,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="ModelId">Model</label>
-                @Html.DropDownList("Form.ModelId", groups, "Select", new { @class = "form-control" })
+                @Html.DropDownList("Form.ModelId", models, "Select", new { @class = "form-control" })
             </div>
         </div>
     </div>
@@ -63,6 +66,15 @@
             <div class="form-group">
                 <label for="Description">Description</label>
                 @Html.TextBoxFor(m => m.Form.Description, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="IFClassMapperId">Mapper</label>
+                @Html.DropDownList("Form.IFClassMapperId", mappers, "Select", new { @class = "form-control" })
             </div>
         </div>
     </div>
