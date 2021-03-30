@@ -244,6 +244,7 @@ namespace IF.Manager.Service.Services
                         var command = this.GetQuery<IFCommand>().SingleOrDefault(p => p.Id == item.Id);
                         command.ParentId = commandId;
                         command.IFClassMapperId = item.IFClassMapperId;
+                        command.Sequence = item.Sequence;
                         this.Update(command);
                     }
                 }

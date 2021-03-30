@@ -43,10 +43,16 @@
 
     <td>
         <div class="form-group">
-
             @Html.DropDownList($"Form[{index}].IFClassMapperId", mappers, "Select", new { @class = "form-control" })
         </div>
     </td>
+    <td>
+        <div class="form-group">
+
+            <input type="text" name="Form[@index].Sequence" value="@Model.Sequence" class="form-control" />
+        </div>
+    </td>
+
 
 
 
