@@ -96,5 +96,8 @@ namespace IF.Manager.Service.CodeGen.Cqrs.Command
 
             GenerateCommandContextClass();
         }
+
+
+
     }
 }

@@ -22,7 +22,27 @@ namespace IF.Manager.Service
 
             EFInsertCommandMethod method = new EFInsertCommandMethod($"ExecuteCommand", entityTree, command);
 
-            commandHandlerClass.Methods.Add(method.Build());
+            if (command.IsQueryOverride)
+            {
+                CSClass commandHandlerOverrideClass = new CSClass();
+                commandHandlerOverrideClass.Name = command.Name;
+                commandHandlerOverrideClass.IsPartial = true;
+                commandHandlerOverrideClass.NameSpace = commandHandlerClass.NameSpace;
+                
+                //AddNameSpaces(query, overClass);
+
+
+                commandHandlerOverrideClass.Methods.Add(method.BuildOverridenQuery());
+
+                fileSystem.FormatCode(commandHandlerOverrideClass.GenerateCode().Template, "cs", command.Name + "Override");
+
+            }
+            else
+            {
+                commandHandlerClass.Methods.Add(method.Build());
+
+
+            }
 
             base.fileSystem.FormatCode(commandHandlerClass.GenerateCode(), "cs");
            

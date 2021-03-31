@@ -62,9 +62,9 @@ namespace IF.Manager.Service.EF
 
             methodBodyBuilder.AppendLine($"context.Entity = entity;");
             methodBodyBuilder.AppendLine();
-            methodBodyBuilder.AppendLine($"this.repository.Update(entity);");
-            methodBodyBuilder.AppendLine();
             methodBodyBuilder.AppendLine($"await this.BeforeExecute(context);");
+            methodBodyBuilder.AppendLine();
+            methodBodyBuilder.AppendLine($"this.repository.Update(entity);");
             methodBodyBuilder.AppendLine();
             methodBodyBuilder.AppendLine($"await this.repository.UnitOfWork.SaveChangesAsync();");
             methodBodyBuilder.AppendLine();

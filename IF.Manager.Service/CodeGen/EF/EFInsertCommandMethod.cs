@@ -64,12 +64,6 @@ namespace IF.Manager.Service.EF
 
             methodBodyBuilder.AppendLine();
 
-
-            //if(command.IsBeforeExecuteOverride)
-            {
-                methodBodyBuilder.AppendLine($"await this.BeforeExecute(context);");
-            }
-
             methodBodyBuilder.AppendLine();
 
 
@@ -80,11 +74,7 @@ namespace IF.Manager.Service.EF
 
             methodBodyBuilder.AppendLine();
 
-
-            //if(command.IsAfterExecuteOverride)
-            {
-                methodBodyBuilder.AppendLine($"await this.AfterExecute(context);");
-            }
+            methodBodyBuilder.AppendLine($"await this.AfterExecute(context);");
 
             if (!IsList)
             {
@@ -98,10 +88,8 @@ namespace IF.Manager.Service.EF
             return this.method;
         }
 
-        public CSMethod BuildOverridenQuery(string name)
+        public CSMethod BuildOverridenQuery()
         {
-            this.method.Name = name;
-
             StringBuilder builder = new StringBuilder();
 
             builder.AppendLine("throw new NotImplementedException();");
@@ -130,6 +118,7 @@ namespace IF.Manager.Service.EF
             
             methodBodyBuilder.AppendLine($"context.Entity = entity;");
 
+            methodBodyBuilder.AppendLine($"await this.BeforeExecute(context);");
 
             methodBodyBuilder.AppendLine($"this.repository.Add(entity);");
 

@@ -37,6 +37,7 @@ namespace IF.Manager.Contracts.Model
 
         public int? ModelId { get; set; }
 
+        public bool IsQueryOverride { get; set; }
         public IFModel Model { get; set; }
 
         //public bool IsBeforeExecuteOverride { get; set; }

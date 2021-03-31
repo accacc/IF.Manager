@@ -82,7 +82,7 @@ namespace IF.Manager.Service.EF
 
             //if(command.IsBeforeExecuteOverride)
             {
-                methodBodyBuilder.AppendLine($"await this.BeforeExecute(context);");
+                
             }
 
             methodBodyBuilder.AppendLine();
@@ -142,7 +142,9 @@ namespace IF.Manager.Service.EF
 
             //    methodBodyBuilder.AppendLine($"entity.{property.Name} = {modelPropertyName}.{property.Name};");
             //}
-           
+
+            methodBodyBuilder.AppendLine($"context.Entity = entity;");
+            methodBodyBuilder.AppendLine($"await this.BeforeExecute(context);");
 
             if (command.Model.Entity.IsSoftDeleted)
             {
@@ -152,7 +154,7 @@ namespace IF.Manager.Service.EF
             }
             else
             {
-                methodBodyBuilder.AppendLine($"context.Entity = entity;");
+               
                 methodBodyBuilder.AppendLine($"this.repository.Delete(entity);");
             }
 
