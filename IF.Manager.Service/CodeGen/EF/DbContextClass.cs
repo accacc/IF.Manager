@@ -56,13 +56,12 @@ namespace IF.Manager.Service
 
             StringBuilder methodBodyBuilder = new StringBuilder();
 
-            methodBodyBuilder.AppendLine("builder.SoftDeleteEnabled(builder);");
-
-
             foreach (var entity in this.Entities)
             {
                 methodBodyBuilder.AppendLine($"builder.ApplyConfiguration(new {entity.Name}Mapping());");
             }
+
+            methodBodyBuilder.AppendLine("builder.SoftDeleteEnabled();");
 
 
             method.Body = methodBodyBuilder.ToString();

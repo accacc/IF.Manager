@@ -31,7 +31,6 @@ namespace IF.Manager.Service
 
             foreach (var entity in entityList)
             {
-
                 CSClass entityClass = new CSClass();
 
                 entityClass.BaseClass = nameof(Entity);
@@ -40,10 +39,11 @@ namespace IF.Manager.Service
                 {
                     entityClass.InheritedInterfaces.Add(nameof(ISoftDelete));
 
-                    var p = new CSProperty("public", "SoftDelete", false);
+                    var softDeleteProperty = new CSProperty("public", "SoftDeleted", false);
 
-                    p.PropertyTypeString = "bool";
+                    softDeleteProperty.PropertyTypeString = "bool";
 
+                    entityClass.Properties.Add(softDeleteProperty);
                 }
 
                 entityClass.Name = entity.Name;
@@ -79,27 +79,27 @@ namespace IF.Manager.Service
 
         private static void GenerateProperties(EntityDto entity, CSClass entityClass)
         {
-            foreach (var property in entity.Properties)
+            foreach (var entityProperty in entity.Properties)
             {
 
-                bool IsNullable = property.IsNullable;
+                bool IsNullable = entityProperty.IsNullable;
 
-                if (property.Type == "string")
+                if (entityProperty.Type == "string")
                 {
                     IsNullable = false;
                 }
 
 
-                var p = new CSProperty("public", property.Name, IsNullable);
+                var classProperty = new CSProperty("public", entityProperty.Name, IsNullable);
 
-                p.PropertyTypeString = property.Type;
+                classProperty.PropertyTypeString = entityProperty.Type;
 
-                if (property.IsIdentity)
+                if (entityProperty.IsIdentity)
                 {
-                    p.Attirubites.Add("Key");
+                    classProperty.Attirubites.Add("Key");
                 }
 
-                entityClass.Properties.Add(p);
+                entityClass.Properties.Add(classProperty);
             }
 
             foreach (var relation in entity.Relations)
@@ -116,10 +116,10 @@ namespace IF.Manager.Service
                 }
 
 
-                var property = new CSProperty("public", relationName, false);
-                property.PropertyTypeString = type;
+                var classProperty = new CSProperty("public", relationName, false);
+                classProperty.PropertyTypeString = type;
 
-                entityClass.Properties.Add(property);
+                entityClass.Properties.Add(classProperty);
 
             }
 
@@ -157,6 +157,7 @@ namespace IF.Manager.Service
             {
 
                 var relationName = relation.RelatedEntityName;
+
                 var type = relation.RelatedEntityName;
 
                 if (relation.EntityRelationType == Contracts.Enum.EntityRelationType.ManyToMany ||
@@ -164,7 +165,7 @@ namespace IF.Manager.Service
                 {
                     relationName += "s";
                     type = $"List<{relation.RelatedEntityName}>";
-                    constructorMethodBody.AppendLine($"{relationName} = new {type}();");
+                    constructorMethodBody.AppendLine($"{relationName} = new {relation.RelatedEntityName}();");
                 }
 
                
@@ -177,6 +178,7 @@ namespace IF.Manager.Service
                 if (relation.EntityRelationType == Contracts.Enum.EntityRelationType.OneToOne) continue;
 
                 var relationName = relation.RelatedEntityName;
+
                 var type = relation.RelatedEntityName;
 
                 if (relation.EntityRelationType == Contracts.Enum.EntityRelationType.ManyToMany)
@@ -188,6 +190,7 @@ namespace IF.Manager.Service
             }
 
             constructorMethod.Body = constructorMethodBody.ToString();
+
             return constructorMethod;
         }
     }

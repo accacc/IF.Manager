@@ -147,7 +147,7 @@ namespace IF.Manager.Service.EF
             if (command.Model.Entity.IsSoftDeleted)
             {
                 var identityProperty = entityTree.Childs.SingleOrDefault(c => c.IsIdentity);
-                methodBodyBuilder.AppendLine($"await this.repository.SoftDelete<{command.Model.Entity.Name}>(command.Data.{identityProperty.Name});");
+                methodBodyBuilder.AppendLine($"await this.repository.SoftDeleteAsync<{command.Model.Entity.Name}>(command.Data.{identityProperty.Name});");
                 methodBodyBuilder.AppendLine();
             }
             else
