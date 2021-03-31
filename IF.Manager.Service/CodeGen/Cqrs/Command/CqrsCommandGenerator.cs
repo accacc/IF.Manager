@@ -97,10 +97,12 @@ namespace IF.Manager.Service
                     cqrsInsertCommandHandler.GenerateMultiInsertCqrsHandlerClass();
                     break;
                 case Core.Data.CommandType.Update:
-                    GenerateUpdateCqrsHandlerClass(command, process, entityTree);
+                    CqrsUpdateCommandHandlerGenerator cqrsUpdateCommandHandler = new CqrsUpdateCommandHandlerGenerator(process, command);
+                    cqrsUpdateCommandHandler.Generate(entityTree);
                     break;
                 case Core.Data.CommandType.Delete:
-                    GenerateDeleteCqrsHandlerClass(command, process, entityTree);
+                    CqrsDeleteCommandHandlerGenerator cqrsDeleteCommandHandler = new CqrsDeleteCommandHandlerGenerator(process, command);
+                    cqrsDeleteCommandHandler.Generate(entityTree);
                     break;
                 default:
                     throw new ApplicationException("unknow command type");
@@ -128,7 +130,8 @@ namespace IF.Manager.Service
                     cqrsInsertCommandHandler.Generate(entityTree);
                     break;
                 case Core.Data.CommandType.Update:
-                    GenerateUpdateCqrsHandlerClass(command, process, entityTree);
+                    CqrsUpdateCommandHandlerGenerator cqrsUpdateCommandHandler = new CqrsUpdateCommandHandlerGenerator(process, command);
+                    cqrsUpdateCommandHandler.Generate(entityTree);
                     break;
                 case Core.Data.CommandType.Delete:
                     CqrsDeleteCommandHandlerGenerator cqrsDeleteCommandHandler = new CqrsDeleteCommandHandlerGenerator(process, command);

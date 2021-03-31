@@ -4,6 +4,7 @@ using IF.Manager.Contracts.Model;
 using System.Linq;
 
 using System;
+using System.Text;
 
 namespace IF.Manager.Service.EF
 {
@@ -30,10 +31,21 @@ namespace IF.Manager.Service.EF
             this.method.IsAsync = true;
             this.method.Parameters.Add(new CsMethodParameter() { Name = "command", Type = command.Name });
 
+            StringBuilder methodBodyBuilder = new StringBuilder();
+
+            methodBodyBuilder.AppendLine($"{command.Name}Context context = new  {command.Name}Context();");
+            methodBodyBuilder.AppendLine($"context.Command = command;");
+            methodBodyBuilder.AppendLine($"context.Model = command.Data;");
+            methodBodyBuilder.AppendLine();
+
+
             var identityProperty = entityTree.Childs.SingleOrDefault(c => c.IsIdentity);
 
-            this.method.Body += $"var entity = await this.repository.GetQuery<{entityTree.Name}>().SingleOrDefaultAsync(k => k.{identityProperty.Name} == command.Data.{identityProperty.Name});" + Environment.NewLine + Environment.NewLine;
-            this.method.Body += $"if (entity == null){{ throw new BusinessException(\"{entityTree.Name} : No such entity exists\");}}" + Environment.NewLine + Environment.NewLine;
+            methodBodyBuilder.AppendLine($"var entity = await this.repository.GetQuery<{entityTree.Name}>().SingleOrDefaultAsync(k => k.{identityProperty.Name} == command.Data.{identityProperty.Name});");
+            methodBodyBuilder.AppendLine();
+            methodBodyBuilder.AppendLine($"if (entity == null){{ throw new BusinessException(\"{entityTree.Name} : No such entity exists\");}}");
+            methodBodyBuilder.AppendLine();
+
 
 
             foreach (var property in this.entityTree.Childs)
@@ -44,13 +56,29 @@ namespace IF.Manager.Service.EF
 
                 if (!IsModelProperty) continue;
 
-                this.method.Body += $"entity.{property.Name} = command.Data.{property.Name};" + Environment.NewLine;
+                methodBodyBuilder.AppendLine($"entity.{property.Name} = command.Data.{property.Name};");
+                methodBodyBuilder.AppendLine();
             }
 
+            methodBodyBuilder.AppendLine($"context.Entity = entity;");
+            methodBodyBuilder.AppendLine();
+            methodBodyBuilder.AppendLine($"this.repository.Update(entity);");
+            methodBodyBuilder.AppendLine();
+            methodBodyBuilder.AppendLine($"await this.BeforeExecute(context);");
+            methodBodyBuilder.AppendLine();
+            methodBodyBuilder.AppendLine($"await this.repository.UnitOfWork.SaveChangesAsync();");
+            methodBodyBuilder.AppendLine();
 
-            this.method.Body += $"this.repository.Update(entity);" + Environment.NewLine;
-            this.method.Body += $"await this.repository.UnitOfWork.SaveChangesAsync();" + Environment.NewLine;
 
+
+            //if(command.IsAfterExecuteOverride)
+            {
+                methodBodyBuilder.AppendLine($"await this.AfterExecute(context);");
+            }
+            methodBodyBuilder.AppendLine();
+
+
+            this.method.Body = methodBodyBuilder.ToString();
 
             return this.method;
         }
