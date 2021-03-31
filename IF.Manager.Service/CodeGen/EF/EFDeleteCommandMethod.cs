@@ -43,13 +43,17 @@ namespace IF.Manager.Service.EF
             methodBodyBuilder.AppendLine($"context.Model = command.Data;");
             methodBodyBuilder.AppendLine();
 
-            var identityProperty = entityTree.Childs.SingleOrDefault(c => c.IsIdentity);
+           
+            if (!command.Model.Entity.IsSoftDeleted)
+            
+            {
+                var identityProperty = entityTree.Childs.SingleOrDefault(c => c.IsIdentity);
 
-            methodBodyBuilder.AppendLine($"var entity = await this.repository.GetQuery<{entityTree.Name}>().SingleOrDefaultAsync(k => k.{identityProperty.Name} == command.Data.{identityProperty.Name});");
-            methodBodyBuilder.AppendLine();
-            methodBodyBuilder.AppendLine($"if (entity == null){{ throw new BusinessException(\"{entityTree.Name} : No such entity exists\");}}");
-            methodBodyBuilder.AppendLine();
-
+                methodBodyBuilder.AppendLine($"var entity = await this.repository.GetQuery<{entityTree.Name}>().SingleOrDefaultAsync(k => k.{identityProperty.Name} == command.Data.{identityProperty.Name});");
+                methodBodyBuilder.AppendLine();
+                methodBodyBuilder.AppendLine($"if (entity == null){{ throw new BusinessException(\"{entityTree.Name} : No such entity exists\");}}");
+                methodBodyBuilder.AppendLine();
+            }
 
 
 
@@ -138,11 +142,19 @@ namespace IF.Manager.Service.EF
 
             //    methodBodyBuilder.AppendLine($"entity.{property.Name} = {modelPropertyName}.{property.Name};");
             //}
+           
 
-            methodBodyBuilder.AppendLine($"context.Entity = entity;");
-
-            methodBodyBuilder.AppendLine($"this.repository.Delete(entity);");
-
+            if (command.Model.Entity.IsSoftDeleted)
+            {
+                var identityProperty = entityTree.Childs.SingleOrDefault(c => c.IsIdentity);
+                methodBodyBuilder.AppendLine($"await this.repository.SoftDelete<{command.Model.Entity.Name}>(command.Data.{identityProperty.Name});");
+                methodBodyBuilder.AppendLine();
+            }
+            else
+            {
+                methodBodyBuilder.AppendLine($"context.Entity = entity;");
+                methodBodyBuilder.AppendLine($"this.repository.Delete(entity);");
+            }
 
         }
 

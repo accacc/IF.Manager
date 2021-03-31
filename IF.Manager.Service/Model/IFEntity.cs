@@ -31,6 +31,7 @@ namespace IF.Manager.Contracts.Model
 
         public IFEntityGroup Group { get; set; }
 
+        public bool IsSoftDeleted { get; set; }
         public ICollection<IFEntityProperty>    Properties { get; set; }
 
         public ICollection<IFEntityRelation> Relations { get; set; }

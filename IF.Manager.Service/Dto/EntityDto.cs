@@ -20,6 +20,7 @@ namespace IF.Manager.Contracts.Dto
 
         public bool IsAudited { get; set; }
 
+        public bool IsSoftDeleted { get; set; }
         public string Prefix { get; set; }
         public string GroupName { get; set; }
         public List<EntityPropertyDto> Properties { get; set; }

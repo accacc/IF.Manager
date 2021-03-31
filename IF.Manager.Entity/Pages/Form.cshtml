@@ -3,68 +3,77 @@
 
 @{
     Layout = "_ModalLayout";
-    List<SelectListItem> groups = ViewData["groups"] as List<SelectListItem>; 
+    List<SelectListItem> groups = ViewData["groups"] as List<SelectListItem>;
 }
 
-    <form>
-        @Html.AntiForgeryToken()
+<form>
+    @Html.AntiForgeryToken()
 
 
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="GroupId">Group</label>
-                    @Html.DropDownList("Form.GroupId", groups, "Select", new { @class = "form-control" })
-                </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="GroupId">Group</label>
+                @Html.DropDownList("Form.GroupId", groups, "Select", new { @class = "form-control" })
             </div>
         </div>
+    </div>
 
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="Name">Name</label>
-                    @Html.TextBoxFor(m => m.Form.Name, new { @class = "form-control" })
-                </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Name">Name</label>
+                @Html.TextBoxFor(m => m.Form.Name, new { @class = "form-control" })
             </div>
         </div>
+    </div>
 
 
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="Description">Description</label>
-                    @Html.TextBoxFor(m => m.Form.Description, new { @class = "form-control" })
-                </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Description">Description</label>
+                @Html.TextBoxFor(m => m.Form.Description, new { @class = "form-control" })
             </div>
         </div>
+    </div>
 
 
-        
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="IsAudited">IsAudited</label>
-                    @Html.CheckBoxFor(m => m.Form.IsAudited, new { @class = "form-check-input" })
-                </div>
-                </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="IsAudited">IsAudited</label>
+                @Html.CheckBoxFor(m => m.Form.IsAudited, new { @class = "form-check-input" })
             </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="IsSoftDeleted">Is SoftDelete</label>
+                @Html.CheckBoxFor(m => m.Form.IsSoftDeleted, new { @class = "form-check-input" })
+            </div>
+        </div>
+    </div>
 
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <button type="submit" class="btn btn-primary"
-                                @{ var handler = "Add"; if (this.Model.Form.Id > 0) { handler = "Update"; } }
-                                if-ajax-action="@Url.Page("/Form",handler)"
-                                if-ajax-form-submit="true"
-                                if-ajax-method="post"
-                                if-ajax-close-modal-on-success="true"
-                                if-ajax-update-id="EntityListDiv">
-                            Save
+    <div class="row">
+        <div class="col-md-6">
+            <button type="submit" class="btn btn-primary"
+                    @{ var handler = "Add"; if (this.Model.Form.Id > 0) { handler = "Update"; } }
+                    if-ajax-action="@Url.Page("/Form",handler)"
+                    if-ajax-form-submit="true"
+                    if-ajax-method="post"
+                    if-ajax-close-modal-on-success="true"
+                    if-ajax-update-id="EntityListDiv">
+                Save
 
-                        </button>
-                    </div>
-                </div>
-                @Html.HiddenFor(model => model.Form.Id)
+            </button>
+        </div>
+    </div>
+    @Html.HiddenFor(model => model.Form.Id)
 </form>
 
 

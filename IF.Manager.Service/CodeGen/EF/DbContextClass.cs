@@ -23,6 +23,7 @@ namespace IF.Manager.Service
             this.BaseClass = "DbContext";
             this.Usings.Add(SolutionHelper.GetCoreNamespace(project));
             this.Usings.Add("Microsoft.EntityFrameworkCore");
+            this.Usings.Add("IF.Persistence.EF");
 
         }
 
@@ -53,14 +54,18 @@ namespace IF.Manager.Service
             parameter.Type = $"ModelBuilder";
             method.Parameters.Add(parameter);
 
-            StringBuilder methodBody = new StringBuilder();
+            StringBuilder methodBodyBuilder = new StringBuilder();
+
+            methodBodyBuilder.AppendLine("builder.SoftDeleteEnabled(builder);");
+
 
             foreach (var entity in this.Entities)
             {
-                methodBody.AppendLine($"builder.ApplyConfiguration(new {entity.Name}Mapping());");
+                methodBodyBuilder.AppendLine($"builder.ApplyConfiguration(new {entity.Name}Mapping());");
             }
 
-            method.Body = methodBody.ToString();
+
+            method.Body = methodBodyBuilder.ToString();
             this.Methods.Add(method);
         }
 

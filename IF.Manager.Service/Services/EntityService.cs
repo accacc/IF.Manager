@@ -250,8 +250,7 @@ namespace IF.Manager.Service
                    Prefix = e.Group.Prefix,
                    GroupId = e.Group.Id,
                    GroupName = e.Group.Name,
-
-
+                   IsSoftDeleted = e.IsSoftDeleted,
                    IsAudited = e.IsAudited,
                    Properties = e.Properties.Select(p => new EntityPropertyDto
                    {
@@ -339,6 +338,7 @@ namespace IF.Manager.Service
             entity.Name = name;
             entity.GroupId = dto.GroupId;
             entity.IsAudited = dto.IsAudited;
+            entity.IsSoftDeleted = dto.IsSoftDeleted;
 
             IFEntityProperty primaryKeyProperty = new IFEntityProperty();
             primaryKeyProperty.IsIdentity = true;
@@ -431,6 +431,7 @@ namespace IF.Manager.Service
             entity.Description = dto.Description;
             entity.IsAudited = dto.IsAudited;
             entity.GroupId = dto.GroupId;
+            entity.IsSoftDeleted = dto.IsSoftDeleted;
 
             //Todo:Caglar db first yuzunden iptal edildi, zaten code first de entity eklerken primary key ekleniyor otomatik
             //if(!entity.Properties.Any(p=>p.IsIdentity && p.Name == "Id"))
@@ -688,7 +689,8 @@ namespace IF.Manager.Service
                 Name = x.Name,
                 Description = x.Description,
                 GroupId = x.GroupId,
-                IsAudited = x.IsAudited
+                IsAudited = x.IsAudited,
+                IsSoftDeleted = x.IsSoftDeleted
             }).SingleOrDefaultAsync(k => k.Id == id);
 
             if (entity == null) { throw new BusinessException("Entity : No such entity exists"); }

@@ -33,7 +33,19 @@ namespace IF.Manager.Service
             {
 
                 CSClass entityClass = new CSClass();
+
                 entityClass.BaseClass = nameof(Entity);
+
+                if(entity.IsSoftDeleted)
+                {
+                    entityClass.InheritedInterfaces.Add(nameof(ISoftDelete));
+
+                    var p = new CSProperty("public", "SoftDelete", false);
+
+                    p.PropertyTypeString = "bool";
+
+                }
+
                 entityClass.Name = entity.Name;
                 entityClass.NameSpace = $"{solutionName}.Core";
                 entityClass.Usings.Add("System");
