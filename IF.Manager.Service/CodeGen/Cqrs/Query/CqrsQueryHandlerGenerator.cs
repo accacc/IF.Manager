@@ -2,6 +2,7 @@
 using IF.CodeGeneration.CSharp;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,7 +11,7 @@ namespace IF.Manager.Service.Cqrs
 {
     public class CqrsQueryHandlerGenerator
     {
-        public void GenerateCqrsHandlerClass(IFQuery query,ModelClassTreeDto entityTree, FileSystemCodeFormatProvider fileSystem)
+        public void GenerateCqrsHandlerClass(IFQuery query, ModelClassTreeDto entityTree, FileSystemCodeFormatProvider fileSystem)
         {
             CSClass queryHandlerclass = new CSClass();
 
@@ -24,7 +25,14 @@ namespace IF.Manager.Service.Cqrs
 
             AddNameSpaces(query, queryHandlerclass);
 
-            queryHandlerclass.InheritedInterfaces.Add($"IQueryHandlerAsync<{query.Name}Request, {query.Name}Response>");
+            if(query.QueryGetType== Contracts.Enum.QueryGetType.Page)
+            {
+                queryHandlerclass.InheritedInterfaces.Add($"IQueryHandlerAsync<{query.Name}Request, PagedListResponseResponse<{query.Model.Name}>");
+            }
+            else
+            {
+                queryHandlerclass.InheritedInterfaces.Add($"IQueryHandlerAsync<{query.Name}Request, {query.Name}Response>");
+            }
 
             var repositoryProperty = new CSProperty("private", "repository", false);
             repositoryProperty.PropertyTypeString = "IRepository";
@@ -40,13 +48,81 @@ namespace IF.Manager.Service.Cqrs
             constructorMethod.Body = methodBody.ToString();
             queryHandlerclass.Methods.Add(constructorMethod);
 
+            CSMethod handleMethod;
 
-            CSMethod handleMethod = new CSMethod("HandleAsync", query.Name + "Response", "public");
+            if (query.QueryGetType == Contracts.Enum.QueryGetType.Page)
+            {
+                handleMethod = new CSMethod("HandleAsync", query.Name + $"PagedListResponse<{query.Model.Name}>", "public");
+
+            }
+            else
+            {
+                handleMethod = new CSMethod("HandleAsync", query.Name + "Response", "public");
+            }
+
+
             handleMethod.IsAsync = true;
             handleMethod.Parameters.Add(new CsMethodParameter() { Name = "request", Type = query.Name + "Request" });
 
-            handleMethod.Body += $"{query.Name}Response response = new {query.Name}Response();" + Environment.NewLine;
-            handleMethod.Body += $"response.Data =   await this.GetQuery(request);" + Environment.NewLine;
+            if (query.QueryGetType == Contracts.Enum.QueryGetType.Page)
+            {
+               
+            }
+            else
+            {
+                handleMethod.Body += $"{query.Name}Response response = new {query.Name}Response();" + Environment.NewLine;
+            }
+
+
+            //handleMethod.Body += $"response.Data =   await this.GetQuery(request);" + Environment.NewLine;
+            //handleMethod.Body += $"return response;" + Environment.NewLine;
+
+
+            if (query.QueryGetType == Contracts.Enum.QueryGetType.Page)
+            {
+
+            }
+            else
+            {
+                handleMethod.Body += $"var query  =   this.GetQuery(request);" + Environment.NewLine;
+            }
+
+            if (query.QueryGetType == Contracts.Enum.QueryGetType.Single)
+            {
+                //queryStringBuilder.AppendLine($".SingleOrDefaultAsync();" + Environment.NewLine);
+                handleMethod.Body += $"var results = await query.SingleOrDefaultAsync();" + Environment.NewLine;
+                //queryStringBuilder.AppendLine();
+            }
+            else if (query.QueryGetType == Contracts.Enum.QueryGetType.Page)
+            {
+
+                handleMethod.Body += $"var response = new PagedListResponse<{query.Model.Name}>(queryable, request);" + Environment.NewLine;
+            }
+            else if(query.QueryGetType == Contracts.Enum.QueryGetType.List || query.QueryGetType == Contracts.Enum.QueryGetType.NameValue)
+            {
+                //queryStringBuilder.AppendLine($".ToListAsync();" + Environment.NewLine);
+                handleMethod.Body += $"var results = query.ToListAsync();" + Environment.NewLine;
+                //queryStringBuilder.AppendLine();
+            }
+            else
+            {
+                throw new ApplicationException("unknown QueryGetType");
+            }
+
+            //queryStringBuilder.AppendLine($"return results;" + Environment.NewLine);
+
+            //handleMethod.Body += $"var query =  this.GetQuery(request);" + Environment.NewLine;
+
+            if (query.QueryGetType == Contracts.Enum.QueryGetType.Page)
+            {
+
+            }
+            else
+            {
+                handleMethod.Body += $"response.Data = results;" + Environment.NewLine;
+            }
+
+
             handleMethod.Body += $"return response;" + Environment.NewLine;
 
             queryHandlerclass.Methods.Add(handleMethod);

@@ -26,15 +26,20 @@ namespace IF.Manager.Service
 
             var methodName = $"GetQuery";
 
-            var returnType = $"List<{query.Model.Name}>";
 
-            if (this.query.QueryGetType == Contracts.Enum.QueryGetType.Single)
-            {
-                returnType = $"{query.Model.Name}";
-            }
+
+            //var returnType = $"List<{query.Model.Name}>";
+
+            //if (this.query.QueryGetType == Contracts.Enum.QueryGetType.Single)
+            //{
+            //    returnType = $"{query.Model.Name}";
+            //}
+
+
+            string returnType = $"IQueryable<{this.query.Model.Name}>";
 
             this.method = new CSMethod(methodName, returnType, "public");
-            this.method.IsAsync = true;
+           // this.method.IsAsync = true;
 
             var parameter = new CsMethodParameter();
             parameter.Name = "request";
@@ -58,26 +63,20 @@ namespace IF.Manager.Service
         }
         public CSMethod BuildGeneratedQuery()
         {
-            StringBuilder builder = new StringBuilder();
+            StringBuilder queryStringBuilder = new StringBuilder();
 
-            builder.AppendLine($"var results = await this.repository.GetQuery<{entityTree.Name}>()");
+            queryStringBuilder.AppendLine($"var queryable = this.repository.GetQuery<{entityTree.Name}>()");
 
-            AddRelations(builder);
-            AddFilters(builder);
-            AddProjections(builder);
+            AddRelations(queryStringBuilder);
+            AddFilters(queryStringBuilder);
+            AddProjections(queryStringBuilder);
 
-            if (query.QueryGetType == Contracts.Enum.QueryGetType.Single)
-            {
-                builder.AppendLine($".SingleOrDefaultAsync();" + Environment.NewLine);
-            }
-            else
-            {
-                builder.AppendLine($".ToListAsync();" + Environment.NewLine);
-            }
+            queryStringBuilder.Append(";");
 
-            builder.AppendLine($"return results;" + Environment.NewLine);
+            queryStringBuilder.AppendLine("return queryable;");
 
-            this.method.Body = builder.ToString();
+
+            this.method.Body = queryStringBuilder.ToString();
 
             return this.method;
         }

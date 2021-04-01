@@ -4,11 +4,12 @@ using System.Text;
 
 namespace IF.Manager.Contracts.Enum
 {
-    public enum  QueryGetType
+    public enum QueryGetType
     {
-        Single=0,
-        List=1,
-        NameValue=2
+        Single = 0,
+        List = 1,
+        NameValue = 2,
+        Page = 3
 
     }
 }

@@ -143,7 +143,7 @@ namespace IF.Manager.Service.EF
             //    methodBodyBuilder.AppendLine($"entity.{property.Name} = {modelPropertyName}.{property.Name};");
             //}
 
-            methodBodyBuilder.AppendLine($"context.Entity = entity;");
+            //methodBodyBuilder.AppendLine($"context.Entity = entity;");
             methodBodyBuilder.AppendLine($"await this.BeforeExecute(context);");
 
             if (command.Model.Entity.IsSoftDeleted)

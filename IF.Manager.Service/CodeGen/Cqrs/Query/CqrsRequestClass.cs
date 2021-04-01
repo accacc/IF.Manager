@@ -16,7 +16,31 @@ namespace IF.Manager.Service.Cqrs
 
             CSClass requestClass = new CSClass();
             requestClass.NameSpace = nameSpace;
-            requestClass.BaseClass = "BaseRequest";
+
+            switch (query.QueryGetType)
+            {
+                case Contracts.Enum.QueryGetType.Single:
+                    requestClass.BaseClass = "BaseRequest";
+
+                    break;
+                case Contracts.Enum.QueryGetType.List:
+                    requestClass.BaseClass = "BaseRequest";
+                    break;
+                case Contracts.Enum.QueryGetType.Page:
+                    requestClass.BaseClass = "BasePagingRequest";
+
+                    break;
+                case Contracts.Enum.QueryGetType.NameValue:
+                    requestClass.BaseClass = "BaseRequest";
+
+                    break;
+                default:
+                    requestClass.BaseClass = "BaseRequest";
+
+                    break;
+            }
+
+
             requestClass.Name = $"{query.Name}Request";
             requestClass.Usings.Add($"IF.Core.Data");
             requestClass.Usings.Add(nameSpace);
