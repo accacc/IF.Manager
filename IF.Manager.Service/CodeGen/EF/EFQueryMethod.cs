@@ -26,20 +26,9 @@ namespace IF.Manager.Service
 
             var methodName = $"GetQuery";
 
-
-
-            //var returnType = $"List<{query.Model.Name}>";
-
-            //if (this.query.QueryGetType == Contracts.Enum.QueryGetType.Single)
-            //{
-            //    returnType = $"{query.Model.Name}";
-            //}
-
-
             string returnType = $"IQueryable<{this.query.Model.Name}>";
 
             this.method = new CSMethod(methodName, returnType, "public");
-           // this.method.IsAsync = true;
 
             var parameter = new CsMethodParameter();
             parameter.Name = "request";
@@ -53,6 +42,8 @@ namespace IF.Manager.Service
         {
 
             StringBuilder builder = new StringBuilder();
+
+            this.method.Parameters.Add(new CsMethodParameter() { Name = "repository", Type = "IRepository" });
 
             builder.AppendLine("throw new NotImplementedException();");
 

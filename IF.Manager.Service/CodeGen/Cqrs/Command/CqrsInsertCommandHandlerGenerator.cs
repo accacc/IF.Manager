@@ -40,8 +40,6 @@ namespace IF.Manager.Service
             else
             {
                 commandHandlerClass.Methods.Add(method.Build());
-
-
             }
 
             base.fileSystem.FormatCode(commandHandlerClass.GenerateCode(), "cs");
