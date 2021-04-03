@@ -16,6 +16,7 @@ namespace IF.Manager.Contracts.Dto
 
         public string Type { get; set; }
         public bool IsIdentity { get; set; }
+        public bool IsAutoNumber { get; set; }
 
         public bool IsNullable { get; set; }
 

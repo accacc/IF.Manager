@@ -39,7 +39,7 @@ namespace IF.Manager.Service.EF
             methodBodyBuilder.AppendLine();
 
 
-            var identityProperty = entityTree.Childs.SingleOrDefault(c => c.IsIdentity);
+            var identityProperty = entityTree.Childs.FirstOrDefault(c => c.IsIdentity);
 
             methodBodyBuilder.AppendLine($"var entity = await this.repository.GetQuery<{entityTree.Name}>().SingleOrDefaultAsync(k => k.{identityProperty.Name} == command.Data.{identityProperty.Name});");
             methodBodyBuilder.AppendLine();

@@ -1,5 +1,4 @@
-﻿using DatabaseSchemaReader.DataSchema;
-
+﻿
 using IF.Core.Data;
 using IF.Core.Exception;
 using IF.Manager.Contracts.Dto;
@@ -8,10 +7,8 @@ using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
 using IF.Manager.Service.CodeGen;
-using IF.Manager.Service.Dto;
 using IF.Persistence.EF;
 
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 using System;
@@ -342,6 +339,7 @@ namespace IF.Manager.Service
 
             IFEntityProperty primaryKeyProperty = new IFEntityProperty();
             primaryKeyProperty.IsIdentity = true;
+            primaryKeyProperty.IsAutoNumber = true;
             primaryKeyProperty.Name = "Id";
             primaryKeyProperty.Type = "int";
             primaryKeyProperty.IsNullable = false;
@@ -390,6 +388,7 @@ namespace IF.Manager.Service
                         entityProperty.IsMultiLanguage = dto.IsMultiLanguage;
                         entityProperty.EntityId = entityId;
                         entityProperty.IsNullable = dto.IsNullable;
+                        entityProperty.IsIdentity = dto.IsIdentity;
                         this.Add(entityProperty);
                     }
                     else
@@ -402,6 +401,8 @@ namespace IF.Manager.Service
                         entityProperty.IsAudited = dto.IsAudited;
                         entityProperty.IsMultiLanguage = dto.IsMultiLanguage;
                         entityProperty.IsNullable = dto.IsNullable;
+                        entityProperty.IsIdentity = dto.IsIdentity;
+
                         this.Update(entityProperty);
                     }
                 }

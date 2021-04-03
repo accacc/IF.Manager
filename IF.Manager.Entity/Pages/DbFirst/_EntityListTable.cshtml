@@ -22,7 +22,7 @@
                     }
                     else
                     {
-                        <input name="Form[@index].Table" type="checkbox"  value="@table.Name" />
+                        <input name="Form[@index].Table" type="checkbox" checked="checked"  value="@table.Name" />
                     }
 
                     @*@Html.CheckBox($"Form[{index}].Table", new { @class = "form-check-input" })*@
@@ -32,7 +32,6 @@
                         <b>Primary Key Seç</b>
                     }
                 </p>
-
             </div>
         </div>
         <div id="g_@table.Name" class="row collapse">
@@ -50,14 +49,9 @@
 
                         </div>
                     </div>
-
-
-
-
                 }
             </div>
         </div>
-
     }
 }
 else

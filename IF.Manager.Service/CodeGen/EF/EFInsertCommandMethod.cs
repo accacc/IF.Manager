@@ -80,7 +80,7 @@ namespace IF.Manager.Service.EF
             {
                 if (!IsList)
                 {
-                    var primaryKey = this.command.Model.Properties.SingleOrDefault(p => p.EntityProperty.IsIdentity);
+                    var primaryKey = this.command.Model.Properties.FirstOrDefault(p => p.EntityProperty.IsIdentity);
                     methodBodyBuilder.AppendLine($"command.Data.{primaryKey.EntityProperty.Name} = entity.{primaryKey.EntityProperty.Name};");
                 }
             }

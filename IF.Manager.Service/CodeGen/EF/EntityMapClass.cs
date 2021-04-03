@@ -3,6 +3,8 @@ using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Service.CodeGen;
 
+using System;
+using System.Linq;
 using System.Text;
 
 namespace IF.Manager.Service
@@ -68,6 +70,14 @@ namespace IF.Manager.Service
                     }
                 }
             }
+
+            //.HasKey(o => new { o.CustomerAbbreviation, o.OrderNumber });
+            var identities = this.EntityMetaData.Properties.Where(p => p.IsIdentity).ToList();
+
+            methodBody.Append("builder.HasKey(o => new {");
+            methodBody.Append(String.Join(",", identities.Select(x => $"o.{x.Name.ToString()}").ToList()));
+            methodBody.AppendLine("});");
+
 
             mapClassMethod.Body = methodBody.ToString();
             this.Methods.Add(mapClassMethod);

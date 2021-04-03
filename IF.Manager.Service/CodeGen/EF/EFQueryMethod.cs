@@ -31,11 +31,12 @@ namespace IF.Manager.Service
 
             this.method = new CSMethod(methodName, returnType, "public");
 
-            var parameter = new CsMethodParameter();
-            parameter.Name = "request";
-            parameter.Type = this.query.Name + "Request";
+            var requestParameter = new CsMethodParameter();
+            requestParameter.Name = "request";
+            requestParameter.Type = this.query.Name + "Request";
+            this.method.Parameters.Add(requestParameter);
 
-            this.method.Parameters.Add(parameter);
+            this.method.Parameters.Add(new CsMethodParameter() { Name = "repository", Type = "IRepository" });
         }
 
       
@@ -44,7 +45,7 @@ namespace IF.Manager.Service
 
             StringBuilder builder = new StringBuilder();
 
-            this.method.Parameters.Add(new CsMethodParameter() { Name = "repository", Type = "IRepository" });
+            
 
             builder.AppendLine("throw new NotImplementedException();");
 

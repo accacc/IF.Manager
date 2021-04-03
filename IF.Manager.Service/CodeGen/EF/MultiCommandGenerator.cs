@@ -140,7 +140,7 @@ namespace IF.Manager.Service.CodeGen.EF
 
                             IFModelProperty foreignProperty = null;
 
-                            IFModelProperty primaryKeyProperty = currentCommand.Model.Properties.SingleOrDefault(p => p.EntityProperty.IsIdentity); ;
+                            IFModelProperty primaryKeyProperty = currentCommand.Model.Properties.FirstOrDefault(p => p.EntityProperty.IsIdentity); ;
 
                             switch (relation.Type)
                             {
