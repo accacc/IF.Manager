@@ -1,6 +1,7 @@
 ﻿using IF.CodeGeneration.CSharp;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
+using IF.Manager.Service.CodeGen;
 using IF.Manager.Service.CodeGen.Rules.Filters;
 using IF.Manager.Service.EF;
 
@@ -123,7 +124,7 @@ namespace IF.Manager.Service
                 if (childTree.IsRelation)
                 {
 
-                    string name = DirectoryHelper.AddAsLastWord(childTree.Name, "DataModel");
+                    string name = ObjectNamerHelper.AddAsLastWord(childTree.Name, "DataModel");
 
                     if (childTree.IsList)
                     {

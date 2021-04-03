@@ -76,10 +76,18 @@ namespace IF.Manager.Service.EF
 
             methodBodyBuilder.AppendLine($"await this.AfterExecute(context);");
 
-            if (!IsList)
+            try
             {
-                var primaryKey = this.command.Model.Properties.SingleOrDefault(p => p.EntityProperty.IsIdentity);
-                methodBodyBuilder.AppendLine($"command.Data.{primaryKey.EntityProperty.Name} = entity.{primaryKey.EntityProperty.Name};");
+                if (!IsList)
+                {
+                    var primaryKey = this.command.Model.Properties.SingleOrDefault(p => p.EntityProperty.IsIdentity);
+                    methodBodyBuilder.AppendLine($"command.Data.{primaryKey.EntityProperty.Name} = entity.{primaryKey.EntityProperty.Name};");
+                }
+            }
+            catch (System.Exception ex)
+            {
+
+                
             }
 
 

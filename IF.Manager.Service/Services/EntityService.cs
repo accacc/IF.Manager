@@ -331,7 +331,7 @@ namespace IF.Manager.Service
                 throw new BusinessException($"{dto.Name} Entity already exist");
             }
 
-            string name = DirectoryHelper.AddAsLastWord(dto.Name, "Entity");
+            string name = ObjectNamerHelper.AddAsLastWord(dto.Name, "Entity");
 
             IFEntity entity = new IFEntity();
             entity.Description = dto.Description;
@@ -425,7 +425,7 @@ namespace IF.Manager.Service
 
             if (entity == null) { throw new BusinessException(" No such entity exists"); }
 
-            string name = DirectoryHelper.AddAsLastWord(dto.Name, "Entity");
+            string name = ObjectNamerHelper.AddAsLastWord(dto.Name, "Entity");
 
             entity.Name = name;
             entity.Description = dto.Description;

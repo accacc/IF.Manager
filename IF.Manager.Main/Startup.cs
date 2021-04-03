@@ -59,6 +59,10 @@ namespace IF.Manager.Main
             services.AddSession();
 
 
+            services.Configure<FormOptions>(options =>
+            {
+                options.ValueCountLimit = int.MaxValue;
+            });
 
 
             services.AddRazorPages(options =>

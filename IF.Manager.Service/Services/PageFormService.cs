@@ -4,6 +4,7 @@ using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
+using IF.Manager.Service.CodeGen;
 using IF.Persistence.EF;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -39,7 +40,7 @@ namespace IF.Manager.Service.Services
         public async Task AddForm(IFPageForm form)
         {
             IFPageForm entity = new IFPageForm();
-            string name = DirectoryHelper.AddAsLastWord(form.Name, "PageForm");
+            string name = ObjectNamerHelper.AddAsLastWord(form.Name, "PageForm");
             entity.Name = name;
             entity.ControlType = PageControlType.Form;
             entity.IFModelId = form.IFModelId;
@@ -61,7 +62,7 @@ namespace IF.Manager.Service.Services
 
                 if (entity == null) { throw new BusinessException($"{nameof(IFPageForm)} : No such entity exists"); }
 
-                string name = DirectoryHelper.AddAsLastWord(form.Name, "PageForm");
+                string name = ObjectNamerHelper.AddAsLastWord(form.Name, "PageForm");
                 entity.Name = name;
                 entity.IFModelId = form.IFModelId;
                 entity.IFQueryId = form.IFQueryId;

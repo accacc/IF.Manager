@@ -4,6 +4,7 @@ using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
+using IF.Manager.Service.CodeGen;
 using IF.Persistence.EF;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -59,7 +60,7 @@ namespace IF.Manager.Service.Services
         {
             IFPageGrid entity = new IFPageGrid();
             entity.Id = form.Id;
-            string name = DirectoryHelper.AddAsLastWord(form.Name, "PageGrid");
+            string name = ObjectNamerHelper.AddAsLastWord(form.Name, "PageGrid");
             entity.Name = name;
             entity.ControlType = PageControlType.Grid;
             entity.QueryId = form.QueryId;
@@ -100,7 +101,7 @@ namespace IF.Manager.Service.Services
 
                 if (entity == null) { throw new BusinessException($"{nameof(IFPageGrid)} : No such entity exists"); }
 
-                string name = DirectoryHelper.AddAsLastWord(form.Name, "PageGrid");
+                string name = ObjectNamerHelper.AddAsLastWord(form.Name, "PageGrid");
                 entity.Name = name;
                 entity.Description = form.Description;
                 entity.GridLayoutId = form.GridLayoutId;
@@ -146,7 +147,7 @@ namespace IF.Manager.Service.Services
         {
             IFPagePanel entity = new IFPagePanel();
             entity.Id = form.Id;
-            string name = DirectoryHelper.AddAsLastWord(form.Name, "PagePanel");
+            string name = ObjectNamerHelper.AddAsLastWord(form.Name, "PagePanel");
             entity.Name = name;
             entity.ControlType = PageControlType.Panel;
             entity.CssClass = form.CssClass;
@@ -167,7 +168,7 @@ namespace IF.Manager.Service.Services
 
                 if (entity == null) { throw new BusinessException($"{nameof(IFPagePanel)} : No such entity exists"); }
 
-                string name = DirectoryHelper.AddAsLastWord(form.Name, "PagePanel");
+                string name = ObjectNamerHelper.AddAsLastWord(form.Name, "PagePanel");
                 entity.Name = name;
                 entity.Description = form.Description;
                 entity.CssClass = form.CssClass;

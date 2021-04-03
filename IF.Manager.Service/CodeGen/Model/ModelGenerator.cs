@@ -1,6 +1,7 @@
 ﻿using IF.CodeGeneration.Core;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
+using IF.Manager.Service.CodeGen;
 using IF.Manager.Service.CodeGen.Interface;
 
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace IF.Manager.Service.Model
         {
             List<ModelClass> alls = new List<ModelClass>();
 
-            string name = DirectoryHelper.AddAsLastWord(model.Name, "DataModel");
+            string name = ObjectNamerHelper.AddAsLastWord(model.Name, "DataModel");
 
             ModelClass modelClass = new ModelClass(nameSpace, name, model);
 
@@ -66,7 +67,7 @@ namespace IF.Manager.Service.Model
 
                 if (!IsModelProperty) continue;
 
-                string name = DirectoryHelper.AddAsLastWord(relation.Name, "DataModel");
+                string name = ObjectNamerHelper.AddAsLastWord(relation.Name, "DataModel");
 
                 ModelClass modelClass = new ModelClass(nameSpace, name, model);
 

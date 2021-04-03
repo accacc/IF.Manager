@@ -4,6 +4,7 @@ using IF.Manager.Contracts.Model;
 using System.Linq;
 
 using System.Collections.Generic;
+using IF.Manager.Service.CodeGen;
 
 namespace IF.Manager.Service
 {
@@ -36,7 +37,7 @@ namespace IF.Manager.Service
 
                     if (childEntityTree.IsRelation)
                     {
-                        name = DirectoryHelper.AddAsLastWord(childEntityTree.Name, "DataModel");
+                        name = ObjectNamerHelper.AddAsLastWord(childEntityTree.Name, "DataModel");
                         name = $"{name}";
                         type = name;
 

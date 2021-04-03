@@ -28,7 +28,7 @@ namespace IF.Manager.Service.CodeGen.Model
         {
             List<MultiModelClass> alls = new List<MultiModelClass>();
 
-            string name = DirectoryHelper.AddAsLastWord(model.Name, "DataModel");
+            string name = ObjectNamerHelper.AddAsLastWord(model.Name, "DataModel");
 
             if(command.IsMultiCommand())
             {

@@ -409,11 +409,13 @@ namespace IF.Manager.Service
                     .Include(s => s.Project.Solution)
                     .Include(s => s.Commands).ThenInclude(c => c.Parent)
                     .Include(s => s.Commands).ThenInclude(c => c.Childrens)
-                    .Include(s => s.Commands).ThenInclude(s=>s.IFClassMapper.IFClass)
+                    .Include(s => s.Commands).ThenInclude(s => s.IFClassMapper.IFClass)
                     .Include(s => s.Commands).ThenInclude(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
                     .Include(s => s.Commands).ThenInclude(s => s.Model.Entity.Relations)
-                    .Include(s => s.Commands).ThenInclude(s => s.Model.Entity.Relations).ThenInclude(s=>s.ForeignKeyIFEntityProperty)
-                    .Include(s => s.Commands).ThenInclude(s => s.CommandFilterItems)
+                    .Include(s => s.Commands).ThenInclude(s => s.Model.Entity.Relations).ThenInclude(s => s.ForeignKeyIFEntityProperty)
+                    .Include(s => s.Commands).ThenInclude(s => s.CommandFilterItems).SingleOrDefaultAsync();
+
+                var process2 = await this.GetQuery<IFProcess>(p => p.Id == publish.ProcessId)
                     .Include(s => s.Queries).ThenInclude(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
                     .Include(s => s.Queries).ThenInclude(s => s.QueryFilterItems).ThenInclude(s=>s.EntityProperty)
                     .Include(s => s.Queries).ThenInclude(s => s.QueryFilterItems).ThenInclude(s => s.IFPageParameter)

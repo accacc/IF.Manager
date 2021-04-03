@@ -49,6 +49,7 @@ function GetAjaxOptions(element) {
         onSuccessRefreshAction: $(element).attr("if-ajax-on-success-refresh-action"),
         onSuccessRefreshUpdateId: $(element).attr("if-ajax-on-success-refresh-updateid"),
         antiForgeryToken: $(element).attr("if-anti-forgery-token"),
+        onSuccessRedirect: $(element).attr("if-ajax-on-success-redirect"),
         data: {}
 
 
@@ -129,6 +130,10 @@ var IFAjax = {
 
                 if (!isUndefined(IFAjax.ajaxOptions.onSuccessFunc)) {
                     getFunction(IFAjax.ajaxOptions.onSuccessFunc, []).apply(this, []);
+                }
+
+                if (!isUndefined(IFAjax.ajaxOptions.onSuccessRedirect)) {
+                    window.location = IFAjax.ajaxOptions.onSuccessRedirect;
                 }
 
             },

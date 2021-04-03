@@ -7,6 +7,7 @@ using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
+using IF.Manager.Service.CodeGen;
 using IF.Manager.Service.Model;
 using IF.Manager.Service.Services;
 using IF.Persistence.EF;
@@ -155,7 +156,7 @@ namespace IF.Manager.Service
         public async Task AddClassMapper(IFClassMapper form)
         {
             IFClassMapper entity = new IFClassMapper();
-            string name = DirectoryHelper.AddAsLastWord(form.Name, "IFClassMapper");
+            string name = ObjectNamerHelper.AddAsLastWord(form.Name, "IFClassMapper");
             entity.Name = name;
             entity.Description = form.Description;
             entity.IFModelId = form.IFModelId;
@@ -176,7 +177,7 @@ namespace IF.Manager.Service
 
                 if (entity == null) { throw new BusinessException($"{nameof(IFClassMapper)} : No such entity exists"); }
 
-                string name = DirectoryHelper.AddAsLastWord(form.Name, "IFClassMapper");
+                string name = ObjectNamerHelper.AddAsLastWord(form.Name, "IFClassMapper");
                 entity.Name = name;
                 entity.Description = form.Description;
                 entity.IFModelId = form.IFModelId;
@@ -248,7 +249,7 @@ namespace IF.Manager.Service
             {
                 IFClass entity = new IFClass();
                 entity.Id = form.Id;
-                string type = DirectoryHelper.AddAsLastWord(form.Type, "CustomClass");
+                string type = ObjectNamerHelper.AddAsLastWord(form.Type, "CustomClass");
                 entity.Type = type;
                 entity.Name = form.Name;
                 entity.GenericType = form.GenericType;
@@ -316,7 +317,7 @@ namespace IF.Manager.Service
 
                 if (entity == null) { throw new BusinessException($"{nameof(IFClass)} : No such entity exists"); }
 
-                string type = DirectoryHelper.AddAsLastWord(form.Type, "CustomClass");
+                string type = ObjectNamerHelper.AddAsLastWord(form.Type, "CustomClass");
                 entity.Type = type;
                 entity.Name = form.Name;
                 entity.Description = form.Description;

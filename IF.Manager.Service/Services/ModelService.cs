@@ -3,6 +3,7 @@ using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
+using IF.Manager.Service.CodeGen;
 using IF.Manager.Service.Model;
 using IF.Persistence.EF;
 
@@ -89,7 +90,7 @@ namespace IF.Manager.Service.Services
         public async Task AddModel(ModelDto form)
         {
 
-            string name = DirectoryHelper.AddAsLastWord(form.Name, "DataModel");
+            string name = ObjectNamerHelper.AddAsLastWord(form.Name, "DataModel");
 
             IFModel entity = new IFModel();
             entity.Name = name;
@@ -111,7 +112,7 @@ namespace IF.Manager.Service.Services
                 if (modelEntity == null) { throw new BusinessException(" No such entity exists"); }
 
 
-                string name = DirectoryHelper.AddAsLastWord(form.Name, "DataModel");
+                string name = ObjectNamerHelper.AddAsLastWord(form.Name, "DataModel");
 
 
                 modelEntity.EntityId = form.EntityId;

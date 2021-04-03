@@ -1,6 +1,7 @@
 ﻿using IF.CodeGeneration.CSharp;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
+using IF.Manager.Service.CodeGen;
 
 using System.Text;
 
@@ -34,7 +35,7 @@ namespace IF.Manager.Service
 
             StringBuilder methodBody = new StringBuilder();
 
-            var name = DirectoryHelper.RemoveLastWord(this.EntityMetaData.Name, "Entity");
+            var name = ObjectNamerHelper.RemoveLastWord(this.EntityMetaData.Name, "Entity");
 
             methodBody.AppendLine($"builder.ToTable(\"{name}\");");
 

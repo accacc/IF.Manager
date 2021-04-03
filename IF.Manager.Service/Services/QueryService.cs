@@ -5,6 +5,7 @@ using IF.Manager.Contracts.Enum;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
+using IF.Manager.Service.CodeGen;
 using IF.Persistence.EF;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -65,7 +66,7 @@ namespace IF.Manager.Service.Services
         {
             IFQuery queryEntity = new IFQuery();
 
-            string name = DirectoryHelper.AddAsLastWord(form.Name, "DataQuery");
+            string name = ObjectNamerHelper.AddAsLastWord(form.Name, "DataQuery");
 
             queryEntity.Id = form.Id;
             queryEntity.Name = name;
@@ -90,7 +91,7 @@ namespace IF.Manager.Service.Services
             .SingleOrDefaultAsync(k => k.Id == form.Id);
 
                 if (entity == null) { throw new BusinessException(" No such entity exists"); }
-                string name = DirectoryHelper.AddAsLastWord(form.Name, "DataQuery");
+                string name = ObjectNamerHelper.AddAsLastWord(form.Name, "DataQuery");
                 entity.Name = name;
                 entity.Description = form.Description;
                 entity.ModelId = form.ModelId;

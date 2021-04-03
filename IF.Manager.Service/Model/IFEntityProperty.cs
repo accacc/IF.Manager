@@ -25,6 +25,8 @@ namespace IF.Manager.Contracts.Model
         public string Type { get; set; }     
         public bool IsIdentity { get; set; }
 
+        public bool IsAutoNumber { get; set; }
+
         public int? MaxValue { get; set; }
 
         public int EntityId { get; set; }

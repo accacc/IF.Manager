@@ -89,7 +89,7 @@ namespace IF.Manager.Service.CodeGen.EF
 
                 if (!childCommand.IsMultiCommand())
                 {
-                    ForeignKeyDispatchNextCommands(childCommand, nextCommands, parentCommand, methodBodyBuilder, level);
+                    DispatchForeignKeyToNextCommands(childCommand, nextCommands, parentCommand, methodBodyBuilder, level);
                 }
                 i++;
             }
@@ -109,7 +109,7 @@ namespace IF.Manager.Service.CodeGen.EF
             return this.method;
         }
 
-        private void ForeignKeyDispatchNextCommands(IFCommand currentCommand, List<IFCommand> nextCommands, IFCommand parentCommand, StringBuilder methodBody, int level)
+        private void DispatchForeignKeyToNextCommands(IFCommand currentCommand, List<IFCommand> nextCommands, IFCommand parentCommand, StringBuilder methodBody, int level)
         {
 
             level++;
@@ -127,7 +127,7 @@ namespace IF.Manager.Service.CodeGen.EF
 
                     if (nextCommand.IsMultiCommand() && nextCommand.Childrens.Any())
                     {
-                        ForeignKeyDispatchNextCommands(currentCommand, nextCommand.Childrens.ToList(), parentCommand, methodBody, level);
+                        DispatchForeignKeyToNextCommands(currentCommand, nextCommand.Childrens.ToList(), parentCommand, methodBody, level);
                     }
                     else
                     {

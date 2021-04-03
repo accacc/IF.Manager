@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace IF.Manager.Service.Services
 {
@@ -45,43 +46,53 @@ namespace IF.Manager.Service.Services
                 throw new BusinessException($"{generateOptions.ProcessName} Process already exist " + ErrorCodes.ProcessNotExist);
             }
 
-            try
+
+
+            //using (TransactionScope scope = new TransactionScope())
+
             {
 
-
-                await AddEntities(tableSchemas, tables);
-
-                ProcessDto process = new ProcessDto();
-                process.Description = generateOptions.ProcessName;
-                process.ProjectId = generateOptions.ProjectId;
-                process.Name = generateOptions.ProcessName;
-
-                await this.projectService.AddProcess(process);
-
-                foreach (var item in tables)
+                try
                 {
-                    var entity = await this.GetQuery<IFEntity>(e => e.Name == item.Table + "Entity")
-                        .Include(e => e.Properties).SingleOrDefaultAsync();
+                    await AddEntities(tableSchemas, tables);
 
-                    await GenerateQuery(process, entity, item.Table + "Get", QueryGetType.Single);
-                    await GenerateQuery(process, entity, item.Table + "List", QueryGetType.Single);
+                    ProcessDto process = new ProcessDto();
+                    process.Description = generateOptions.ProcessName;
+                    process.ProjectId = generateOptions.ProjectId;
+                    process.Name = generateOptions.ProcessName;
+
+                    await this.projectService.AddProcess(process);
+
+                    foreach (var item in tables)
+                    {
+                        if (item.Table == null) continue;
+
+                        
 
 
-                    await GenerateCommand(process, entity, item.Table + "Insert", CommandType.Insert);
-                    await GenerateCommand(process, entity, item.Table + "Update", CommandType.Update);
-                    await GenerateCommand(process, entity, item.Table + "Delete", CommandType.Delete);
+                        string entityName = ObjectNamerHelper.AddAsLastWord(item.Table, "Entity");
+
+                        var entity = await this.GetQuery<IFEntity>(e => e.Name == entityName)
+                            .Include(e => e.Properties).SingleOrDefaultAsync();
+
+                        await GenerateQuery(process, entity, item.Table + "Get", QueryGetType.Single);
+                        await GenerateQuery(process, entity, item.Table + "List", QueryGetType.Single);
 
 
-
-
+                        await GenerateCommand(process, entity, item.Table + "Insert", CommandType.Insert);
+                        await GenerateCommand(process, entity, item.Table + "Update", CommandType.Update);
+                        await GenerateCommand(process, entity, item.Table + "Delete", CommandType.Delete);
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
+                catch (Exception ex)
+                {                   
 
-                throw;
-            }
+                    throw;
+                }
 
+              //  scope.Complete();
+
+            }
 
         }
 
@@ -111,7 +122,6 @@ namespace IF.Manager.Service.Services
             command.IsList = false;
             command.CommandGetType = getType;
 
-
             await this.commandService.AddCommand(command);
         }
 
@@ -133,18 +143,26 @@ namespace IF.Manager.Service.Services
         private IFModel GenerateModel(string Name, IFEntity entity)
         {
             IFModel model = new IFModel();
-            model.Name = Name + "DataModel";
-            model.Description = Name;
-            model.EntityId = entity.Id;
-
-            foreach (var property in entity.Properties)
+            try
             {
-                IFModelProperty modelProperty = new IFModelProperty();
-                modelProperty.EntityId = entity.Id;
-                modelProperty.EntityPropertyId = property.Id;
-                model.Properties.Add(modelProperty);
-            }
+                model.Name = Name + "DataModel";
+                model.Description = Name;
+                model.EntityId = entity.Id;
 
+                foreach (var property in entity.Properties)
+                {
+                    IFModelProperty modelProperty = new IFModelProperty();
+                    modelProperty.EntityId = entity.Id;
+                    modelProperty.EntityPropertyId = property.Id;
+                    model.Properties.Add(modelProperty);
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+               // throw;
+            }
             return model;
         }
 
@@ -152,7 +170,13 @@ namespace IF.Manager.Service.Services
         {
             foreach (var table in tableSchemas)
             {
-                string entityName = DirectoryHelper.AddAsLastWord(table.Name, "Entity");
+
+                if(table.Name == "appClaimantAddress")
+                {
+
+
+                }
+                string entityName = ObjectNamerHelper.AddAsLastWord(table.Name, "Entity");
 
                 if (await this.entityService.EntityIsExistByName(entityName))
                 {
@@ -172,6 +196,8 @@ namespace IF.Manager.Service.Services
                     IFEntityProperty property = new IFEntityProperty();
 
                     property.IsIdentity = column.IsPrimaryKey;
+
+                    property.IsAutoNumber = column.IsAutoNumber;
 
                     property.Name = column.Name;
 
@@ -217,6 +243,7 @@ namespace IF.Manager.Service.Services
             if (type.Name == "Boolean") { return "bool"; }
             if (type.Name == "DateTime") { return "DateTime"; }
             if (type.Name == "Decimal") { return "decimal"; }
+            if (type.Name == "Byte[]") { return "Byte[]"; }
 
             throw new ApplicationException($"Tip bulunamadi {type.Name}");
         }

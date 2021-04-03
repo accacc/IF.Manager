@@ -7,75 +7,6 @@ namespace IF.Manager.Service
 {
     public static class DirectoryHelper
     {
-
-        public static string RemoveLastWord(string name, string word)
-        {
-
-            name = name.Trim();
-
-            string lastFiveChar = name.Substring(name.Length - word.Length);
-
-            if (lastFiveChar == word)
-            {
-                return name.Remove(name.Length -  word.Length);
-            }
-
-            return name;
-
-        }
-
-        
-        public static string AddAsLastWord(string name, string word)
-        {
-            name = name.Trim();
-
-            if(name.Length < word.Length +1)
-            {
-                name = name + word;
-            }
-
-            string lastFiveChar = name.Substring(name.Length - word.Length);
-
-            if (lastFiveChar != word)
-            {
-                name = name + word;
-            }
-
-            return name;
-        }
-        //public static string GetPagePath(string pageName, string pagePath)
-        //{
-        //    var path = "";
-
-        //    if (pagePath == $"{pageName}/")
-        //    {
-        //        path = pageName;
-        //    }
-        //    else
-        //    {
-        //        path = $@"{pagePath}{pageName}";
-        //    }
-
-        //    return path;
-        //}
-
-
-        //public static string GetPagePathNameSpace(string pageName, string pagePath)
-        //{
-        //    var path = "";
-
-        //    if (pagePath == $"{pageName}.")
-        //    {
-        //        path = pageName;
-        //    }
-        //    else
-        //    {
-        //        path = $@"{pagePath}{pageName}";
-        //    }
-
-        //    return path;
-        //}
-
         public static void MoveDirectory(string from, string to, bool deleteExist = true)
         {
 
@@ -91,9 +22,9 @@ namespace IF.Manager.Service
         public static string GetTempPageDirectory(IFPageControlMap pageControl)
         {
             var pagePath = pageControl.GetPagePath();
+
             var page = (IFPage)pageControl.IFPageControl;
 
-            //string path = GetPagePath(page.Name, pagePath);
             string path = pagePath;
 
             return $@"{GetTempGeneratedDirectoryName()}/{SolutionHelper.GetProjectNamespace(page.IFProject).Replace(".", "/")}/Pages/{path}";
@@ -238,10 +169,6 @@ namespace IF.Manager.Service
             return $@"{GetNewSolutionPath(project.Solution.Path, project.Solution.SolutionName)}{GetProjectFullName(project.Solution.SolutionName, project.Name, project.ProjectType)}/";
         }
 
-
-
-
-
         public static string GetNewProcessDirectory(IFProcess process)
         {
             return $@"{GetNewSolutionPath(process.Project.Solution.Path,process.Project.Solution.SolutionName)}{GetNewCoreProjectName(process.Project.Solution.SolutionName)}{process.Name}";
@@ -267,7 +194,6 @@ namespace IF.Manager.Service
             var pagePath = pageControl.GetPagePath();
             var page = (IFPage)pageControl.IFPageControl;
 
-            //string path = GetPagePath(page.Name, pagePath);
             string path = pagePath;
 
             return $@"{GetNewSolutionPath(page.IFProject.Solution.Path, page.IFProject.Solution.SolutionName)}{GetProjectFullName(page.IFProject.Solution.SolutionName, page.IFProject.Name, page.IFProject.ProjectType)}/Pages/{path}";

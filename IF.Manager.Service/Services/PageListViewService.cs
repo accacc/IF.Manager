@@ -3,6 +3,7 @@ using IF.Core.Exception;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
+using IF.Manager.Service.CodeGen;
 using IF.Persistence.EF;
 
 using Microsoft.EntityFrameworkCore;
@@ -33,7 +34,7 @@ namespace IF.Manager.Service.Services
         public async Task AddListView(IFPageListView form)
         {
             IFPageListView entity = new IFPageListView();
-            string name = DirectoryHelper.AddAsLastWord(form.Name, "ListView");
+            string name = ObjectNamerHelper.AddAsLastWord(form.Name, "ListView");
             entity.Name = name;
             entity.ControlType = PageControlType.ListView;
             entity.IFQueryId = form.IFQueryId;
@@ -55,7 +56,7 @@ namespace IF.Manager.Service.Services
                 if (entity == null) { throw new BusinessException($"{nameof(IFPageListView)} : No such entity exists"); }
 
                 entity.IFQueryId = form.IFQueryId;
-                string name = DirectoryHelper.AddAsLastWord(form.Name, "ListView");
+                string name = ObjectNamerHelper.AddAsLastWord(form.Name, "ListView");
                 entity.Name = name;
                 entity.Description = form.Description;
                 entity.FormLayoutId = form.FormLayoutId;

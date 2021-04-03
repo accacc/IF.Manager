@@ -25,6 +25,8 @@ namespace IF.Manager.Contracts.Model
 
         public string Description { get; set; }
 
+        
+
         public int? GroupId { get; set; }
 
         public bool IsAudited { get; set; }

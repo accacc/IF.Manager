@@ -4,6 +4,7 @@ using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
+using IF.Manager.Service.CodeGen;
 using IF.Manager.Service.Model;
 using IF.Persistence.EF;
 
@@ -61,7 +62,7 @@ namespace IF.Manager.Service.Services
         {
             IFCommand entity = new IFCommand();
             entity.Id = form.Id;
-            string name = DirectoryHelper.AddAsLastWord(form.Name, "DataCommand");
+            string name = ObjectNamerHelper.AddAsLastWord(form.Name, "DataCommand");
             entity.Name = name;
             entity.ModelId = form.ModelId;
             entity.ProcessId = form.ProcessId;

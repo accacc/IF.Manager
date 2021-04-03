@@ -7,6 +7,7 @@ using IF.Manager.Contracts.Enum;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
+using IF.Manager.Service.CodeGen;
 using IF.Manager.Service.Web.Page;
 using IF.Persistence.EF;
 
@@ -124,7 +125,7 @@ namespace IF.Manager.Service.Services
             entity.ParentId = null;
             entity.IFPageControlId = form.Id;
             IFPage page = new IFPage();
-            string name = DirectoryHelper.AddAsLastWord(form.Name, "Page");
+            string name = ObjectNamerHelper.AddAsLastWord(form.Name, "Page");
             page.Name = name;
             page.PageLayoutId = form.PageLayoutId;
             page.ProcessId = form.ProcessId;
@@ -169,7 +170,7 @@ namespace IF.Manager.Service.Services
 
                 if (entity == null) { throw new BusinessException(" No such entity exists"); }
 
-                string name = DirectoryHelper.AddAsLastWord(form.Name, "Page");
+                string name = ObjectNamerHelper.AddAsLastWord(form.Name, "Page");
                 entity.Name = name;
                 entity.Description = form.Description;
                 entity.PageLayoutId = form.PageLayoutId;
