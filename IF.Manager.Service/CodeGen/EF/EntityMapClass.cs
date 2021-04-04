@@ -43,16 +43,18 @@ namespace IF.Manager.Service
 
             foreach (var item in this.EntityMetaData.Properties)
             {
-                methodBody.Append($".Property(x => x.{item.Name})");
+                methodBody.Append($"builder.Property(x => x.{item.Name})");
 
                 if(item.IsAutoNumber)
                 {
                     methodBody.Append(".ValueGeneratedOnAdd()");
                 }
 
-                methodBody.Append(";");
+                methodBody.AppendLine(";");
 
             }
+
+         
 
             foreach (var relation in this.EntityMetaData.Relations)
             {

@@ -52,9 +52,9 @@ namespace IF.Manager.Contracts.Model
 
         //public bool IsMutli { get; set; }
 
-        public bool? IsList { get; set; }
+        public bool IsList { get; set; }
 
-        public int? Sequence { get; set; }
+        public int Sequence { get; set; }
 
 
         public bool IsMultiCommand()
@@ -130,7 +130,7 @@ namespace IF.Manager.Contracts.Model
 
         public bool IsMultiList()
         {
-            return this.IsMultiCommand() && this.IsList.Value;
+            return this.IsMultiCommand() && this.IsList;
 
         }
 

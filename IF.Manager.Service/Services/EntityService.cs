@@ -166,6 +166,7 @@ namespace IF.Manager.Service
                     childProperty.ParentId = child.Id;
                     childProperty.IsNullable = entityProperty.IsNullable;
                     child.IsIdentity = entityProperty.IsIdentity;
+                    
 
                     child.Childs.Add(childProperty);
                 }
@@ -259,7 +260,8 @@ namespace IF.Manager.Service
                        Type = p.Type,
                        IsNullable = p.IsNullable,
                        IsMultiLanguage = p.IsMultiLanguage,
-                       IsAudited = p.IsAudited
+                       IsAudited = p.IsAudited,
+                       IsAutoNumber = p.IsAutoNumber
 
                    }).ToList(),
                    ReverseRelations = e.ReverseRelations.Select(r => new EntityRelationDto
@@ -313,7 +315,9 @@ namespace IF.Manager.Service
                    IsIdentity = e.IsIdentity,
                    MaxValue = e.MaxValue,
                    Type = e.Type,
-                   IsNullable = e.IsNullable
+                   IsNullable = e.IsNullable,
+                   IsAutoNumber = e.IsAutoNumber
+
 
                })
                .ToListAsync();
