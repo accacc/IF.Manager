@@ -699,9 +699,22 @@ namespace IF.Manager.Service
             return entity;
         }
 
-       
 
-      
+
+        public async Task<IFEntity> GetEntityWithProperties(int id)
+        {
+            var entity = await this.GetQuery<IFEntity>()
+                .Include(e=>e.Properties)
+           .SingleOrDefaultAsync(k => k.Id == id);
+
+            if (entity == null) { throw new BusinessException("Entity : No such entity exists"); }
+
+            return entity;
+        }
+
+
+
+
         public string[] GetPrimitives()
         {
 

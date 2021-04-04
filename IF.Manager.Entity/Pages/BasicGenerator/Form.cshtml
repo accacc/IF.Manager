@@ -1,0 +1,39 @@
+﻿@page
+@model IF.Manager.Entity.Pages.BasicGenerator.FormModel
+
+@{
+    Layout = "_ModalLayout";
+    List<SelectListItem> process = ViewData["process"] as List<SelectListItem>;
+}
+
+
+<form>
+    @Html.AntiForgeryToken()
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="ProcessId">Process</label>
+                @Html.DropDownList("ProcessId", process, "Select", new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <button type="submit" class="btn btn-primary"
+                    if-ajax-action="@Url.Page("/BasicGenerator/Form")"
+                    if-ajax-form-submit="true"
+                    if-ajax-method="post"
+                    if-ajax-close-modal-on-success="true"
+                    if-ajax-update-id="EntityListDiv">
+                Save
+            </button>
+        </div>
+    </div>
+    @Html.HiddenFor(model => model.EntityId)
+</form>
+
+

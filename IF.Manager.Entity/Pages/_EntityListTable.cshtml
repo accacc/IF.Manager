@@ -69,6 +69,20 @@
                        if-ajax-modal-id="@Guid.NewGuid()">
                         Relation Designer
                     </a>
+
+
+                    <br />
+
+                    <a class="btn btn-primary"
+                       href="@Url.Page("/BasicGenerator/Form", new { EntityId = item.Id })"
+                       if-ajax="true"
+                       if-ajax-method="get"
+                       if-ajax-insertion-mode="replace"
+                       if-ajax-show-dialog="true"
+                       if-ajax-modal-id="@Guid.NewGuid()">
+                        Basic Generator
+                    </a>
+
                     <br />
                     <p><b>Properties</b></p>
                     @foreach (var property in item.Properties)

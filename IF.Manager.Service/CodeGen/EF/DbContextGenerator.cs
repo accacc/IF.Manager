@@ -94,10 +94,10 @@ namespace IF.Manager.Service
 
                 classProperty.PropertyTypeString = entityProperty.Type;
 
-                if (entityProperty.IsIdentity)
-                {
-                    classProperty.Attirubites.Add("Key");
-                }
+                //if (entityProperty.IsIdentity)
+                //{
+                //    classProperty.Attirubites.Add("Key");
+                //}
 
                 entityClass.Properties.Add(classProperty);
             }

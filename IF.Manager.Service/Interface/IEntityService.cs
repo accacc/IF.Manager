@@ -1,6 +1,7 @@
 ﻿using DatabaseSchemaReader.DataSchema;
 using IF.Core.Persistence;
 using IF.Manager.Contracts.Dto;
+using IF.Manager.Contracts.Model;
 using IF.Manager.Service;
 using IF.Manager.Service.CodeGen;
 using IF.Manager.Service.Dto;
@@ -33,6 +34,7 @@ namespace IF.Manager.Contracts.Services
         Task<List<EntityRelationDto>> GetEntityRelationList(int entityId);
         Task AddEntityGroup(EntityGroupDto form);
         Task<EntityDto> GetEntity(int id);
+        Task<IFEntity> GetEntityWithProperties(int id);
         Task<EntityGroupDto> GetEntityGroup(int id);
         Task UpdateEntityGroup(EntityGroupDto form);
         Task<List<EntityGroupDto>> GetEntityGroupList();
