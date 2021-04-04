@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Transactions;
 
 namespace IF.Manager.Service.Services
 {
@@ -67,21 +66,12 @@ namespace IF.Manager.Service.Services
                     {
                         if (item.Table == null) continue;
 
-                        
-
 
                         string entityName = ObjectNamerHelper.AddAsLastWord(item.Table, "Entity");
 
                         var entity = await this.GetQuery<IFEntity>(e => e.Name == entityName)
                             .Include(e => e.Properties).SingleOrDefaultAsync();
-
-                        await GenerateQuery(process, entity, item.Table + "Get", QueryGetType.Single);
-                        await GenerateQuery(process, entity, item.Table + "List", QueryGetType.Single);
-
-
-                        await GenerateCommand(process, entity, item.Table + "Insert", CommandType.Insert);
-                        await GenerateCommand(process, entity, item.Table + "Update", CommandType.Update);
-                        await GenerateCommand(process, entity, item.Table + "Delete", CommandType.Delete);
+                        await GenerateQueryAndCommands(process.Id, item.Table, entity);
                     }
                 }
                 catch (Exception ex)
@@ -96,29 +86,40 @@ namespace IF.Manager.Service.Services
 
         }
 
-        private async Task GenerateCommand(ProcessDto process, IFEntity entity, string modelName, CommandType getType)
+        public async Task GenerateQueryAndCommands(int processId , string name, IFEntity entity)
+        {
+            await GenerateQuery(processId, entity, name + "Get", QueryGetType.Single);
+            await GenerateQuery(processId, entity, name + "List", QueryGetType.Single);
+
+
+            await GenerateCommand(processId, entity, name + "Insert", CommandType.Insert);
+            await GenerateCommand(processId, entity, name + "Update", CommandType.Update);
+            await GenerateCommand(processId, entity, name + "Delete", CommandType.Delete);
+        }
+
+        private async Task GenerateCommand(int processId, IFEntity entity, string modelName, CommandType getType)
         {
             var selectGetModel = GenerateModel(modelName, entity);
             this.Add(selectGetModel);
             await this.UnitOfWork.SaveChangesAsync();
-            await AddCommand(process, modelName, selectGetModel, getType);
+            await AddCommand(processId, modelName, selectGetModel, getType);
         }
 
-        private async Task GenerateQuery(ProcessDto process, IFEntity entity, string modelName, QueryGetType getType)
+        private async Task GenerateQuery(int processId, IFEntity entity, string modelName, QueryGetType getType)
         {
             var selectGetModel = GenerateModel(modelName, entity);
             this.Add(selectGetModel);
             await this.UnitOfWork.SaveChangesAsync();
-            await AddQuery(process, modelName, selectGetModel, getType);
+            await AddQuery(processId, modelName, selectGetModel, getType);
         }
 
-        private async Task AddCommand(ProcessDto process, string modelName, IFModel selectGetModel, CommandType getType)
+        private async Task AddCommand(int processId, string modelName, IFModel selectGetModel, CommandType getType)
         {
             IFCommand command = new IFCommand();
             command.Name = modelName;
             command.Description = modelName;
             command.ModelId = selectGetModel.Id;
-            command.ProcessId = process.Id;
+            command.ProcessId = processId;
             command.IsList = false;
             command.CommandGetType = getType;
 
@@ -126,13 +127,13 @@ namespace IF.Manager.Service.Services
         }
 
 
-        private async Task AddQuery(ProcessDto process, string modelName, IFModel selectGetModel, QueryGetType getType)
+        private async Task AddQuery(int processId, string modelName, IFModel selectGetModel, QueryGetType getType)
         {
             QueryDto queryDto = new QueryDto();
             queryDto.Name = modelName;
             queryDto.Description = modelName;
             queryDto.ModelId = selectGetModel.Id;
-            queryDto.ProcessId = process.Id;
+            queryDto.ProcessId = processId;
             queryDto.QueryGetType = getType;
             queryDto.PageNumber = 1;
             queryDto.PageSize = 20;

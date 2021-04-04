@@ -1,6 +1,7 @@
 ﻿using DatabaseSchemaReader.DataSchema;
 
 using IF.Core.Persistence;
+using IF.Manager.Contracts.Model;
 using IF.Manager.Service.CodeGen;
 using IF.Manager.Service.Dto;
 
@@ -16,5 +17,7 @@ namespace IF.Manager.Service.Interface
 
         Task AddDbFirst(List<DatabaseTable> tableSchemas, List<TableDbFirstDto> tables, GenerateOptions generateOptions);
         List<DatabaseTable> GetAllTableSchemas(string ConnectionString);
+
+        Task GenerateQueryAndCommands(int processId, string name, IFEntity entity);
     }
 }

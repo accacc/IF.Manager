@@ -32,7 +32,10 @@ namespace IF.Manager.Service.CodeGen.Cqrs.Command
 
             CSProperty modelProperty = new CSProperty("public", "Model", false);
             modelProperty.PropertyTypeString = this.command.Model.Name;
-
+            if(command.IsList.Value)
+            {
+                modelProperty.GenericType = "List";
+            }
             commandContextClass.Properties.Add(modelProperty);
 
             CSProperty entityProperty = new CSProperty("public", "Entity", false);
