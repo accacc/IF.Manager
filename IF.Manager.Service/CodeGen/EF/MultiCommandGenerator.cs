@@ -150,7 +150,7 @@ namespace IF.Manager.Service.CodeGen.EF
                                     foreignProperty = nextCommand.Model.Properties.SingleOrDefault(p => p.EntityPropertyId == relation.ForeignKeyIFEntityPropertyId);
                                     break;
                                 case Contracts.Enum.EntityRelationType.OneToOne:
-                                    relation = relation.Relation.Relations.SingleOrDefault(r => r.RelationId == relation.EntityId);
+                                    //relation = relation.Relation.Relations.SingleOrDefault(r => r.RelationId == relation.EntityId);
                                     foreignProperty = nextCommand.Model.Properties.SingleOrDefault(p => p.EntityPropertyId == relation.ForeignKeyIFEntityPropertyId);
                                     break;
                                 case Contracts.Enum.EntityRelationType.ManyToMany:

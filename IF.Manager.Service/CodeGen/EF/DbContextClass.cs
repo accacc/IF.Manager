@@ -13,8 +13,6 @@ namespace IF.Manager.Service
 
         public List<EntityDto> Entities { get; set; }
 
-
-
         public DbContextClass(List<EntityDto> entities, IFProject project)
         {
             this.Entities = entities;

@@ -42,7 +42,7 @@ namespace IF.Manager.Service.CodeGen.Cqrs
 
             if (isList)
             {
-                modelProperty.PropertyTypeString = $"IEnumerable<{propertyName}>";
+                modelProperty.PropertyTypeString = $"List<{propertyName}>";
             }
             else
             {

@@ -158,14 +158,12 @@ namespace IF.Manager.Service
 
                 var relationName = relation.RelatedEntityName;
 
-                var type = relation.RelatedEntityName;
-
                 if (relation.EntityRelationType == Contracts.Enum.EntityRelationType.ManyToMany ||
                      relation.EntityRelationType == Contracts.Enum.EntityRelationType.OneToMany)
                 {
                     relationName += "s";
-                    type = $"List<{relation.RelatedEntityName}>";
-                    constructorMethodBody.AppendLine($"{relationName} = new {relation.RelatedEntityName}();");
+                    string type = $"List<{relation.RelatedEntityName}>";
+                    constructorMethodBody.AppendLine($"{relationName} = new {type}();");
                 }
 
                
@@ -179,12 +177,11 @@ namespace IF.Manager.Service
 
                 var relationName = relation.RelatedEntityName;
 
-                var type = relation.RelatedEntityName;
 
                 if (relation.EntityRelationType == Contracts.Enum.EntityRelationType.ManyToMany)
                 {
                     relationName += "s";
-                    type = $"List<{relation.RelatedEntityName}>";
+                    string type = $"List<{relation.RelatedEntityName}>";
                     constructorMethodBody.AppendLine($"{relationName} = new {type}();");
                 }
             }

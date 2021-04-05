@@ -71,7 +71,7 @@ namespace IF.Manager.Service
 
                             break;
                         case Contracts.Enum.EntityRelationType.OneToOne:
-                            methodBody.AppendLine($"builder.HasOne(s => s.{relation.RelatedEntityName}).WithOne(s => s.{relation.EntityName}).HasForeignKey<{relation.EntityName}>(s => s.{relation.ForeignKeyPropertyName});");
+                            methodBody.AppendLine($"builder.HasOne(s => s.{relation.RelatedEntityName}).WithOne(s => s.{relation.EntityName}).HasForeignKey<{relation.RelatedEntityName}>(s => s.{relation.ForeignKeyPropertyName});");
                             break;
                         case Contracts.Enum.EntityRelationType.ManyToMany:
                             break;

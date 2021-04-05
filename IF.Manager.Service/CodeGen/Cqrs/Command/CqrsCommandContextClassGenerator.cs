@@ -24,6 +24,7 @@ namespace IF.Manager.Service.CodeGen.Cqrs.Command
             commandContextClass.Name = $"{command.Name}Context";
             commandContextClass.Usings.Add($"{SolutionHelper.GetProcessNamaspace(command.Process)}");
             commandContextClass.Usings.Add($"{SolutionHelper.GetCoreNamespace(command.Process.Project)}");
+            commandContextClass.Usings.Add("System.Collections.Generic");
 
             CSProperty commandProperty = new CSProperty("public", "Command", false);
             commandProperty.PropertyTypeString = this.command.Name;
