@@ -511,8 +511,7 @@ namespace IF.Manager.Service
 
                 string modelName = "";
                 string modelNameWithParent = "";
-                string multiWord = "Multi";
-                string multiName = "";
+                string multiName = "Multi";
                 string modelType = "";
                 string parentModelName = "";
 
@@ -558,7 +557,7 @@ namespace IF.Manager.Service
 
                         if (currentCommand.IsMultiCommand())
                         {
-                            modelName = modelName +multiWord;
+                            modelName = modelName +multiName;
                         }
 
                         if (child.Parent.GenericType == "List")
@@ -611,10 +610,10 @@ namespace IF.Manager.Service
                         }
 
 
-                        if (currentCommand.IsMultiCommand())
-                        {
-                            multiName = "Multi";
-                        }
+                        //if (currentCommand.IsMultiCommand())
+                        //{
+                        //    multiName = "Multi";
+                        //}
 
                         if (child.Name == "Borclular")
                         {
@@ -633,21 +632,21 @@ namespace IF.Manager.Service
                             {
                                 if (currentCommand.Parent.IsList)
                                 {
-                                    builder.AppendLine($"{indent} var {parentModelName}Multis = new List<{parentModelName}Multi>();");
+                                    builder.AppendLine($"{indent} var {parentModelName}{multiName}s = new List<{parentModelName}{multiName}>();");
                                     IsMultiList = true;
                                 }
                                 else
                                 {
-                                    builder.AppendLine($"{indent} {parentModelName}Multi {parentModelName}Multi = new {parentModelName}Multi();");
+                                    builder.AppendLine($"{indent} {parentModelName}{multiName} {parentModelName}{multiName} = new {parentModelName}{multiName}();");
                                 }
 
                                 if (currentCommand.Parent.Parent != null)
                                 {
-                                    string lastName = "Multi";
+                                    string lastName = $"{multiName}";
 
-                                    if (currentCommand.Parent.IsList) lastName = "Multis";
+                                    if (currentCommand.Parent.IsList) lastName = $"{multiName}s";
 
-                                    builder.AppendLine($"{currentCommand.Parent.Parent.Model.Name}Multi.{parentModelName}Multi = {parentModelName}{lastName};");
+                                    builder.AppendLine($"{currentCommand.Parent.Parent.Model.Name}{multiName}.{parentModelName}{multiName} = {parentModelName}{lastName};");
                                 }
                             }
 
@@ -669,7 +668,7 @@ namespace IF.Manager.Service
                                 builder.AppendLine($"{indent} {modelName} {modelName} = new {modelName}();");
                             }
 
-                            builder.AppendLine($"{indent} {parentModelName}Multi.{modelName} = {modelName};");
+                            builder.AppendLine($"{indent} {parentModelName}{multiName}.{modelName} = {modelName};");
 
                         }
 
@@ -712,7 +711,7 @@ namespace IF.Manager.Service
 
                             if (IsMultiList)
                             {
-                                builder.AppendLine($"{indent}  {parentModelName}Multi {parentModelName}Multi = new {parentModelName}Multi();");
+                                builder.AppendLine($"{indent}  {parentModelName}{multiName} {parentModelName}{multiName} = new {parentModelName}{multiName}();");
                             }
 
 
@@ -723,7 +722,7 @@ namespace IF.Manager.Service
 
                             if (IsMultiList && child.GenericType == "List")
                             {
-                                builder.AppendLine($"{indent} {parentModelName}Multi.{modelName}= {modelName}{level};");
+                                builder.AppendLine($"{indent} {parentModelName}{multiName}.{modelName}= {modelName}{level};");
                             }
 
                             builder.AppendLine(indent);
@@ -742,7 +741,7 @@ namespace IF.Manager.Service
                             if (currentCommand.Parent.IsMultiCommand() && currentCommand.Parent.Parent != null && currentCommand.Parent.Childrens.First().Id == currentCommand.Id)
                             {
 
-                                builder.AppendLine($"{indent} {parentModelName}Multis.Add({parentModelName}Multi);");
+                                builder.AppendLine($"{indent} {parentModelName}{multiName}s.Add({parentModelName}{multiName});");
                             }
                             else
                             {
