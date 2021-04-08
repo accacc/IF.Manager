@@ -6,17 +6,15 @@ $(document).ready(function () {
 
     toastr.options = {
         "closeButton": true,
-        "debug": false,
-        "newestOnTop": false,
+        "debug": true,
+        "newestOnTop": true,
         "progressBar": false,
-        "rtl": false,
-        "positionClass": "toast-top-center-screen",
+        "positionClass": "toast-top-center",
         "preventDuplicates": false,
-        "onclick": null,
-        "showDuration": 300,
-        "hideDuration": 1000,
-        "timeOut": 0,
-        "extendedTimeOut": 0,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
         "showEasing": "swing",
         "hideEasing": "linear",
         "showMethod": "fadeIn",
@@ -35,7 +33,7 @@ function handleAjaxMessages() {
     $(document).ajaxSuccess(function (event, request) {
         checkAndHandleMessageFromHeader(request);
     }).ajaxError(function (event, request) {
-        toastr.error("Error");
+       /* toastr.error("Error");*/
         debugger;
         if (request.responseText !== undefined && request.responseText !== '') {
             try {

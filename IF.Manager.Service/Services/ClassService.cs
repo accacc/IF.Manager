@@ -409,10 +409,14 @@ namespace IF.Manager.Service
             StringBuilder builder = new StringBuilder();
 
             List<IFCommand> commands = await this.GetQuery<IFCommand>()
-                .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.FromProperty)
-                .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.ToProperty.EntityProperty)
                 .Include(c => c.Childrens).ThenInclude(p => p.Parent)
                 .Include(c => c.Parent)
+                .ToListAsync();
+
+
+            List<IFCommand> commands2 = await this.GetQuery<IFCommand>()
+                .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.FromProperty)
+                .Include(s => s.IFClassMapper.IFClassMappings).ThenInclude(m => m.ToProperty.EntityProperty)
                 .Include(s => s.Model.Properties).ThenInclude(s => s.EntityProperty)
                 .Include(s => s.Model.Entity.Relations)
                 .ToListAsync();
@@ -519,7 +523,23 @@ namespace IF.Manager.Service
 
                         if (currentCommand == null) continue;
 
-                        var mapper = currentCommand.IFClassMapper.IFClassMappings.Where(m => m.FromProperty.Id == child.Id).SingleOrDefault();
+                        var mapperList = currentCommand.IFClassMapper.IFClassMappings.Where(m => m.FromProperty.Id == child.Id).ToList();
+
+
+                        if (!mapperList.Any())
+                        {
+
+                            throw new BusinessException($"Command:{currentCommand.Name} Mapper:{currentCommand.IFClassMapper.Name} Property:{child.Name} PropertyMapping Is Not Found : ErroCode(C1534)");
+                        }
+
+                        var mapperCount = mapperList.Count();
+
+                        if (mapperCount > 1)
+                        {
+                            throw new BusinessException($"Command:{currentCommand.Name} Mapper:{currentCommand.IFClassMapper.Name} Property:{child.Name} Too Many PropertyMapping : ErroCode(C1533)");
+                        }
+
+                        var mapper = mapperList.Where(m => m.FromProperty.Id == child.Id).SingleOrDefault();
 
                         var path = currentCommand.GetModelPath();
 
