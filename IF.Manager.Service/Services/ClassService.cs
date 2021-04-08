@@ -510,7 +510,10 @@ namespace IF.Manager.Service
 
 
                 string modelName = "";
+                string modelNameWithParent = "";
                 string multiName = "";
+                string modelType = "";
+                string parentModelName = "";
 
                 try
                 {
@@ -544,6 +547,13 @@ namespace IF.Manager.Service
                         var path = currentCommand.GetModelPath();
 
                         modelName = currentCommand.Model.Name;
+                        modelType = currentCommand.Model.Name;
+
+                        if (currentCommand.Parent != null && currentCommand.Parent.Model != null)
+                        {
+                            parentModelName = currentCommand.Parent.Model.Name;
+                            modelNameWithParent = $"{parentModelName}_{modelName}";
+                        }
 
                         if (currentCommand.IsMultiCommand())
                         {
