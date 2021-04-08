@@ -557,7 +557,7 @@ namespace IF.Manager.Service
 
                         if (currentCommand.IsMultiCommand())
                         {
-                            modelName = modelName +multiName;
+                            modelName = modelName + multiName;
                         }
 
                         if (child.Parent.GenericType == "List")
@@ -609,11 +609,6 @@ namespace IF.Manager.Service
                             modelNameWithParent = $"{parentModelName}_{modelName}";
                         }
 
-
-                        //if (currentCommand.IsMultiCommand())
-                        //{
-                        //    multiName = "Multi";
-                        //}
 
                         if (child.Name == "Borclular")
                         {
