@@ -559,14 +559,14 @@ namespace IF.Manager.Service
                         {
                             modelName = modelName + multiName;
                         }
-
+                        
                         if (child.Parent.GenericType == "List")
                         {
                             builder.AppendLine($"{indent} {modelName}{level - 1}.{mapper.ToProperty.EntityProperty.Name} = item{level - 1}.{mapper.FromProperty.Name};");
                         }
                         else
                         {
-                            builder.AppendLine($"{indent} {modelName}.{mapper.ToProperty.EntityProperty.Name} = {classPropertyName}.{mapper.FromProperty.Name};");
+                            builder.AppendLine($"{indent} {parentModelName}{multiName}.{modelName}.{mapper.ToProperty.EntityProperty.Name} = {classPropertyName}.{mapper.FromProperty.Name};");
                         }
                     }
                     else
@@ -656,14 +656,14 @@ namespace IF.Manager.Service
 
                             if (child.GenericType == "List")
                             {
-                                builder.AppendLine($"{indent} List<{modelName}> {modelName} = new List<{modelName}>();");
+                                builder.AppendLine($"{indent} List<{modelName}> {modelNameWithParent} = new List<{modelName}>();");
                             }
                             else
                             {
-                                builder.AppendLine($"{indent} {modelName} {modelName} = new {modelName}();");
+                                builder.AppendLine($"{indent} {modelName} {modelNameWithParent} = new {modelName}();");
                             }
 
-                            builder.AppendLine($"{indent} {parentModelName}{multiName}.{modelName} = {modelName};");
+                            builder.AppendLine($"{indent} {parentModelName}{multiName}.{modelName} = {modelNameWithParent};");
 
                         }
 
@@ -713,7 +713,7 @@ namespace IF.Manager.Service
                             builder.AppendLine();
                             builder.AppendLine();
 
-                            builder.AppendLine($"{indent} {modelName} {modelName}{level}= new {modelName}();");
+                            builder.AppendLine($"{indent} {modelName} {modelName}{level} = new {modelName}();");
 
                             if (IsMultiList && child.GenericType == "List")
                             {
@@ -741,7 +741,7 @@ namespace IF.Manager.Service
                             else
                             {
 
-                                builder.AppendLine($"{indent} {modelName}.Add({modelName}{level});");
+                                builder.AppendLine($"{indent} {modelNameWithParent}.Add({modelName}{level});");
                             }
 
 
