@@ -2,9 +2,23 @@
 
 @{
     Layout = null;
-    List<SelectListItem> primitives = ViewData["primitives"] as List<SelectListItem>; 
+
+
+    List<SelectListItem> primitives = ViewData["primitives"] as List<SelectListItem>;
+
+
+    foreach (var item in primitives)
+    {
+        item.Selected = false;
+        if (item.Value == Model.Type)
+        {
+            item.Selected = true;
+        }
+    }
+
+
     var index = Guid.NewGuid();
-    
+
 }
 
 <tr>
@@ -17,14 +31,14 @@
     <td>
         <div class="form-group">
 
-            @if (!String.IsNullOrWhiteSpace(Model.Type))
+            @*@if (!String.IsNullOrWhiteSpace(Model.Type))
             {
                 @Model.Type
             }
-            else
-            {
+            else*@
+            @*{*@
                 @Html.DropDownList($"Form[{index}].Type", primitives, "Select", new { @class = "form-control" })
-            }
+            @*}*@
         </div>
     </td>
 

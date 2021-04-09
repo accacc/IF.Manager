@@ -401,6 +401,7 @@ namespace IF.Manager.Service
                         //entityProperty.IsIdentity = dto.IsIdentity;
                         entityProperty.MaxValue = dto.MaxValue;
                         entityProperty.Name = dto.Name;
+                        entityProperty.Type = dto.Type;
                         entityProperty.Type = entityProperty.Type;
                         entityProperty.IsAudited = dto.IsAudited;
                         entityProperty.IsMultiLanguage = dto.IsMultiLanguage;
