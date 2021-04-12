@@ -18,11 +18,9 @@ namespace IF.Manager.Contracts.Services
         Task UpdateProject(IFProject form);
         Task<List<IFProject>> GetProjectList();
 
-        Task PublishApiProject(int projectId);
 
-        Task PublishProject(PublishDto publish);
 
-        Task PublishProcess(PublishDto publish);
+       
 
         Task AddSolution(IFSolution form);
 
@@ -36,9 +34,6 @@ namespace IF.Manager.Contracts.Services
         Task UpdateProcess(ProcessDto form);
         Task<List<ProcessDto>> GetProcessList();
 
-        Task<List<PublishDto>> GetPublishList(int processId);
-
-        Task AddPublish(PublishDto form);
-        Task PublishSolution(PublishDto form);
+   
     }
 }

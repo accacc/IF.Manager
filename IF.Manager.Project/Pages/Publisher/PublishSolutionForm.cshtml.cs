@@ -20,11 +20,13 @@ namespace IF.Manager.Project.Pages
 
         private readonly IEntityService entityService;
         private readonly IProjectService projectService;
+        private readonly IPublishService publishService;
 
-        public PublishSolutionFormModel(IEntityService entityService, IProjectService projectService)
+        public PublishSolutionFormModel(IEntityService entityService, IProjectService projectService, IPublishService publishService)
         {
             this.entityService = entityService;
             this.projectService = projectService;
+            this.publishService = publishService;
         }
 
 
@@ -43,7 +45,7 @@ namespace IF.Manager.Project.Pages
 
             try
             {
-                await this.projectService.PublishSolution(this.Form);
+                await this.publishService.PublishSolution(this.Form);
             }
             catch (Exception ex)
             {
@@ -64,7 +66,7 @@ namespace IF.Manager.Project.Pages
 
         public async Task<PartialViewResult> OnGetListAsync(int ProcessId)
         {
-            var PublishList = await this.projectService.GetPublishList(ProcessId);
+            var PublishList = await this.publishService.GetPublishList(ProcessId);
 
             return new PartialViewResult
             {

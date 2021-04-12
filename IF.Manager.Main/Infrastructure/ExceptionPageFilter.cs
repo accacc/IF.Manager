@@ -65,7 +65,7 @@ namespace IF.Manager.Main.Infrastructure
             else
             {
                 //result.AddMessage("Bir hata oluştu");
-                result.AddException(context.Exception);
+                result.AddException(context.Exception.GetBaseException());
             }
 
             if (context.HttpContext.Request.IsAjaxRequest())

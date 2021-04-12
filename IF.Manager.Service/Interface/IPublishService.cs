@@ -13,5 +13,16 @@ namespace IF.Manager.Contracts.Services
         Task PublishPageTree(PublishDto form);
         Task PublishMenu(PublishDto form);
         Task<List<PublishDto>> GetMenuPublishHistory();
+
+        Task PublishProcess(PublishDto publish);
+
+        Task<List<PublishDto>> GetPublishList(int processId);
+
+        Task AddPublish(PublishDto form);
+        Task PublishSolution(PublishDto form);
+
+        Task PublishApiProject(int projectId);
+
+        Task PublishProject(PublishDto publish);
     }
 }
