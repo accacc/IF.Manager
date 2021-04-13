@@ -17,7 +17,9 @@ namespace IF.Manager.Service.Model
     {
 
         FileSystemCodeFormatProvider fileSystem;
-        IFModel model; string nameSpace; ModelClassTreeDto entityTree;
+        IFModel model;
+        string nameSpace;
+        ModelClassTreeDto entityTree;
         
         public ModelGenerator(FileSystemCodeFormatProvider fileSystem, IFModel model, string nameSpace, ModelClassTreeDto entityTree)
         {
@@ -27,7 +29,7 @@ namespace IF.Manager.Service.Model
             this.entityTree = entityTree;
         }
 
-        public void Generate()
+        public void Generate(string path)
         {
             List<ModelClass> alls = new List<ModelClass>();
 
@@ -56,7 +58,7 @@ namespace IF.Manager.Service.Model
             {
                 builder.AppendLine(cls.GenerateCode().Template);
 
-                this.fileSystem.FormatCode(builder.ToString(), "cs", name);
+                this.fileSystem.FormatCode(builder.ToString(), "cs", name, path);
             }
         }     
         private void GenerateRelatedModels(List<ModelClassTreeDto> relations,List<ModelClass> alls, IFModel model, string nameSpace)
@@ -79,16 +81,11 @@ namespace IF.Manager.Service.Model
 
                 modelClass.Build(relation.Childs);
 
-                //this.fileSystem.FormatCode(modelClass.GenerateCode(), "cs");
-
                 if (relation.Childs.Any(c => c.IsRelation))
                 {
                     GenerateRelatedModels(relation.Childs.Where(c => c.IsRelation).ToList(),alls ,model, nameSpace);
-
                 }
             }
-
-
         }
     }
 }

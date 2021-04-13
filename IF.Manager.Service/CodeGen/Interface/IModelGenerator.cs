@@ -6,6 +6,6 @@ namespace IF.Manager.Service.CodeGen.Interface
 {
     public interface IModelGenerator
     {
-        void Generate();
+        void Generate(string path);
     }
 }

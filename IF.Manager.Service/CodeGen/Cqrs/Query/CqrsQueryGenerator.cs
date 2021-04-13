@@ -3,6 +3,8 @@ using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Service.Cqrs;
 using IF.Manager.Service.Model;
+
+using System.IO;
 using System.Threading.Tasks;
 
 namespace IF.Manager.Service.Services
@@ -30,10 +32,15 @@ namespace IF.Manager.Service.Services
 
             foreach (var query in process.Queries)
             {
+                if(!Directory.Exists(generatedBasePath + "/" + query.Name))
+                {
+                    Directory.CreateDirectory(generatedBasePath + "/" + query.Name);
+                }
+
                 var entityTree = await entityService.GetEntityTree(query.Model.EntityId);
 
                 ModelGenerator modelGenerator = new ModelGenerator(fileSystem, query.Model, nameSpace, entityTree);
-                modelGenerator.Generate();
+                modelGenerator.Generate(query.Name);
 
                 CqrsQueryHandlerGenerator handlerGenerator = new CqrsQueryHandlerGenerator();
                 handlerGenerator.GenerateCqrsHandlerClass(query, entityTree, fileSystem);

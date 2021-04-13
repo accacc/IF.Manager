@@ -39,6 +39,7 @@ namespace IF.Manager.Service
         public async Task Generate()
         {
             string nameSpace = SolutionHelper.GetProcessNamaspace(process);
+
             var rootCommands = process.Commands.Where(c => !c.ParentId.HasValue).ToList();
            
             await GenerateCommands(nameSpace,rootCommands);
@@ -56,8 +57,6 @@ namespace IF.Manager.Service
 
         private async Task GenerateCommands(string nameSpace, List<IFCommand> commands)
         {
-
-
             foreach (var command in commands)
             {
                 var childs = command.Childrens.OrderBy(c => c.Sequence).ToList();
@@ -82,7 +81,7 @@ namespace IF.Manager.Service
 
             MultiCommandModelGenerator modelGenerator = new MultiCommandModelGenerator(fileSystem, command.Model, nameSpace, command);
 
-            modelGenerator.Generate();
+            modelGenerator.Generate("");
 
             CqrsCommandClassGenerator commandClassGenerator = new CqrsCommandClassGenerator(command, process, entityTree, fileSystem);
 
@@ -115,7 +114,7 @@ namespace IF.Manager.Service
 
             ModelGenerator modelGenerator = new ModelGenerator(fileSystem, command.Model, nameSpace, entityTree);
 
-            modelGenerator.Generate();
+            modelGenerator.Generate("");
 
             CqrsCommandClassGenerator commandClassGenerator = new CqrsCommandClassGenerator(command, process, entityTree, fileSystem);
 

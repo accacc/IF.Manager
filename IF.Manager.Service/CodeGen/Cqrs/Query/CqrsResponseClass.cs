@@ -30,7 +30,7 @@ namespace IF.Manager.Service.Cqrs
 
 
 
-            fileSystem.FormatCode(responseClass.GenerateCode(), "cs");
+            fileSystem.FormatCode(responseClass.GenerateCode(), "cs","",query.Name);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace IF.Manager.Service.CodeGen.Model
             this.command = command;
         }
 
-        public void Generate()
+        public void Generate(string path)
         {
             List<MultiModelClass> alls = new List<MultiModelClass>();
 

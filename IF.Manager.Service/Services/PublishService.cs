@@ -355,10 +355,6 @@ namespace IF.Manager.Service.Services
                 CqrsCommandGenerator commandGenerator = new CqrsCommandGenerator(entityService, classService, process);
                 await commandGenerator.Generate();
 
-                //await classService.GenerateClass(process, 702);
-                //await  classService.GenerateMapper(process,1);
-
-
                 DirectoryHelper.MoveDirectory(DirectoryHelper.GetTempProcessDirectory(process), DirectoryHelper.GetNewProcessDirectory(process));
 
                 WebApiMethodGenerator apiMethodGenerator = new WebApiMethodGenerator(process);

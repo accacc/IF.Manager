@@ -120,16 +120,15 @@ namespace IF.Manager.Service.Cqrs
                 AddNameSpaces(query, queryOverrideClass);
 
                 EFQueryMethod queryOverrideMethod = new EFQueryMethod(entityTree, query);
-                
 
                 queryOverrideClass.Methods.Add(queryOverrideMethod.BuildOverridenQuery());
 
-                fileSystem.FormatCode(queryOverrideClass.GenerateCode().Template, "cs", queryHandlerclass.Name + "Override");
+                fileSystem.FormatCode(queryOverrideClass.GenerateCode().Template, "cs", queryHandlerclass.Name + "Override", query.Name);
 
 
             }
 
-            fileSystem.FormatCode(queryHandlerclass.GenerateCode(), "cs");
+            fileSystem.FormatCode(queryHandlerclass.GenerateCode(), "cs", "", query.Name);
 
         }
 
@@ -145,10 +144,5 @@ namespace IF.Manager.Service.Cqrs
             queryHandlerclass.Usings.Add($"System");
             queryHandlerclass.Usings.Add($"{SolutionHelper.GetCoreNamespace(query.Process.Project)}");
         }
-
-        //public string GetDataQueryClassName(string name)
-        //{
-        //    return $"{name}QueryAsync";
-        //}
     }
 }
