@@ -101,8 +101,8 @@ namespace IF.Manager.Service.Cqrs
             var modelType = $"{query.Name}Filter";
             model.PropertyTypeString = modelType;
             requestClass.Properties.Add(model);
-            fileSystem.FormatCode(requestClass.GenerateCode(), "cs","",query.Name);
-            fileSystem.FormatCode(requestModelClass.GenerateCode(), "cs",query.Name);
+            fileSystem.FormatCode(requestClass.GenerateCode(), "cs", "", query.Name);
+            fileSystem.FormatCode(requestModelClass.GenerateCode(), "cs", "", query.Name);
         }
     }
 }

@@ -10,6 +10,7 @@ using IF.Manager.Service.Model;
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -76,12 +77,13 @@ namespace IF.Manager.Service
 
         private async Task GenerateParentCommand(string nameSpace, IFCommand command)
         {
+            GenerateCommandClassFilesDirectory(command);
 
             var entityTree = await entityService.GetEntityTree(command.Model.EntityId);
 
             MultiCommandModelGenerator modelGenerator = new MultiCommandModelGenerator(fileSystem, command.Model, nameSpace, command);
 
-            modelGenerator.Generate("");
+            modelGenerator.Generate(command.Name);
 
             CqrsCommandClassGenerator commandClassGenerator = new CqrsCommandClassGenerator(command, process, entityTree, fileSystem);
 
@@ -92,7 +94,7 @@ namespace IF.Manager.Service
             switch (command.CommandGetType)
             {
                 case Core.Data.CommandType.Insert:
-                    CqrsInsertCommandHandlerGenerator cqrsInsertCommandHandler = new CqrsInsertCommandHandlerGenerator(process,command);
+                    CqrsInsertCommandHandlerGenerator cqrsInsertCommandHandler = new CqrsInsertCommandHandlerGenerator(process, command);
                     cqrsInsertCommandHandler.GenerateMultiInsertCqrsHandlerClass();
                     break;
                 case Core.Data.CommandType.Update:
@@ -108,13 +110,24 @@ namespace IF.Manager.Service
             }
         }
 
+        private void GenerateCommandClassFilesDirectory(IFCommand command)
+        {
+            if (!Directory.Exists(generatedBasePath + "/" + command.Name))
+            {
+                Directory.CreateDirectory(generatedBasePath + "/" + command.Name);
+            }
+        }
+
         private async Task GenerateChildCommand(string nameSpace, IFCommand command)
         {
+
+            GenerateCommandClassFilesDirectory(command);
+
             var entityTree = await entityService.GetEntityTree(command.Model.EntityId);
 
             ModelGenerator modelGenerator = new ModelGenerator(fileSystem, command.Model, nameSpace, entityTree);
 
-            modelGenerator.Generate("");
+            modelGenerator.Generate(command.Name);
 
             CqrsCommandClassGenerator commandClassGenerator = new CqrsCommandClassGenerator(command, process, entityTree, fileSystem);
 
@@ -141,73 +154,73 @@ namespace IF.Manager.Service
             }
         }
 
-        private void GenerateDeleteCqrsHandlerClass(IFCommand command, IFProcess process, ModelClassTreeDto entityTree)
-        {
-           // throw new NotImplementedException();
-        }
+        //private void GenerateDeleteCqrsHandlerClass(IFCommand command, IFProcess process, ModelClassTreeDto entityTree)
+        //{
+        //   // throw new NotImplementedException();
+        //}
 
-        private void GenerateUpdateCqrsHandlerClass(IFCommand command, IFProcess process, ModelClassTreeDto entityTree)
-        {
+        //private void GenerateUpdateCqrsHandlerClass(IFCommand command, IFProcess process, ModelClassTreeDto entityTree)
+        //{
 
-            string nameSpace = SolutionHelper.GetProcessNamaspace(process);
+        //    string nameSpace = SolutionHelper.GetProcessNamaspace(process);
 
-            CSClass commandHandlerClass = GetCommandHandlerClass(command, process, nameSpace);
+        //    CSClass commandHandlerClass = GetCommandHandlerClass(command, process, nameSpace);
 
-            EFUpdateCommandMethod method = new EFUpdateCommandMethod($"ExecuteCommand", entityTree, command);
+        //    EFUpdateCommandMethod method = new EFUpdateCommandMethod($"ExecuteCommand", entityTree, command);
 
-            commandHandlerClass.Methods.Add(method.Build());
+        //    commandHandlerClass.Methods.Add(method.Build());
 
-            fileSystem.FormatCode(commandHandlerClass.GenerateCode(), "cs");
+        //    fileSystem.FormatCode(commandHandlerClass.GenerateCode(), "cs");
 
-        }
+        //}
 
-        private static CSClass GetCommandHandlerClass(IFCommand command, IFProcess process, string nameSpace)
-        {
-            string commandName = $"{command.Name}";
-            CSClass commandHandlerClass = new CSClass();
-            //if (command.IsAfterExecuteOverride || command.IsBeforeExecuteOverride) commandHandlerClass.IsPartial = true;
-            commandHandlerClass.Name = $"{commandName}CommandHandler";
-            commandHandlerClass.NameSpace = nameSpace + ".Commands.Cqrs";
-            commandHandlerClass.Usings.Add("IF.Core.Data");
-            commandHandlerClass.Usings.Add("IF.Core.Exception");
-            commandHandlerClass.Usings.Add("Microsoft.EntityFrameworkCore");
-            commandHandlerClass.Usings.Add("System.Threading.Tasks");
-            commandHandlerClass.Usings.Add("IF.Core.Persistence");
-            commandHandlerClass.Usings.Add($"{SolutionHelper.GetCoreNamespace(command.Process.Project)}");
-
-
-            commandHandlerClass.InheritedInterfaces.Add($"ICommandHandlerAsync<{commandName}>");
-
-            var repositoryProperty = new CSProperty("private", "repository", false);
-            repositoryProperty.PropertyTypeString = $"IRepository";
-            repositoryProperty.IsReadOnly = true;
-            commandHandlerClass.Properties.Add(repositoryProperty);
-
-            var dispatcher = new CSProperty("private", "dispatcher", false);
-            dispatcher.PropertyTypeString = $"IDispatcher";
-            dispatcher.IsReadOnly = true;
-            commandHandlerClass.Properties.Add(dispatcher);
+        //private static CSClass GetCommandHandlerClass(IFCommand command, IFProcess process, string nameSpace)
+        //{
+        //    string commandName = $"{command.Name}";
+        //    CSClass commandHandlerClass = new CSClass();
+        //    //if (command.IsAfterExecuteOverride || command.IsBeforeExecuteOverride) commandHandlerClass.IsPartial = true;
+        //    commandHandlerClass.Name = $"{commandName}CommandHandler";
+        //    commandHandlerClass.NameSpace = nameSpace + ".Commands.Cqrs";
+        //    commandHandlerClass.Usings.Add("IF.Core.Data");
+        //    commandHandlerClass.Usings.Add("IF.Core.Exception");
+        //    commandHandlerClass.Usings.Add("Microsoft.EntityFrameworkCore");
+        //    commandHandlerClass.Usings.Add("System.Threading.Tasks");
+        //    commandHandlerClass.Usings.Add("IF.Core.Persistence");
+        //    commandHandlerClass.Usings.Add($"{SolutionHelper.GetCoreNamespace(command.Process.Project)}");
 
 
+        //    commandHandlerClass.InheritedInterfaces.Add($"ICommandHandlerAsync<{commandName}>");
 
-            CSMethod constructorMethod = new CSMethod(commandHandlerClass.Name, "", "public");
-            constructorMethod.Parameters.Add(new CsMethodParameter() { Name = "repository", Type = "IRepository" });
-            constructorMethod.Parameters.Add(new CsMethodParameter() { Name = "dispatcher", Type = "IDispatcher" });
-            StringBuilder methodBody = new StringBuilder();
-            methodBody.AppendLine("this.repository = repository;");
-            methodBody.AppendLine("this.dispatcher = dispatcher;");
-            methodBody.AppendLine();
-            constructorMethod.Body = methodBody.ToString();
-            commandHandlerClass.Methods.Add(constructorMethod);
+        //    var repositoryProperty = new CSProperty("private", "repository", false);
+        //    repositoryProperty.PropertyTypeString = $"IRepository";
+        //    repositoryProperty.IsReadOnly = true;
+        //    commandHandlerClass.Properties.Add(repositoryProperty);
 
-            CSMethod handleMethod = new CSMethod("HandleAsync", "void", "public");
-            handleMethod.IsAsync = true;
-            handleMethod.Parameters.Add(new CsMethodParameter() { Name = "command", Type = $"{commandName}" });
-            handleMethod.Body += $"await this.ExecuteCommand(command);" + Environment.NewLine;
+        //    var dispatcher = new CSProperty("private", "dispatcher", false);
+        //    dispatcher.PropertyTypeString = $"IDispatcher";
+        //    dispatcher.IsReadOnly = true;
+        //    commandHandlerClass.Properties.Add(dispatcher);
 
-            commandHandlerClass.Methods.Add(handleMethod);
-            return commandHandlerClass;
-        }
+
+
+        //    CSMethod constructorMethod = new CSMethod(commandHandlerClass.Name, "", "public");
+        //    constructorMethod.Parameters.Add(new CsMethodParameter() { Name = "repository", Type = "IRepository" });
+        //    constructorMethod.Parameters.Add(new CsMethodParameter() { Name = "dispatcher", Type = "IDispatcher" });
+        //    StringBuilder methodBody = new StringBuilder();
+        //    methodBody.AppendLine("this.repository = repository;");
+        //    methodBody.AppendLine("this.dispatcher = dispatcher;");
+        //    methodBody.AppendLine();
+        //    constructorMethod.Body = methodBody.ToString();
+        //    commandHandlerClass.Methods.Add(constructorMethod);
+
+        //    CSMethod handleMethod = new CSMethod("HandleAsync", "void", "public");
+        //    handleMethod.IsAsync = true;
+        //    handleMethod.Parameters.Add(new CsMethodParameter() { Name = "command", Type = $"{commandName}" });
+        //    handleMethod.Body += $"await this.ExecuteCommand(command);" + Environment.NewLine;
+
+        //    commandHandlerClass.Methods.Add(handleMethod);
+        //    return commandHandlerClass;
+        //}
 
        
     }

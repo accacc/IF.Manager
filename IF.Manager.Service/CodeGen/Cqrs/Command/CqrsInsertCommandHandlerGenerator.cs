@@ -34,7 +34,7 @@ namespace IF.Manager.Service
 
                 commandHandlerOverrideClass.Methods.Add(method.BuildOverridenQuery());
 
-                fileSystem.FormatCode(commandHandlerOverrideClass.GenerateCode().Template, "cs", command.Name + "Override");
+                fileSystem.FormatCode(commandHandlerOverrideClass.GenerateCode().Template, "cs", command.Name + "Override",command.Name);
 
             }
             else
@@ -42,9 +42,9 @@ namespace IF.Manager.Service
                 commandHandlerClass.Methods.Add(method.Build());
             }
 
-            base.fileSystem.FormatCode(commandHandlerClass.GenerateCode(), "cs");
+            base.fileSystem.FormatCode(commandHandlerClass.GenerateCode().Template, "cs","",command.Name);
            
-            GenerateCommandContextClass();
+            GenerateCommandContextAndOverrideClass();
 
         }
 

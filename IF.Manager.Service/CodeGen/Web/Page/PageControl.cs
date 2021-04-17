@@ -31,7 +31,7 @@ namespace IF.Manager.Service.Web.Page
 
             GeneratePartialViews(columnCount, pageNameSpace, builder);
 
-            this.fileSystem.FormatCode(builder.ToString(), "cshtml", $"{page.Name}");
+            this.fileSystem.FormatCode(builder.ToString(), "cshtml", $"{page.Name}","");
         }
 
         //TODO:base classa al 112
@@ -135,7 +135,7 @@ namespace IF.Manager.Service.Web.Page
             AddGetModelMethod();
 
 
-            fileSystem.FormatCode(this.GenerateCode().Template, "cshtml.cs", this.PageControlMap.IFPageControl.Name);
+            fileSystem.FormatCode(this.GenerateCode().Template, "cshtml.cs", this.PageControlMap.IFPageControl.Name,"");
 
         }
 

@@ -61,20 +61,20 @@ namespace IF.Manager.Service
                 entityClass.Methods.Add(constructorMethod);
 
 
-                this.fileSystem.FormatCode(entityClass.GenerateCode(), "cs");
+                this.fileSystem.FormatCode(entityClass.GenerateCode(), "cs","","");
 
                 EntityMapClass entityMap = new EntityMapClass(entity, project);
 
                 entityMap.Build();
 
-                this.fileSystem.FormatCode(entityMap.GenerateCode(), "cs");
+                this.fileSystem.FormatCode(entityMap.GenerateCode(), "cs","","");
             }
 
             DbContextClass dbContext = new DbContextClass(entityList, project);
 
             dbContext.Build();
 
-            this.fileSystem.FormatCode(dbContext.GenerateCode(), "cs");
+            this.fileSystem.FormatCode(dbContext.GenerateCode(), "cs","","");
         }
 
         private static void GenerateProperties(EntityDto entity, CSClass entityClass)

@@ -455,7 +455,7 @@ namespace IF.Manager.Service
             cSClass.Methods.Add(mapperMethod);
 
 
-            fileSystem.FormatCode(cSClass.GenerateCode(), "cs");
+            fileSystem.FormatCode(cSClass.GenerateCode(), "cs","","");
 
             return builder.ToString();
         }
@@ -791,7 +791,7 @@ namespace IF.Manager.Service
             }
 
 
-            fileSystem.FormatCode(code.ToString(), "cs", parent.Name);
+             fileSystem.FormatCode(code.ToString(), "cs", parent.Name,"");
         }
 
         private static void GenerateClassTree(ClassControlTreeDto mainClass, CSClass csClass, List<CSClass> allClass)

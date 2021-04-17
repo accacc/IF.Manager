@@ -21,7 +21,7 @@ namespace IF.Manager.Service.Services
         {
             this.entityService = entityService;
             this.process = process;
-            generatedBasePath = generatedBasePath = DirectoryHelper.GetTempProcessDirectory(process);
+            generatedBasePath  = DirectoryHelper.GetTempProcessDirectory(process);
             this.fileSystem = new FileSystemCodeFormatProvider(generatedBasePath);
         }
 

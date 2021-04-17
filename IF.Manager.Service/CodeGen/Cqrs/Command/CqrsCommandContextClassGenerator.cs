@@ -50,7 +50,7 @@ namespace IF.Manager.Service.CodeGen.Cqrs.Command
 
             commandContextClass.Properties.Add(entityProperty);
 
-            fileSystem.FormatCode(commandContextClass.GenerateCode().Template, "cs", command.Name + "Context");
+            fileSystem.FormatCode(commandContextClass.GenerateCode().Template, "cs", command.Name + "Context",command.Name);
 
 
 

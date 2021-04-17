@@ -39,7 +39,7 @@ namespace IF.Manager.Service.Web.Page.Panel
             GeneratePartialViews(1, pageNameSpace, builder);
 
             builder.AppendDivEnd();
-            this.fileSystem.FormatCode(builder.ToString(), "cshtml", $"{panel.Name}");
+            this.fileSystem.FormatCode(builder.ToString(), "cshtml", $"{panel.Name}","");
         }
 
         //TODO:base classa al 112

@@ -98,7 +98,7 @@ namespace IF.Manager.Service.Web.Page.Form
 
             builder.AppendLine("</form>");
 
-            fileSystem.FormatCode(builder.ToString(), "cshtml", this.form.Name);
+            fileSystem.FormatCode(builder.ToString(), "cshtml", this.form.Name,"");
         }
 
         private void GenerateFormClass()
@@ -119,7 +119,7 @@ namespace IF.Manager.Service.Web.Page.Form
                 }
             }
 
-            fileSystem.FormatCode(this.GenerateCode().Template, "cshtml.cs", this.PageControlMap.IFPageControl.Name);
+            fileSystem.FormatCode(this.GenerateCode().Template, "cshtml.cs", this.PageControlMap.IFPageControl.Name,"");
         }
 
         private void AddSetFormDefaultsMethod()

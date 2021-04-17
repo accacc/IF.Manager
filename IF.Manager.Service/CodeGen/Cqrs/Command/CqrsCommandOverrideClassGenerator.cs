@@ -33,7 +33,7 @@ namespace IF.Manager.Service.CodeGen.Cqrs.Command
             AddBeforeExecuteMethod(commandHandlerOverrideClass);
             AddAfterExecuteMethod(commandHandlerOverrideClass);
 
-            fileSystem.FormatCode(commandHandlerOverrideClass.GenerateCode().Template, "cs", commandHandlerOverrideClass.Name + "Override");
+            fileSystem.FormatCode(commandHandlerOverrideClass.GenerateCode().Template, "cs", commandHandlerOverrideClass.Name + "Override",command.Name);
         }
 
         private void AddBeforeExecuteMethod(CSClass overClass)

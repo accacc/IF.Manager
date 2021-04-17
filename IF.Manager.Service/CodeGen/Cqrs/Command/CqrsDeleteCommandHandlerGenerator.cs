@@ -23,9 +23,9 @@ namespace IF.Manager.Service
 
             commandHandlerClass.Methods.Add(method.Build());
 
-            base.fileSystem.FormatCode(commandHandlerClass.GenerateCode(), "cs");
+            base.fileSystem.FormatCode(commandHandlerClass.GenerateCode(), "cs","",command.Name);
            
-            GenerateCommandContextClass();
+            GenerateCommandContextAndOverrideClass();
 
         }
 

@@ -155,12 +155,12 @@ namespace IF.Manager.Service.Services
 
             ProgramClassWebApi program = new ProgramClassWebApi(project);
             program.Build();
-            fileSystem.FormatCode(program.GenerateCode(), "cs");
+            fileSystem.FormatCode(program.GenerateCode(), "cs","","");
 
 
             StartupClassWebApi startup = new StartupClassWebApi(project);
             startup.Build();
-            fileSystem.FormatCode(startup.GenerateCode(), "cs");
+            fileSystem.FormatCode(startup.GenerateCode(), "cs","","");
 
             GenerateConfigClassAndJson(project);
 
@@ -213,11 +213,11 @@ namespace IF.Manager.Service.Services
 
             ConfigInterface configInterface = new ConfigInterface(settings, project);
             configInterface.Build();
-            fileSystem.FormatCode(configInterface.GenerateCode(), "cs");
+            fileSystem.FormatCode(configInterface.GenerateCode(), "cs","","");
 
             ConfigClass configClass = new ConfigClass(settings, project);
             configClass.Build();
-            fileSystem.FormatCode(configClass.GenerateCode(), "cs");
+            fileSystem.FormatCode(configClass.GenerateCode(), "cs","","");
         }
 
         public async Task PublishPageTree(PublishDto form)
@@ -347,6 +347,14 @@ namespace IF.Manager.Service.Services
                     .Include(s => s.Queries).ThenInclude(s => s.QueryFilterItems).ThenInclude(s => s.IFPageParameter)
 
                     .SingleOrDefaultAsync();
+
+
+                string generatedBasePath = DirectoryHelper.GetTempProcessDirectory(process);
+
+                if (!Directory.Exists(generatedBasePath + "/" + "Models"))
+                {
+                    Directory.CreateDirectory(generatedBasePath + "/" + "Models");
+                }
 
 
                 CqrsQueryGenerator queryGenerator = new CqrsQueryGenerator(entityService, process);

@@ -85,7 +85,7 @@ namespace IF.Manager.Service.WebApi
                 }
             }
 
-            this.fileSystem.FormatCode(controllerClass.GenerateCode(), "cs");
+            this.fileSystem.FormatCode(controllerClass.GenerateCode(), "cs","","");
         }
 
         private CSMethod GetListMethodGenerate(IFQuery query)

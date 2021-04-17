@@ -73,11 +73,11 @@ namespace IF.Manager.Service.CodeGen.Cqrs.Command
             return commandHandlerClass;
         }
 
-        protected void GenerateCommandContextClass()
+        protected void GenerateCommandContextAndOverrideClass()
         {
             CqrsCommandContextClassGenerator commandContextClassGenerator = new CqrsCommandContextClassGenerator(command, fileSystem);
-
             commandContextClassGenerator.Generate();
+
             CqrsCommandOverrideClassGenerator overrideClassGenerator = new CqrsCommandOverrideClassGenerator(command, fileSystem);
             overrideClassGenerator.Generate();
         }
@@ -92,9 +92,9 @@ namespace IF.Manager.Service.CodeGen.Cqrs.Command
 
             commandHandlerClass.Methods.Add(method.Build());
 
-            fileSystem.FormatCode(commandHandlerClass.GenerateCode(), "cs");
+            fileSystem.FormatCode(commandHandlerClass.GenerateCode().Template, "cs","",command.Name);
 
-            GenerateCommandContextClass();
+            GenerateCommandContextAndOverrideClass();
         }
 
 

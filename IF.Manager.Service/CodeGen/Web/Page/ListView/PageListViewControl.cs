@@ -73,7 +73,7 @@ namespace IF.Manager.Service.Web.Page.ListView
             AddOnGetModelMethod();
 
 
-            fileSystem.FormatCode(this.GenerateCode().Template, "cshtml.cs", this.listView.Name);
+            fileSystem.FormatCode(this.GenerateCode().Template, "cshtml.cs", this.listView.Name,"");
         }
 
         private void AddPartialViewMethod()
@@ -206,7 +206,7 @@ namespace IF.Manager.Service.Web.Page.ListView
 
                 
 
-            fileSystem.FormatCode(builder.ToString(), "cshtml", $"{this.listView.Name}");
+            fileSystem.FormatCode(builder.ToString(), "cshtml","", $"{this.listView.Name}");
         }
 
             private void RenderPartialView()
@@ -278,11 +278,11 @@ namespace IF.Manager.Service.Web.Page.ListView
             if (!(this.listView.IFPageControlMap.Parent.IFPageControl is IFPage))
             {
 
-                fileSystem.FormatCode(builder.ToString(), "cshtml", $"_{this.listView.Name}");
+                fileSystem.FormatCode(builder.ToString(), "cshtml","", $"_{this.listView.Name}");
             }
             else
             {
-                fileSystem.FormatCode(builder.ToString(), "cshtml", $"{this.listView.Name}");
+                fileSystem.FormatCode(builder.ToString(), "cshtml", "", $"{this.listView.Name}");
             }
         }
     }

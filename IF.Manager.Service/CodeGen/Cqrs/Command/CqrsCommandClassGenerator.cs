@@ -68,7 +68,7 @@ namespace IF.Manager.Service.CodeGen.Cqrs
             classes += Environment.NewLine;
             classes += "}";
 
-            fileSystem.FormatCode(classes, "cs", commandClass.Name);
+            fileSystem.FormatCode(classes, "cs", commandClass.Name,command.Name);
         }
     }
 }

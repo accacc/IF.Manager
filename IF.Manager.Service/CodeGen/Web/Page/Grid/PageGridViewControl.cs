@@ -233,7 +233,7 @@ namespace IF.Manager.Service.Web.Page
             builder.AppendLine("}");
             builder.AppendLine("</table>");
 
-            this.fileSystem.FormatCode(builder.ToString(), "cshtml", $"_{grid.Name}");
+            this.fileSystem.FormatCode(builder.ToString(), "cshtml", $"_{grid.Name}","");
         }
     }
 }

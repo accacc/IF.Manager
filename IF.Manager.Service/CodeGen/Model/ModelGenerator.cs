@@ -58,7 +58,7 @@ namespace IF.Manager.Service.Model
             {
                 builder.AppendLine(cls.GenerateCode().Template);
 
-                this.fileSystem.FormatCode(builder.ToString(), "cs", name, path);
+                this.fileSystem.FormatCode(builder.ToString(), "cs", name, "Models");
             }
         }     
         private void GenerateRelatedModels(List<ModelClassTreeDto> relations,List<ModelClass> alls, IFModel model, string nameSpace)

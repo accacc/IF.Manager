@@ -30,7 +30,7 @@ namespace IF.Manager.Service.CodeGen.Model
 
             string name = ObjectNamerHelper.AddAsLastWord(model.Name, "DataModel");
 
-            if(command.IsMultiCommand())
+            if (command.IsMultiCommand())
             {
                 name = name + "Multi";
             }
@@ -50,9 +50,9 @@ namespace IF.Manager.Service.CodeGen.Model
             {
                 builder.AppendLine(cls.GenerateCode().Template);
 
-                this.fileSystem.FormatCode(builder.ToString(), "cs", name);
+                this.fileSystem.FormatCode(builder.ToString(), "cs", name, "Models");
             }
         }
-       
+
     }
 }
