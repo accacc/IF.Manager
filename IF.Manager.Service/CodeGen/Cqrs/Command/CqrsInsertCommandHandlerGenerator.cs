@@ -28,10 +28,6 @@ namespace IF.Manager.Service
                 commandHandlerOverrideClass.Name = command.Name;
                 commandHandlerOverrideClass.IsPartial = true;
                 commandHandlerOverrideClass.NameSpace = commandHandlerClass.NameSpace;
-                
-                //AddNameSpaces(query, overClass);
-
-
                 commandHandlerOverrideClass.Methods.Add(method.BuildOverridenQuery());
 
                 fileSystem.FormatCode(commandHandlerOverrideClass.GenerateCode().Template, "cs", command.Name + "Override",command.Name);
@@ -42,7 +38,7 @@ namespace IF.Manager.Service
                 commandHandlerClass.Methods.Add(method.Build());
             }
 
-            base.fileSystem.FormatCode(commandHandlerClass.GenerateCode().Template, "cs","",command.Name);
+            base.fileSystem.FormatCode(commandHandlerClass.GenerateCode(), "cs","",command.Name);
            
             GenerateCommandContextAndOverrideClass();
 

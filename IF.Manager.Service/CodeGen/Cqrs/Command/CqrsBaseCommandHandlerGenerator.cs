@@ -92,7 +92,7 @@ namespace IF.Manager.Service.CodeGen.Cqrs.Command
 
             commandHandlerClass.Methods.Add(method.Build());
 
-            fileSystem.FormatCode(commandHandlerClass.GenerateCode().Template, "cs","",command.Name);
+            fileSystem.FormatCode(commandHandlerClass.GenerateCode(), "cs","",command.Name);
 
             GenerateCommandContextAndOverrideClass();
         }

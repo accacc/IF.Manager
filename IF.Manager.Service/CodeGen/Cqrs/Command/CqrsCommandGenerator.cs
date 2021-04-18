@@ -99,11 +99,11 @@ namespace IF.Manager.Service
                     break;
                 case Core.Data.CommandType.Update:
                     CqrsUpdateCommandHandlerGenerator cqrsUpdateCommandHandler = new CqrsUpdateCommandHandlerGenerator(process, command);
-                    cqrsUpdateCommandHandler.Generate(entityTree);
+                    cqrsUpdateCommandHandler.GenerateMultiInsertCqrsHandlerClass();
                     break;
                 case Core.Data.CommandType.Delete:
                     CqrsDeleteCommandHandlerGenerator cqrsDeleteCommandHandler = new CqrsDeleteCommandHandlerGenerator(process, command);
-                    cqrsDeleteCommandHandler.Generate(entityTree);
+                    cqrsDeleteCommandHandler.GenerateMultiInsertCqrsHandlerClass();
                     break;
                 default:
                     throw new ApplicationException("unknow command type");

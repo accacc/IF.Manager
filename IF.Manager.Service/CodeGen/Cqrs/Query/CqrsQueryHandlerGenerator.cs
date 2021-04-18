@@ -128,7 +128,7 @@ namespace IF.Manager.Service.Cqrs
 
             }
 
-            fileSystem.FormatCode(queryHandlerclass.GenerateCode().Template, "cs", "", query.Name);
+            fileSystem.FormatCode(queryHandlerclass.GenerateCode(), "cs", "", query.Name);
 
         }
 
