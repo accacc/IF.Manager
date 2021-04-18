@@ -184,13 +184,11 @@ namespace IF.Manager.Service.Services
                     throw new BusinessException($"{entityName} Entity already exist");
                 }
 
-
-
                 IFEntity entity = new IFEntity();
 
                 entity.Description = entityName;
                 entity.Name = entityName;
-                entity.IsAudited = false;
+                entity.AuditType = Enum.IFAuditType.None;
 
                 foreach (var column in table.Columns)
                 {

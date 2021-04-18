@@ -249,7 +249,7 @@ namespace IF.Manager.Service
                    GroupId = e.Group.Id,
                    GroupName = e.Group.Name,
                    IsSoftDeleted = e.IsSoftDeleted,
-                   IsAudited = e.IsAudited,
+                   AuditType = e.AuditType,
                    Properties = e.Properties.Select(p => new EntityPropertyDto
                    {
                        Id = p.Id,
@@ -338,7 +338,7 @@ namespace IF.Manager.Service
             entity.Description = dto.Description;
             entity.Name = name;
             entity.GroupId = dto.GroupId;
-            entity.IsAudited = dto.IsAudited;
+            entity.AuditType = dto.AuditType;
             entity.IsSoftDeleted = dto.IsSoftDeleted;
 
             IFEntityProperty primaryKeyProperty = new IFEntityProperty();
@@ -435,7 +435,7 @@ namespace IF.Manager.Service
 
             entity.Name = name;
             entity.Description = dto.Description;
-            entity.IsAudited = dto.IsAudited;
+            entity.AuditType = dto.AuditType;
             entity.GroupId = dto.GroupId;
             entity.IsSoftDeleted = dto.IsSoftDeleted;
 
@@ -695,7 +695,7 @@ namespace IF.Manager.Service
                 Name = x.Name,
                 Description = x.Description,
                 GroupId = x.GroupId,
-                IsAudited = x.IsAudited,
+                AuditType = x.AuditType,
                 IsSoftDeleted = x.IsSoftDeleted
             }).SingleOrDefaultAsync(k => k.Id == id);
 

@@ -1,10 +1,6 @@
-﻿using IF.Core.Data;
-using IF.Core.Security;
-using IF.Manager.Contracts.Model;
-using System;
+﻿using IF.Manager.Service.Enum;
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace IF.Manager.Contracts.Dto
 {
@@ -18,8 +14,9 @@ namespace IF.Manager.Contracts.Dto
 
         public int? GroupId { get; set; }
 
-        public bool IsAudited { get; set; }
+        //public bool IsAudited { get; set; }
 
+        public IFAuditType AuditType { get; set; }
         public bool IsSoftDeleted { get; set; }
         public string Prefix { get; set; }
         public string GroupName { get; set; }
@@ -30,5 +27,5 @@ namespace IF.Manager.Contracts.Dto
 
     }
 
- 
+
 }
