@@ -54,7 +54,7 @@ namespace PlayGround
             project.Name = name;
             StartupClassWebApi startup = new StartupClassWebApi(project);
             startup.Build();
-            fileSystem.FormatCode(startup.GenerateCode(), "cs");
+            //fileSystem.FormatCode(startup.GenerateCode(), "cs");
         }
 
         private static void GenerateConfigs(string tempPath, string name, FileSystemCodeFormatProvider fileSystem)
