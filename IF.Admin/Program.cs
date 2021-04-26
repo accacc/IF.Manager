@@ -15,6 +15,8 @@ namespace IF.Admin
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
+
+            //aa
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
