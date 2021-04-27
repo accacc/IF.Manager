@@ -12,6 +12,8 @@ namespace IF.Manager.Contracts.Services
     public interface IClassService: IRepository
     {
 
+
+        Task GenerateClass(int classId, string dir);
         Task JsonToClass(string name, string json);
         Task<IFClass> GetClass(int id);
         Task<List<IFClass>> GetClassList();

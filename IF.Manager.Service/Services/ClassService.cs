@@ -765,8 +765,14 @@ namespace IF.Manager.Service
 
         public async Task GenerateClass(IFProcess process, int classId)
         {
+            string dir = DirectoryHelper.GetTempProcessDirectory(process);
 
-            var fileSystem = new FileSystemCodeFormatProvider(DirectoryHelper.GetTempProcessDirectory(process));
+            await GenerateClass(classId, dir);
+        }
+
+        public async Task GenerateClass(int classId, string dir)
+        {
+            var fileSystem = new FileSystemCodeFormatProvider(dir);
 
             var tree = await this.GetClassTreeList(classId);
 
@@ -791,7 +797,7 @@ namespace IF.Manager.Service
             }
 
 
-             fileSystem.FormatCode(code.ToString(), "cs", parent.Name,"");
+            fileSystem.FormatCode(code.ToString(), "cs", parent.Name, "");
         }
 
         private static void GenerateClassTree(ClassControlTreeDto mainClass, CSClass csClass, List<CSClass> allClass)
