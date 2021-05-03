@@ -40,10 +40,10 @@ namespace IF.Manager.Service.Services
         public async Task AddDbFirst(List<DatabaseTable> tableSchemas, List<TableDbFirstDto> tables, GenerateOptions generateOptions)
         {
 
-            if (await this.projectService.ProcessIsExistByName(generateOptions.ProcessName))
-            {
-                throw new BusinessException($"{generateOptions.ProcessName} Process already exist " + ErrorCodes.ProcessNotExist);
-            }
+            //if (await this.projectService.ProcessIsExistByName(generateOptions.ProcessId))
+            //{
+            //    throw new BusinessException($"{generateOptions.ProcessId} Process already exist " + ErrorCodes.ProcessNotExist);
+            //}
 
 
 
@@ -55,12 +55,12 @@ namespace IF.Manager.Service.Services
                 {
                     await AddEntities(tableSchemas, tables);
 
-                    ProcessDto process = new ProcessDto();
-                    process.Description = generateOptions.ProcessName;
-                    process.ProjectId = generateOptions.ProjectId;
-                    process.Name = generateOptions.ProcessName;
+                    //ProcessDto process = new ProcessDto();
+                    //process.Description = generateOptions.ProcessId;
+                    //process.ProjectId = generateOptions.ProjectId;
+                    //process.Name = generateOptions.ProcessId;
 
-                    await this.projectService.AddProcess(process);
+                    //await this.projectService.AddProcess(process);
 
                     foreach (var item in tables)
                     {
@@ -71,7 +71,7 @@ namespace IF.Manager.Service.Services
 
                         var entity = await this.GetQuery<IFEntity>(e => e.Name == entityName)
                             .Include(e => e.Properties).SingleOrDefaultAsync();
-                        await GenerateQueryAndCommands(process.Id, item.Table, entity);
+                        await GenerateQueryAndCommands(generateOptions.ProcessId, item.Table, entity);
                     }
                 }
                 catch (Exception ex)

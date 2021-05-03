@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.Data.SqlClient;
 
 using System;
 using System.Collections.Generic;
@@ -21,7 +20,7 @@ using System.Threading.Tasks;
 
 namespace IF.Manager.Entity.Pages.DbFirst
 {
-  
+
 
     public class FormModel : PageModel
     {
@@ -61,7 +60,7 @@ namespace IF.Manager.Entity.Pages.DbFirst
         public string ConnectionString { get; set; }
 
         [BindProperty(SupportsGet = true), Required]
-        public string ProcessName { get; set; }
+        public int ProcessId { get; set; }
 
 
         public async Task OnGet()
@@ -80,6 +79,12 @@ namespace IF.Manager.Entity.Pages.DbFirst
 
         private async Task SetFormDefaults()
         {
+            await SetProjects();
+            await SetProcesses();
+        }
+
+        private async Task SetProjects()
+        {
             var projects = await this.projectService.GetProjectList();
 
             List<SelectListItem> items = new List<SelectListItem>();
@@ -96,6 +101,23 @@ namespace IF.Manager.Entity.Pages.DbFirst
             ViewData["projects"] = items;
         }
 
+        private async Task SetProcesses()
+        {
+            var processes = await this.projectService.GetProcessList();
+
+            List<SelectListItem> items = new List<SelectListItem>();
+
+            foreach (var process in processes)
+            {
+                SelectListItem item = new SelectListItem();
+
+                item.Text = process.Name;
+                item.Value = process.Id.ToString();
+                items.Add(item);
+            }
+
+            ViewData["processes"] = items;
+        }
 
         public PartialViewResult OnGetListTablesAsync()
         {
@@ -133,7 +155,7 @@ namespace IF.Manager.Entity.Pages.DbFirst
             generateOptions.UpdateOperation = this.UpdateOperation;
             generateOptions.InsertOperation = this.InsertOperation;
             generateOptions.ProjectId = this.IFProjectId;
-            generateOptions.ProcessName = this.ProcessName;
+            generateOptions.ProcessId = this.ProcessId;
 
             try
             {

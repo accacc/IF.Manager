@@ -4,7 +4,9 @@
 @{
 
     List<SelectListItem> projects = ViewData["projects"] as List<SelectListItem>;
+    List<SelectListItem> processes = ViewData["processes"] as List<SelectListItem>;
 }
+
 
 <form>
     @Html.AntiForgeryToken()
@@ -28,35 +30,44 @@
         </div>
     </div>
     <div class="row">
-        
-            <div class="col-md-3">
-                <div class="form-group">
-                    SelectOperation <input name="SelectOperation" class="form-check-input" type="checkbox" value="true" />
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    InsertOperation  <input name="InsertOperation" type="checkbox" class="form-check-input" value="true" />
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    UpdateOperation <input name="UpdateOperation" type="checkbox" class="form-check-input" value="true" />
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    DeleteOperation  <input name="DeleteOperation" type="checkbox" class="form-check-input" value="true" />
-                </div>
+
+        <div class="col-md-3">
+            <div class="form-group">
+                SelectOperation <input name="SelectOperation" class="form-check-input" type="checkbox" value="true" />
             </div>
         </div>
-    
+        <div class="col-md-3">
+            <div class="form-group">
+                InsertOperation  <input name="InsertOperation" type="checkbox" class="form-check-input" value="true" />
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                UpdateOperation <input name="UpdateOperation" type="checkbox" class="form-check-input" value="true" />
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                DeleteOperation  <input name="DeleteOperation" type="checkbox" class="form-check-input" value="true" />
+            </div>
+        </div>
+    </div>
+
+
+    @*<div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="Name">Process Name</label>
+                    @Html.TextBoxFor(m => m.ProcessId, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>*@
 
     <div class="row">
         <div class="col-md-12">
             <div class="form-group">
-                <label for="Name">Process Name</label>
-                @Html.TextBoxFor(m => m.ProcessName, new { @class = "form-control" })
+                <label for="IFProcessId">Process</label>
+                @Html.DropDownList("IFProcessId", processes, "Select", new { @class = "form-control" })
             </div>
         </div>
     </div>
