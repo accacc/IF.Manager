@@ -1,15 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using IF.Manager.Contracts.Dto;
-using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Service.Model;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace IF.Manager.ClassDesigner.Pages
 {
