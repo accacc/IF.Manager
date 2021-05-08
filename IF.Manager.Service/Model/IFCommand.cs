@@ -39,10 +39,6 @@ namespace IF.Manager.Contracts.Model
 
         public bool IsQueryOverride { get; set; }
         public IFModel Model { get; set; }
-
-        //public bool IsBeforeExecuteOverride { get; set; }
-        //public bool IsAfterExecuteOverride { get; set; }
-
         public IFProcess Process { get; set; }
 
         public int ProcessId { get; set; }
@@ -50,28 +46,32 @@ namespace IF.Manager.Contracts.Model
 
         public ICollection<IFPageAction> Actions { get; set; }
 
-        //public bool IsMutli { get; set; }
-
         public bool IsList { get; set; }
 
         public int Sequence { get; set; }
 
+        public bool IsMultiList()
+        {
+            return this.IsMultiCommand() && this.IsList;
+
+        }
 
         public bool IsMultiCommand()
         {
-
             return this.Childrens.Any();
         }
-        public string GetModelPath()
+
+
+        public string GetModelRootPath()
         {
             var parents = this.GetParents();
 
-            string pagePath = GeneratePaths(parents);
+            string pagePath = GenerateModelRootPathAsString(parents);
 
             return pagePath;
         }
 
-        private string GeneratePaths(List<IFCommand> parents)
+        private string GenerateModelRootPathAsString(List<IFCommand> parents)
         {
             var pagePath = "";
 
@@ -96,22 +96,18 @@ namespace IF.Manager.Contracts.Model
             return pagePath;
         }
 
-        public string GetModelPathUpTheRoot()
+        public string GetModelRootPathWithoutRoot()
         {
             var parents = this.GetParents();
 
             parents = parents.Where(p => p.Parent != null).ToList();
 
-            string pagePath = GeneratePaths(parents);
+            string pagePath = GenerateModelRootPathAsString(parents);
 
             return pagePath;
         }
 
-        public bool IsMultiList()
-        {
-            return this.IsMultiCommand() && this.IsList;
-
-        }
+       
 
         public List<IFCommand> GetParents()
         {
@@ -136,30 +132,5 @@ namespace IF.Manager.Contracts.Model
 
             return paths;
         }
-        public List<IFModel> GetModelParents()
-        {
-
-            List<IFModel> paths = new List<IFModel>();
-
-            if (this.Parent == null)
-            {
-                return paths;
-            }
-
-            var command = this;
-
-            while (command != null)
-            {
-                if (command.Parent == null) break;
-                command = command.Parent;
-                paths.Add(command.Model);
-            }
-
-            paths.Reverse();
-
-            return paths;
-        }
-
-
     }
 }

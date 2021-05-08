@@ -544,7 +544,7 @@ namespace IF.Manager.Service
 
                         var mapper = mapperList.Where(m => m.FromProperty.Id == child.Id).SingleOrDefault();
 
-                        var path = currentCommand.GetModelPath();
+                        var path = currentCommand.GetModelRootPath();
 
                         modelName = currentCommand.Model.Name;
                         modelType = currentCommand.Model.Name;
@@ -593,11 +593,11 @@ namespace IF.Manager.Service
 
                         if (currentCommand.Parent == null)
                         {
-                            path = currentCommand.GetModelPath();
+                            path = currentCommand.GetModelRootPath();
                         }
                         else
                         {
-                            path += currentCommand.GetModelPath();
+                            path += currentCommand.GetModelRootPath();
                         }
 
                         modelName = currentCommand.Model.Name;
@@ -848,7 +848,7 @@ namespace IF.Manager.Service
 
             foreach (var item in list)
             {
-                item.Childrens = await GetChildrenByParentId(item.Id);
+                item.Childrens = await GetChildrenByParentId(item);
             }
 
             return list;
@@ -875,15 +875,17 @@ namespace IF.Manager.Service
             return children;
         }
 
-        private async Task<List<IFClass>> GetChildrenByParentId(int parentId)
+        private async Task<List<IFClass>> GetChildrenByParentId(IFClass parent)
         {
             var children = new List<IFClass>();
 
-            var items = await this.GetQuery<IFClass>(x => x.ParentId == parentId).ToListAsync();
+            var items = await this.GetQuery<IFClass>(x => x.ParentId == parent.Id).ToListAsync();
 
             foreach (var item in items)
             {
-                item.Childrens = await GetChildrenByParentId(item.Id);
+                item.Childrens = await GetChildrenByParentId(item);
+                item.Parent = parent;
+                item.ParentId = parent.Id;
                 children.Add(item);
             }
 

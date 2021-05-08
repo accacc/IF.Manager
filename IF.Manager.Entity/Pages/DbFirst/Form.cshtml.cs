@@ -60,7 +60,7 @@ namespace IF.Manager.Entity.Pages.DbFirst
         public string ConnectionString { get; set; }
 
         [BindProperty(SupportsGet = true), Required]
-        public int ProcessId { get; set; }
+        public int IFProcessId { get; set; }
 
 
         public async Task OnGet()
@@ -154,12 +154,12 @@ namespace IF.Manager.Entity.Pages.DbFirst
             generateOptions.SelectOperation = this.SelectOperation;
             generateOptions.UpdateOperation = this.UpdateOperation;
             generateOptions.InsertOperation = this.InsertOperation;
-            generateOptions.ProjectId = this.IFProjectId;
-            generateOptions.ProcessId = this.ProcessId;
+            //generateOptions.ProjectId = this.IFProjectId;
+            //generateOptions.ProcessId = this.ProcessId;
 
             try
             {
-                await this.entityService.AddDbFirst(tableSchemas, this.Form,generateOptions);
+                await this.entityService.AddDbFirst(tableSchemas, this.Form,this.IFProcessId, generateOptions);
             }
             catch (Exception ex)
             {

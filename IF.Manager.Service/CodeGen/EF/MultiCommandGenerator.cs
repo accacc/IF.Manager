@@ -203,8 +203,8 @@ namespace IF.Manager.Service.CodeGen.EF
                             else
                             {
 
-                                var currentModelPath = currentCommand.GetModelPathUpTheRoot();
-                                var nextModelPath = nextCommand.GetModelPathUpTheRoot();
+                                var currentModelPath = currentCommand.GetModelRootPathWithoutRoot();
+                                var nextModelPath = nextCommand.GetModelRootPathWithoutRoot();
 
 
                                 if (!String.IsNullOrWhiteSpace(currentModelPath))

@@ -1,10 +1,8 @@
 ﻿using IF.Core.Data;
 
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+using System.Linq;
 
 namespace IF.Manager.Service.Model
 {
@@ -34,19 +32,7 @@ namespace IF.Manager.Service.Model
         public bool IsNullable { get; set; }
         public bool IsPrimitive { get; set; }
 
-        [NotMapped]
-
-        public bool Selected { get; set; }
-
-        [NotMapped]
-
-        public int? SortOrder { get; set; }
-
-        [NotMapped]
-
-        public int Level { get; set; }
-
-        public List<IFClass> GetParentPages()
+        public List<IFClass> GetParents()
         {
 
             List<IFClass> paths = new List<IFClass>();
@@ -56,19 +42,14 @@ namespace IF.Manager.Service.Model
                 return paths;
             }
 
-            var page = this;
+            var @class = this;
 
-            while (page != null)
+            while (@class != null)
             {
+                if (@class.Parent == null) break;
 
-                if (page.Parent == null) break;
-
-               
-                    page = page.Parent;
-                    paths.Add(page);
-                
-
-
+                @class = @class.Parent;
+                paths.Add(@class);
             }
 
             paths.Reverse();
@@ -76,8 +57,48 @@ namespace IF.Manager.Service.Model
             return paths;
         }
 
+        public string GetRootPath()
+        {
+            var parents = this.GetParents();
+
+            string pagePath = GenerateRootPathAsString(parents);
+
+            return pagePath;
+        }
+
+        public string GetRootPathWithoutRoot()
+        {
+            var parents = this.GetParents();
+
+            parents = parents.Where(p => p.Parent != null).ToList();
+
+            string pagePath = GenerateRootPathAsString(parents);
+
+            return pagePath;
+        }
+
+        private string GenerateRootPathAsString(List<IFClass> parents)
+        {
+            var pagePath = "";
+
+            foreach (var parent in parents)
+            {
+                string name = parent.Name;
+
+                pagePath += name + ".";
+            }
+
+
+            if (parents.Any())
+            {
+                pagePath = pagePath.Remove(pagePath.Length - 1);
+            }
+
+            return pagePath;
+        }
+
     }
 
- 
+
 }
 

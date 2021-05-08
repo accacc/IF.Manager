@@ -46,7 +46,7 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper.Mapping
                 SetEmptyForm();
             }
 
-            await SetFromDefaults();
+            await SetFormDefaults();
 
         }
 
@@ -72,18 +72,19 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper.Mapping
 
         }
 
-        private async Task SetFromDefaults()
+        private async Task SetFormDefaults()
         {
 
 
             var mapping = await this.classService.GetClassMapper(this.ClassMapId);
 
+            List<IFClass> classes = await this.classService.GetClassFlattenList(mapping.IFClassId.Value);
 
-            await SetClasses(mapping.IFClassId.Value);
+            SetClasses(classes);
 
-            var model = await this.modelService.GetModelPropertyList(mapping.IFModelId.Value);
+            var models = await this.modelService.GetModelPropertyList(mapping.IFModelId.Value);
 
-            SetModels(model);
+            SetModels(models);
 
         }
 
@@ -105,7 +106,7 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper.Mapping
 
         public async Task<PartialViewResult> OnGetEmptyFormItemPartialAsync(int ParentId)
         {
-            await SetFromDefaults();
+            await SetFormDefaults();
 
             var emptyFormItem = new IFClassMapping();
 
@@ -116,10 +117,8 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper.Mapping
             };
         }
 
-        private async Task SetClasses(int classId)
+        private void SetClasses(List<IFClass> classes)
         {
-
-            List<IFClass> classes = await this.classService.GetClassFlattenList(classId);
 
 
             List<SelectListItem> items = new List<SelectListItem>();
@@ -129,16 +128,18 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper.Mapping
             {
                 SelectListItem item = new SelectListItem();
 
-                if (@class.Parent == null)
-                {
-                    item.Text = @class.Name;
-                }
-                else
-                {
-                    item.Text = @class.Parent.Name + " - " + @class.Name;
-                }
+                //if (@class.Parent == null)
+                //{
+                //    item.Text = @class.Name;
+                //}
+                //else
+                //{
+                //    item.Text = @class.Parent.Name + " - " + @class.Name;
+                //}
 
+                item.Text = @class.GetRootPathWithoutRoot() + "." + @class.Name;
                 item.Value = @class.Id.ToString();
+
                 items.Add(item);
 
             }
