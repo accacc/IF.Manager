@@ -86,14 +86,21 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper.Mapping
 
             List<IFClass> classes = await this.classService.GetClassFlattenList(mapping.IFClassId.Value);
 
-            SetClasses(classes);
-
             var models = await this.modelService.GetModelPropertyList(mapping.IFModelId.Value);
 
+            if (IsAutoFill)
+            {
+                AutoMapping(classes, models);
+
+            }
+
             SetModels(models);
+            SetClasses(classes);
 
-            if (!IsAutoFill) return;
+        }
 
+        private void AutoMapping(List<IFClass> classes, List<ModelPropertyDto> models)
+        {
             foreach (var model in models)
             {
                 List<LevenshteinDistanceResult> levenshteinDistanceResultList = new List<LevenshteinDistanceResult>();
@@ -126,28 +133,9 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper.Mapping
                     this.Form.Add(new IFClassMapping { FromPropertyId = bestMatch.id1, ToPropertyId = bestMatch.id2 });
                 }
             }
-
-
-
         }
 
-        private void SetModels(List<ModelPropertyDto> models)
-        {
-            List<DropDownClass> items = new List<DropDownClass>();
-
-            foreach (var property in models)
-            {
-                DropDownClass item = new DropDownClass();
-
-                item.Text = property.EntityName + " - " + property.Name;
-                item.Value = property.ModelPropertyId.ToString();
-                items.Add(item);
-            }
-
-            ViewData["models"] = items;
-        }
-
-        public async Task<PartialViewResult> OnGetEmptyFormItemPartialAsync(int ParentId)
+        public async Task<PartialViewResult> OnGetEmptyFormItemPartialAsync()
         {
             await SetFormDefaults();
 
@@ -174,11 +162,39 @@ namespace IF.Manager.ClassDesigner.Pages.Mapper.Mapping
                 item.Text = @class.GetRootPathWithoutRoot() + "." + @class.Name;
                 item.Value = @class.Id.ToString();
 
+                if (this.Form.Any(m => m.FromPropertyId == @class.Id))
+                {
+                    item.Choosen = true;
+                }
+
                 items.Add(item);
 
             }
 
             ViewData["classes"] = items;
+        }
+
+
+        private void SetModels(List<ModelPropertyDto> models)
+        {
+            List<DropDownClass> items = new List<DropDownClass>();
+
+            foreach (var model in models)
+            {
+                DropDownClass item = new DropDownClass();
+
+                item.Text = model.EntityName + " - " + model.Name;
+                item.Value = model.ModelPropertyId.ToString();
+
+                if (this.Form.Any(m => m.ToPropertyId == model.ModelPropertyId))
+                {
+                    item.Choosen = true;
+                }
+
+                items.Add(item);
+            }
+
+            ViewData["models"] = items;
         }
     }
 

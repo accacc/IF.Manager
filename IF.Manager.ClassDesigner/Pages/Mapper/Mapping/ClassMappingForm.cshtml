@@ -22,7 +22,6 @@
                         <th>Delete</th>
                     </tr>
                 </thead>
-
                 @for (int i = 0; i < Model.Form.Count; i++)
                 {
                     await Html.RenderPartialAsync("_ClassMappingFormItem", Model.Form[i]);
