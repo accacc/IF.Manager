@@ -39,7 +39,7 @@
 
             @*@Html.DropDownList($"Form[{index}].FromPropertyId", classes, "Select", new { @class = "form-control" })*@
 
-            <select class="form-control" id="Form_@{@index} __FromPropertyId" name="Form[@index].FromPropertyId">
+            <select class="form-control"  data-live-search="true" id="Form_@{@index} __FromPropertyId" name="Form[@index].FromPropertyId">
 
                 <option value="">Select</option>
 
@@ -117,5 +117,8 @@
         return false;
     }
 
+    $(function () {
+        $('select').selectpicker();
+    });
 
 </script>

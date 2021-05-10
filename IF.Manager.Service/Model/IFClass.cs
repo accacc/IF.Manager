@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace IF.Manager.Service.Model
@@ -31,6 +32,10 @@ namespace IF.Manager.Service.Model
 
         public bool IsNullable { get; set; }
         public bool IsPrimitive { get; set; }
+
+        [NotMapped]
+
+        public int Level { get; set; }
 
         public List<IFClass> GetParents()
         {
