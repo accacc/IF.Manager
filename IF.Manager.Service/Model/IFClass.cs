@@ -30,6 +30,11 @@ namespace IF.Manager.Service.Model
 
         public string GenericType { get; set; }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+
         public bool IsNullable { get; set; }
         public bool IsPrimitive { get; set; }
 
