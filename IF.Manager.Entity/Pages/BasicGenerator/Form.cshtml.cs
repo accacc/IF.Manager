@@ -1,11 +1,10 @@
-using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Services;
+using IF.Manager.Service.CodeGen;
 using IF.Manager.Service.Interface;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -72,7 +71,15 @@ namespace IF.Manager.Entity.Pages.BasicGenerator
            var entity = await this.entityService.GetEntityWithProperties(this.EntityId);
 
 
-            await this.dbFirstService.GenerateQueryAndCommands(this.ProcessId, entity.Name, entity);
+            await this.dbFirstService.GenerateQueryAndCommands(this.ProcessId, entity.Name, entity,
+
+                new GenerateOptions()
+                {
+                    DeleteOperation = true,
+                    InsertOperation = true,
+                    UpdateOperation = true,
+                    SelectOperation = true
+                });
 
             return new EmptyResult();
         }

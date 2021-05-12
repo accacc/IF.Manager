@@ -37,16 +37,8 @@ namespace IF.Manager.Service.Services
         }
 
 
-        public async Task AddDbFirst(List<DatabaseTable> tableSchemas, List<TableDbFirstDto> tables, GenerateOptions generateOptions)
+        public async Task AddDbFirst(List<DatabaseTable> tableSchemas, List<TableDbFirstDto> tables,int ProcessId, GenerateOptions generateOptions)
         {
-
-            if (await this.projectService.ProcessIsExistByName(generateOptions.ProcessName))
-            {
-                throw new BusinessException($"{generateOptions.ProcessName} Process already exist " + ErrorCodes.ProcessNotExist);
-            }
-
-
-
             //using (TransactionScope scope = new TransactionScope())
 
             {
@@ -55,46 +47,57 @@ namespace IF.Manager.Service.Services
                 {
                     await AddEntities(tableSchemas, tables);
 
-                    ProcessDto process = new ProcessDto();
-                    process.Description = generateOptions.ProcessName;
-                    process.ProjectId = generateOptions.ProjectId;
-                    process.Name = generateOptions.ProcessName;
-
-                    await this.projectService.AddProcess(process);
-
                     foreach (var item in tables)
                     {
                         if (item.Table == null) continue;
 
-
                         string entityName = ObjectNamerHelper.AddAsLastWord(item.Table, "Entity");
 
                         var entity = await this.GetQuery<IFEntity>(e => e.Name == entityName)
-                            .Include(e => e.Properties).SingleOrDefaultAsync();
-                        await GenerateQueryAndCommands(process.Id, item.Table, entity);
+                            .Include(e => e.Properties)
+                            .SingleOrDefaultAsync();
+
+                        await GenerateQueryAndCommands(ProcessId, item.Table, entity,generateOptions);
                     }
                 }
                 catch (Exception ex)
-                {                   
+                {
 
                     throw;
                 }
 
-              //  scope.Complete();
+                //  scope.Complete();
 
             }
 
         }
 
-        public async Task GenerateQueryAndCommands(int processId , string name, IFEntity entity)
+        public async Task GenerateQueryAndCommands(int processId, string name, IFEntity entity, GenerateOptions generateOptions)
         {
-            await GenerateQuery(processId, entity, name + "Get", QueryGetType.Single);
-            await GenerateQuery(processId, entity, name + "List", QueryGetType.Single);
+            if (generateOptions.SelectOperation)
+            {
+                await GenerateQuery(processId, entity, name + "Get", QueryGetType.Single);
+                await GenerateQuery(processId, entity, name + "List", QueryGetType.Single);
+            }
 
+            if(generateOptions.InsertOperation)
+            {
+                await GenerateCommand(processId, entity, name + "Insert", CommandType.Insert);
+            }
 
-            await GenerateCommand(processId, entity, name + "Insert", CommandType.Insert);
-            await GenerateCommand(processId, entity, name + "Update", CommandType.Update);
-            await GenerateCommand(processId, entity, name + "Delete", CommandType.Delete);
+            if (generateOptions.UpdateOperation)
+            {
+                await GenerateCommand(processId, entity, name + "Update", CommandType.Update);
+            }
+
+            if (generateOptions.DeleteOperation)
+            {
+                await GenerateCommand(processId, entity, name + "Delete", CommandType.Delete);
+            }
+
+          
+           
+           
         }
 
         private async Task GenerateCommand(int processId, IFEntity entity, string modelName, CommandType getType)
@@ -144,6 +147,7 @@ namespace IF.Manager.Service.Services
         private IFModel GenerateModel(string Name, IFEntity entity)
         {
             IFModel model = new IFModel();
+
             try
             {
                 model.Name = Name + "DataModel";
@@ -162,8 +166,9 @@ namespace IF.Manager.Service.Services
             catch (Exception ex)
             {
 
-               // throw;
+                throw;
             }
+
             return model;
         }
 
@@ -171,12 +176,6 @@ namespace IF.Manager.Service.Services
         {
             foreach (var table in tableSchemas)
             {
-
-                if(table.Name == "appClaimantAddress")
-                {
-
-
-                }
                 string entityName = ObjectNamerHelper.AddAsLastWord(table.Name, "Entity");
 
                 if (await this.entityService.EntityIsExistByName(entityName))

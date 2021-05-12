@@ -1,10 +1,12 @@
-﻿@model IF.Manager.Service.Model.IFClassMapping
+﻿@using IF.Manager.ClassDesigner.Pages.Mapper.Mapping
+@using IF.Manager.Service.Model
+
+@model IF.Manager.Service.Model.IFClassMapping
 @{
     Layout = null;
 
-    List<SelectListItem> classes = ViewData["classes"] as List<SelectListItem>;
-    List<SelectListItem> models = ViewData["models"] as List<SelectListItem>;
-
+    List<DropDownClass> classes = ViewData["classes"] as List<DropDownClass>;
+    List<DropDownClass> models = ViewData["models"] as List<DropDownClass>;
 
     var index = Guid.NewGuid();
 
@@ -35,15 +37,67 @@
     <td>
         <div class="form-group">
 
-            @Html.DropDownList($"Form[{index}].FromPropertyId", classes, "Select", new { @class = "form-control" })
+            @*@Html.DropDownList($"Form[{index}].FromPropertyId", classes, "Select", new { @class = "form-control" })*@
+
+            <select class="form-control"  data-live-search="true" id="Form_@{@index} __FromPropertyId" name="Form[@index].FromPropertyId">
+
+                <option value="">Select</option>
+
+                @foreach (var item in classes)
+                {
+                    var selected = "";
+
+                    if (item.Selected)
+                    {
+                        selected = "selected";
+                    }
+
+                    @if (item.Choosen)
+                    {
+                        <option @selected style="background-color: lightgray;" value="@item.Value">@item.Text</option>
+                    }
+                    else
+                    {
+                        <option @selected value="@item.Value">@item.Text</option>
+                    }
+
+
+
+                }
+
+            </select>
 
         </div>
     </td>
     <td>
         <div class="form-group">
 
-            @Html.DropDownList($"Form[{index}].ToPropertyId", models, "Select", new { @class = "form-control" })
+            @*@Html.DropDownList($"Form[{index}].ToPropertyId", models, "Select", new { @class = "form-control" })*@
+            <select class="form-control" id="Form_@{@index} __ToPropertyId" name="Form[@index].ToPropertyId">
 
+                <option value="">Select</option>
+
+                @foreach (var item in models)
+                {
+                    var selected = "";
+
+                    if (item.Selected)
+                    {
+                        selected = "selected";
+                    }
+
+                    @if (item.Choosen)
+                    {
+                        <option @selected style="background-color: lightgray;" value="@item.Value">@item.Text</option>
+                    }
+                    else
+                    {
+                        <option @selected value="@item.Value">@item.Text</option>
+                    }
+
+                }
+
+            </select>
         </div>
     </td>
 
@@ -63,5 +117,8 @@
         return false;
     }
 
+    $(function () {
+        $('select').selectpicker();
+    });
 
 </script>

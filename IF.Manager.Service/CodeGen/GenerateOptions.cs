@@ -15,8 +15,6 @@ namespace IF.Manager.Service.CodeGen
 
         public bool DeleteOperation { get; set; }
 
-        public string ProcessName { get; set; }
-
-        public int ProjectId { get; set; }
+      
     }
 }

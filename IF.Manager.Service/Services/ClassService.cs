@@ -544,7 +544,7 @@ namespace IF.Manager.Service
 
                         var mapper = mapperList.Where(m => m.FromProperty.Id == child.Id).SingleOrDefault();
 
-                        var path = currentCommand.GetModelPath();
+                        var path = currentCommand.GetModelRootPath();
 
                         modelName = currentCommand.Model.Name;
                         modelType = currentCommand.Model.Name;
@@ -593,11 +593,11 @@ namespace IF.Manager.Service
 
                         if (currentCommand.Parent == null)
                         {
-                            path = currentCommand.GetModelPath();
+                            path = currentCommand.GetModelRootPath();
                         }
                         else
                         {
-                            path += currentCommand.GetModelPath();
+                            path += currentCommand.GetModelRootPath();
                         }
 
                         modelName = currentCommand.Model.Name;
@@ -828,15 +828,11 @@ namespace IF.Manager.Service
                     GenerateClassTree(child, childClass, allClass);
 
                 }
-
             }
-
-
         }
 
         public async Task<List<IFClassMapping>> GetClassMappings(int classMapId)
         {
-
             var list = await this.GetQuery<IFClassMapping>(c => c.IFClassMapperId == classMapId).ToListAsync();
 
             return list;
@@ -846,9 +842,12 @@ namespace IF.Manager.Service
         {
             var list = await this.GetQuery<IFClass>(t => t.Id == classId).ToListAsync();
 
+            int level = 0;
+
             foreach (var item in list)
             {
-                item.Childrens = await GetChildrenByParentId(item.Id);
+                item.Level = level;
+                item.Childrens = await GetChildrenByParentId(item,level);
             }
 
             return list;
@@ -875,15 +874,20 @@ namespace IF.Manager.Service
             return children;
         }
 
-        private async Task<List<IFClass>> GetChildrenByParentId(int parentId)
+        private async Task<List<IFClass>> GetChildrenByParentId(IFClass parent,int level)
         {
             var children = new List<IFClass>();
 
-            var items = await this.GetQuery<IFClass>(x => x.ParentId == parentId).ToListAsync();
+            var items = await this.GetQuery<IFClass>(x => x.ParentId == parent.Id).ToListAsync();
+
+            level++;
 
             foreach (var item in items)
             {
-                item.Childrens = await GetChildrenByParentId(item.Id);
+                item.Childrens = await GetChildrenByParentId(item,level);
+                item.Level = level;
+                item.Parent = parent;
+                item.ParentId = parent.Id;
                 children.Add(item);
             }
 

@@ -17,11 +17,6 @@ namespace IF.Manager.Contracts.Services
         Task<IFProject> GetProject(int id);
         Task UpdateProject(IFProject form);
         Task<List<IFProject>> GetProjectList();
-
-
-
-       
-
         Task AddSolution(IFSolution form);
 
         Task<IFSolution> GetSolution(int id);

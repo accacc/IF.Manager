@@ -30,7 +30,14 @@ namespace IF.Manager.ClassDesigner.Pages.Json
 
         public async Task OnPostAsync()
         {
-            await this.classService.JsonToClass(name, jsondata);
+            try
+            {
+                await this.classService.JsonToClass(name, jsondata);
+            }
+            catch (System.Exception ex)
+            {
+
+            }
         }
 
       

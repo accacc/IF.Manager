@@ -15,9 +15,9 @@ namespace IF.Manager.Service.Interface
     public interface IDbFirstService: IRepository
     {
 
-        Task AddDbFirst(List<DatabaseTable> tableSchemas, List<TableDbFirstDto> tables, GenerateOptions generateOptions);
+        Task AddDbFirst(List<DatabaseTable> tableSchemas, List<TableDbFirstDto> tables,int ProcessId, GenerateOptions generateOptions);
         List<DatabaseTable> GetAllTableSchemas(string ConnectionString);
 
-        Task GenerateQueryAndCommands(int processId, string name, IFEntity entity);
+        Task GenerateQueryAndCommands(int processId, string name, IFEntity entity, GenerateOptions generateOptions);
     }
 }
