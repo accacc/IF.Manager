@@ -27,7 +27,7 @@
       <HintPath>..\packages\InFramework\IF.CodeGeneration.Language.CSharp.dll</HintPath>
     </Reference>
     <Reference Include="IF.Core">
-      <HintPath>..\..\IF.Template\packages\InFramework\IF.Core.dll</HintPath>
+      <HintPath>..\packages\InFramework\IF.Core.dll</HintPath>
     </Reference>
     <Reference Include="IF.Web.Mvc">
       <HintPath>..\packages\InFramework\IF.Web.Mvc.dll</HintPath>

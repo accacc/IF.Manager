@@ -10,7 +10,7 @@
         @foreach (var solution in Model)
         {
         <li class="list-group-item">
-            <b>Solution</b> - @solution.SolutionName
+            <b>Solution</b> - <label sl-data-label="solution">@solution.SolutionName</label>
             &nbsp;
             <a class="btn btn-primary"
                href="@Url.Page("/Solution/SolutionForm","Update",new { Id = solution.Id})"
@@ -30,6 +30,7 @@
                if-ajax-insertion-mode="replace"
                if-anti-forgery-token="@Context.GetAntiforgeryToken()"
                if-ajax-show-dialog="true"
+               id="AddProjectButton"
                if-ajax-modal-id="@Guid.NewGuid()">
                 Add Project
             </a>
@@ -53,7 +54,7 @@
             @foreach (var project in solution.Projects)
             {
                 <li class="list-group-item">
-                    &nbsp;&nbsp;<b>Project</b> - @project.Name
+                    &nbsp;&nbsp;<b>Project</b> - <label sl-data-label="project">@project.Name</label>
                     &nbsp;
                     <a class="btn btn-primary"
                        href="@Url.Page("/ProjectForm","Update",new { Id = project.Id})"
@@ -73,6 +74,7 @@
                        if-ajax-insertion-mode="replace"
                        if-anti-forgery-token="@Context.GetAntiforgeryToken()"
                        if-ajax-show-dialog="true"
+                       id="AddProcessButton"
                        if-ajax-modal-id="@Guid.NewGuid()">
                         Add Process
                     </a>
@@ -95,7 +97,7 @@
                     @foreach (var process in project.Processes)
                     {
                         <li class="list-group-item">
-                            &nbsp;&nbsp;&nbsp;&nbsp;<b>Process</b> - @process.Name
+                            &nbsp;&nbsp;&nbsp;&nbsp;<b>Process</b> - <label sl-data-label="process">@process.Name</label>
                             &nbsp;
                             <a class="btn btn-primary"
                                href="@Url.Page("/Process/ProcessForm", "Update", new { Id = process.Id })"
