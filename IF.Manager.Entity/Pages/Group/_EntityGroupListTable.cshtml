@@ -11,7 +11,8 @@
                if-ajax-method="get"
                if-ajax-insertion-mode="replace"
                if-ajax-show-dialog="true"
-               if-ajax-modal-id="@Guid.NewGuid()">
+               if-ajax-modal-id="@Guid.NewGuid()"
+               id="AddEntityGroupButton">
                 Add
             </a>
         </div>
@@ -40,9 +41,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Id)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
+                <td sl-data-label="entitygroup">@Html.DisplayFor(modelItem => item.Name)</td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Prefix)
                 </td>

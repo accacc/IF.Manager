@@ -57,7 +57,8 @@
                        if-ajax-method="get"
                        if-ajax-insertion-mode="replace"
                        if-ajax-show-dialog="true"
-                       if-ajax-modal-id="@Guid.NewGuid()">
+                       if-ajax-modal-id="@Guid.NewGuid()"
+                       id="PropertyDesignerButton">
                         Property Designer
                     </a>
                     <a class="btn btn-primary"
@@ -87,9 +88,7 @@
                     <p><b>Properties</b></p>
                     @foreach (var property in item.Properties)
                     {
-
-                        @property.Name<br />
-
+                        <label sl-data-label="properties">@property.Name</label><br />
                     }
                     <p><b>Relations</b></p>
 
