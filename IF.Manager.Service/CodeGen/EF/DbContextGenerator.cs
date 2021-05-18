@@ -1,5 +1,6 @@
 ﻿using IF.CodeGeneration.Core;
 using IF.CodeGeneration.CSharp;
+using IF.Core.Audit;
 using IF.Core.Data;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
@@ -44,6 +45,20 @@ namespace IF.Manager.Service
                     softDeleteProperty.PropertyTypeString = "bool";
 
                     entityClass.Properties.Add(softDeleteProperty);
+                }
+
+                switch (entity.AuditType)
+                {
+                    case Enum.IFAuditType.Shadow:
+                        entityClass.InheritedInterfaces.Add(nameof(IShadowAuditableEntity));
+                        break;
+                    case Enum.IFAuditType.Bulk:
+                        break;
+                        entityClass.InheritedInterfaces.Add(nameof(IBulkAuditableEntity));
+                    case Enum.IFAuditType.None:
+                        break;
+                    default:
+                        break;
                 }
 
                 entityClass.Name = entity.Name;
