@@ -18,7 +18,8 @@
                if-ajax-method="get"
                if-ajax-mode="replace"
                if-ajax-show-dialog="true"
-               if-ajax-modal-id="@Guid.NewGuid()">
+               if-ajax-modal-id="@Guid.NewGuid()"
+               id="EditSolutionButton">
                 Edit
             </a>
 
@@ -54,7 +55,7 @@
             @foreach (var project in solution.Projects)
             {
                 <li class="list-group-item">
-                    &nbsp;&nbsp;<b>Project</b> - <label sl-data-label="project">@project.Name</label>
+                    &nbsp;&nbsp;<b>Project</b> - <label sl-data-label-solution="@solution.SolutionName" sl-data-label="project">@project.Name</label>
                     &nbsp;
                     <a class="btn btn-primary"
                        href="@Url.Page("/ProjectForm","Update",new { Id = project.Id})"
@@ -62,7 +63,8 @@
                        if-ajax-method="get"
                        if-ajax-mode="replace"
                        if-ajax-show-dialog="true"
-                       if-ajax-modal-id="@Guid.NewGuid()">
+                       if-ajax-modal-id="@Guid.NewGuid()"
+                       id="EditProjectButton">
                         Edit
                     </a>
 
@@ -97,7 +99,7 @@
                     @foreach (var process in project.Processes)
                     {
                         <li class="list-group-item">
-                            &nbsp;&nbsp;&nbsp;&nbsp;<b>Process</b> - <label sl-data-label="process">@process.Name</label>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<b>Process</b> - <label sl-data-label-solution="@solution.SolutionName" sl-data-label-project="@project.Name" sl-data-label="process">@process.Name</label>
                             &nbsp;
                             <a class="btn btn-primary"
                                href="@Url.Page("/Process/ProcessForm", "Update", new { Id = process.Id })"
@@ -105,7 +107,8 @@
                                if-ajax-method="get"
                                if-ajax-mode="replace"
                                if-ajax-show-dialog="true"
-                               if-ajax-modal-id="@Guid.NewGuid()">
+                               if-ajax-modal-id="@Guid.NewGuid()"
+                               id="EditProcessButton">
                                 Edit
                             </a>
 
