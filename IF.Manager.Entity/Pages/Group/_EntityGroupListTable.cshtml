@@ -42,9 +42,7 @@
                     @Html.DisplayFor(modelItem => item.Id)
                 </td>
                 <td sl-data-label="entitygroup">@Html.DisplayFor(modelItem => item.Name)</td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Prefix)
-                </td>
+                <td sl-data-label="entityprefix">@Html.DisplayFor(modelItem => item.Prefix)</td>
                 <td>
                     <a class="btn btn-primary"
                        href="@Url.Page("/Group/GroupForm","Update",new { Id = item.Id})"
@@ -52,7 +50,8 @@
                        if-ajax-method="get"
                        if-ajax-mode="replace"
                        if-ajax-show-dialog="true"
-                       if-ajax-modal-id="@Guid.NewGuid()">
+                       if-ajax-modal-id="@Guid.NewGuid()"
+                       id="EditEntityGroupButton">
                         Edit
                     </a>
                 </td>                
