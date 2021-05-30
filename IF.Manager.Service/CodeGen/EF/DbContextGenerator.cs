@@ -5,8 +5,8 @@ using IF.Core.Data;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
+using IF.Manager.Service.CodeGen.EF;
 
-using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -50,7 +50,23 @@ namespace IF.Manager.Service
                 switch (entity.AuditType)
                 {
                     case Enum.IFAuditType.Shadow:
+                        
+                        
+                        entityClass.Usings.Add("IF.Core.Audit");
                         entityClass.InheritedInterfaces.Add(nameof(IShadowAuditableEntity));
+                        entityClass.Usings.Add("System.ComponentModel.DataAnnotations.Schema");
+                        AuditClass auditClass = new AuditClass(entity, project);
+                        auditClass.Build();
+                        this.fileSystem.FormatCode(auditClass.GenerateCode(), "cs", "", "");
+
+                        var classProperty = new CSProperty("public", "UniqueId", false);
+
+                        classProperty.PropertyTypeString = "Guid";
+
+                        classProperty.Attirubites.Add("NotMapped");
+
+                        entityClass.Properties.Add(classProperty);
+
                         break;
                     case Enum.IFAuditType.Bulk:
                         break;
@@ -113,6 +129,8 @@ namespace IF.Manager.Service
                 //{
                 //    classProperty.Attirubites.Add("Key");
                 //}
+
+              
 
                 entityClass.Properties.Add(classProperty);
             }
