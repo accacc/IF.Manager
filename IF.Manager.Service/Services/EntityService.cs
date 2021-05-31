@@ -717,7 +717,15 @@ namespace IF.Manager.Service
             return entity;
         }
 
+        public async Task<List<IFEntity>> GetShadowAuditEntityList()
+        {
+            var entities = await this.GetQuery<IFEntity>().Include(e => e.Properties)
+              .Where(e => e.AuditType == Enum.IFAuditType.Shadow)
+         .ToListAsync();
 
+            return entities;
+
+        }
 
 
         public string[] GetPrimitives()
@@ -733,7 +741,7 @@ namespace IF.Manager.Service
 
         }
 
-        
+     
     }
 
 

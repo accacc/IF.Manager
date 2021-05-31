@@ -1,23 +1,28 @@
 ﻿using IF.CodeGeneration.CSharp;
 using IF.Manager.Contracts.Model;
+using IF.Manager.Contracts.Services;
+
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace IF.Manager.Service
 {
     public class StartupClassWebApi : CSClass
     {
 
-        private  IFProject Project { get; set; }
-        private  string CoreDllName {get;set;}
+        private IFProject Project { get; set; }
+        private string CoreDllName { get; set; }
+        private IEntityService entityService { get; set; }
 
-
-        public StartupClassWebApi(IFProject project)
+        public StartupClassWebApi(IFProject project,IEntityService entityService)
         {
 
+            this.entityService = entityService;
             this.Project = project;
             this.CoreDllName = SolutionHelper.GetCoreNamespace(Project);
-            
-            
+
+
             this.Name = $"Startup";
             this.NameSpace = SolutionHelper.GetProjectNamespace(project);
             this.Usings.Add("Autofac");
@@ -34,6 +39,7 @@ namespace IF.Manager.Service
             this.Usings.Add("IF.Persistence.EF.SqlServer.Integration");
             this.Usings.Add("Microsoft.Extensions.Hosting");
             this.Usings.Add("IF.Swagger.Integration");
+            this.Usings.Add("IF.Persistence.EF.Audit");
             this.Usings.Add(SolutionHelper.GetCoreNamespace(project));
             this.Usings.Add(SolutionHelper.GetCoreBaseNamespace(project));
 
@@ -41,11 +47,11 @@ namespace IF.Manager.Service
 
         }
 
-        public void Build()
+        public async Task Build()
         {
             this.AddConstructor();
             this.ConfigureServices();
-            this.ConfigureContainer();
+            await this.ConfigureContainer();
             this.AddProperties();
             this.Configure();
 
@@ -68,7 +74,7 @@ namespace IF.Manager.Service
             StringBuilder methodBody = new StringBuilder();
 
             methodBody.AppendLine($@"if (env.IsDevelopment())");
-           methodBody.AppendLine($@" {{");
+            methodBody.AppendLine($@" {{");
             methodBody.AppendLine($@"      app.UseDeveloperExceptionPage();");
             methodBody.AppendLine($@"}}");
 
@@ -106,7 +112,7 @@ namespace IF.Manager.Service
 
             methodBody.AppendLine($@"var settings = this.Configuration.GetSettings<{this.Project.Name}AppSettings>();");
 
-            
+
 
             methodBody.AppendLine($@"@if.AddDbContext<{this.Project.Name}DbContext>(services, settings.Database.ConnectionString,""{this.CoreDllName}"")");
             methodBody.AppendLine($@".AddSwagger(services, ""v1"", ""{SolutionHelper.GetProjectFullName(Project)}"", true)");
@@ -131,7 +137,7 @@ namespace IF.Manager.Service
             this.Properties.Add(p3);
         }
 
-        private void ConfigureContainer()
+        private async Task ConfigureContainer()
         {
             CSMethod method = new CSMethod("ConfigureContainer", "void", "public");
 
@@ -161,10 +167,19 @@ namespace IF.Manager.Service
             methodBody.AppendLine($@"handler.AddCommandAsyncHandlers().Build(new Assembly[] {{ handlers }});");
             methodBody.AppendLine($@"}});");
             methodBody.AppendLine($@"}})");
-
-            
-
             methodBody.AppendLine($@";");
+
+
+            var shadowAuditEntities = await this.entityService.GetShadowAuditEntityList();
+
+            foreach (var item in shadowAuditEntities)
+            {
+                // ShadowAuditing.RegisterAuditType<ProductEntity, ProductEntityShadowAudit, int>(c => c.Id);
+                //TODO:Caglar multiple identity icinde çözüm sunmak lazim
+                var identity = item.Properties.Where(p => p.IsIdentity).FirstOrDefault();
+
+                methodBody.AppendLine($@"ShadowAuditing.RegisterAuditType<{item.Name}, {item.Name}ShadowAudit, {identity.Type}>(c => c.{identity.Name});");
+            }
 
             method.Body = methodBody.ToString();
             this.Methods.Add(method);
@@ -176,9 +191,9 @@ namespace IF.Manager.Service
         {
             CSMethod consMethod = new CSMethod(this.Name, "", "public");
             consMethod.IsConstructor = true;
-            
+
             CsMethodParameter parameter = new CsMethodParameter();
-            parameter.Name = "configuration";            
+            parameter.Name = "configuration";
             parameter.Type = $"IConfiguration";
             consMethod.Parameters.Add(parameter);
 
@@ -187,7 +202,7 @@ namespace IF.Manager.Service
 
             methodBody.AppendLine("Configuration = configuration;");
             methodBody.AppendLine("@if = new InFrameworkBuilder();");
-                
+
 
             consMethod.Body = methodBody.ToString();
 

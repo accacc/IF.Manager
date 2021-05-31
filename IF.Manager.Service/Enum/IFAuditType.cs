@@ -6,8 +6,9 @@ namespace IF.Manager.Service.Enum
 {
     public enum IFAuditType
     {
-        Shadow = 0,
-        Bulk = 1,
-        None
+        None = 0,
+        Shadow = 1,
+        Bulk = 2
+        
     }
 }

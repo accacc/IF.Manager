@@ -158,8 +158,8 @@ namespace IF.Manager.Service.Services
             fileSystem.FormatCode(program.GenerateCode(), "cs","","");
 
 
-            StartupClassWebApi startup = new StartupClassWebApi(project);
-            startup.Build();
+            StartupClassWebApi startup = new StartupClassWebApi(project,entityService);
+            await startup.Build();
             fileSystem.FormatCode(startup.GenerateCode(), "cs","","");
 
             GenerateConfigClassAndJson(project);
