@@ -1,0 +1,213 @@
+﻿@model List<IF.Manager.Contracts.Model.IFSolution>
+@using IF.Web.Mvc.Extensions
+
+@{ Layout = null;}
+
+
+@if (Model != null && Model.Any())
+{
+<ul class="tree">
+    @foreach (var solution in Model)
+    {
+    <ul>
+
+        <li class="section">
+            <input type="checkbox" id="@solution.Id@solution.SolutionName" />
+            <label for="@solution.Id@solution.SolutionName" sl-data-label="solution"><span><b>Solution - </b></span>@solution.SolutionName</label>
+            
+            <a class="btn btn-primary"
+               href="@Url.Page("/Solution/SolutionForm","Update",new { Id = solution.Id})"
+               if-ajax="true"
+               if-ajax-method="get"
+               if-ajax-mode="replace"
+               if-ajax-show-dialog="true"
+               if-ajax-modal-id="@Guid.NewGuid()"
+               id="EditSolutionButton">
+                Edit
+            </a>
+
+            
+            <a class="btn btn-success"
+               href="@Url.Page("/ProjectForm","Add",new { SolutionId = solution.Id})"
+               if-ajax="true"
+               if-ajax-method="get"
+               if-ajax-insertion-mode="replace"
+               if-anti-forgery-token="@Context.GetAntiforgeryToken()"
+               if-ajax-show-dialog="true"
+               id="AddProjectButton"
+               if-ajax-modal-id="@Guid.NewGuid()">
+                Add Project
+            </a>
+
+            <a class="btn btn btn-danger"
+               href="@Url.Page("/Publisher/PublishSolutionForm",new { SolutionId= solution.Id})"
+               if-ajax="true"
+               if-ajax-method="get"
+               if-ajax-insertion-mode="replace"
+               if-ajax-show-dialog="true"
+               if-ajax-modal-id="@Guid.NewGuid()">
+                Publish
+            </a>
+
+
+
+
+
+
+            @foreach (var project in solution.Projects)
+            {
+        <ul>
+            <li class="section">
+                <input type="checkbox" id="@project.Id@project.Name" />
+                <label for="@project.Id@project.Name" sl-data-label-solution="@solution.SolutionName" sl-data-label="project"><span><b>Project - </b></span>@project.Name</label>
+                
+                <a class="btn btn-primary"
+                   href="@Url.Page("/ProjectForm","Update",new { Id = project.Id})"
+                   if-ajax="true"
+                   if-ajax-method="get"
+                   if-ajax-mode="replace"
+                   if-ajax-show-dialog="true"
+                   if-ajax-modal-id="@Guid.NewGuid()"
+                   id="EditProjectButton">
+                    Edit
+                </a>
+
+                
+                <a class="btn btn-success"
+                   href="@Url.Page("/Process/ProcessForm","Add",new { ProjectId = project.Id})"
+                   if-ajax="true"
+                   if-ajax-method="get"
+                   if-ajax-insertion-mode="replace"
+                   if-anti-forgery-token="@Context.GetAntiforgeryToken()"
+                   if-ajax-show-dialog="true"
+                   id="AddProcessButton"
+                   if-ajax-modal-id="@Guid.NewGuid()">
+                    Add Process
+                </a>
+
+
+                <a class="btn btn btn-danger"
+                   href="@Url.Page("/Publisher/PublishProjectForm",new { ProjectId= project.Id})"
+                   if-ajax="true"
+                   if-ajax-method="get"
+                   if-ajax-insertion-mode="replace"
+                   if-ajax-show-dialog="true"
+                   if-ajax-modal-id="@Guid.NewGuid()">
+                    Publish
+                </a>
+
+                @if (project.ProjectType == IF.Manager.Contracts.Enum.ProjectType.Api)
+                {
+
+                    @foreach (var process in project.Processes)
+                    {
+            <ul>
+                <li class="section">
+                    <input type="checkbox" id="@process.Id@process.Name" />
+
+                    <label for="@process.Id@process.Name" sl-data-label-solution="@solution.SolutionName" sl-data-label-project="@project.Name" sl-data-label="process"><span><b>Process - </b></span>@process.Name</label>
+                    
+                    <a class="btn btn-primary"
+                       href="@Url.Page("/Process/ProcessForm", "Update", new { Id = process.Id })"
+                       if-ajax="true"
+                       if-ajax-method="get"
+                       if-ajax-mode="replace"
+                       if-ajax-show-dialog="true"
+                       if-ajax-modal-id="@Guid.NewGuid()"
+                       id="EditProcessButton">
+                        Edit
+                    </a>
+
+                    
+
+                    <a class="btn btn btn-danger"
+                       href="@Url.Page("/Publisher/PublishProcessForm", new { ProcessId = process.Id })"
+                       if-ajax="true"
+                       if-ajax-method="get"
+                       if-ajax-insertion-mode="replace"
+                       if-ajax-show-dialog="true"
+                       if-ajax-modal-id="@Guid.NewGuid()">
+                        Publish
+                    </a>
+
+                    <a class="btn btn-success"
+                       href="@Url.Page("/Publisher/PublishForm", "List", new { ProcessId = process.Id })"
+                       if-ajax="true"
+                       if-ajax-method="get"
+                       if-ajax-insertion-mode="replace"
+                       if-ajax-show-dialog="true"
+                       if-ajax-modal-id="@Guid.NewGuid()">
+                        History
+                    </a>
+
+
+
+                </li>
+            </ul>
+                }
+                }
+                else if (project.ProjectType == IF.Manager.Contracts.Enum.ProjectType.Web)
+                {
+                    @foreach (var ifpage in project.IFPages)
+                    {
+            <ul>
+                <li class="list-group-item">
+                    <b>Pages</b> - @ifpage.Name
+                    
+                    @*<a class="btn btn-primary"
+               href="@Url.Page("/Process/ProcessForm", "Update", new { Id = process.Id })"
+               if-ajax="true"
+               if-ajax-method="get"
+               if-ajax-mode="replace"
+               if-ajax-show-dialog="true"
+               if-ajax-modal-id="@Guid.NewGuid()">
+                Edit
+            </a>*@
+
+                    
+
+                    <a class="btn btn btn-danger"
+                       href="@Url.Page("/Publisher/PublishPageForm", new { PageId = ifpage.Id })"
+                       if-ajax="true"
+                       if-ajax-method="get"
+                       if-ajax-insertion-mode="replace"
+                       if-ajax-show-dialog="true"
+                       if-ajax-modal-id="@Guid.NewGuid()">
+                        Publish
+                    </a>
+
+                    <a class="btn btn-success"
+                       href="@Url.Page("/Publisher/PublishForm", "List", new { PageId = ifpage.Id })"
+                       if-ajax="true"
+                       if-ajax-method="get"
+                       if-ajax-insertion-mode="replace"
+                       if-ajax-show-dialog="true"
+                       if-ajax-modal-id="@Guid.NewGuid()">
+                        History
+                    </a>
+
+
+
+                </li>
+            </ul>
+                    }
+                }
+</li>
+                </ul>
+            }
+            </li>
+
+        </ul>
+
+
+    }
+</ul>
+}
+else
+{
+    @:Veri bulunamadı.
+
+}
+
+
+
