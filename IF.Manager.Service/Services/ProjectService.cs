@@ -52,6 +52,17 @@ namespace IF.Manager.Service
             entity.SolutionId = form.SolutionId;
             entity.ProjectType = form.ProjectType;
             entity.ConnectionString = form.ConnectionString;
+
+            entity.SystemDbType = form.SystemDbType;
+            entity.SystemDbConnectionString = form.SystemDbConnectionString;
+            entity.JsonAppType = form.JsonAppType;
+            entity.CommandAudit = form.CommandAudit;
+            entity.CommandErrorHandler = form.CommandErrorHandler;
+            entity.CommandPerformanceCounter = form.CommandPerformanceCounter;
+            entity.QueryAudit = form.QueryAudit;
+            entity.QueryErrorHandler = form.QueryErrorHandler;
+            entity.QueryPerformanceCounter = form.QueryPerformanceCounter;
+
             this.Add(entity);
             await this.UnitOfWork.SaveChangesAsync();
             form.Id = entity.Id;
@@ -68,6 +79,18 @@ namespace IF.Manager.Service
             entity.Name = form.Name;
             entity.ConnectionString = form.ConnectionString;
             entity.ProjectType = form.ProjectType;
+
+            entity.SystemDbType = form.SystemDbType;
+            entity.SystemDbConnectionString = form.SystemDbConnectionString;
+            entity.JsonAppType = form.JsonAppType;
+            entity.CommandAudit = form.CommandAudit;
+            entity.CommandErrorHandler = form.CommandErrorHandler;
+            entity.CommandPerformanceCounter = form.CommandPerformanceCounter;
+            entity.QueryAudit = form.QueryAudit;
+            entity.QueryErrorHandler = form.QueryErrorHandler;
+            entity.QueryPerformanceCounter = form.QueryPerformanceCounter;
+
+
             this.Update(entity);
             await this.UnitOfWork.SaveChangesAsync();
         }

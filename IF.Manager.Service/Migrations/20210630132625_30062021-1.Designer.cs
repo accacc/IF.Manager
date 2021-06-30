@@ -4,14 +4,16 @@ using IF.Manager.Persistence.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IF.Manager.Service.Migrations
 {
     [DbContext(typeof(ManagerDbContext))]
-    partial class ManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210630132625_30062021-1")]
+    partial class _300620211
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
