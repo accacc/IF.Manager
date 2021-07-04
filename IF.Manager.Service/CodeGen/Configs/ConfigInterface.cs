@@ -1,6 +1,5 @@
 ﻿using IF.CodeGeneration.CSharp;
 using IF.Manager.Contracts.Model;
-using System.Text;
 
 namespace IF.Manager.Service
 {
@@ -14,9 +13,12 @@ namespace IF.Manager.Service
             this.config = config;
             this.Name = $"I{project.Name}AppSettings";
             this.InheritedInterfaces.Add("IAppSettingsCore");
+
             this.Usings.Add("IF.Configuration");
             this.Usings.Add("IF.Core.Configuration");
             this.Usings.Add("IF.Core.Database");
+            this.Usings.Add("IF.Core.MongoDb");
+
         }
 
         public void Build()
@@ -26,6 +28,14 @@ namespace IF.Manager.Service
             {
                 var p = new CSProperty("", "Database", false);
                 p.PropertyTypeString = "DatabaseSettings";
+                this.Properties.Add(p);
+
+            }
+
+            if(config.MongoConnection!=null)
+            {
+                var p = new CSProperty("", "MongoConnection", false);
+                p.PropertyTypeString = "MongoConnectionSettings";
                 this.Properties.Add(p);
 
             }

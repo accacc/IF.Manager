@@ -201,6 +201,13 @@ namespace IF.Manager.Service.Services
             settings.Database = new IF.Core.Database.DatabaseSettings();
             settings.Database.ConnectionString = project.ConnectionString;
 
+            if(project.SystemDbType == Enum.SystemDbType.Mongo)
+            {
+                settings.MongoConnection = new Core.MongoDb.MongoConnectionSettings();
+                settings.MongoConnection.Database = "Logger";
+                settings.MongoConnection.ConnectionString = project.SystemDbConnectionString;
+            }
+
             settings.ApplicationName = project.Name;
             settings.Version = "1.0.0";
             settings.RabbitMQConnection = new IF.Core.RabbitMQ.RabbitMQConnectionSettings();

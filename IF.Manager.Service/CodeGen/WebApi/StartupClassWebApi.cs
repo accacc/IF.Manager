@@ -40,6 +40,8 @@ namespace IF.Manager.Service
             this.Usings.Add("Microsoft.Extensions.Hosting");
             this.Usings.Add("IF.Swagger.Integration");
             this.Usings.Add("IF.Persistence.EF.Audit");
+            this.Usings.Add("IF.MongoDB.Integration");
+
             this.Usings.Add(SolutionHelper.GetCoreNamespace(project));
             this.Usings.Add(SolutionHelper.GetCoreBaseNamespace(project));
 
@@ -113,7 +115,6 @@ namespace IF.Manager.Service
             methodBody.AppendLine($@"var settings = this.Configuration.GetSettings<{this.Project.Name}AppSettings>();");
 
 
-
             methodBody.AppendLine($@"@if.AddDbContext<{this.Project.Name}DbContext>(services, settings.Database.ConnectionString,""{this.CoreDllName}"")");
             methodBody.AppendLine($@".AddSwagger(services, ""v1"", ""{SolutionHelper.GetProjectFullName(Project)}"", true)");
             methodBody.AppendLine(";");
@@ -148,6 +149,7 @@ namespace IF.Manager.Service
 
             StringBuilder methodBody = new StringBuilder();
 
+            methodBody.AppendLine($@"var settings = this.Configuration.GetSettings<{this.Project.Name}AppSettings>();");
 
             methodBody.AppendLine("@if.SetContainerBuilder(builder);");
             methodBody.AppendLine($@"var handlers = Assembly.Load(""{this.CoreDllName}"");");
@@ -158,15 +160,64 @@ namespace IF.Manager.Service
 
             methodBody.AppendLine($@"handler =>");
             methodBody.AppendLine($@"{{");
-            methodBody.AppendLine($@"handler.AddQueryHandlers().Build(new Assembly[] {{ handlers }});");
 
-            methodBody.AppendLine($@"handler.AddQueryAsyncHandlers().Build(new Assembly[] {{ handlers }});");
+            methodBody.AppendLine($@"handler.AddQueryHandlers()");
+            AddSystemQueryDecarators(methodBody);
+            methodBody.AppendLine(".Build(new Assembly[] { handlers });");
 
-            methodBody.AppendLine($@"handler.AddCommandHandlers().Build(new Assembly[] {{ handlers }});");
+            methodBody.AppendLine($@"handler.AddQueryAsyncHandlers()");
+            AddSystemQueryDecarators(methodBody);
+            methodBody.AppendLine($@".Build(new Assembly[] {{ handlers }});");
 
-            methodBody.AppendLine($@"handler.AddCommandAsyncHandlers().Build(new Assembly[] {{ handlers }});");
+            methodBody.AppendLine($@"handler.AddCommandHandlers()");
+            AddSystemCommandDecarators(methodBody);
+            methodBody.AppendLine($@".Build(new Assembly[] {{ handlers }});");
+
+            methodBody.AppendLine($@"handler.AddCommandAsyncHandlers()");
+            AddSystemCommandDecarators(methodBody);
+            methodBody.AppendLine($@".Build(new Assembly[] {{ handlers }});");
+
             methodBody.AppendLine($@"}});");
             methodBody.AppendLine($@"}})");
+
+            if (this.Project.JsonAppType == Enum.JsonAppType.NewstonJson)
+            {
+                methodBody.AppendLine(@".AddNewstonJson(json => json.Build())");
+            }
+
+            if(this.Project.SystemDbType == Enum.SystemDbType.Mongo)
+            {
+                if(IsSystemCommandDecoratorAvailable() || IsSystemQueryDecoratorAvailable())
+                {
+                    methodBody.AppendLine($@".AddMongo(m => m.AddMongoPerServiceConnectionStrategy(settings.MongoConnection, c => {{");
+                }
+
+                if (this.Project.QueryAudit || this.Project.CommandAudit)
+                {
+                    methodBody.AppendLine(@"c.AddAuditLogger();");
+                }
+
+
+                if (this.Project.QueryErrorHandler || this.Project.CommandErrorHandler)
+                {
+                    methodBody.AppendLine(@"c.AddApplicationLogger();");
+                }
+
+
+                if (this.Project.QueryPerformanceCounter || this.Project.CommandPerformanceCounter)
+                {
+                    methodBody.AppendLine(@"c.AddPerformanceLogger();");
+                }
+
+
+                if (IsSystemCommandDecoratorAvailable() || IsSystemQueryDecoratorAvailable())
+                {
+                    methodBody.AppendLine("}");
+                    methodBody.AppendLine("))");
+                }
+
+            }
+
             methodBody.AppendLine($@";");
 
 
@@ -185,6 +236,90 @@ namespace IF.Manager.Service
             this.Methods.Add(method);
 
 
+        }
+
+        private void AddSystemQueryDecarators(StringBuilder methodBody)
+        {
+            if(IsSystemQueryDecoratorAvailable())
+            {
+                methodBody.AppendLine(".Decoration(d =>");
+            }
+
+            if (this.Project.QueryAudit)
+            {
+                methodBody.AppendLine(@".AddAuditing()");
+            }
+
+
+            if (this.Project.QueryErrorHandler)
+            {
+                methodBody.AppendLine(@".AddErrorLogging()");
+            }
+
+
+            if (this.Project.QueryPerformanceCounter)
+            {
+                methodBody.AppendLine(@".AddPerformanceCounter()");
+            }
+
+            if (IsSystemQueryDecoratorAvailable())
+            {
+                methodBody.AppendLine(")");
+            }
+        }
+
+        private bool IsSystemQueryDecoratorAvailable()
+        {
+            if (this.Project.QueryAudit || this.Project.QueryErrorHandler || this.Project.QueryPerformanceCounter)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private bool IsSystemCommandDecoratorAvailable()
+        {
+            if (this.Project.CommandAudit || this.Project.CommandErrorHandler || this.Project.CommandPerformanceCounter)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private void AddSystemCommandDecarators(StringBuilder methodBody)
+        {
+            if (IsSystemCommandDecoratorAvailable())
+            {
+                methodBody.AppendLine(".Decoration(d =>");
+            }
+
+            if (this.Project.CommandAudit)
+            {
+                methodBody.AppendLine(@".AddAuditing()");
+            }
+
+
+            if (this.Project.CommandErrorHandler)
+            {
+                methodBody.AppendLine(@".AddErrorLogging()");
+            }
+
+
+            if (this.Project.CommandPerformanceCounter)
+            {
+                methodBody.AppendLine(@".AddPerformanceCounter()");
+            }
+
+            if (IsSystemCommandDecoratorAvailable())
+            {
+                methodBody.AppendLine(")");
+            }
         }
 
         private void AddConstructor()
