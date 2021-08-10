@@ -1,10 +1,12 @@
 ﻿using IF.CodeGeneration.Core;
+using IF.CodeGeneration.CSharp;
 using IF.Core.Data;
 using IF.Core.Navigation;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
+using IF.Manager.Service.CodeGen.CodeTemplates;
 using IF.Manager.Service.Web.Page;
 using IF.Manager.Service.Web.Page.Form;
 using IF.Manager.Service.Web.Page.ListView;
@@ -12,6 +14,9 @@ using IF.Manager.Service.Web.Page.Panel;
 using IF.Manager.Service.WebApi;
 using IF.Persistence.EF;
 
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 
 using Newtonsoft.Json;
@@ -170,10 +175,42 @@ namespace IF.Manager.Service.Services
             this.vsHelper.AddClassToProject(project.ProjectType, projectName, "Program", solutionName);
             this.vsHelper.AddConfigJsonFileToApiProject(project.ProjectType, projectName, solutionName);
 
-            //CoreDllGenerator coreDllGenerator = new CoreDllGenerator();
-            //coreDllGenerator.GenerateCoreBaseDll(solutionName, DirectoryHelper.GetTempGeneratedDirectoryName());
+            var useCsFile = CodeTemplateHelper.GetResourceTextFile("User.cs");
 
-            var files = Directory.GetFiles(DirectoryHelper.GetTempGeneratedDirectoryName(), "*.cs", SearchOption.AllDirectories).Where(s => s.EndsWith(".cs") || s.EndsWith(".cs")).ToArray();
+            //using (StreamReader reader = new StreamReader(useCsFile))
+            //{
+            //    var code = reader.ReadToEnd();
+
+                SyntaxTree Tree = CSharpSyntaxTree.ParseText(useCsFile);
+
+                SyntaxNode Root = Tree.GetRoot();
+
+                var properties = Root.DescendantNodes().OfType<PropertyDeclarationSyntax>().ToList();
+
+            CSClass userCsClass = new CSClass();
+            userCsClass.Name = "User";
+
+            userCsClass.Usings.Add("IF.Core.Audit");
+            userCsClass.Usings.Add("System.ComponentModel.DataAnnotations.Schema");
+
+            foreach (PropertyDeclarationSyntax item in properties)
+            {
+                CSProperty cSProperty = new CSProperty("public","",false);
+
+            }
+
+            //}
+
+            
+
+
+                //CoreDllGenerator coreDllGenerator = new CoreDllGenerator();
+                //coreDllGenerator.GenerateCoreBaseDll(solutionName, DirectoryHelper.GetTempGeneratedDirectoryName());
+
+                var files = Directory.GetFiles(DirectoryHelper.GetTempGeneratedDirectoryName(), "*.cs", SearchOption.AllDirectories).Where(s => s.EndsWith(".cs") || s.EndsWith(".cs")).ToArray();
+
+
+
 
             string targetPath = DirectoryHelper.GetNewCoreProjectDirectory(project);
             string fileName = string.Empty;

@@ -11,6 +11,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="CodeGen\CodeTemplates\User.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="CodeGen\CodeTemplates\User.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Autofac" Version="5.1.2" />
     <PackageReference Include="DatabaseSchemaReader" Version="2.7.3" />
     <PackageReference Include="Microsoft.Build" Version="16.4.0" />
