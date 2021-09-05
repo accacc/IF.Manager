@@ -72,6 +72,15 @@
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
+                <label for="Name">Authentication Type</label>
+                @Html.DropDownList($"Form.AuthenticationType", Html.GetEnumSelectList<IF.Manager.Service.Enum.AuthenticationType>(), "Select", new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
                 <label for="Name">Json App Type</label>
                 @Html.DropDownList($"Form.JsonAppType", Html.GetEnumSelectList<IF.Manager.Service.Enum.JsonAppType>(), "Select", new { @class = "form-control" })
             </div>
@@ -97,13 +106,13 @@
         <div class="col-md-3">
             <div class="form-check">
                 @Html.CheckBoxFor(m => m.Form.CommandPerformanceCounter, new { @class = "form-check-input" })
-            <label class="form-check-label" for="CommandPerformanceCounter">CommandPerformanceCounter</label>
+                <label class="form-check-label" for="CommandPerformanceCounter">CommandPerformanceCounter</label>
             </div>
         </div>
         <div class="col-md-3">
             <div class="form-check">
                 @Html.CheckBoxFor(m => m.Form.CommandErrorHandler, new { @class = "form-check-input" })
-            <label class="form-check-label" for="CommandErrorHandler">CommandErrorHandler</label>
+                <label class="form-check-label" for="CommandErrorHandler">CommandErrorHandler</label>
             </div>
         </div>
     </div>
@@ -120,19 +129,19 @@
         <div class="col-md-3">
             <div class="form-check">
                 @Html.CheckBoxFor(m => m.Form.QueryAudit, new { @class = "form-check-input" })
-            <label class="form-check-label" for="QueryAudit">QueryAudit</label>
+                <label class="form-check-label" for="QueryAudit">QueryAudit</label>
             </div>
         </div>
         <div class="col-md-3">
             <div class="form-check">
                 @Html.CheckBoxFor(m => m.Form.QueryPerformanceCounter, new { @class = "form-check-input" })
-            <label class="form-check-label" for="QueryPerformanceCounter">QueryPerformanceCounter</label>
+                <label class="form-check-label" for="QueryPerformanceCounter">QueryPerformanceCounter</label>
             </div>
         </div>
         <div class="col-md-3">
             <div class="form-check">
                 @Html.CheckBoxFor(m => m.Form.QueryErrorHandler, new { @class = "form-check-input" })
-            <label class="form-check-label" for="QueryErrorHandler">QueryErrorHandler</label>
+                <label class="form-check-label" for="QueryErrorHandler">QueryErrorHandler</label>
             </div>
         </div>
     </div>

@@ -33,7 +33,6 @@ namespace IF.Manager.Contracts.Services
         Task<ProcessDto> GetProcess(int id);
         Task UpdateProcess(ProcessDto form);
         Task<List<ProcessDto>> GetProcessList();
-
-   
+        Task AddAuthentication(int projectId);
     }
 }

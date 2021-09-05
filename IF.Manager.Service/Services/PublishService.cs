@@ -1,5 +1,6 @@
 ﻿using IF.CodeGeneration.Core;
-using IF.CodeGeneration.CSharp;
+using IF.CodeGeneration.Language.CSharp;
+using IF.CodeGeneration.Language.CSharp;
 using IF.Core.Data;
 using IF.Core.Navigation;
 using IF.Manager.Contracts.Dto;
@@ -7,6 +8,7 @@ using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
 using IF.Manager.Service.CodeGen.CodeTemplates;
+using IF.Manager.Service.Enum;
 using IF.Manager.Service.Web.Page;
 using IF.Manager.Service.Web.Page.Form;
 using IF.Manager.Service.Web.Page.ListView;
@@ -149,23 +151,29 @@ namespace IF.Manager.Service.Services
                 .SingleOrDefaultAsync();
 
             string projectName = project.Name;
-
             string solutionName = project.Solution.SolutionName;
 
-            var entityList = await this.entityService.GetEntityList();
 
+            if (project.AuthenticationType != AuthenticationType.None && !project.IsAuthenticationAdded)
+            {
+                await AddAuthenticationEntities();
+
+                await projectService.AddAuthentication(project.Id);
+            }
+
+            var entityList = await this.entityService.GetEntityList();
 
             DbContextGenerator dbContextGenerator = new DbContextGenerator(entityService, fileSystem);
             dbContextGenerator.Generate(entityList, project);
 
             ProgramClassWebApi program = new ProgramClassWebApi(project);
             program.Build();
-            fileSystem.FormatCode(program.GenerateCode(), "cs","","");
+            fileSystem.FormatCode(program.GenerateCode(), "cs", "", "");
 
 
-            StartupClassWebApi startup = new StartupClassWebApi(project,entityService);
+            StartupClassWebApi startup = new StartupClassWebApi(project, entityService);
             await startup.Build();
-            fileSystem.FormatCode(startup.GenerateCode(), "cs","","");
+            fileSystem.FormatCode(startup.GenerateCode(), "cs", "", "");
 
             GenerateConfigClassAndJson(project);
 
@@ -175,39 +183,10 @@ namespace IF.Manager.Service.Services
             this.vsHelper.AddClassToProject(project.ProjectType, projectName, "Program", solutionName);
             this.vsHelper.AddConfigJsonFileToApiProject(project.ProjectType, projectName, solutionName);
 
-            var useCsFile = CodeTemplateHelper.GetResourceTextFile("User.cs");
+            //CoreDllGenerator coreDllGenerator = new CoreDllGenerator();
+            //coreDllGenerator.GenerateCoreBaseDll(solutionName, DirectoryHelper.GetTempGeneratedDirectoryName());
 
-            //using (StreamReader reader = new StreamReader(useCsFile))
-            //{
-            //    var code = reader.ReadToEnd();
-
-                SyntaxTree Tree = CSharpSyntaxTree.ParseText(useCsFile);
-
-                SyntaxNode Root = Tree.GetRoot();
-
-                var properties = Root.DescendantNodes().OfType<PropertyDeclarationSyntax>().ToList();
-
-            CSClass userCsClass = new CSClass();
-            userCsClass.Name = "User";
-
-            userCsClass.Usings.Add("IF.Core.Audit");
-            userCsClass.Usings.Add("System.ComponentModel.DataAnnotations.Schema");
-
-            foreach (PropertyDeclarationSyntax item in properties)
-            {
-                CSProperty cSProperty = new CSProperty("public","",false);
-
-            }
-
-            //}
-
-            
-
-
-                //CoreDllGenerator coreDllGenerator = new CoreDllGenerator();
-                //coreDllGenerator.GenerateCoreBaseDll(solutionName, DirectoryHelper.GetTempGeneratedDirectoryName());
-
-                var files = Directory.GetFiles(DirectoryHelper.GetTempGeneratedDirectoryName(), "*.cs", SearchOption.AllDirectories).Where(s => s.EndsWith(".cs") || s.EndsWith(".cs")).ToArray();
+            var files = Directory.GetFiles(DirectoryHelper.GetTempGeneratedDirectoryName(), "*.cs", SearchOption.AllDirectories).Where(s => s.EndsWith(".cs") || s.EndsWith(".cs")).ToArray();
 
 
 
@@ -230,6 +209,76 @@ namespace IF.Manager.Service.Services
 
             this.vsHelper.ExploreSolution(project.Solution.Path, solutionName);
 
+        }
+
+        //private void AddSystemEntities()
+        //{
+        //    var useCsFile = CodeTemplateHelper.GetResourceTextFile("User.cs");
+
+        //    var properties = CsharpClassParser.Parse(useCsFile).Properties;
+
+        //    EntityDto entity = new EntityDto();
+
+        //    entity.Description = "User Table";
+        //    entity.Name = "User";
+
+
+        //    foreach (var item in properties)
+        //    {
+        //        EntityPropertyDto entityProperty = new EntityPropertyDto();
+
+        //        if(item.Name =="Id")
+        //        {
+        //            entityProperty.IsIdentity = true;
+        //            entityProperty.IsAutoNumber = true;
+
+        //        }
+
+        //        entityProperty.Name = item.Name;
+        //        entityProperty.Type = item.PropertyTypeString;
+        //        entityProperty.IsNullable = false;
+
+        //        entity.Properties.Add(entityProperty);
+                
+        //    }
+
+        //    this.entityService.AddEntity(entity);
+        //}
+
+        private async Task AddAuthenticationEntities()
+        {
+            var useCsFile = CodeTemplateHelper.GetResourceTextFile("User.cs");
+
+            var properties = CsharpClassParser.Parse(useCsFile).Properties;
+
+            IFEntity entity = new IFEntity();
+
+            entity.Description = "User Table";
+            entity.Name = "User";
+
+
+            foreach (var item in properties)
+            {
+                IFEntityProperty entityProperty = new IFEntityProperty();
+
+                if (item.Name == "Id")
+                {
+                    entityProperty.IsIdentity = true;
+                    entityProperty.IsAutoNumber = true;
+
+                }
+
+                entityProperty.Name = item.Name;
+                entityProperty.Type = item.PropertyTypeString;
+                entityProperty.IsNullable = false;
+
+                entity.Properties.Add(entityProperty);
+
+            }
+
+            this.entityService.Add(entity);
+
+            await this.entityService.UnitOfWork.SaveChangesAsync();
         }
 
         private void GenerateConfigClassAndJson(IFProject project)

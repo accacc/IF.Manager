@@ -9,6 +9,8 @@ namespace IF.Manager.Service.CodeGen
         public static string RemoveLastWord(string name, string word)
         {
 
+            if (name.Length < word.Length) return name;
+
             name = name.Trim();
 
             string lastFiveChar = name.Substring(name.Length - word.Length);

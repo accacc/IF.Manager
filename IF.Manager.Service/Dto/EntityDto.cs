@@ -6,6 +6,11 @@ namespace IF.Manager.Contracts.Dto
 {
     public class EntityDto
     {
+
+        public EntityDto()
+        {
+            this.Properties = new List<EntityPropertyDto>();
+        }
         public int Id { get; set; }
 
         public string Name { get; set; }

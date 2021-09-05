@@ -1,5 +1,5 @@
 ﻿using IF.CodeGeneration.Core;
-using IF.CodeGeneration.CSharp;
+using IF.CodeGeneration.Language.CSharp;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 

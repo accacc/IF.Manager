@@ -62,7 +62,8 @@ namespace IF.Manager.Service
             entity.QueryAudit = form.QueryAudit;
             entity.QueryErrorHandler = form.QueryErrorHandler;
             entity.QueryPerformanceCounter = form.QueryPerformanceCounter;
-
+            entity.AuthenticationType = form.AuthenticationType;
+            entity.IsAuthenticationAdded = false;
             this.Add(entity);
             await this.UnitOfWork.SaveChangesAsync();
             form.Id = entity.Id;
@@ -89,7 +90,7 @@ namespace IF.Manager.Service
             entity.QueryAudit = form.QueryAudit;
             entity.QueryErrorHandler = form.QueryErrorHandler;
             entity.QueryPerformanceCounter = form.QueryPerformanceCounter;
-
+            entity.AuthenticationType = form.AuthenticationType;
 
             this.Update(entity);
             await this.UnitOfWork.SaveChangesAsync();
@@ -245,17 +246,17 @@ namespace IF.Manager.Service
             return data;
         }
 
-       
+        public async Task AddAuthentication(int projectId)
+        {
+            var entity = await this.GetQuery<IFProject>()
+            .SingleOrDefaultAsync(k => k.Id == projectId);
 
+            if (entity == null) { throw new BusinessException(" No such entity exists"); }
 
+            entity.IsAuthenticationAdded = true;
 
-
-
-
-
-      
-      
-
-      
+            this.Update(entity);
+            await this.UnitOfWork.SaveChangesAsync();
+        }
     }
 }

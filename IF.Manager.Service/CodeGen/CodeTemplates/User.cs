@@ -53,7 +53,7 @@ namespace {namespace}
 
         public bool IsSystemAdmin { get; set; }
 
-        public UserType UserType { get; set; }
+        //public UserType UserType { get; set; }
 
         [MaxLength(13)]
         public string Tckn { get; set; }

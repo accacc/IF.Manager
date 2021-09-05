@@ -1,5 +1,5 @@
 ﻿using IF.CodeGeneration.Core;
-using IF.CodeGeneration.CSharp;
+using IF.CodeGeneration.Language.CSharp;
 using IF.Core.Audit;
 using IF.Core.Data;
 using IF.Manager.Contracts.Dto;
@@ -69,8 +69,9 @@ namespace IF.Manager.Service
 
                         break;
                     case Enum.IFAuditType.Bulk:
-                        break;
                         entityClass.InheritedInterfaces.Add(nameof(IBulkAuditableEntity));
+                        break;
+
                     case Enum.IFAuditType.None:
                         break;
                     default:

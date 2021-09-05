@@ -35,8 +35,9 @@ namespace IF.Manager.Contracts.Model
         
         public int SolutionId { get; set; }
 
-
+        public AuthenticationType AuthenticationType { get; set; }
         public bool CommandAudit { get; set; }
+        public bool IsAuthenticationAdded { get; set; }
         public bool CommandPerformanceCounter { get; set; }
         public bool CommandErrorHandler { get; set; }
         public bool QueryAudit { get; set; }

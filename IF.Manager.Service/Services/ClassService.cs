@@ -1,6 +1,7 @@
 ﻿
 using IF.CodeGeneration.Core;
-using IF.CodeGeneration.CSharp;
+using IF.CodeGeneration.Language.CSharp;
+using IF.CodeGeneration.Language.CSharp;
 using IF.Core.Data;
 using IF.Core.Exception;
 using IF.Manager.Contracts.Dto;
