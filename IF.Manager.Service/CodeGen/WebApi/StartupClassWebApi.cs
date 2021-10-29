@@ -240,26 +240,67 @@ namespace IF.Manager.Service
 
         private void AddSystemQueryDecarators(StringBuilder methodBody)
         {
+
+
+
             if(IsSystemQueryDecoratorAvailable())
             {
                 methodBody.AppendLine(".Decoration(d =>");
             }
 
+            bool IsAnyDecorator = false;
+
             if (this.Project.QueryAudit)
             {
-                methodBody.AppendLine(@".AddAuditing()");
+                if(IsAnyDecorator)
+                {
+                    methodBody.AppendLine(@".AddAuditing()");
+
+                }
+                else
+                {
+                    methodBody.AppendLine(@"d.AddAuditing()");
+                   
+
+                }
+                IsAnyDecorator = true;
+
             }
 
 
             if (this.Project.QueryErrorHandler)
             {
-                methodBody.AppendLine(@".AddErrorLogging()");
+                if(IsAnyDecorator)
+                {
+                    methodBody.AppendLine(@".AddErrorLogging()");
+                }
+                else
+                {
+                    methodBody.AppendLine(@"d.AddErrorLogging()");
+                  
+
+                }
+
+                IsAnyDecorator = true;
             }
 
 
             if (this.Project.QueryPerformanceCounter)
             {
-                methodBody.AppendLine(@".AddPerformanceCounter()");
+
+                if(IsAnyDecorator)
+                {
+                    methodBody.AppendLine(@".AddPerformanceCounter()");
+
+                }
+                else
+                {
+                    methodBody.AppendLine(@"d.AddPerformanceCounter()");
+                   
+
+                }
+
+                IsAnyDecorator = true;
             }
 
             if (IsSystemQueryDecoratorAvailable())
@@ -267,6 +308,78 @@ namespace IF.Manager.Service
                 methodBody.AppendLine(")");
             }
         }
+
+       
+
+        private void AddSystemCommandDecarators(StringBuilder methodBody)
+        {
+            if (IsSystemCommandDecoratorAvailable())
+            {
+                methodBody.AppendLine(".Decoration(d =>");
+            }
+
+
+            bool IsAnyDecorator = false;
+
+
+
+            if (this.Project.CommandAudit)
+            {
+                if(IsAnyDecorator)
+                {
+                    methodBody.AppendLine(@".AddAuditing()");
+
+                }
+                else
+                {
+                    methodBody.AppendLine(@"d.AddAuditing()");
+                    
+                }
+
+                IsAnyDecorator = true;
+            }
+
+
+            if (this.Project.CommandErrorHandler)
+            {
+                if(IsAnyDecorator)
+                {
+                    methodBody.AppendLine(@".AddErrorLogging()");
+
+                }
+                else
+                {
+                    methodBody.AppendLine(@"d.AddErrorLogging()");
+                   
+                }
+
+                IsAnyDecorator = true;
+            }
+
+
+            if (this.Project.CommandPerformanceCounter)
+            {
+
+                if(IsAnyDecorator)
+                {
+                    methodBody.AppendLine(@".AddPerformanceCounter()");
+
+                }
+                else
+                {
+                    methodBody.AppendLine(@"d.AddPerformanceCounter()");
+                   
+                }
+
+                IsAnyDecorator = true;
+            }
+
+            if (IsSystemCommandDecoratorAvailable())
+            {
+                methodBody.AppendLine(")");
+            }
+        }
+
 
         private bool IsSystemQueryDecoratorAvailable()
         {
@@ -289,36 +402,6 @@ namespace IF.Manager.Service
             else
             {
                 return false;
-            }
-        }
-
-        private void AddSystemCommandDecarators(StringBuilder methodBody)
-        {
-            if (IsSystemCommandDecoratorAvailable())
-            {
-                methodBody.AppendLine(".Decoration(d =>");
-            }
-
-            if (this.Project.CommandAudit)
-            {
-                methodBody.AppendLine(@".AddAuditing()");
-            }
-
-
-            if (this.Project.CommandErrorHandler)
-            {
-                methodBody.AppendLine(@".AddErrorLogging()");
-            }
-
-
-            if (this.Project.CommandPerformanceCounter)
-            {
-                methodBody.AppendLine(@".AddPerformanceCounter()");
-            }
-
-            if (IsSystemCommandDecoratorAvailable())
-            {
-                methodBody.AppendLine(")");
             }
         }
 
