@@ -247,14 +247,25 @@ namespace IF.Manager.Service.Services
 
         private async Task AddAuthenticationEntities()
         {
-            var useCsFile = CodeTemplateHelper.GetResourceTextFile("User.cs");
+            string resourceName = "User.cs";
+            string description = "User Table";
+            string name = "IFUser";
+
+            await AddResourceEntity(resourceName, description, name);
+
+            await AddResourceEntity("Role.cs", "Role Table", "IFRole");
+        }
+
+        private async Task AddResourceEntity(string resourceName, string description, string name)
+        {
+            var useCsFile = CodeTemplateHelper.GetResourceTextFile(resourceName);
 
             var properties = CsharpClassParser.Parse(useCsFile).Properties;
 
             IFEntity entity = new IFEntity();
 
-            entity.Description = "User Table";
-            entity.Name = "User";
+            entity.Description = description;
+            entity.Name = name;
 
 
             foreach (var item in properties)

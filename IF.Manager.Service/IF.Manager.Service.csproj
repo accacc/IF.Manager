@@ -11,11 +11,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="CodeGen\CodeTemplates\User.cs" />
+    <Compile Remove="CodeGen\CodeTemplates\IFPermission.cs" />
+    <Compile Remove="CodeGen\CodeTemplates\IFPermissionMap.cs" />
+    <Compile Remove="CodeGen\CodeTemplates\IFRole.cs" />
+    <Compile Remove="CodeGen\CodeTemplates\IFRolePermission.cs" />
+    <Compile Remove="CodeGen\CodeTemplates\IFUser.cs" />
+    <Compile Remove="CodeGen\CodeTemplates\IFUserExtraPermission.cs" />
+    <Compile Remove="CodeGen\CodeTemplates\IFUserRole.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="CodeGen\CodeTemplates\User.cs" />
+    <EmbeddedResource Include="CodeGen\CodeTemplates\IFPermission.cs" />
+    <EmbeddedResource Include="CodeGen\CodeTemplates\IFPermissionMap.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CodeGen\CodeTemplates\IFRole.cs" />
+    <EmbeddedResource Include="CodeGen\CodeTemplates\IFRolePermission.cs" />
+    <EmbeddedResource Include="CodeGen\CodeTemplates\IFUser.cs" />
+    <EmbeddedResource Include="CodeGen\CodeTemplates\IFUserExtraPermission.cs" />
+    <EmbeddedResource Include="CodeGen\CodeTemplates\IFUserRole.cs" />
   </ItemGroup>
 
   <ItemGroup>
