@@ -17,15 +17,23 @@ namespace IF.Manager.Service.Web.Page
 
         public PageControlBase(IFPageControlMap map)
         {
-            this.PageControlMap = map;
-            this.pageNameSpace = this.PageControlMap.GetPageNameSpace();
-            this.topPage = this.PageControlMap.GetTopPage();
-            this.page = this.PageControlMap.GetTopPage(true);
-            this.pagePath = PageControlMap.GetPagePath();
-            this.BaseClass = "PageModel";
-            this.NameSpace = SolutionHelper.GetPageNamespace(topPage, this.pageNameSpace);
-            string generatedBasePath = DirectoryHelper.GetTempPageDirectory(this.pagePath, this.page.IFProject.Solution.SolutionName, this.page.IFProject.Name, this.page.IFProject.ProjectType);
-            this.fileSystem = new FileSystemCodeFormatProvider(generatedBasePath);
+            try
+            {
+                this.PageControlMap = map;
+                this.pageNameSpace = this.PageControlMap.GetPageNameSpace();
+                this.topPage = this.PageControlMap.GetTopPage();
+                this.page = this.PageControlMap.GetTopPage(true);
+                this.pagePath = PageControlMap.GetPagePath();
+                this.BaseClass = "PageModel";
+                this.NameSpace = SolutionHelper.GetPageNamespace(topPage, this.pageNameSpace);
+                string generatedBasePath = DirectoryHelper.GetTempPageDirectory(this.pagePath, this.page.IFProject.Solution.SolutionName, this.page.IFProject.Name, this.page.IFProject.ProjectType);
+                this.fileSystem = new FileSystemCodeFormatProvider(generatedBasePath);
+            }
+            catch (System.Exception ex)
+            {
+
+                throw;
+            }
         }
 
 

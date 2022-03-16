@@ -154,11 +154,11 @@ namespace IF.Manager.Service.Services
             string solutionName = project.Solution.SolutionName;
 
 
-            if (project.AuthenticationType != AuthenticationType.None && !project.IsAuthenticationAdded)
+            //if (project.AuthenticationType != AuthenticationType.None && !project.IsAuthenticationAdded)
             {
-                await AddAuthenticationEntities();
+                //await AddAuthenticationEntities();
 
-                await projectService.AddAuthentication(project.Id);
+                //await projectService.AddAuthentication(project.Id);
             }
 
             var entityList = await this.entityService.GetEntityList();
@@ -247,13 +247,19 @@ namespace IF.Manager.Service.Services
 
         private async Task AddAuthenticationEntities()
         {
-            string resourceName = "User.cs";
+            string resourceName = "IFUser.cs";
             string description = "User Table";
             string name = "IFUser";
 
             await AddResourceEntity(resourceName, description, name);
 
-            await AddResourceEntity("Role.cs", "Role Table", "IFRole");
+            await AddResourceEntity("IFRole.cs", "Role Table", "IFRole");
+            await AddResourceEntity("IFPermission.cs", "IFPermission Table", "IFPermission");
+            await AddResourceEntity("IFPermissionMap.cs", "IFPermissionMap Table", "IFPermissionMap");
+            await AddResourceEntity("IFRolePermission.cs", "IFRolePermission Table", "IFRolePermission");
+            await AddResourceEntity("IFUser.cs", "IFUser Table", "IFUser");
+            await AddResourceEntity("IFUserExtraPermission.cs", "IFUserExtraPermission Table", "IFUserExtraPermission");
+            await AddResourceEntity("IFUserRole.cs", "IFUserRole Table", "IFUserRole");
         }
 
         private async Task AddResourceEntity(string resourceName, string description, string name)

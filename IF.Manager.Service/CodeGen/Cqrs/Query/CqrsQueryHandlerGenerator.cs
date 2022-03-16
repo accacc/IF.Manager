@@ -87,7 +87,7 @@ namespace IF.Manager.Service.Cqrs
             }
             else if (query.QueryGetType == Contracts.Enum.QueryGetType.List || query.QueryGetType == Contracts.Enum.QueryGetType.NameValue)
             {
-                handleMethodBuilder.AppendLine($"var results = query.ToListAsync();");
+                handleMethodBuilder.AppendLine($"var results = await query.ToListAsync();");
             }
             else
             {

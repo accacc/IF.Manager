@@ -16,6 +16,16 @@ namespace IF.Manager.Persistence.EF.Mappings
             builder.Property(x => x.Id).IsRequired();
             builder.Property(x => x.Name).IsRequired();
             builder.Property(x => x.Description).IsRequired();
+
+            builder.HasData(
+
+                 new IFPageFormItem { Name = "Textbox", Description = "Textbox" },
+                 new IFPageFormItem { Name = "Datepicker", Description = "Datepicker" },
+                 new IFPageFormItem { Name = "Checkbox", Description = "Checkbox" },
+                 new IFPageFormItem { Name = "DropDown", Description = "DropDown" },
+                 new IFPageFormItem { Name = "MultipleSelect", Description = "MultipleSelect" }
+
+                );
         }
     }
 }
