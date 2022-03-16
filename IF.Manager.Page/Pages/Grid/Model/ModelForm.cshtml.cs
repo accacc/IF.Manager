@@ -81,13 +81,13 @@ namespace IF.Manager.Page.Pages.Grid.Model
             await this.pageService.UpdateControlItemModelProperties(this.Form, this.FormId);
 
 
-            var FormList = await this.pageFormService.GetFormList();
+            var FormList = await this.pageGridService.GetGridList();
 
 
             return new PartialViewResult
             {
-                ViewName = "_FormListTable",
-                ViewData = new ViewDataDictionary<List<IFPageForm>>(ViewData, FormList)
+                ViewName = "_GridListTable",
+                ViewData = new ViewDataDictionary<List<IFPageGrid>>(ViewData, FormList)
             };
 
         }

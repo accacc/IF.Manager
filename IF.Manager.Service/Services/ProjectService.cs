@@ -1,6 +1,7 @@
 ﻿using IF.CodeGeneration.Core;
 using IF.Core.Exception;
 using IF.Manager.Contracts.Dto;
+using IF.Manager.Contracts.Enum;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
@@ -116,6 +117,16 @@ namespace IF.Manager.Service
 
             return data;
         }
+
+        public async Task<List<IFProject>> GetProjectList(ProjectType projectType)
+        {
+            var data = await this.GetQuery<IFProject>().Where(p => p.ProjectType == projectType)
+                                .ToListAsync();
+
+            return data;
+        }
+
+        //        projects = projects.Where(p => p.ProjectType == Contracts.Enum.ProjectType.Web).ToList();
 
         public async Task AddSolution(IFSolution form)
         {

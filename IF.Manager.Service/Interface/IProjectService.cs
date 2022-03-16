@@ -1,5 +1,6 @@
 ﻿using IF.Core.Persistence;
 using IF.Manager.Contracts.Dto;
+using IF.Manager.Contracts.Enum;
 using IF.Manager.Contracts.Model;
 using System;
 using System.Collections.Generic;
@@ -17,10 +18,11 @@ namespace IF.Manager.Contracts.Services
         Task<IFProject> GetProject(int id);
         Task UpdateProject(IFProject form);
         Task<List<IFProject>> GetProjectList();
+        Task<List<IFProject>> GetProjectList(ProjectType projectType);
 
 
 
-       
+
 
         Task AddSolution(IFSolution form);
 

@@ -49,12 +49,14 @@ namespace IF.Manager.Page.Pages.Navigation
 
         private async Task SetFormDefaults()
         {
-            var entities = await this.projectService.GetProjectList();
+            var projects = await this.projectService.GetProjectList(Contracts.Enum.ProjectType.Web);
+
+    
 
             List<SelectListItem> items = new List<SelectListItem>();
 
 
-            foreach (var entity in entities)
+            foreach (var entity in projects)
             {
                 SelectListItem item = new SelectListItem();               
 

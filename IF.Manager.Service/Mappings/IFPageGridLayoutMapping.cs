@@ -24,7 +24,7 @@ namespace IF.Manager.Persistence.EF.Mappings
 
             builder.HasData(
 
-                 new IFPageGridLayout { Name = "Textbox", Description = "Textbox",LayoutId =1 ,Id=1}
+                 new IFPageGridLayout { Name = "Grid Layout", Description = "Grid Layout", LayoutId =1 ,Id=1}
 
                 );
         }
