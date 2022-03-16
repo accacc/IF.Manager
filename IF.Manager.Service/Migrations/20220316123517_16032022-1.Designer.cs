@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IF.Manager.Service.Migrations
 {
     [DbContext(typeof(ManagerDbContext))]
-    [Migration("20210630132625_30062021-1")]
-    partial class _300620211
+    [Migration("20220316123517_16032022-1")]
+    partial class _160320221
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -462,6 +462,38 @@ namespace IF.Manager.Service.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("IFPageFormItem");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Textbox",
+                            Name = "Textbox"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Datepicker",
+                            Name = "Datepicker"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Checkbox",
+                            Name = "Checkbox"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "DropDown",
+                            Name = "DropDown"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "MultipleSelect",
+                            Name = "MultipleSelect"
+                        });
                 });
 
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFPageFormLayout", b =>
@@ -482,6 +514,14 @@ namespace IF.Manager.Service.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("IFPageFormLayout");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Textbox",
+                            Name = "Textbox"
+                        });
                 });
 
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFPageGridLayout", b =>
@@ -507,6 +547,15 @@ namespace IF.Manager.Service.Migrations
                     b.HasIndex("LayoutId");
 
                     b.ToTable("IFPageGridLayout");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Textbox",
+                            LayoutId = 1,
+                            Name = "Textbox"
+                        });
                 });
 
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFPageLayout", b =>
@@ -530,6 +579,15 @@ namespace IF.Manager.Service.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("IFPageLayout");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ColumSize = 2,
+                            Description = "Two Column",
+                            Name = "Two Column"
+                        });
                 });
 
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFPageParameter", b =>
@@ -592,6 +650,9 @@ namespace IF.Manager.Service.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AuthenticationType")
+                        .HasColumnType("int");
+
                     b.Property<bool>("CommandAudit")
                         .HasColumnType("bit");
 
@@ -607,6 +668,9 @@ namespace IF.Manager.Service.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsAuthenticationAdded")
+                        .HasColumnType("bit");
 
                     b.Property<int>("JsonAppType")
                         .HasColumnType("int");

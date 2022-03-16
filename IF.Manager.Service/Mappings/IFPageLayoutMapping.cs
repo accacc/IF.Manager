@@ -19,7 +19,7 @@ namespace IF.Manager.Persistence.EF.Mappings
 
             builder.HasData(
 
-               new IFPageLayout { Name = "Two Column", Description = "Two Column", ColumSize = 2 }
+               new IFPageLayout { Name = "Two Column", Description = "Two Column", ColumSize = 2 ,Id =1 }
 
               );
         }

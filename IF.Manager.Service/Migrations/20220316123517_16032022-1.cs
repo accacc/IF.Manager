@@ -2,7 +2,7 @@
 
 namespace IF.Manager.Service.Migrations
 {
-    public partial class _032520211 : Migration
+    public partial class _160320221 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -125,7 +125,8 @@ namespace IF.Manager.Service.Migrations
                     Name = table.Column<string>(nullable: false),
                     Description = table.Column<string>(nullable: false),
                     GroupId = table.Column<int>(nullable: true),
-                    IsAudited = table.Column<bool>(nullable: false)
+                    AuditType = table.Column<int>(nullable: false),
+                    IsSoftDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -168,8 +169,19 @@ namespace IF.Manager.Service.Migrations
                     Name = table.Column<string>(nullable: true),
                     ProjectType = table.Column<int>(nullable: false),
                     ConnectionString = table.Column<string>(nullable: false),
+                    SystemDbConnectionString = table.Column<string>(nullable: true),
+                    SystemDbType = table.Column<int>(nullable: false),
+                    JsonAppType = table.Column<int>(nullable: false),
                     Description = table.Column<string>(nullable: true),
-                    SolutionId = table.Column<int>(nullable: false)
+                    SolutionId = table.Column<int>(nullable: false),
+                    AuthenticationType = table.Column<int>(nullable: false),
+                    CommandAudit = table.Column<bool>(nullable: false),
+                    IsAuthenticationAdded = table.Column<bool>(nullable: false),
+                    CommandPerformanceCounter = table.Column<bool>(nullable: false),
+                    CommandErrorHandler = table.Column<bool>(nullable: false),
+                    QueryAudit = table.Column<bool>(nullable: false),
+                    QueryPerformanceCounter = table.Column<bool>(nullable: false),
+                    QueryErrorHandler = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -191,6 +203,7 @@ namespace IF.Manager.Service.Migrations
                     Name = table.Column<string>(nullable: false),
                     Type = table.Column<string>(nullable: true),
                     IsIdentity = table.Column<bool>(nullable: false, defaultValue: false),
+                    IsAutoNumber = table.Column<bool>(nullable: false),
                     MaxValue = table.Column<int>(nullable: true),
                     EntityId = table.Column<int>(nullable: false),
                     IsAudited = table.Column<bool>(nullable: false),
@@ -427,9 +440,10 @@ namespace IF.Manager.Service.Migrations
                     Name = table.Column<string>(nullable: false),
                     Description = table.Column<string>(nullable: false),
                     ModelId = table.Column<int>(nullable: true),
+                    IsQueryOverride = table.Column<bool>(nullable: false),
                     ProcessId = table.Column<int>(nullable: false),
-                    IsList = table.Column<bool>(nullable: true),
-                    Sequence = table.Column<int>(nullable: true)
+                    IsList = table.Column<bool>(nullable: false),
+                    Sequence = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -901,6 +915,33 @@ namespace IF.Manager.Service.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "IFPageFormItem",
+                columns: new[] { "Id", "Description", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Textbox", "Textbox" },
+                    { 2, "Datepicker", "Datepicker" },
+                    { 3, "Checkbox", "Checkbox" },
+                    { 4, "DropDown", "DropDown" },
+                    { 5, "MultipleSelect", "MultipleSelect" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "IFPageFormLayout",
+                columns: new[] { "Id", "Description", "Name" },
+                values: new object[] { 1, "Textbox", "Textbox" });
+
+            migrationBuilder.InsertData(
+                table: "IFPageLayout",
+                columns: new[] { "Id", "ColumSize", "Description", "Name" },
+                values: new object[] { 1, 2, "Two Column", "Two Column" });
+
+            migrationBuilder.InsertData(
+                table: "IFPageGridLayout",
+                columns: new[] { "Id", "Description", "LayoutId", "Name" },
+                values: new object[] { 1, "Textbox", 1, "Textbox" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_IFClass_ParentId",

@@ -460,6 +460,38 @@ namespace IF.Manager.Service.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("IFPageFormItem");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Textbox",
+                            Name = "Textbox"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Datepicker",
+                            Name = "Datepicker"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Checkbox",
+                            Name = "Checkbox"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "DropDown",
+                            Name = "DropDown"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "MultipleSelect",
+                            Name = "MultipleSelect"
+                        });
                 });
 
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFPageFormLayout", b =>
@@ -480,6 +512,14 @@ namespace IF.Manager.Service.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("IFPageFormLayout");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Textbox",
+                            Name = "Textbox"
+                        });
                 });
 
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFPageGridLayout", b =>
@@ -505,6 +545,15 @@ namespace IF.Manager.Service.Migrations
                     b.HasIndex("LayoutId");
 
                     b.ToTable("IFPageGridLayout");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Textbox",
+                            LayoutId = 1,
+                            Name = "Textbox"
+                        });
                 });
 
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFPageLayout", b =>
@@ -528,6 +577,15 @@ namespace IF.Manager.Service.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("IFPageLayout");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ColumSize = 2,
+                            Description = "Two Column",
+                            Name = "Two Column"
+                        });
                 });
 
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFPageParameter", b =>

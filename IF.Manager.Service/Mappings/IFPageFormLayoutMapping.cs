@@ -21,7 +21,7 @@ namespace IF.Manager.Persistence.EF.Mappings
 
             builder.HasData(
 
-            new IFPageFormLayout { Name = "Textbox", Description = "Textbox" }
+            new IFPageFormLayout { Name = "Textbox", Description = "Textbox",Id=1 }
 
            );
         }
