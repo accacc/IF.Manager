@@ -47,7 +47,8 @@
                        if-ajax-method="get"
                        if-ajax-insertion-mode="replace"
                        if-ajax-show-dialog="true"
-                       if-ajax-modal-id="@Guid.NewGuid()">
+                       if-ajax-modal-id="@Guid.NewGuid()"
+                       id="EditEntityButton">
                         Edit
                     </a>
 
@@ -67,7 +68,8 @@
                        if-ajax-method="get"
                        if-ajax-insertion-mode="replace"
                        if-ajax-show-dialog="true"
-                       if-ajax-modal-id="@Guid.NewGuid()">
+                       if-ajax-modal-id="@Guid.NewGuid()"
+                       id="RelationDesignerButton">
                         Relation Designer
                     </a>
 
@@ -95,7 +97,7 @@
                     @foreach (var relation in item.Relations)
                     {
 
-                        @relation.RelatedEntityName<br />
+                        <label>@relation.RelatedEntityName</label><br />
 
                     }
                     <p><b>Reverse Relations</b></p>
