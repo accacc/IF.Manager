@@ -52,8 +52,8 @@ namespace PlayGround
             //GenerateConfigs(tempPath, name, fileSystem);
             IFProject project = new IFProject();
             project.Name = name;
-            StartupClassWebApi startup = new StartupClassWebApi(project);
-            startup.Build();
+            StartupClassWebApi startup = new StartupClassWebApi(project,entityService);
+            await startup.Build();
             //fileSystem.FormatCode(startup.GenerateCode(), "cs");
         }
 

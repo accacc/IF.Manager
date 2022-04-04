@@ -1,6 +1,7 @@
 ﻿using IF.CodeGeneration.Core;
 using IF.Core.Exception;
 using IF.Manager.Contracts.Dto;
+using IF.Manager.Contracts.Enum;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
@@ -52,6 +53,18 @@ namespace IF.Manager.Service
             entity.SolutionId = form.SolutionId;
             entity.ProjectType = form.ProjectType;
             entity.ConnectionString = form.ConnectionString;
+
+            entity.SystemDbType = form.SystemDbType;
+            entity.SystemDbConnectionString = form.SystemDbConnectionString;
+            entity.JsonAppType = form.JsonAppType;
+            entity.CommandAudit = form.CommandAudit;
+            entity.CommandErrorHandler = form.CommandErrorHandler;
+            entity.CommandPerformanceCounter = form.CommandPerformanceCounter;
+            entity.QueryAudit = form.QueryAudit;
+            entity.QueryErrorHandler = form.QueryErrorHandler;
+            entity.QueryPerformanceCounter = form.QueryPerformanceCounter;
+            entity.AuthenticationType = form.AuthenticationType;
+            entity.IsAuthenticationAdded = false;
             this.Add(entity);
             await this.UnitOfWork.SaveChangesAsync();
             form.Id = entity.Id;
@@ -68,6 +81,18 @@ namespace IF.Manager.Service
             entity.Name = form.Name;
             entity.ConnectionString = form.ConnectionString;
             entity.ProjectType = form.ProjectType;
+
+            entity.SystemDbType = form.SystemDbType;
+            entity.SystemDbConnectionString = form.SystemDbConnectionString;
+            entity.JsonAppType = form.JsonAppType;
+            entity.CommandAudit = form.CommandAudit;
+            entity.CommandErrorHandler = form.CommandErrorHandler;
+            entity.CommandPerformanceCounter = form.CommandPerformanceCounter;
+            entity.QueryAudit = form.QueryAudit;
+            entity.QueryErrorHandler = form.QueryErrorHandler;
+            entity.QueryPerformanceCounter = form.QueryPerformanceCounter;
+            entity.AuthenticationType = form.AuthenticationType;
+
             this.Update(entity);
             await this.UnitOfWork.SaveChangesAsync();
         }
@@ -92,6 +117,16 @@ namespace IF.Manager.Service
 
             return data;
         }
+
+        public async Task<List<IFProject>> GetProjectList(ProjectType projectType)
+        {
+            var data = await this.GetQuery<IFProject>().Where(p => p.ProjectType == projectType)
+                                .ToListAsync();
+
+            return data;
+        }
+
+        //        projects = projects.Where(p => p.ProjectType == Contracts.Enum.ProjectType.Web).ToList();
 
         public async Task AddSolution(IFSolution form)
         {
@@ -222,17 +257,17 @@ namespace IF.Manager.Service
             return data;
         }
 
-       
+        public async Task AddAuthentication(int projectId)
+        {
+            var entity = await this.GetQuery<IFProject>()
+            .SingleOrDefaultAsync(k => k.Id == projectId);
 
+            if (entity == null) { throw new BusinessException(" No such entity exists"); }
 
+            entity.IsAuthenticationAdded = true;
 
-
-
-
-
-      
-      
-
-      
+            this.Update(entity);
+            await this.UnitOfWork.SaveChangesAsync();
+        }
     }
 }

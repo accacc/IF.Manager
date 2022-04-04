@@ -1,11 +1,13 @@
 ﻿using IF.CodeGeneration.Core;
-using IF.CodeGeneration.CSharp;
+using IF.CodeGeneration.Language.CSharp;
+using IF.Core.Audit;
 using IF.Core.Data;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
+using IF.Manager.Service.CodeGen.EF;
+using IF.Persistence.EF.Audit;
 
-using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -44,6 +46,47 @@ namespace IF.Manager.Service
                     softDeleteProperty.PropertyTypeString = "bool";
 
                     entityClass.Properties.Add(softDeleteProperty);
+                }
+
+                switch (entity.AuditType)
+                {
+                    case Enum.IFAuditType.Shadow:
+                        
+                        
+                        entityClass.Usings.Add("IF.Core.Audit");
+                        entityClass.InheritedInterfaces.Add(nameof(IShadowAuditableEntity));
+                        entityClass.Usings.Add("System.ComponentModel.DataAnnotations.Schema");
+
+                        AuditClass auditClass = new AuditClass(entity, project);
+                        auditClass.Build();
+
+
+                        this.fileSystem.FormatCode(auditClass.GenerateCode(), "cs", "", "");
+
+                        var uniqueIdProperty = new CSProperty("public", "UniqueId", false);
+
+                        uniqueIdProperty.PropertyTypeString = "Guid";
+
+                        uniqueIdProperty.Attirubites.Add("NotMapped");
+
+                        entityClass.Properties.Add(uniqueIdProperty);
+
+
+                    
+
+
+
+
+
+                        break;
+                    case Enum.IFAuditType.Bulk:
+                        entityClass.InheritedInterfaces.Add(nameof(IBulkAuditableEntity));
+                        break;
+
+                    case Enum.IFAuditType.None:
+                        break;
+                    default:
+                        break;
                 }
 
                 entityClass.Name = entity.Name;
@@ -98,6 +141,8 @@ namespace IF.Manager.Service
                 //{
                 //    classProperty.Attirubites.Add("Key");
                 //}
+
+              
 
                 entityClass.Properties.Add(classProperty);
             }
@@ -184,6 +229,24 @@ namespace IF.Manager.Service
                     string type = $"List<{relation.RelatedEntityName}>";
                     constructorMethodBody.AppendLine($"{relationName} = new {type}();");
                 }
+            }
+
+
+            switch (entity.AuditType)
+            {
+                case Enum.IFAuditType.Shadow:
+
+
+
+                    break;
+                case Enum.IFAuditType.Bulk:
+                    constructorMethodBody.AppendLine("this.UniqueId = Guid.NewGuid();");
+                    break;
+
+                case Enum.IFAuditType.None:
+                    break;
+                default:
+                    break;
             }
 
             constructorMethod.Body = constructorMethodBody.ToString();

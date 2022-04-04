@@ -18,7 +18,15 @@ namespace IF.Manager.Persistence.EF.Mappings
             builder.Property(x => x.Name).IsRequired();
             builder.Property(x => x.Description).IsRequired();
 
-            builder.HasOne<IFPageLayout>(s => s.Layout).WithMany(s => s.GridLayouts).HasForeignKey(s => s.LayoutId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(s => s.Layout).WithMany(s => s.GridLayouts).HasForeignKey(s => s.LayoutId).OnDelete(DeleteBehavior.Restrict);
+
+
+
+            builder.HasData(
+
+                 new IFPageGridLayout { Name = "Grid Layout", Description = "Grid Layout", LayoutId =1 ,Id=1}
+
+                );
         }
     }
 }

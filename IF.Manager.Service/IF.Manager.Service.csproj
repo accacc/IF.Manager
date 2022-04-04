@@ -11,6 +11,28 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="CodeGen\CodeTemplates\IFPermission.cs" />
+    <Compile Remove="CodeGen\CodeTemplates\IFPermissionMap.cs" />
+    <Compile Remove="CodeGen\CodeTemplates\IFRole.cs" />
+    <Compile Remove="CodeGen\CodeTemplates\IFRolePermission.cs" />
+    <Compile Remove="CodeGen\CodeTemplates\IFUser.cs" />
+    <Compile Remove="CodeGen\CodeTemplates\IFUserExtraPermission.cs" />
+    <Compile Remove="CodeGen\CodeTemplates\IFUserRole.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="CodeGen\CodeTemplates\IFPermission.cs" />
+    <EmbeddedResource Include="CodeGen\CodeTemplates\IFPermissionMap.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CodeGen\CodeTemplates\IFRole.cs" />
+    <EmbeddedResource Include="CodeGen\CodeTemplates\IFRolePermission.cs" />
+    <EmbeddedResource Include="CodeGen\CodeTemplates\IFUser.cs" />
+    <EmbeddedResource Include="CodeGen\CodeTemplates\IFUserExtraPermission.cs" />
+    <EmbeddedResource Include="CodeGen\CodeTemplates\IFUserRole.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Autofac" Version="5.1.2" />
     <PackageReference Include="DatabaseSchemaReader" Version="2.7.3" />
     <PackageReference Include="Microsoft.Build" Version="16.4.0" />
@@ -60,6 +82,9 @@
     </Reference>
     <Reference Include="IF.Persistence.EF">
       <HintPath>..\packages\InFramework\IF.Persistence.EF.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.Persistence.EF.Audit">
+      <HintPath>..\packages\InFramework\IF.Persistence.EF.Audit.dll</HintPath>
     </Reference>
   </ItemGroup>
 

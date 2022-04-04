@@ -40,23 +40,36 @@
 
 
 
+    @*<div class="row">
+            <div class="col-md-6">
+                <div class="form-check">
+                    @Html.CheckBoxFor(m => m.Form.IsAudited, new { @class = "form-check-input" })
+                    <label class="form-check-label" for="IsAudited">
+                        IsAudited
+                    </label>
+                </div>
+            </div>
+        </div>*@
+
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
-                <label for="IsAudited">IsAudited</label>
-                @Html.CheckBoxFor(m => m.Form.IsAudited, new { @class = "form-check-input" })
+                <label for="AuditType">Audit Type</label>
+                @Html.DropDownList($"Form.AuditType", Html.GetEnumSelectList<IF.Manager.Service.Enum.IFAuditType>(), "Select", new { @class = "form-control" })
             </div>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-6">
-            <div class="form-group">
-                <label for="IsSoftDeleted">Is SoftDelete</label>
+            <div class="form-check">
                 @Html.CheckBoxFor(m => m.Form.IsSoftDeleted, new { @class = "form-check-input" })
+                <label class="form-check-label" for="IsSoftDeleted">Is SoftDelete</label>
             </div>
         </div>
     </div>
+
+
 
 
     <div class="row">

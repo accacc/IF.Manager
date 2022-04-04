@@ -12,6 +12,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 
+
 namespace IF.Manager.Service
 {
     public class CoreDllGenerator

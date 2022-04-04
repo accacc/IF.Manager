@@ -1,10 +1,14 @@
 ﻿using IF.CodeGeneration.Core;
+using IF.CodeGeneration.Language.CSharp;
+using IF.CodeGeneration.Language.CSharp;
 using IF.Core.Data;
 using IF.Core.Navigation;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
+using IF.Manager.Service.CodeGen.CodeTemplates;
+using IF.Manager.Service.Enum;
 using IF.Manager.Service.Web.Page;
 using IF.Manager.Service.Web.Page.Form;
 using IF.Manager.Service.Web.Page.ListView;
@@ -12,6 +16,9 @@ using IF.Manager.Service.Web.Page.Panel;
 using IF.Manager.Service.WebApi;
 using IF.Persistence.EF;
 
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 
 using Newtonsoft.Json;
@@ -144,23 +151,29 @@ namespace IF.Manager.Service.Services
                 .SingleOrDefaultAsync();
 
             string projectName = project.Name;
-
             string solutionName = project.Solution.SolutionName;
 
-            var entityList = await this.entityService.GetEntityList();
 
+            //if (project.AuthenticationType != AuthenticationType.None && !project.IsAuthenticationAdded)
+            {
+                //await AddAuthenticationEntities();
+
+                //await projectService.AddAuthentication(project.Id);
+            }
+
+            var entityList = await this.entityService.GetEntityList();
 
             DbContextGenerator dbContextGenerator = new DbContextGenerator(entityService, fileSystem);
             dbContextGenerator.Generate(entityList, project);
 
             ProgramClassWebApi program = new ProgramClassWebApi(project);
             program.Build();
-            fileSystem.FormatCode(program.GenerateCode(), "cs","","");
+            fileSystem.FormatCode(program.GenerateCode(), "cs", "", "");
 
 
-            StartupClassWebApi startup = new StartupClassWebApi(project);
-            startup.Build();
-            fileSystem.FormatCode(startup.GenerateCode(), "cs","","");
+            StartupClassWebApi startup = new StartupClassWebApi(project, entityService);
+            await startup.Build();
+            fileSystem.FormatCode(startup.GenerateCode(), "cs", "", "");
 
             GenerateConfigClassAndJson(project);
 
@@ -174,6 +187,9 @@ namespace IF.Manager.Service.Services
             //coreDllGenerator.GenerateCoreBaseDll(solutionName, DirectoryHelper.GetTempGeneratedDirectoryName());
 
             var files = Directory.GetFiles(DirectoryHelper.GetTempGeneratedDirectoryName(), "*.cs", SearchOption.AllDirectories).Where(s => s.EndsWith(".cs") || s.EndsWith(".cs")).ToArray();
+
+
+
 
             string targetPath = DirectoryHelper.GetNewCoreProjectDirectory(project);
             string fileName = string.Empty;
@@ -195,11 +211,105 @@ namespace IF.Manager.Service.Services
 
         }
 
+        //private void AddSystemEntities()
+        //{
+        //    var useCsFile = CodeTemplateHelper.GetResourceTextFile("User.cs");
+
+        //    var properties = CsharpClassParser.Parse(useCsFile).Properties;
+
+        //    EntityDto entity = new EntityDto();
+
+        //    entity.Description = "User Table";
+        //    entity.Name = "User";
+
+
+        //    foreach (var item in properties)
+        //    {
+        //        EntityPropertyDto entityProperty = new EntityPropertyDto();
+
+        //        if(item.Name =="Id")
+        //        {
+        //            entityProperty.IsIdentity = true;
+        //            entityProperty.IsAutoNumber = true;
+
+        //        }
+
+        //        entityProperty.Name = item.Name;
+        //        entityProperty.Type = item.PropertyTypeString;
+        //        entityProperty.IsNullable = false;
+
+        //        entity.Properties.Add(entityProperty);
+                
+        //    }
+
+        //    this.entityService.AddEntity(entity);
+        //}
+
+        private async Task AddAuthenticationEntities()
+        {
+            string resourceName = "IFUser.cs";
+            string description = "User Table";
+            string name = "IFUser";
+
+            await AddResourceEntity(resourceName, description, name);
+
+            await AddResourceEntity("IFRole.cs", "Role Table", "IFRole");
+            await AddResourceEntity("IFPermission.cs", "IFPermission Table", "IFPermission");
+            await AddResourceEntity("IFPermissionMap.cs", "IFPermissionMap Table", "IFPermissionMap");
+            await AddResourceEntity("IFRolePermission.cs", "IFRolePermission Table", "IFRolePermission");
+            await AddResourceEntity("IFUser.cs", "IFUser Table", "IFUser");
+            await AddResourceEntity("IFUserExtraPermission.cs", "IFUserExtraPermission Table", "IFUserExtraPermission");
+            await AddResourceEntity("IFUserRole.cs", "IFUserRole Table", "IFUserRole");
+        }
+
+        private async Task AddResourceEntity(string resourceName, string description, string name)
+        {
+            var useCsFile = CodeTemplateHelper.GetResourceTextFile(resourceName);
+
+            var properties = CsharpClassParser.Parse(useCsFile).Properties;
+
+            IFEntity entity = new IFEntity();
+
+            entity.Description = description;
+            entity.Name = name;
+
+
+            foreach (var item in properties)
+            {
+                IFEntityProperty entityProperty = new IFEntityProperty();
+
+                if (item.Name == "Id")
+                {
+                    entityProperty.IsIdentity = true;
+                    entityProperty.IsAutoNumber = true;
+
+                }
+
+                entityProperty.Name = item.Name;
+                entityProperty.Type = item.PropertyTypeString;
+                entityProperty.IsNullable = false;
+
+                entity.Properties.Add(entityProperty);
+
+            }
+
+            this.entityService.Add(entity);
+
+            await this.entityService.UnitOfWork.SaveChangesAsync();
+        }
+
         private void GenerateConfigClassAndJson(IFProject project)
         {
             TemplateAppSettings settings = new TemplateAppSettings();
             settings.Database = new IF.Core.Database.DatabaseSettings();
             settings.Database.ConnectionString = project.ConnectionString;
+
+            if(project.SystemDbType == Enum.SystemDbType.Mongo)
+            {
+                settings.MongoConnection = new Core.MongoDb.MongoConnectionSettings();
+                settings.MongoConnection.Database = "Logger";
+                settings.MongoConnection.ConnectionString = project.SystemDbConnectionString;
+            }
 
             settings.ApplicationName = project.Name;
             settings.Version = "1.0.0";

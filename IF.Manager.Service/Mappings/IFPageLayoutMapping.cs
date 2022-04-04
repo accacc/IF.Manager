@@ -16,6 +16,12 @@ namespace IF.Manager.Persistence.EF.Mappings
             builder.Property(x => x.Id).IsRequired();
             builder.Property(x => x.Name).IsRequired();
             builder.Property(x => x.Description).IsRequired();
+
+            builder.HasData(
+
+               new IFPageLayout { Name = "Two Column", Description = "Two Column", ColumSize = 2 ,Id =1 }
+
+              );
         }
     }
 }

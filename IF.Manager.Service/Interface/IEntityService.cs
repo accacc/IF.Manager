@@ -1,10 +1,6 @@
-﻿using DatabaseSchemaReader.DataSchema;
-using IF.Core.Persistence;
+﻿using IF.Core.Persistence;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
-using IF.Manager.Service;
-using IF.Manager.Service.CodeGen;
-using IF.Manager.Service.Dto;
 
 using System;
 using System.Collections.Generic;
@@ -17,6 +13,8 @@ namespace IF.Manager.Contracts.Services
 
         Task<List<EntityDto>> GetEntityAllRelations(int id);
         Task<List<EntityDto>> GetEntityList();
+
+        Task<List<IFEntity>> GetShadowAuditEntityList();
 
         Task<List<List<EntityDto>>> GetEntityListGrouped();
         //Task<List<EntityDto>> GetEntityListWithProperties();

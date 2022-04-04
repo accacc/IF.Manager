@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IF.Manager.Service.Migrations
 {
     [DbContext(typeof(ManagerDbContext))]
-    [Migration("20210325125943_03252021-1")]
-    partial class _032520211
+    [Migration("20220318085255_16032022-1")]
+    partial class _160320221
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -38,7 +38,10 @@ namespace IF.Manager.Service.Migrations
                     b.Property<int?>("IFClassMapperId")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("IsList")
+                    b.Property<bool>("IsList")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsQueryOverride")
                         .HasColumnType("bit");
 
                     b.Property<int?>("ModelId")
@@ -54,7 +57,7 @@ namespace IF.Manager.Service.Migrations
                     b.Property<int>("ProcessId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Sequence")
+                    b.Property<int>("Sequence")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -116,6 +119,9 @@ namespace IF.Manager.Service.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AuditType")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -123,7 +129,7 @@ namespace IF.Manager.Service.Migrations
                     b.Property<int?>("GroupId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsAudited")
+                    b.Property<bool>("IsSoftDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
@@ -167,6 +173,9 @@ namespace IF.Manager.Service.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("IsAudited")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsAutoNumber")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsIdentity")
@@ -453,6 +462,38 @@ namespace IF.Manager.Service.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("IFPageFormItem");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Textbox",
+                            Name = "Textbox"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Datepicker",
+                            Name = "Datepicker"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Checkbox",
+                            Name = "Checkbox"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "DropDown",
+                            Name = "DropDown"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "MultipleSelect",
+                            Name = "MultipleSelect"
+                        });
                 });
 
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFPageFormLayout", b =>
@@ -473,6 +514,14 @@ namespace IF.Manager.Service.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("IFPageFormLayout");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Standart",
+                            Name = "Standart"
+                        });
                 });
 
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFPageGridLayout", b =>
@@ -498,6 +547,15 @@ namespace IF.Manager.Service.Migrations
                     b.HasIndex("LayoutId");
 
                     b.ToTable("IFPageGridLayout");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Grid Layout",
+                            LayoutId = 1,
+                            Name = "Grid Layout"
+                        });
                 });
 
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFPageLayout", b =>
@@ -521,6 +579,15 @@ namespace IF.Manager.Service.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("IFPageLayout");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ColumSize = 2,
+                            Description = "Two Column",
+                            Name = "Two Column"
+                        });
                 });
 
             modelBuilder.Entity("IF.Manager.Contracts.Model.IFPageParameter", b =>
@@ -583,6 +650,18 @@ namespace IF.Manager.Service.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AuthenticationType")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("CommandAudit")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CommandErrorHandler")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CommandPerformanceCounter")
+                        .HasColumnType("bit");
+
                     b.Property<string>("ConnectionString")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -590,13 +669,34 @@ namespace IF.Manager.Service.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsAuthenticationAdded")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("JsonAppType")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProjectType")
                         .HasColumnType("int");
 
+                    b.Property<bool>("QueryAudit")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("QueryErrorHandler")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("QueryPerformanceCounter")
+                        .HasColumnType("bit");
+
                     b.Property<int>("SolutionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SystemDbConnectionString")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SystemDbType")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

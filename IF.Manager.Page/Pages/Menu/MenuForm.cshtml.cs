@@ -112,7 +112,7 @@ namespace IF.Manager.Page.Pages.Menu
 
         private async Task SetFormDefaults()
         {
-            var entities = await this.projectService.GetProjectList();
+            var entities = await this.projectService.GetProjectList(Contracts.Enum.ProjectType.Web);
 
             List<SelectListItem> items = new List<SelectListItem>();
 

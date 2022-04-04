@@ -1,8 +1,7 @@
-﻿using IF.CodeGeneration.CSharp;
+﻿using IF.CodeGeneration.Language.CSharp;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 
-using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -40,6 +39,23 @@ namespace IF.Manager.Service
                 var p = new CSProperty("public", entity.Name, false);
                 p.PropertyTypeString = $"DbSet<{entity.Name}>";
                 this.Properties.Add(p);
+
+
+                switch (entity.AuditType)
+                {
+                    case Enum.IFAuditType.Shadow:
+
+                        var auditEntityProperty = new CSProperty("public", entity.Name + "ShadowAudit", false);
+                        auditEntityProperty.PropertyTypeString = $"DbSet<{entity.Name}ShadowAudit>";
+                        this.Properties.Add(auditEntityProperty);
+                        break;
+                    case Enum.IFAuditType.Bulk:
+                        break;
+                    case Enum.IFAuditType.None:
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 

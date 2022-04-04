@@ -1,18 +1,17 @@
-﻿                                                                                                                                                                                                                                                                                                                                                                                                                                                                using IF.Core.Data;
-using System;
+﻿using IF.Core.Data;
+using IF.Manager.Service.Enum;
+
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace IF.Manager.Contracts.Model
 {
-    public class IFEntity:Entity
+    public class IFEntity : Entity
     {
         public IFEntity()
         {
             this.Properties = new List<IFEntityProperty>();
             this.ReverseRelations = new List<IFEntityRelation>();
-            //this.ModelEntities = new List<IFModelEntity>();
             this.ModelProperties = new List<IFModelProperty>();
             this.QueryFilterItems = new List<IFQueryFilterItem>();
             this.CommandFilterItems = new List<IFCommandFilterItem>();
@@ -25,22 +24,22 @@ namespace IF.Manager.Contracts.Model
 
         public string Description { get; set; }
 
-        
+
 
         public int? GroupId { get; set; }
 
-        public bool IsAudited { get; set; }
+        //public bool IsAudited { get; set; }
+
+        public IFAuditType AuditType { get; set; }
 
         public IFEntityGroup Group { get; set; }
 
         public bool IsSoftDeleted { get; set; }
-        public ICollection<IFEntityProperty>    Properties { get; set; }
+        public ICollection<IFEntityProperty> Properties { get; set; }
 
         public ICollection<IFEntityRelation> Relations { get; set; }
 
         public ICollection<IFEntityRelation> ReverseRelations { get; set; }
-
-        //public ICollection<IFModelEntity> ModelEntities { get; set; }
 
         public ICollection<IFModelProperty> ModelProperties { get; set; }
         public ICollection<IFQueryFilterItem> QueryFilterItems { get; set; }
@@ -49,4 +48,3 @@ namespace IF.Manager.Contracts.Model
 
     }
 }
-  

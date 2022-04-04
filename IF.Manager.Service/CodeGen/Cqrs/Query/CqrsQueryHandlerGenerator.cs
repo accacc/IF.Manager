@@ -1,5 +1,5 @@
 ﻿using IF.CodeGeneration.Core;
-using IF.CodeGeneration.CSharp;
+using IF.CodeGeneration.Language.CSharp;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 
@@ -87,7 +87,7 @@ namespace IF.Manager.Service.Cqrs
             }
             else if (query.QueryGetType == Contracts.Enum.QueryGetType.List || query.QueryGetType == Contracts.Enum.QueryGetType.NameValue)
             {
-                handleMethodBuilder.AppendLine($"var results = query.ToListAsync();");
+                handleMethodBuilder.AppendLine($"var results = await query.ToListAsync();");
             }
             else
             {

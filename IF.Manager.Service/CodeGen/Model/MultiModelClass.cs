@@ -1,4 +1,4 @@
-﻿using IF.CodeGeneration.CSharp;
+﻿using IF.CodeGeneration.Language.CSharp;
 using IF.Manager.Contracts.Model;
 
 using System.Linq;

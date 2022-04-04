@@ -93,7 +93,7 @@ namespace IF.Manager.Page.Pages
 
         private async Task SetProjects()
         {
-            var projects = await this.projectService.GetProjectList();
+            var projects = await this.projectService.GetProjectList(Contracts.Enum.ProjectType.Web);
 
             List<SelectListItem> items = new List<SelectListItem>();
 

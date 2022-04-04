@@ -1,7 +1,7 @@
-﻿using IF.CodeGeneration.CSharp;
+﻿using IF.CodeGeneration.Language.CSharp;
+
 using IF.Manager.Contracts.Model;
-using System;
-using System.Collections.Generic;
+
 using System.Text;
 
 namespace IF.Manager.Service

@@ -17,7 +17,13 @@ namespace IF.Manager.Persistence.EF.Mappings
             builder.Property(x => x.Id).IsRequired();
             builder.Property(x => x.Name).IsRequired();
             builder.Property(x => x.Description).IsRequired();
-            
+
+
+            builder.HasData(
+
+            new IFPageFormLayout { Name = "Standart", Description = "Standart", Id=1 }
+
+           );
         }
     }
 }

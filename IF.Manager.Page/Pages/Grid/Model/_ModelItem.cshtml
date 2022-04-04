@@ -54,7 +54,7 @@
         <input type="hidden" name="Form[@index].Id" value="@Model.Id" />
     </td>
     <td>
-        <a class="btn btn-primary"
+        @*<a class="btn btn-primary"
            href="@Url.Page("/Form/Model/ModelForm","MoveModelItemUpOne", new { Id = Model.Id,FormId = Model.IFPageForm.Id })"
            if-ajax="true"
            if-ajax-method="post"
@@ -74,7 +74,7 @@
            if-anti-forgery-token="@Context.GetAntiforgeryToken()"
            if-ajax-update-id="ModelItemListDiv">
             &#8595;
-        </a>
+        </a>*@
 
     </td>
     <td>
@@ -82,21 +82,21 @@
     </td>
     @if (Model.IFPageFormItem != null)
     {
-    @if (Model.IFPageFormItem.Name == IF.Manager.Contracts.Enum.FormModelType.DropDown.ToString())
-    {
-        <td>
-            <a class="btn btn-primary"
-               href="@Url.Page("/Form/DropDown/DropDownForm", new { Id = Model.Id, ObjectId = Model.ObjectId, IFQueryId = Model.IFQueryId })"
-               if-ajax="true"
-               if-ajax-method="get"
-               if-ajax-insertion-mode="replace"
-               if-ajax-show-dialog="true"
-               if-ajax-modal-id="@Guid.NewGuid()">
-                Query
-            </a>
+        @if (Model.IFPageFormItem.Name == IF.Manager.Contracts.Enum.FormModelType.DropDown.ToString())
+        {
+            <td>
+                <a class="btn btn-primary"
+                   href="@Url.Page("/Form/DropDown/DropDownForm", new { Id = Model.Id, ObjectId = Model.ObjectId, IFQueryId = Model.IFQueryId })"
+                   if-ajax="true"
+                   if-ajax-method="get"
+                   if-ajax-insertion-mode="replace"
+                   if-ajax-show-dialog="true"
+                   if-ajax-modal-id="@Guid.NewGuid()">
+                    Query
+                </a>
 
-        </td>
-    }
+            </td>
+        }
     }
 </tr>
 
