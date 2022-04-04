@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IF.Manager.Service.Migrations
 {
     [DbContext(typeof(ManagerDbContext))]
-    [Migration("20220316123517_16032022-1")]
+    [Migration("20220318085255_16032022-1")]
     partial class _160320221
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -519,8 +519,8 @@ namespace IF.Manager.Service.Migrations
                         new
                         {
                             Id = 1,
-                            Description = "Textbox",
-                            Name = "Textbox"
+                            Description = "Standart",
+                            Name = "Standart"
                         });
                 });
 
@@ -552,9 +552,9 @@ namespace IF.Manager.Service.Migrations
                         new
                         {
                             Id = 1,
-                            Description = "Textbox",
+                            Description = "Grid Layout",
                             LayoutId = 1,
-                            Name = "Textbox"
+                            Name = "Grid Layout"
                         });
                 });
 

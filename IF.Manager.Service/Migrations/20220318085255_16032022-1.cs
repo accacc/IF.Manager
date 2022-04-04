@@ -931,7 +931,7 @@ namespace IF.Manager.Service.Migrations
             migrationBuilder.InsertData(
                 table: "IFPageFormLayout",
                 columns: new[] { "Id", "Description", "Name" },
-                values: new object[] { 1, "Textbox", "Textbox" });
+                values: new object[] { 1, "Standart", "Standart" });
 
             migrationBuilder.InsertData(
                 table: "IFPageLayout",
@@ -941,7 +941,7 @@ namespace IF.Manager.Service.Migrations
             migrationBuilder.InsertData(
                 table: "IFPageGridLayout",
                 columns: new[] { "Id", "Description", "LayoutId", "Name" },
-                values: new object[] { 1, "Textbox", 1, "Textbox" });
+                values: new object[] { 1, "Grid Layout", 1, "Grid Layout" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_IFClass_ParentId",

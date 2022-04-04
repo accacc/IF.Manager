@@ -517,8 +517,8 @@ namespace IF.Manager.Service.Migrations
                         new
                         {
                             Id = 1,
-                            Description = "Textbox",
-                            Name = "Textbox"
+                            Description = "Standart",
+                            Name = "Standart"
                         });
                 });
 
@@ -550,9 +550,9 @@ namespace IF.Manager.Service.Migrations
                         new
                         {
                             Id = 1,
-                            Description = "Textbox",
+                            Description = "Grid Layout",
                             LayoutId = 1,
-                            Name = "Textbox"
+                            Name = "Grid Layout"
                         });
                 });
 

@@ -81,7 +81,6 @@ namespace IF.Manager.Service
                 }
             }
 
-            //.HasKey(o => new { o.CustomerAbbreviation, o.OrderNumber });
             var identities = this.EntityMetaData.Properties.Where(p => p.IsIdentity).ToList();
 
             methodBody.Append("builder.HasKey(o => new {");
@@ -90,6 +89,7 @@ namespace IF.Manager.Service
 
 
             mapClassMethod.Body = methodBody.ToString();
+
             this.Methods.Add(mapClassMethod);
 
         }

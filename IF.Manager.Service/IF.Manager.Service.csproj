@@ -83,6 +83,9 @@
     <Reference Include="IF.Persistence.EF">
       <HintPath>..\packages\InFramework\IF.Persistence.EF.dll</HintPath>
     </Reference>
+    <Reference Include="IF.Persistence.EF.Audit">
+      <HintPath>..\packages\InFramework\IF.Persistence.EF.Audit.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

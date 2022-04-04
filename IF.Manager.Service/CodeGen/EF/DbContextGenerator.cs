@@ -6,6 +6,7 @@ using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Service.CodeGen.EF;
+using IF.Persistence.EF.Audit;
 
 using System.Collections.Generic;
 using System.Text;
@@ -55,17 +56,27 @@ namespace IF.Manager.Service
                         entityClass.Usings.Add("IF.Core.Audit");
                         entityClass.InheritedInterfaces.Add(nameof(IShadowAuditableEntity));
                         entityClass.Usings.Add("System.ComponentModel.DataAnnotations.Schema");
+
                         AuditClass auditClass = new AuditClass(entity, project);
                         auditClass.Build();
+
+
                         this.fileSystem.FormatCode(auditClass.GenerateCode(), "cs", "", "");
 
-                        var classProperty = new CSProperty("public", "UniqueId", false);
+                        var uniqueIdProperty = new CSProperty("public", "UniqueId", false);
 
-                        classProperty.PropertyTypeString = "Guid";
+                        uniqueIdProperty.PropertyTypeString = "Guid";
 
-                        classProperty.Attirubites.Add("NotMapped");
+                        uniqueIdProperty.Attirubites.Add("NotMapped");
 
-                        entityClass.Properties.Add(classProperty);
+                        entityClass.Properties.Add(uniqueIdProperty);
+
+
+                    
+
+
+
+
 
                         break;
                     case Enum.IFAuditType.Bulk:
@@ -218,6 +229,24 @@ namespace IF.Manager.Service
                     string type = $"List<{relation.RelatedEntityName}>";
                     constructorMethodBody.AppendLine($"{relationName} = new {type}();");
                 }
+            }
+
+
+            switch (entity.AuditType)
+            {
+                case Enum.IFAuditType.Shadow:
+
+
+
+                    break;
+                case Enum.IFAuditType.Bulk:
+                    constructorMethodBody.AppendLine("this.UniqueId = Guid.NewGuid();");
+                    break;
+
+                case Enum.IFAuditType.None:
+                    break;
+                default:
+                    break;
             }
 
             constructorMethod.Body = constructorMethodBody.ToString();

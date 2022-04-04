@@ -1,14 +1,9 @@
 ﻿using IF.CodeGeneration.Language.CSharp;
-using IF.CodeGeneration.Language.CSharp;
 using IF.Core.Audit;
 using IF.Core.Data;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
-using IF.Manager.Service.CodeGen;
-
-using System;
-using System.Linq;
-using System.Text;
+using IF.Persistence.EF.Audit;
 namespace IF.Manager.Service.CodeGen.EF
 {
     public class AuditClass : CSClass
@@ -44,15 +39,48 @@ namespace IF.Manager.Service.CodeGen.EF
 
                 var classProperty = new CSProperty("public", entityProperty.Name, IsNullable);
 
-                classProperty.PropertyTypeString = entityProperty.Type;
+                classProperty.PropertyTypeString = entityProperty.Type;               
 
-                //if (entityProperty.IsIdentity)
-                //{
-                //    classProperty.Attirubites.Add("Key");
-                //}
-
-                this.Properties.Add(classProperty);
+                this.Properties.Add(classProperty);             
             }
+
+            var CreatedColumnNameProperty = new CSProperty("public", ShadowAuditing.CreatedColumnName, false);
+            CreatedColumnNameProperty.PropertyTypeString = "DateTime";
+            this.Properties.Add(CreatedColumnNameProperty);
+
+
+            var CreatedByColumnNameProperty = new CSProperty("public", ShadowAuditing.CreatedByColumnName, false);
+            CreatedByColumnNameProperty.PropertyTypeString = "string";
+            this.Properties.Add(CreatedByColumnNameProperty);
+
+            var LogTypeColumnNameProperty = new CSProperty("public", ShadowAuditing.LogTypeColumnName, false);
+            LogTypeColumnNameProperty.PropertyTypeString = "int";
+            this.Properties.Add(LogTypeColumnNameProperty);
+
+            var ModifiedColumnNameProperty = new CSProperty("public", ShadowAuditing.ModifiedColumnName, false);
+            ModifiedColumnNameProperty.PropertyTypeString = "DateTime";
+            this.Properties.Add(ModifiedColumnNameProperty);
+
+
+            var ModifiedByColumnNameProperty = new CSProperty("public", ShadowAuditing.ModifiedByColumnName, false);
+            ModifiedByColumnNameProperty.PropertyTypeString = "string";
+            this.Properties.Add(ModifiedByColumnNameProperty);
+
+
+
+            var LogDateColumnNameProperty = new CSProperty("public", ShadowAuditing.LogDateColumnName, false);
+            LogDateColumnNameProperty.PropertyTypeString = "DateTime";
+            this.Properties.Add(LogDateColumnNameProperty);
+
+
+            var ObjectIdColumnNameProperty = new CSProperty("public", ShadowAuditing.ObjectIdColumnName, false);
+            ObjectIdColumnNameProperty.PropertyTypeString = "string";
+            this.Properties.Add(ObjectIdColumnNameProperty);
+
+
+            var ChannelColumnNameProperty = new CSProperty("public", ShadowAuditing.ChannelColumnName, false);
+            ChannelColumnNameProperty.PropertyTypeString = "string";
+            this.Properties.Add(ChannelColumnNameProperty);
 
         }
     }
