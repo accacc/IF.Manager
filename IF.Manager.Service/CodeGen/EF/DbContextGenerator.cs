@@ -9,6 +9,7 @@ using IF.Manager.Service.CodeGen.EF;
 using IF.Persistence.EF.Audit;
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace IF.Manager.Service
@@ -27,9 +28,31 @@ namespace IF.Manager.Service
 
         public void Generate(List<EntityDto> entityList, IFProject project)
         {
-
-
             string solutionName = project.Solution.SolutionName;
+
+
+            if (entityList.Any(e => e.AuditType == Enum.IFAuditType.Bulk))
+            {
+                EntityDto auditEntity = new EntityDto();
+                auditEntity.Name = "Audit";
+                auditEntity.Properties = new List<EntityPropertyDto>();
+
+                auditEntity.Properties.Add(new EntityPropertyDto { Name = "Id", Type = "int" ,IsIdentity = true});
+                auditEntity.Properties.Add(new EntityPropertyDto { Name = "UserId", Type = "string" });
+                auditEntity.Properties.Add(new EntityPropertyDto { Name = "Type", Type = "string" });
+                auditEntity.Properties.Add(new EntityPropertyDto { Name = "TableName", Type = "string" });
+                auditEntity.Properties.Add(new EntityPropertyDto { Name = "DateTime", Type = "DateTime" });
+                auditEntity.Properties.Add(new EntityPropertyDto { Name = "OldValues", Type = "string" });
+                auditEntity.Properties.Add(new EntityPropertyDto { Name = "NewValues", Type = "string" });
+                auditEntity.Properties.Add(new EntityPropertyDto { Name = "AffectedColumns", Type = "string" });
+                auditEntity.Properties.Add(new EntityPropertyDto { Name = "PrimaryKey", Type = "string" });
+                
+                EntityMapClass auditEntityMap = new EntityMapClass(auditEntity, project);
+
+                auditEntityMap.Build();
+
+                this.fileSystem.FormatCode(auditEntityMap.GenerateCode(), "cs", "", "");
+            }
 
             foreach (var entity in entityList)
             {
@@ -71,16 +94,10 @@ namespace IF.Manager.Service
 
                         entityClass.Properties.Add(uniqueIdProperty);
 
-
-                    
-
-
-
-
-
                         break;
                     case Enum.IFAuditType.Bulk:
-                        entityClass.InheritedInterfaces.Add(nameof(IBulkAuditableEntity));
+                        entityClass.Usings.Add("IF.Core.Audit");
+                        entityClass.InheritedInterfaces.Add(nameof(ISimpleAuditableEntity));
                         break;
 
                     case Enum.IFAuditType.None:
@@ -137,13 +154,6 @@ namespace IF.Manager.Service
 
                 classProperty.PropertyTypeString = entityProperty.Type;
 
-                //if (entityProperty.IsIdentity)
-                //{
-                //    classProperty.Attirubites.Add("Key");
-                //}
-
-              
-
                 entityClass.Properties.Add(classProperty);
             }
 
@@ -162,6 +172,7 @@ namespace IF.Manager.Service
 
 
                 var classProperty = new CSProperty("public", relationName, false);
+
                 classProperty.PropertyTypeString = type;
 
                 entityClass.Properties.Add(classProperty);
@@ -209,9 +220,7 @@ namespace IF.Manager.Service
                     relationName += "s";
                     string type = $"List<{relation.RelatedEntityName}>";
                     constructorMethodBody.AppendLine($"{relationName} = new {type}();");
-                }
-
-               
+                }              
 
             }
 
@@ -235,12 +244,10 @@ namespace IF.Manager.Service
             switch (entity.AuditType)
             {
                 case Enum.IFAuditType.Shadow:
-
-
-
+                    constructorMethodBody.AppendLine("this.UniqueId = Guid.NewGuid();");
                     break;
                 case Enum.IFAuditType.Bulk:
-                    constructorMethodBody.AppendLine("this.UniqueId = Guid.NewGuid();");
+                   
                     break;
 
                 case Enum.IFAuditType.None:

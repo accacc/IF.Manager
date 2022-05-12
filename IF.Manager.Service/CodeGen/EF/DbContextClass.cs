@@ -3,6 +3,7 @@ using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace IF.Manager.Service
@@ -34,6 +35,15 @@ namespace IF.Manager.Service
 
         private void AddDbSets()
         {
+
+            if(this.Entities.Any(e=>e.AuditType == Enum.IFAuditType.Bulk))
+            {
+                var auditEntityProperty = new CSProperty("public", "Audit", false);
+                auditEntityProperty.PropertyTypeString = "DbSet<Audit>";
+                this.Properties.Add(auditEntityProperty);
+                this.Usings.Add("IF.Core.Audit");
+            }
+
             foreach (var entity in this.Entities)
             {
                 var p = new CSProperty("public", entity.Name, false);
@@ -48,9 +58,13 @@ namespace IF.Manager.Service
                         var auditEntityProperty = new CSProperty("public", entity.Name + "ShadowAudit", false);
                         auditEntityProperty.PropertyTypeString = $"DbSet<{entity.Name}ShadowAudit>";
                         this.Properties.Add(auditEntityProperty);
+
+
                         break;
                     case Enum.IFAuditType.Bulk:
                         break;
+
+
                     case Enum.IFAuditType.None:
                         break;
                     default:

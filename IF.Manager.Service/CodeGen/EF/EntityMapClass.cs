@@ -1,4 +1,5 @@
 ﻿using IF.CodeGeneration.Language.CSharp;
+using IF.Core.Exception;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Service.CodeGen;
@@ -21,6 +22,7 @@ namespace IF.Manager.Service
             this.InheritedInterfaces.Add($"IEntityTypeConfiguration<{this.EntityMetaData.Name}>");
             this.Usings.Add("Microsoft.EntityFrameworkCore");
             this.Usings.Add("Microsoft.EntityFrameworkCore.Metadata.Builders");
+            this.Usings.Add("IF.Core.Audit");
             this.Usings.Add(SolutionHelper.GetCoreNamespace(project));
         }
 
@@ -82,6 +84,8 @@ namespace IF.Manager.Service
             }
 
             var identities = this.EntityMetaData.Properties.Where(p => p.IsIdentity).ToList();
+
+            if (!identities.Any()) throw new BusinessException("EntityMapClass: no identity column");
 
             methodBody.Append("builder.HasKey(o => new {");
             methodBody.Append(String.Join(",", identities.Select(x => $"o.{x.Name.ToString()}").ToList()));

@@ -10,6 +10,8 @@ namespace IF.Manager.Contracts.Dto
         public EntityDto()
         {
             this.Properties = new List<EntityPropertyDto>();
+            this.Relations = new List<EntityRelationDto>();
+            this.ReverseRelations = new List<EntityRelationDto>();
         }
         public int Id { get; set; }
 
