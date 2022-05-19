@@ -38,8 +38,8 @@ namespace IF.Manager.Service
 
             if(this.Entities.Any(e=>e.AuditType == Enum.IFAuditType.Bulk))
             {
-                var auditEntityProperty = new CSProperty("public", "Audit", false);
-                auditEntityProperty.PropertyTypeString = "DbSet<Audit>";
+                var auditEntityProperty = new CSProperty("public", "AuditLog", false);
+                auditEntityProperty.PropertyTypeString = "DbSet<AuditLog>";
                 this.Properties.Add(auditEntityProperty);
                 this.Usings.Add("IF.Core.Audit");
             }

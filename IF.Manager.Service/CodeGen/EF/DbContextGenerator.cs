@@ -34,14 +34,16 @@ namespace IF.Manager.Service
             if (entityList.Any(e => e.AuditType == Enum.IFAuditType.Bulk))
             {
                 EntityDto auditEntity = new EntityDto();
-                auditEntity.Name = "Audit";
+                auditEntity.Name = "AuditLog";
                 auditEntity.Properties = new List<EntityPropertyDto>();
 
                 auditEntity.Properties.Add(new EntityPropertyDto { Name = "Id", Type = "int" ,IsIdentity = true});
-                auditEntity.Properties.Add(new EntityPropertyDto { Name = "UserId", Type = "string" });
+                auditEntity.Properties.Add(new EntityPropertyDto { Name = "CreatedBy", Type = "string" });
+                auditEntity.Properties.Add(new EntityPropertyDto { Name = "ModifiedBy", Type = "string" });
                 auditEntity.Properties.Add(new EntityPropertyDto { Name = "Type", Type = "string" });
                 auditEntity.Properties.Add(new EntityPropertyDto { Name = "TableName", Type = "string" });
-                auditEntity.Properties.Add(new EntityPropertyDto { Name = "DateTime", Type = "DateTime" });
+                auditEntity.Properties.Add(new EntityPropertyDto { Name = "Modified", Type = "DateTime?" });
+                auditEntity.Properties.Add(new EntityPropertyDto { Name = "Created", Type = "DateTime" });
                 auditEntity.Properties.Add(new EntityPropertyDto { Name = "OldValues", Type = "string" });
                 auditEntity.Properties.Add(new EntityPropertyDto { Name = "NewValues", Type = "string" });
                 auditEntity.Properties.Add(new EntityPropertyDto { Name = "AffectedColumns", Type = "string" });

@@ -58,7 +58,7 @@ namespace IF.Manager.Service.CodeGen.EF
             this.Properties.Add(LogTypeColumnNameProperty);
 
             var ModifiedColumnNameProperty = new CSProperty("public", ShadowAuditing.ModifiedColumnName, false);
-            ModifiedColumnNameProperty.PropertyTypeString = "DateTime";
+            ModifiedColumnNameProperty.PropertyTypeString = "DateTime?";
             this.Properties.Add(ModifiedColumnNameProperty);
 
 
