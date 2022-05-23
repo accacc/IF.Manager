@@ -38,6 +38,12 @@ namespace IF.Manager.Service
         {
             JsonClassGenerator jsonClassGenerator = GetJsonGenerator(name, json);
 
+
+
+
+
+
+
             var jsonTypes = jsonClassGenerator.Types;
 
             IFClass wrapperClass = new IFClass();
