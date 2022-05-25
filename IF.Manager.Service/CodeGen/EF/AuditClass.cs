@@ -44,27 +44,10 @@ namespace IF.Manager.Service.CodeGen.EF
                 this.Properties.Add(classProperty);             
             }
 
-            var CreatedColumnNameProperty = new CSProperty("public", ShadowAuditing.CreatedColumnName, false);
-            CreatedColumnNameProperty.PropertyTypeString = "DateTime";
-            this.Properties.Add(CreatedColumnNameProperty);
-
-
-            var CreatedByColumnNameProperty = new CSProperty("public", ShadowAuditing.CreatedByColumnName, false);
-            CreatedByColumnNameProperty.PropertyTypeString = "string";
-            this.Properties.Add(CreatedByColumnNameProperty);
-
+           
             var LogTypeColumnNameProperty = new CSProperty("public", ShadowAuditing.LogTypeColumnName, false);
             LogTypeColumnNameProperty.PropertyTypeString = "int";
             this.Properties.Add(LogTypeColumnNameProperty);
-
-            var ModifiedColumnNameProperty = new CSProperty("public", ShadowAuditing.ModifiedColumnName, false);
-            ModifiedColumnNameProperty.PropertyTypeString = "DateTime?";
-            this.Properties.Add(ModifiedColumnNameProperty);
-
-
-            var ModifiedByColumnNameProperty = new CSProperty("public", ShadowAuditing.ModifiedByColumnName, false);
-            ModifiedByColumnNameProperty.PropertyTypeString = "string";
-            this.Properties.Add(ModifiedByColumnNameProperty);
 
 
 

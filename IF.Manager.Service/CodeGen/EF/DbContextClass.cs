@@ -63,8 +63,9 @@ namespace IF.Manager.Service
                         break;
                     case Enum.IFAuditType.Bulk:
                         break;
-
-
+                    case Enum.IFAuditType.Self:
+                        //ISelfAuditableEntity
+                        break;
                     case Enum.IFAuditType.None:
                         break;
                     default:

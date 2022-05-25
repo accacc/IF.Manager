@@ -102,6 +102,11 @@ namespace IF.Manager.Service
                         entityClass.InheritedInterfaces.Add(nameof(ISimpleAuditableEntity));
                         break;
 
+                    case Enum.IFAuditType.Self:
+                        entityClass.Usings.Add("IF.Core.Audit");
+                        entityClass.InheritedInterfaces.Add(nameof(ISelfAuditableEntity));
+                        break;
+
                     case Enum.IFAuditType.None:
                         break;
                     default:
@@ -151,12 +156,38 @@ namespace IF.Manager.Service
                     IsNullable = false;
                 }
 
+                
 
                 var classProperty = new CSProperty("public", entityProperty.Name, IsNullable);
 
                 classProperty.PropertyTypeString = entityProperty.Type;
 
                 entityClass.Properties.Add(classProperty);
+            }
+
+            if (entity.AuditType == Enum.IFAuditType.Self)
+            {
+
+                var CreatedColumnNameProperty = new CSProperty("public", ShadowAuditing.CreatedColumnName, false);
+                CreatedColumnNameProperty.PropertyTypeString = "DateTime";
+                entityClass.Properties.Add(CreatedColumnNameProperty);
+
+
+                var CreatedByColumnNameProperty = new CSProperty("public", ShadowAuditing.CreatedByColumnName, false);
+                CreatedByColumnNameProperty.PropertyTypeString = "string";
+                entityClass.Properties.Add(CreatedByColumnNameProperty);
+
+
+
+                var ModifiedColumnNameProperty = new CSProperty("public", ShadowAuditing.ModifiedColumnName, false);
+                ModifiedColumnNameProperty.PropertyTypeString = "DateTime?";
+                entityClass.Properties.Add(ModifiedColumnNameProperty);
+
+
+                var ModifiedByColumnNameProperty = new CSProperty("public", ShadowAuditing.ModifiedByColumnName, false);
+                ModifiedByColumnNameProperty.PropertyTypeString = "string";
+                entityClass.Properties.Add(ModifiedByColumnNameProperty);
+
             }
 
             foreach (var relation in entity.Relations)

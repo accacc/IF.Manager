@@ -8,7 +8,8 @@ namespace IF.Manager.Service.Enum
     {
         None = 0,
         Shadow = 1,
-        Bulk = 2
-        
+        Bulk = 2,
+        Self = 3
+
     }
 }
