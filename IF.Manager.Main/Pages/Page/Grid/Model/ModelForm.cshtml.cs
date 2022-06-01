@@ -1,0 +1,186 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
+using IF.Core.Exception;
+using IF.Manager.Contracts.Dto;
+using IF.Manager.Contracts.Model;
+using IF.Manager.Contracts.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+
+namespace IF.Manager.Page.Pages.Grid.Model
+{
+
+
+    public class ModelFormModel : PageModel
+    {
+
+        private readonly IPageFormService pageFormService;
+        private readonly IPageActionService pageActionService;
+        private readonly IPageService pageService;
+        private readonly IModelService modelService;
+        private readonly IPageGridService pageGridService;
+
+        [BindProperty, Required]
+        public List<IFPageControlItemModelProperty> Form { get; set; }
+
+
+        [BindProperty(SupportsGet = true), Required]
+        public int FormId { get; set; }
+
+
+        public ModelFormModel(IPageFormService pageFormService, IPageService queryService, IModelService modelService, IPageGridService pageGridService, IPageActionService pageActionService)
+        {
+            this.pageFormService = pageFormService;
+            this.pageService = queryService;
+            this.modelService = modelService;
+            this.pageGridService = pageGridService;
+            this.pageActionService = pageActionService;
+        }
+
+
+
+        public async Task OnGet()
+        {
+
+            this.Form = await this.pageService.GetPageControlItemModelProperties(this.FormId);
+            
+
+            if (!this.Form.Any())
+            {
+                SetEmptyForm(this.FormId);
+            }
+
+            await SetFormDefaults(this.FormId);
+
+        }
+
+
+
+
+        public async Task<PartialViewResult> OnGetEmptyModelItemPartialAsync()
+        {
+            await SetFormDefaults(this.FormId);
+
+            var emptyFormItem = new IFPageControlItemModelProperty();
+            emptyFormItem.IFPageForm = new IFPageForm();
+
+            return new PartialViewResult
+            {
+                ViewName = "_ModelItem",
+                ViewData = new ViewDataDictionary<IFPageControlItemModelProperty>(ViewData, emptyFormItem)
+            };
+        }
+
+        public async Task<PartialViewResult> OnPost()
+        {
+            await this.pageService.UpdateControlItemModelProperties(this.Form, this.FormId);
+
+
+            var FormList = await this.pageGridService.GetGridList();
+
+
+            return new PartialViewResult
+            {
+                ViewName = "_GridListTable",
+                ViewData = new ViewDataDictionary<List<IFPageGrid>>(ViewData, FormList)
+            };
+
+        }
+
+        public async Task<PartialViewResult> OnPostMoveModelItemUpOneAsync(int Id)
+        {
+            this.pageService.MovePageControlModelItemUp(Id,this.FormId);
+
+            var propertyList = await this.pageService.GetPageControlItemModelProperties(this.FormId);
+
+            await this.SetFormDefaults(this.FormId);
+
+            return new PartialViewResult
+            {
+                ViewName = "_ModelItemList",
+                ViewData = new ViewDataDictionary<List<IFPageControlItemModelProperty>>(ViewData, propertyList)
+            };
+
+        }
+
+        public async Task<PartialViewResult> OnPostMoveModelItemDownOneAsync(int Id)
+        {
+            this.pageService.MovePageControlModelItemDown(Id, this.FormId);            
+
+            var propertyList = await this.pageService.GetPageControlItemModelProperties(this.FormId);
+
+            await this.SetFormDefaults(this.FormId);
+
+            return new PartialViewResult
+            {
+                ViewName = "_ModelItemList",
+                ViewData = new ViewDataDictionary<List<IFPageControlItemModelProperty>>(ViewData, propertyList)
+            };
+
+        }
+
+        private void SetEmptyForm(int Id)
+        {
+            var modelProperty = new IFPageControlItemModelProperty();
+            modelProperty.IFPageForm = new IFPageForm();
+            modelProperty.IFPageForm.Id = Id;
+            this.FormId = Id;
+            this.Form = new List<IFPageControlItemModelProperty>();            
+            this.Form.Add(modelProperty);
+
+        }
+
+        private async Task SetFormDefaults(int Id)
+        {           
+
+            await SetModelProperties();
+            await SetFormItems();
+
+        }
+
+
+
+        private async Task SetFormItems()
+        {
+            List<IFPageFormItem> formItems = await this.pageFormService.GetFormItems();
+
+            List<SelectListItem> items = new List<SelectListItem>();
+
+
+            foreach (var data in formItems)
+            {
+                SelectListItem item = new SelectListItem();
+                item.Text = data.Name;
+                item.Value = data.Id.ToString();
+                items.Add(item);
+            }
+
+            ViewData["form_items"] = items;
+        }
+
+        private async Task SetModelProperties()
+        {
+
+            List<ModelPropertyDto> properties = await this.pageGridService.GetGridModelProperties(this.FormId);
+
+            List<SelectListItem> items = new List<SelectListItem>();
+
+
+            foreach (var property in properties)
+            {
+                SelectListItem item = new SelectListItem();
+                item.Text = property.EntityName + " - " + property.Name;
+
+                item.Value = property.ModelPropertyId.ToString();
+                items.Add(item);
+            }
+
+            ViewData["model_properties"] = items;
+        }
+    }
+}

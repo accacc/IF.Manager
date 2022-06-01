@@ -1,0 +1,44 @@
+﻿@model IF.Manager.Contracts.Dto.CommandMapModel
+
+
+
+
+@{
+    if (Model.IsModal)
+    {
+        Layout = "_ModalLayout";
+    }
+
+}
+
+<style>
+    .vakata-context {
+        z-index: 1100
+    }
+</style>
+
+<form>
+
+    <div id="row">
+
+      
+
+        <a class="btn btn-primary"
+           href="@Url.Page("/Multi/CommandMultiForm",new {Id = Model.CommandId })"
+           if-ajax="true"
+           if-ajax-method="get"
+           if-ajax-mode="replace"
+           if-ajax-show-dialog="true"
+           if-ajax-extradatafunc="setselectedtreenode()"
+           if-ajax-modal-id="@Guid.NewGuid()">
+            Add Command
+        </a>
+
+    </div>
+    <br />
+    <div id="row">
+        <div id="CommandMapTree">
+            @{await Html.RenderPartialAsync("_CommandTree.cshtml", Model.Tree);}
+        </div>
+    </div>
+</form>

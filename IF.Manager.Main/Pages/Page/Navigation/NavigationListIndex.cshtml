@@ -1,0 +1,100 @@
+﻿@page
+@model IF.Manager.Page.Pages.Navigation.NavigationListIndexModel
+
+@{ List<SelectListItem> projects = ViewData["projects"] as List<SelectListItem>;}
+
+
+<div class="row">
+    <div class="col-md-6">
+        <a class="btn btn btn-danger"
+           href="@Url.Page("/Navigation/PublishMenuForm")"
+           if-ajax="true"
+           if-ajax-method="get"
+           if-ajax-insertion-mode="replace"
+           if-ajax-show-dialog="true"
+           if-ajax-data-extra-by-id="IFProjectId"
+           if-ajax-modal-id="@Guid.NewGuid()">
+            Publish
+        </a>
+    </div>
+
+    <div class="col-md-6">
+        <a class="btn btn-success"
+           href="@Url.Page("/Navigation/PublishHistory")"
+           if-ajax="true"
+           if-ajax-method="get"
+           if-ajax-insertion-mode="replace"
+           if-ajax-show-dialog="true"
+           if-ajax-modal-id="@Guid.NewGuid()">
+            History
+        </a>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <hr />
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+            <label for="IFProjectId">Project</label>
+            @Html.DropDownList("IFProjectId", projects, "Select", new { @class = "form-control" })
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div id="MenuListDiv" class="col-md-12">
+        @{await Html.RenderPartialAsync("../Control/_PageControlTreeList.cshtml", Model.NavigationTree);}
+        
+    </div>
+</div>
+
+
+
+@section Scripts
+{
+    
+    <script>
+
+        function setselectedtreenode() {
+            debugger;
+            var id = $("#PageControlMapTree").jstree('get_selected');
+            //alert(id);
+            if (id == "") {
+                alert("Lütfen bir eleman seçiniz.")
+            }
+
+            var data = {};
+
+            data.TreeSelectedId = id[0];
+            data.IFProjectId = $("#IFProjectId").val();
+
+            return data;
+        }
+
+    $('#IFProjectId').on('change', function () {
+
+        //alert(this.value);
+
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Page("/Navigation/NavigationListIndex", "NavigationListPartial")',
+            data: { IFProjectId: this.value },
+            success: function (data) {
+                $("#MenuListDiv").html(data);
+                $("#PageControlMapTree").jstree({
+                    "plugins": ["wholerow"]
+                })
+
+            }
+        });
+
+    });
+    </script>
+}

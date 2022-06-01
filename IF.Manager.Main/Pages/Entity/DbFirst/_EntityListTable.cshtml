@@ -1,0 +1,61 @@
+﻿@model List<DatabaseSchemaReader.DataSchema.DatabaseTable>
+
+@{ Layout = null;}
+
+
+
+
+@if (Model != null && Model.Any())
+{
+    @foreach (var table in Model)
+    {
+        var index = Guid.NewGuid();
+
+        <input type="hidden" name="Form.Index" value="@index" />
+
+        <div class="row">
+            <div class="col-md-12">
+                <p style="color:red;" data-toggle="collapse" data-target="#g_@table.Name" aria-expanded="false" aria-controls="collapseExample">
+                    @if (table.PrimaryKey == null)
+                    {
+                        <input name="Form[@index].Table" type="checkbox"  value="@table.Name" />
+                    }
+                    else
+                    {
+                        <input name="Form[@index].Table" type="checkbox" checked="checked"  value="@table.Name" />
+                    }
+
+                    @*@Html.CheckBox($"Form[{index}].Table", new { @class = "form-check-input" })*@
+                    <b>+ @table.Name</b>
+                    @if (table.PrimaryKey == null)
+                    {
+                        <b>Primary Key Seç</b>
+                    }
+                </p>
+            </div>
+        </div>
+        <div id="g_@table.Name" class="row collapse">
+            <div class="col-md-12">
+                @foreach (var item in table.Columns)
+                {
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p data-toggle="collapse" style="color:darkslateblue;" data-target="#e_@item.Name" aria-expanded="false" aria-controls="collapseExample">
+                                <input name="Form[@index].PrimaryKey" checked="checked" type="checkbox" value="@item.Name" />
+                                @*@Html.CheckBox($"Form[{index}].PrimaryKey", new { @class = "form-check-input" })*@
+                                <b> @item.Name</b>
+                            </p>
+
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+}
+else
+{
+    @:Veri bulunamadı,Lütfen Kriter seçiniz
+}
+

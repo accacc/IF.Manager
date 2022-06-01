@@ -1,0 +1,64 @@
+﻿@page
+@model IF.Manager.Page.Pages.Form.DropDown.DropDownGridModel
+
+
+@{
+    Layout = "_ModalLayout";
+    List<SelectListItem> queries = ViewData["queries"] as List<SelectListItem>;
+}
+
+<form>
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="QueryId">Query</label>
+                @Html.DropDownList("Form.IFQueryId", queries, "Select", new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div id="DropDownPropertyDiv">
+        @if (Model.Form.IFQueryId > 0)
+        {
+            await Html.RenderPartialAsync("_DropDownProperty", Model.Form);
+        }
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <button type="submit" class="btn btn-primary"
+                    if-ajax-action="@Url.Page("/Form/DropDown/DropDownForm","Save")"
+                    if-ajax-form-submit="true"
+                    if-ajax-method="post"
+                    if-ajax-close-modal-on-success="true"
+                    if-ajax-update-id="GridListDiv">
+                Save
+            </button>
+        </div>
+    </div>
+
+    @Html.HiddenFor(m => m.Form.Id)
+    @*@Html.HiddenFor(m=>m.Form.IFPageFormItemModelPropertyId)*@
+</form>
+
+
+<script>
+
+    $('#Form_IFQueryId').on('change', function (e) {
+        var valueSelected = this.value;
+        debugger;
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Page("/Form/DropDown/DropDownForm", "DropDownPropertyPartial")',
+            data: { IFQueryId: valueSelected },
+            success: function (data) {
+                debugger;
+                $("#DropDownPropertyDiv").html(data);
+            }
+        });
+    });
+
+</script>
+

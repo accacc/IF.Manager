@@ -1,0 +1,33 @@
+﻿@page
+@model IF.Manager.ClassDesigner.Pages.ClassListIndexModel
+@{
+}
+
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <a class="btn btn-success"
+           href="@Url.Page("ClassForm","Add")"
+           if-ajax="true"
+           if-ajax-method="get"
+           if-ajax-insertion-mode="replace"
+           if-ajax-show-dialog="true"
+           if-ajax-modal-id="@Guid.NewGuid()">
+            Add
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <hr />
+    </div>
+</div>
+
+<div class="row">
+    <div id="ClassListDiv" class="col-md-12">
+        @{await Html.RenderPartialAsync("_ClassListTable", Model.ClassList);}
+    </div>
+</div>

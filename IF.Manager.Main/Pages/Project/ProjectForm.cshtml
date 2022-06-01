@@ -1,0 +1,168 @@
+﻿@page
+@model IF.Manager.Project.Pages.ProjectFormModel
+
+@{
+    Layout = "_ModalLayout";
+
+    var projectTypes = Html.GetEnumSelectList<IF.Manager.Contracts.Enum.ProjectType>();
+
+
+    foreach (var op in projectTypes)
+    {
+        if (op.Value == ((int)Model.Form.ProjectType).ToString())
+        {
+            op.Selected = true;
+        }
+    }
+}
+
+
+<form>
+    @Html.AntiForgeryToken()
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Name">Name</label>
+                @Html.TextBoxFor(m => m.Form.Name, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Name">Name</label>
+                @Html.DropDownList($"Form.ProjectType", projectTypes, "Select", new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Prefix">ConnectionString</label>
+                @Html.TextAreaFor(m => m.Form.ConnectionString, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Name">System Db Type</label>
+                @Html.DropDownList($"Form.SystemDbType", Html.GetEnumSelectList<IF.Manager.Service.Enum.SystemDbType>(), "Select", new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Prefix">System Database ConnectionString</label>
+                @Html.TextAreaFor(m => m.Form.SystemDbConnectionString, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Name">Authentication Type</label>
+                @Html.DropDownList($"Form.AuthenticationType", Html.GetEnumSelectList<IF.Manager.Service.Enum.AuthenticationType>(), "Select", new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Name">Json App Type</label>
+                @Html.DropDownList($"Form.JsonAppType", Html.GetEnumSelectList<IF.Manager.Service.Enum.JsonAppType>(), "Select", new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <p>System Command Decorators</p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-check">
+                @Html.CheckBoxFor(m => m.Form.CommandAudit, new { @class = "form-check-input" })
+                <label class="form-check-label" for="CommandAudit">CommandAudit</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-check">
+                @Html.CheckBoxFor(m => m.Form.CommandPerformanceCounter, new { @class = "form-check-input" })
+                <label class="form-check-label" for="CommandPerformanceCounter">CommandPerformanceCounter</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-check">
+                @Html.CheckBoxFor(m => m.Form.CommandErrorHandler, new { @class = "form-check-input" })
+                <label class="form-check-label" for="CommandErrorHandler">CommandErrorHandler</label>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <p>System Query Decorators</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-check">
+                @Html.CheckBoxFor(m => m.Form.QueryAudit, new { @class = "form-check-input" })
+                <label class="form-check-label" for="QueryAudit">QueryAudit</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-check">
+                @Html.CheckBoxFor(m => m.Form.QueryPerformanceCounter, new { @class = "form-check-input" })
+                <label class="form-check-label" for="QueryPerformanceCounter">QueryPerformanceCounter</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-check">
+                @Html.CheckBoxFor(m => m.Form.QueryErrorHandler, new { @class = "form-check-input" })
+                <label class="form-check-label" for="QueryErrorHandler">QueryErrorHandler</label>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <button type="submit" class="btn btn-primary"
+                    @{ var handler = "Add"; if (this.Model.Form.Id > 0) { handler = "Update"; } }
+                    if-ajax-action="@Url.Page("/ProjectForm",handler)"
+                    if-ajax-form-submit="true"
+                    if-ajax-method="post"
+                    id="SaveProjectButton"
+                    if-ajax-close-modal-on-success="true"
+                    if-ajax-update-id="SolutionListDiv">
+                Save
+            </button>
+        </div>
+    </div>
+    @Html.HiddenFor(model => model.Form.Id)
+    @Html.HiddenFor(model => model.Form.SolutionId)
+</form>
+
+

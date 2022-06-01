@@ -1,0 +1,98 @@
+﻿@model List<IF.Manager.Contracts.Model.IFPageListView>
+
+@{ Layout = null;}
+
+<table class="table table-striped table-sm">
+    <tr>
+        <th>
+            Id
+        </th>
+        <th>
+            Name
+        </th>
+        <th>
+            Description
+        </th>
+        <th>
+            Düzenle
+        </th>
+        <th>
+            Filters
+        </th>
+        <th>
+            Orders
+        </th>
+    </tr>
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var item in Model)
+        {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.Id)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Name)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Description)
+    </td>
+    <td>
+        <a class="btn btn-primary"
+           href="@Url.Page("/ListView/ListViewForm","Update",new { Id = item.Id})"
+           if-ajax="true"
+           if-ajax-method="get"
+           if-ajax-mode="replace"
+           if-ajax-show-dialog="true"
+           if-ajax-modal-id="@Guid.NewGuid()">
+            Edit
+        </a>
+    </td>
+
+    <td>
+        <a class="btn btn-primary"
+           href="@Url.Page("/PageParameterForm",new {  ObjectId= item.Id,ObjectType = IF.Manager.Contracts.Enum.PageParameterType.ListView })"
+           if-ajax="true"
+           if-ajax-method="get"
+           if-ajax-insertion-mode="replace"
+           if-ajax-show-dialog="true"
+           if-ajax-modal-id="PageControlTreeListModal">
+            Parameters
+        </a>
+    </td>
+
+    <td>
+
+        <a class="btn btn-primary"
+           href="@Url.Page("/ListView/Model/ModelForm",new { Id = item.Id })"
+           if-ajax="true"
+           if-ajax-method="get"
+           if-ajax-insertion-mode="replace"
+           if-ajax-show-dialog="true"
+           if-ajax-modal-id="@Guid.NewGuid()">
+            Model
+        </a>
+    </td>
+
+    @*<td>
+
+            <a class="btn btn-primary"
+               href="@Url.Page("/Form/Action/HeaderActions",new { Id = item.Id })"
+               if-ajax="true"
+               if-ajax-method="get"
+               if-ajax-insertion-mode="replace"
+               if-ajax-show-dialog="true"
+               if-ajax-modal-id="@Guid.NewGuid()">
+                Header Actions
+            </a>
+        </td>*@
+
+</tr>
+        }
+    }
+    else
+    {
+        @:Veri bulunamadı, Lütfen Kriter seçiniz
+    }
+</table>
+

@@ -1,0 +1,34 @@
+﻿
+@model IF.Manager.Contracts.Model.IFPageControlItemModelProperty
+
+
+
+@{
+    Layout = "";
+
+    List<SelectListItem> name_models = ViewData["name_models"] as List<SelectListItem>;
+
+    List<SelectListItem> value_models = ViewData["value_models"] as List<SelectListItem>;
+}
+
+
+@{
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="QueryId">Value Property</label>
+                @Html.DropDownList("Form.ValueIFModelPropertyId", value_models, "Select", new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="QueryId">Name Property</label>
+                @Html.DropDownList("Form.NameIFModelPropertyId", name_models, "Select", new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+}

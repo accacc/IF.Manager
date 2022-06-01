@@ -1,0 +1,126 @@
+﻿@page
+@model IF.Manager.Page.Pages.ActionFormModel
+
+@{
+    Layout = "_ModalLayout";
+
+    List<SelectListItem> queries = ViewData["queries"] as List<SelectListItem>;
+    List<SelectListItem> commands = ViewData["commands"] as List<SelectListItem>;
+    List<SelectListItem> models = ViewData["models"] as List<SelectListItem>;
+    List<SelectListItem> page_controls = ViewData["page_controls"] as List<SelectListItem>;
+}
+
+
+    <form>
+        @Html.AntiForgeryToken()
+
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="QueryId">Query</label>
+                    @Html.DropDownList("Form.QueryId", queries, "Select", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="CommandId">Command</label>
+                    @Html.DropDownList("Form.CommandId", commands, "Select", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="ModelId">Model</label>
+                    @Html.DropDownList("Form.IFModelId", models, "Select", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="IFPageControlId">Update Control</label>
+                    @Html.DropDownList("Form.IFPageControlId", page_controls, "Select", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="Name">Name</label>
+                    @Html.TextBoxFor(m => m.Form.Name, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="Description">Description</label>
+                    @Html.TextBoxFor(m => m.Form.Description, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="">Text</label>
+                <input type="text" name="Form.Text" class="form-control" value="@Model.Form.Text" required />
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="">Url</label>
+                <input type="text" name="Form.Url" class="form-control" value="@Model.Form.Url" required />
+            </div>
+        </div>
+
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="">Widget Type</label>
+                @Html.DropDownList("Form.WidgetType", Html.GetEnumSelectList<IF.Core.Mvc.ActionWidgetType>(), "Select", new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <label for="">Action Type</label>
+            @Html.DropDownList("Form.ActionType", Html.GetEnumSelectList<IF.Core.Mvc.ActionType>(), "Select", new { @class = "form-control" })
+        </div>
+
+        <div class="col-md-6">
+            <label for="">RenderType Type</label>
+            @Html.DropDownList("Form.WidgetRenderType", Html.GetEnumSelectList<IF.Core.Mvc.ActionWidgetRenderType>(), "Select", new { @class = "form-control" })
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="">Sort Order</label>
+                    <input type="text" name="Form.SortOrder" class="form-control" value="@Model.Form.SortOrder" required />
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <button type="submit" class="btn btn-primary"
+                        @{ var handler = "Add"; if (this.Model.Form.Id > 0) { handler = "Update"; } }
+                        if-ajax-action="@Url.Page("/Action/ActionForm",handler)"
+                        if-ajax-form-submit="true"
+                        if-ajax-method="post"
+                        if-ajax-close-modal-on-success="true"
+                        if-ajax-update-id="ActionListDiv">
+                    Save
+                </button>
+            </div>
+        </div>
+        @Html.HiddenFor(model => model.Form.Id)
+    </form>

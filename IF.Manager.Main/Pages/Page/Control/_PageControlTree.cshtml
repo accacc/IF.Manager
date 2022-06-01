@@ -1,0 +1,31 @@
+﻿@model List<IF.Manager.Contracts.Dto.PageControlTreeDto>
+
+
+<ul>
+
+    @foreach (var item in Model)
+    {
+        if (ViewBag.ParentId != null && item.Id == Convert.ToInt32(ViewBag.ParentId))
+        {
+            @:<li class="jstree-open" data-jstree='{"selected":true}' id="@item.Id">
+            }
+            else
+            {
+                @:<li class="jstree-open" id="@item.Id">
+            }
+
+            <b>@item.Name</b> @:- @item.PageControl.ControlType
+
+
+
+            @if (item.Childs != null && item.Childs.Any())
+            {
+                
+                await Html.RenderPartialAsync("_PageControlTree.cshtml", item.Childs);
+
+            }
+
+        @:</li>
+    }
+
+</ul>

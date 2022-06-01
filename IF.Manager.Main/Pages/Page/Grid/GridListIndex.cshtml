@@ -1,0 +1,29 @@
+﻿@page
+@model IF.Manager.Page.Pages.Grid.GridListIndexModel
+
+
+<div class="row">
+    <div class="col-md-12">
+        <a class="btn btn-success"
+           href="@Url.Page("GridForm","Add")"
+           if-ajax="true"
+           if-ajax-method="get"
+           if-ajax-insertion-mode="replace"
+           if-ajax-show-dialog="true"
+           if-ajax-modal-id="@Guid.NewGuid()">
+            Add
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <hr />
+    </div>
+</div>
+
+<div class="row">
+    <div id="GridListDiv" class="col-md-12">
+        @{await Html.RenderPartialAsync("_GridListTable", Model.GridList);}
+    </div>
+</div>

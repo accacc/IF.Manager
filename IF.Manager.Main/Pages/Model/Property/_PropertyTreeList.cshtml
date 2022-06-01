@@ -1,0 +1,33 @@
+﻿@model IF.Manager.Model.Pages.Property.ModelTreeModel
+
+@{Layout = null;}
+
+
+@{ 
+    string treeid = @Model.EntityTree.First().Name + "tree";
+    string hiddenid = "Checked" + @Model.EntityTree.First().Name;
+    int entityid = @Model.EntityTree.First().Id;
+    
+    
+}
+
+
+<div id="@treeid">
+    @{await Html.RenderPartialAsync("../Property/_PropertyTree.cshtml", Model);}
+</div>
+
+<input type="hidden" name="CreateModel.Id" value="@entityid" />
+<input type="hidden" name="CreateModel.Values" id="@hiddenid" value="" />
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $("#@treeid").jstree({"plugins": ["checkbox"]}).on('changed.jstree', function () {
+            SetSelecteds("@treeid", "@hiddenid");
+        });
+
+    });
+
+</script>

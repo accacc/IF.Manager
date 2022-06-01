@@ -1,0 +1,56 @@
+﻿@page
+@model IF.Manager.Model.Pages.ModelFormModel
+
+
+@{
+    Layout = "_ModalLayout";
+    List<SelectListItem> entities = ViewData["entities"] as List<SelectListItem>;
+}
+
+
+    <form>
+        @Html.AntiForgeryToken()
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="EntityId">Entity</label>
+                    @Html.DropDownList("Form.EntityId", entities, "Select", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="Name">Name</label>
+                    @Html.TextBoxFor(m => m.Form.Name, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="Description">Description</label>
+                    @Html.TextBoxFor(m => m.Form.Description, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <button type="submit" class="btn btn-primary"
+                        @{ var handler = "Add"; if (this.Model.Form.Id > 0) { handler = "Update"; } }
+                        if-ajax-action="@Url.Page("/ModelForm",handler)"
+                        if-ajax-form-submit="true"
+                        if-ajax-method="post"
+                        if-ajax-close-modal-on-success="true"
+                        if-ajax-update-id="ModelListDiv">
+                    Save
+                </button>
+            </div>
+        </div>
+        @Html.HiddenFor(model => model.Form.Id)
+    </form>
+
+
+

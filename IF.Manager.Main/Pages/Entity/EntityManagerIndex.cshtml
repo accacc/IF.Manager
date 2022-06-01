@@ -1,0 +1,31 @@
+﻿@page
+@model IF.Manager.Entity.Pages.EntityManagerIndexModel
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <a class="btn btn-success"
+           href="@Url.Page("/Form","Add")"
+           if-ajax="true"
+           if-ajax-method="get"
+           if-ajax-insertion-mode="replace"
+           if-ajax-show-dialog="true"
+           if-ajax-modal-id="@Guid.NewGuid()"
+           id="AddEntityButton">
+            Add
+        </a>      
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <hr />
+    </div>
+</div>
+
+<div class="row">
+    <div id="EntityListDiv" class="col-md-12">
+        @{await Html.RenderPartialAsync("_EntityListTable", Model.EntityList);}
+    </div>
+</div>

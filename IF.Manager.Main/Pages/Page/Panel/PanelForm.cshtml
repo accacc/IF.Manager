@@ -1,0 +1,77 @@
+﻿@page
+@model IF.Manager.Page.Pages.Panel.PanelFormModel
+
+@{
+    Layout = "_ModalLayout";
+
+    //List<SelectListItem> grid_layouts = ViewData["grid_layouts"] as List<SelectListItem>;
+    //List<SelectListItem> queries = ViewData["queries"] as List<SelectListItem>;
+}
+
+
+    <form>
+        @Html.AntiForgeryToken()
+
+        @*<div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="GridLayoutId">Grid Layout</label>
+                    @Html.DropDownList("Form.GridLayoutId", grid_layouts, "Select", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>*@
+
+        @*<div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="QueryId">Query</label>
+                    @Html.DropDownList("Form.QueryId", queries, "Select", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>*@
+
+
+
+
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="Name">Name</label>
+                    @Html.TextBoxFor(m => m.Form.Name, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="Description">Description</label>
+                    @Html.TextBoxFor(m => m.Form.Description, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="CssClass">CssClass</label>
+                    @Html.TextBoxFor(m => m.Form.CssClass, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <button type="submit" class="btn btn-primary"
+                        @{ var handler = "Add"; if (this.Model.Form.Id > 0) { handler = "Update"; } }
+                        if-ajax-action="@Url.Page("/Panel/PanelForm",handler)"
+                        if-ajax-form-submit="true"
+                        if-ajax-method="post"
+                        if-ajax-close-modal-on-success="true"
+                        if-ajax-update-id="PanelListDiv">
+                    Save
+                </button>
+            </div>
+        </div>
+        @Html.HiddenFor(model => model.Form.Id)
+    </form>

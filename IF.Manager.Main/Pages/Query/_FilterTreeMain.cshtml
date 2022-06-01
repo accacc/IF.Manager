@@ -1,0 +1,33 @@
+﻿@model IF.Manager.Contracts.Dto.QueryFilterMapModel
+
+@*@{
+    Layout = "_ModalLayout";
+
+}*@
+
+    <script>
+
+        function setselectedtreenode() {
+            debugger;
+            var id = $("#FilterMapTree").jstree('get_selected');
+            //alert(id);
+            //if (id == "") {
+            //    alert("Lütfen bir eleman seçiniz.")
+            //}
+
+            var data = {};
+
+            data.ParentId = id[0];
+            debugger;
+            return data;
+        }
+
+
+        $(document).ready(function () {
+            $("#FilterMapTree").jstree({
+                "plugins": ["wholerow"]
+            })
+        });
+    </script>
+
+@{await Html.RenderPartialAsync("Filter/_FilterTreeList.cshtml", Model);}

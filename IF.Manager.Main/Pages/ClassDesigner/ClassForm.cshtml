@@ -1,0 +1,76 @@
+﻿@page
+@model IF.Manager.ClassDesigner.Pages.ClassFormModel
+
+@{
+    Layout = "_ModalLayout";
+    string updatedId = "ClassListDiv";
+    @if(Model.ParentId.HasValue)
+    {
+        updatedId = "ClassTreeListModal";
+    }
+}
+
+
+<form>
+    @Html.AntiForgeryToken()
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Name">Name</label>
+                @Html.TextBoxFor(m => m.Form.Name, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Type">Type</label>
+                @Html.TextBoxFor(m => m.Form.Type, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="GenericType">GenericType</label>
+                @Html.TextBoxFor(m => m.Form.GenericType, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Description">Description</label>
+                @Html.TextBoxFor(m => m.Form.Description, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <button type="submit" class="btn btn-primary"
+                    @{ var handler = "Add"; if (this.Model.Form.Id > 0) { handler = "Update"; } }
+                    if-ajax-action="@Url.Page("/ClassForm",handler)"
+                    if-ajax-form-submit="true"
+                    if-ajax-method="post"
+                    if-ajax-close-modal-on-success="true"
+                    if-ajax-update-id="@updatedId">
+                Save
+            </button>
+        </div>
+    </div>
+    @Html.HiddenFor(model => model.Form.Id)
+    @Html.HiddenFor(model => model.Form.ParentId)
+    @Html.HiddenFor(model => model.RootParentId)
+</form>
+
+
+<script>
+
+</script>

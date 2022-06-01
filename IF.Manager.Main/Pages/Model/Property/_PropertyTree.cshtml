@@ -1,0 +1,33 @@
+﻿@model IF.Manager.Model.Pages.Property.ModelTreeModel
+@using IF.Manager.Model.Pages.Property
+
+
+
+
+<ul>
+    @foreach (var item in Model.EntityTree)
+    {
+
+        var clientId = Model.Selecteds.SingleOrDefault(s => s.StartsWith(item.ClientId));
+
+            if (clientId!=null)
+            {
+                @: <li class="jstree-open" data-jstree='{"selected":true}' id="@clientId">
+            }
+            else
+            {
+                @:<li class="jstree-open" id="@item.ClientId">
+            }
+
+            @item.Name
+
+            @if (item.Childs != null && item.Childs.Any())
+            {
+                ModelTreeModel tempModel = new ModelTreeModel();
+                tempModel.EntityTree = item.Childs.ToList();
+                tempModel.Selecteds = Model.Selecteds;
+                await Html.RenderPartialAsync("_PropertyTree.cshtml", tempModel);
+            }
+
+        }
+</ul>

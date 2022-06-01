@@ -1,0 +1,87 @@
+﻿@model IF.Manager.Contracts.Dto.PageControlMapModel
+
+@using IF.Web.Mvc.Extensions
+
+
+
+@{
+    if (Model.IsModal)
+    {
+        Layout = "_ModalLayout";
+    }
+
+}
+
+<style>
+    .vakata-context {
+        z-index: 1100
+    }
+</style>
+
+<form>
+
+    <div id="row">
+
+        <a class="btn btn-primary"
+           href="@Url.Page("/Control/PageControlInsertForm","AddControl",new { RootControlMapId = Model.RootControlMapId})"
+           if-ajax="true"
+           if-ajax-method="get"
+           if-ajax-mode="replace"
+           if-ajax-show-dialog="true"
+           if-ajax-extradatafunc="setselectedtreenode()"
+           if-ajax-modal-id="@Guid.NewGuid()">
+            Ekle
+        </a>
+        -
+        <a class="btn btn-primary"
+           href="@Url.Page("/Control/PageControlUpdateForm","UpdateControl",new { RootControlMapId = Model.RootControlMapId})"
+           if-ajax="true"
+           if-ajax-method="get"
+           if-ajax-mode="replace"
+           if-ajax-show-dialog="true"
+           if-ajax-extradatafunc="setselectedtreenode()"
+           if-ajax-modal-id="@Guid.NewGuid()">
+            Güncelle
+        </a>
+        -
+        <a class="btn btn-primary"
+           href="@Url.Page("/Control/PageControlUpdateForm","DeleteControl",new { RootControlMapId = Model.RootControlMapId})"
+           if-ajax="true"
+           if-ajax-method="post"
+           if-ajax-mode="replace"
+           if-ajax-update-id="PageControlTreeListModal"
+           if-anti-forgery-token="@Context.GetAntiforgeryToken()"
+           if-ajax-extradatafunc="setselectedtreenode()">
+            Sil
+        </a>
+        -  <a class="btn btn-primary"
+              href="@Url.Page("/Control/PageControlInsertForm","MoveModelItemUpOne")"
+              if-ajax="true"
+              if-ajax-method="post"
+              if-ajax-insertion-mode="replace"
+              if-ajax-update-id="PageControlTreeListModal"
+              if-anti-forgery-token="@Context.GetAntiforgeryToken()"
+              if-ajax-extradatafunc="setselectedtreenode()">
+            &#8593;
+        </a>
+
+        -
+
+        <a class="btn btn-primary"
+           href="@Url.Page("/Control/PageControlInsertForm","MoveModelItemDownOne")"
+           if-ajax="true"
+           if-ajax-method="post"
+           if-ajax-insertion-mode="replace"
+           if-ajax-update-id="PageControlTreeListModal"
+           if-anti-forgery-token="@Context.GetAntiforgeryToken()"
+           if-ajax-extradatafunc="setselectedtreenode()">
+            &#8595;
+        </a>
+    </div>
+    <br />
+    <div id="row">
+        <div id="PageControlMapTree">
+            @{await Html.RenderPartialAsync("../Control/_PageControlTree.cshtml", Model.Tree);}
+        </div>
+    </div>
+</form>

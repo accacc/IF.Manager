@@ -1,0 +1,55 @@
+﻿@model IF.Manager.Contracts.Dto.ClassMapModel
+
+@using IF.Web.Mvc.Extensions
+
+
+
+@{
+    if (Model.IsModal)
+    {
+        Layout = "_ModalLayout";
+    }
+
+}
+
+<style>
+    .vakata-context {
+        z-index: 1100
+    }
+</style>
+
+<form>
+
+    <div id="row">
+
+        <a class="btn btn-primary"
+           href="@Url.Page("/Control/ClassChildForm","AddPrimitiveProperty",new {RootParentId = Model.ClassId })"
+           if-ajax="true"
+           if-ajax-method="get"
+           if-ajax-mode="replace"
+           if-ajax-show-dialog="true"
+           if-ajax-extradatafunc="setselectedtreenode()"
+           if-ajax-modal-id="@Guid.NewGuid()">
+           Properties
+        </a>
+        -
+
+        <a class="btn btn-primary"
+           href="@Url.Page("/ClassForm","Add",new {RootParentId = Model.ClassId })"
+           if-ajax="true"
+           if-ajax-method="get"
+           if-ajax-mode="replace"
+           if-ajax-show-dialog="true"
+           if-ajax-extradatafunc="setselectedtreenode()"
+           if-ajax-modal-id="@Guid.NewGuid()">
+            Add Class
+        </a>
+
+    </div>
+    <br />
+    <div id="row">
+        <div id="ClassMapTree">
+            @{await Html.RenderPartialAsync("../Control/_ClassTree.cshtml", Model.Tree);}
+        </div>
+    </div>
+</form>

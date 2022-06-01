@@ -1,0 +1,65 @@
+﻿@model IF.Manager.Contracts.Model.IFCommandFilterItem
+
+@{
+    Layout = null;
+    List<SelectListItem> entities = ViewData["entities"] as List<SelectListItem>;
+    var filterOperators = Html.GetEnumSelectList<IF.Manager.Contracts.Enum.QueryFilterOperator>();
+    var index = Guid.NewGuid();
+
+    foreach (var entity in entities)
+    {
+        entity.Selected = false;
+        if (entity.Value == Model.EntityPropertyId.ToString())
+        {
+            entity.Selected = true;
+        }
+    }
+
+
+
+    foreach (var op in filterOperators)
+    {
+        op.Selected = false;
+        if (op.Value == ((int)Model.FilterOperator).ToString())
+        {
+            op.Selected = true;
+        }
+    }
+
+
+}
+
+<tr>
+    <td>
+        <div class="form-group">
+
+            @Html.DropDownList($"Form[{index}].EntityPropertyId", entities, "Select", new { @class = "form-control" })
+
+        </div>
+    </td>
+
+    <td>
+        <div class="form-group">
+
+            @Html.DropDownList($"Form[{index}].FilterOperator", filterOperators, "Select", new { @class = "form-control" })
+        </div>
+    </td>
+
+
+
+    <td>
+        <div class="form-group">
+
+            <input type="text" name="Form[@index].Value" value="@Model.Value" class="form-control" />
+        </div>
+    </td>
+
+
+
+
+    <td>
+        <input type="hidden" name="Form.Index" value="@index" />
+        <input type="hidden" name="Form[@index].Id" value="@Model.Id" />
+    </td>
+
+</tr>

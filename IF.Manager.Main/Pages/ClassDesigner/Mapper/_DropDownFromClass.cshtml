@@ -1,0 +1,28 @@
+﻿@*@{
+    @model IF.Manager.Service.Model.IFClassMapper
+    Layout = "";
+
+    List<SelectListItem> classes = ViewData["classes"] as List<SelectListItem>;
+
+
+    @if (Model != null)
+        {
+            foreach (var property in classes)
+            {
+                if (property.Value == Model.FromClassId.ToString())
+                {
+                    property.Selected = true;
+                }
+            }
+        }
+    }
+
+
+
+<div class="col-md-6">
+    <div class="form-group">
+        <label for="FromClassId">From Class</label>
+        @Html.DropDownList($"Form.FromClassId", classes, "Select", new { @class = "form-control" })
+    </div>
+</div>*@
+

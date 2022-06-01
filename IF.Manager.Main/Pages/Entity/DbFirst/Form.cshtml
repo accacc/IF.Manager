@@ -1,0 +1,135 @@
+﻿@page
+@model IF.Manager.Entity.Pages.DbFirst.FormModel
+
+@{
+
+    List<SelectListItem> projects = ViewData["projects"] as List<SelectListItem>;
+    List<SelectListItem> processes = ViewData["processes"] as List<SelectListItem>;
+}
+
+
+<form>
+    @Html.AntiForgeryToken()
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="IFProjectId">Project</label>
+                @Html.DropDownList("IFProjectId", projects, "Select", new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="Name">ConnectionString</label>
+                @Html.TextBoxFor(m => m.ConnectionString, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-md-3">
+            <div class="form-check">
+                SelectOperation <input name="SelectOperation" class="form-check-input" type="checkbox" value="true" />
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-check">
+                InsertOperation  <input name="InsertOperation" type="checkbox" class="form-check-input" value="true" />
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-check">
+                UpdateOperation <input name="UpdateOperation" type="checkbox" class="form-check-input" value="true" />
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-check">
+                DeleteOperation  <input name="DeleteOperation" type="checkbox" class="form-check-input" value="true" />
+            </div>
+        </div>
+    </div>
+
+
+    @*<div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="Name">Process Name</label>
+                    @Html.TextBoxFor(m => m.ProcessId, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>*@
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="IFProcessId">Process</label>
+                @Html.DropDownList("IFProcessId", processes, "Select", new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <button type="submit" class="btn btn-primary"
+                    if-ajax-action="@Url.Page("/DbFirst/Form","ListTables")"
+                    if-ajax-form-submit="true"
+                    if-ajax-method="get"
+                    if-ajax-update-id="EntityListDiv">
+                Get Tables
+
+            </button>
+            &nbsp;
+            <button type="submit" class="btn btn-primary"
+                    if-ajax-action="@Url.Page("/DbFirst/Form","AddTables")"
+                    if-ajax-form-submit="true"
+                    if-ajax-method="post"
+                    if-ajax-update-id="EntityListDiv">
+                Save
+
+            </button>
+
+            &nbsp;
+            @*<a class="btn btn-primary"
+                   href="@Url.Page("/DbFirst","BasicCrudForm")"
+                   if-ajax="true"
+                   if-ajax-method="get"
+                   if-ajax-insertion-mode="replace"
+                   if-ajax-show-dialog="true"
+                   if-ajax-modal-id="ClassTreeListModal">
+                    Generate Basic Crud
+                </a>*@
+        </div>
+    </div>
+
+    <div id="EntityListDiv"></div>
+</form>
+
+
+@section Scripts
+{
+
+    <script>
+
+
+
+    $('#IFProjectId').on('change', function () {
+
+        //alert(this.value);
+
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Page("/DbFirst/Form", "GetProjectCnnString")',
+            data: { IFProjectId: this.value },
+            success: function (data) {
+                $("#ConnectionString").val(data);
+
+            }
+        });
+
+    });
+    </script>
+}

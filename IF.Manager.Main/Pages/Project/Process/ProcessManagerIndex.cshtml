@@ -1,0 +1,30 @@
+﻿@page
+@model IF.Manager.Project.Pages.ProcessIndexModel
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <a class="btn btn-success"
+           href="@Url.Page("/ProcessForm","Add")"
+           if-ajax="true"
+           if-ajax-method="get"
+           if-ajax-insertion-mode="replace"
+           if-ajax-show-dialog="true"
+           if-ajax-modal-id="@Guid.NewGuid()">
+            Add
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <hr />
+    </div>
+</div>
+
+<div class="row">
+    <div id="ProcessListDiv" class="col-md-12">
+        @{await Html.RenderPartialAsync("_ProcessListTable", Model.ProcessList);}
+    </div>
+</div>

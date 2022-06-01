@@ -1,0 +1,64 @@
+﻿@model IF.Manager.Contracts.Model.IFPageControlItemModelProperty
+
+@{
+    Layout = null;
+    var index = Guid.NewGuid();
+    List<SelectListItem> model_properties = ViewData["model_properties"] as List<SelectListItem>;
+    List<SelectListItem> form_items = ViewData["form_items"] as List<SelectListItem>;
+
+    foreach (var property in model_properties)
+    {
+        if (property.Value == Model.IFModelPropertyId.ToString())
+        {
+            property.Selected = true;
+        }
+    }
+
+
+    foreach (var formItem in form_items)
+    {
+        if (formItem.Value == Model.IFPageFormItemId.ToString())
+        {
+            formItem.Selected = true;
+        }
+    }
+
+
+
+}
+
+    <tr id="@index">
+        <td>
+            <div class="form-group">
+
+                @Html.DropDownList($"Form[{index}].IFModelPropertyId", model_properties, "Select", new { @class = "form-control" })
+
+            </div>
+        </td>
+
+
+        <td>
+            <div class="form-group">
+
+                @Html.DropDownList($"Form[{index}].IFPageFormItemId", form_items, "Select", new { @class = "form-control" })
+
+            </div>
+        </td>
+
+
+
+        <td>
+            <input type="hidden" name="Form.Index" value="@index" />
+            <input type="hidden" name="Form[@index].Id" value="@Model.Id" />
+        </td>
+        <td><button onclick="deleteOrder('@index')">-</button></td>
+    </tr>
+
+
+<script>
+    function deleteOrder(index) {
+        var id = "table#EmptyFormItem tr#" + index;
+        $(id).remove();
+        return false;
+    }
+</script>

@@ -1,0 +1,29 @@
+﻿@page
+@model IF.Manager.Page.Pages.Form.FormListIndexModel
+
+
+<div class="row">
+    <div class="col-md-12">
+        <a class="btn btn-success"
+           href="@Url.Page("FormForm","Add")"
+           if-ajax="true"
+           if-ajax-method="get"
+           if-ajax-insertion-mode="replace"
+           if-ajax-show-dialog="true"
+           if-ajax-modal-id="@Guid.NewGuid()">
+            Add
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <hr />
+    </div>
+</div>
+
+<div class="row">
+    <div id="FormListDiv" class="col-md-12">
+        @{await Html.RenderPartialAsync("_FormListTable", Model.FormList);}
+    </div>
+</div>

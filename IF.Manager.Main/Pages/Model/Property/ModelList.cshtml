@@ -1,0 +1,64 @@
+﻿@page
+@model IF.Manager.Model.Pages.Property.ModelListModel
+
+
+
+@{
+    Layout = "_ModalLayout";
+
+}
+
+
+<style>
+    .vakata-context {
+        z-index: 1100
+    }
+</style>
+
+
+
+<form>
+
+    @Html.AntiForgeryToken()
+
+
+
+
+    @{await Html.RenderPartialAsync("../Property/_PropertyTreeList.cshtml", Model.TreeList); }
+
+
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <button type="submit" class="btn btn-primary"
+                    if-ajax-action="@Url.Page("/Property/ModelList","CreateModel",new { ModelId = this.Model.ModelId})"
+                    if-ajax-form-submit="true"
+                    if-ajax-method="post"
+                    if-ajax-close-modal-on-success="true"
+                    if-ajax-update-id="ModelListDiv">
+                Kaydet
+            </button>
+        </div>
+    </div>
+</form>
+
+
+
+
+
+<script>
+    function SetSelecteds(tree_id, hidden_id) {
+        var selecteds = [];
+
+        var selectedIndexes = $("#" + tree_id).jstree("get_selected", true);
+
+        //debugger;
+
+        $.each(selectedIndexes, function () {
+            selecteds.push(this.id);
+        });
+
+        $("#" + hidden_id).val(selecteds.join(","))
+    }
+</script>
