@@ -81,21 +81,22 @@ namespace IF.Manager.Main
 
             var handlers = Assembly.Load("IF.Manager.Service");
 
-            @if.AddCqrs(cqrs =>
-            {
-                cqrs.AddHandler(
+            @if
+            //.AddCqrs(cqrs =>
+            //{
+            //    cqrs.AddHandler(
 
-                    handler =>
-                    {
-                        handler.AddQueryHandlers().Build(new Assembly[] { handlers });
+            //        handler =>
+            //        {
+            //            handler.AddQueryHandlers().Build(new Assembly[] { handlers });
 
-                        handler.AddQueryAsyncHandlers().Build(new Assembly[] { handlers });
+            //            handler.AddQueryAsyncHandlers().Build(new Assembly[] { handlers });
 
-                        handler.AddCommandHandlers().Build(new Assembly[] { handlers });
+            //            handler.AddCommandHandlers().Build(new Assembly[] { handlers });
 
-                        handler.AddCommandAsyncHandlers().Build(new Assembly[] { handlers });
-                    });
-            })
+            //            handler.AddCommandAsyncHandlers().Build(new Assembly[] { handlers });
+            //        });
+            //})
 
                  //.AddLocalization(l =>
                  //{
@@ -107,9 +108,9 @@ namespace IF.Manager.Main
                  //.RegisterType<RoleRepository, IRoleRepository>(DependencyScope.PerInstance)
                  //.Register<IMapperService>(new AutoMapperService(mapper), DependencyScope.Single)
                  .RegisterRepositories<IRepository>(new Assembly[] { Assembly.Load("IF.Manager.Service") })
-                 .RegisterType<MemoryCacheService, ICacheService>(DependencyScope.Single)
-                 .RegisterType<LanguageService, ILanguageService>(DependencyScope.PerInstance)
-                 .RegisterType<TranslatorService, ITranslatorService>(DependencyScope.PerInstance);
+                 //.RegisterType<MemoryCacheService, ICacheService>(DependencyScope.Single)
+                 //.RegisterType<LanguageService, ILanguageService>(DependencyScope.PerInstance)
+                 //.RegisterType<TranslatorService, ITranslatorService>(DependencyScope.PerInstance);
             ;
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

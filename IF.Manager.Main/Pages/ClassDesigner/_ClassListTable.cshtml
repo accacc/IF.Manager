@@ -41,7 +41,7 @@
                 </td>
                 <td>
                     <a class="btn btn-primary"
-                       href="@Url.Page("/ClassForm","Update",new { Id = item.Id})"
+                       href="@Url.Page("/ClassDesigner/ClassForm","Update",new { Id = item.Id})"
                        if-ajax="true"
                        if-ajax-method="get"
                        if-ajax-mode="replace"
@@ -52,7 +52,7 @@
                 </td>
                 <td>
                     <a class="btn btn-primary"
-                       href="@Url.Page("/ClassForm","Delete",new { ClassId = item.Id})"
+                       href="@Url.Page("/ClassDesigner/ClassForm","Delete",new { ClassId = item.Id})"
                        if-ajax="true"
                        if-ajax-method="post"
                        if-ajax-mode="replace"
@@ -64,7 +64,7 @@
 
                 <td>
                     <a class="btn btn-primary"
-                       href="@Url.Page("/ClassListIndex","ClassTreeList",new { Id = item.Id })"
+                       href="@Url.Page("/ClassDesigner/ClassListIndex","ClassTreeList",new { Id = item.Id })"
                        if-ajax="true"
                        if-ajax-method="get"
                        if-ajax-insertion-mode="replace"
@@ -76,7 +76,7 @@
                 <td>
 
                     <a class="btn btn-primary"
-                       href="@Url.Page("/ClassListIndex","Generate",new { ClassId = item.Id})"
+                       href="@Url.Page("/ClassDesigner/ClassListIndex","Generate",new { ClassId = item.Id})"
                        if-ajax="true"
                        if-ajax-method="post"
                        if-ajax-mode="replace"

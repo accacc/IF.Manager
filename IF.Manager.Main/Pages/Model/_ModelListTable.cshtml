@@ -36,7 +36,7 @@
                 </td>
                 <td>
                     <a class="btn btn-primary"
-                       href="@Url.Page("/ModelForm","Update",new { Id = item.Id})"
+                       href="@Url.Page("/Model/ModelForm","Update",new { Id = item.Id})"
                        if-ajax="true"
                        if-ajax-method="get"
                        if-ajax-mode="replace"
@@ -48,7 +48,7 @@
                 <td>
 
                     <a type="submit" class="btn btn-primary"
-                       href="@Url.Page("/Property/ModelList",new { ModelId = item.Id})"
+                       href="@Url.Page("/Model/Property/ModelList",new { ModelId = item.Id})"
                        if-ajax="true"
                        if-ajax-mode="replace"
                        if-ajax-method="get"

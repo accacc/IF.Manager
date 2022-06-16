@@ -10,11 +10,12 @@
 <div class="row">
     <div class="col-md-12">
         <form class="form-inline">
+            
             @Html.AntiForgeryToken()
 
 
-
             <table class="table table-striped table-sm" id="EmptyFormItem">
+                
                 <thead>
                     <tr>
                         <th>From</th>
@@ -22,6 +23,7 @@
                         <th>Delete</th>
                     </tr>
                 </thead>
+
                 @for (int i = 0; i < Model.Form.Count; i++)
                 {
                     await Html.RenderPartialAsync("_ClassMappingFormItem", Model.Form[i]);
@@ -34,7 +36,7 @@
                 <div class="col-md-4">
 
                     <a class="btn btn-primary"
-                       href="@Url.Page("/Mapper/Mapping/ClassMappingForm","EmptyFormItemPartial",new { ClassMapId = Model.ClassMapId })"
+                       href="@Url.Page("/ClassDesigner/Mapper/Mapping/ClassMappingForm","EmptyFormItemPartial",new { ClassMapId = Model.ClassMapId })"
                        if-ajax="true"
                        if-ajax-method="get"
                        if-ajax-insertion-mode="after"
@@ -48,7 +50,7 @@
                 <div class="col-md-4">
 
                     <a class="btn btn-primary"
-                       href="@Url.Page("/Mapper/Mapping/ClassMappingForm","AutoMapping",new { ClassMapId = Model.ClassMapId })"
+                       href="@Url.Page("/ClassDesigner/Mapper/Mapping/ClassMappingForm","AutoMapping",new { ClassMapId = Model.ClassMapId })"
                        if-ajax="true"
                        if-ajax-method="get"
                        if-ajax-insertion-mode="replace"
@@ -60,7 +62,7 @@
 
                 <div class="col-md-4">
                     <button type="submit" class="btn btn-primary"
-                            if-ajax-action="@Url.Page("/Mapper/Mapping/ClassMappingForm",new { Id = Model.ClassMapId })"
+                            if-ajax-action="@Url.Page("/ClassDesigner/Mapper/Mapping/ClassMappingForm",new { Id = Model.ClassMapId })"
                             if-ajax-form-submit="true"
                             if-ajax-method="post"
                             if-ajax-close-modal-on-success="true"
@@ -77,6 +79,8 @@
         </form>
     </div>
 </div>
+
+
 <script>
 
     function setselectedtreenode() {
@@ -85,7 +89,5 @@
         data.ParentId = 1;
         return data;
     }
-
-
 
 </script>

@@ -40,7 +40,7 @@
     </td>
     <td>
         <a class="btn btn-primary"
-           href="@Url.Page("/Mapper/ClassMapperForm","Update",new { Id = item.Id})"
+           href="@Url.Page("/ClassDesigner/Mapper/ClassMapperForm","Update",new { Id = item.Id})"
            if-ajax="true"
            if-ajax-method="get"
            if-ajax-mode="replace"
@@ -51,7 +51,7 @@
     </td>
     <td>
         <a class="btn btn-primary"
-           href="@Url.Page("/Mapper/Mapping/ClassMappingForm",new { ClassMapId = item.Id})"
+           href="@Url.Page("/ClassDesigner/Mapper/Mapping/ClassMappingForm",new { ClassMapId = item.Id})"
            if-ajax="true"
            if-ajax-method="get"
            if-ajax-mode="replace"
@@ -64,7 +64,7 @@
     <td>
 
         <a class="btn btn-primary"
-           href="@Url.Page("/Mapper/ClassMapperIndex","Generate",new { ClassMapId = item.Id})"
+           href="@Url.Page("/ClassDesigner/Mapper/ClassMapperIndex","Generate",new { ClassMapId = item.Id})"
            if-ajax="true"
            if-ajax-method="post"
            if-ajax-mode="replace"
