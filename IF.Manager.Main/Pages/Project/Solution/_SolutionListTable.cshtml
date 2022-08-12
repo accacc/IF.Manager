@@ -13,7 +13,7 @@
             <b>Solution</b> - <label sl-data-label="solution">@solution.SolutionName</label>
             &nbsp;
             <a class="btn btn-primary"
-               href="@Url.Page("/Solution/SolutionForm","Update",new { Id = solution.Id})"
+           href="@Url.Page("/Project/Solution/SolutionForm","Update",new { Id = solution.Id})"
                if-ajax="true"
                if-ajax-method="get"
                if-ajax-mode="replace"
@@ -25,7 +25,7 @@
 
             &nbsp;
             <a class="btn btn-success"
-               href="@Url.Page("/ProjectForm","Add",new { SolutionId = solution.Id})"
+           href="@Url.Page("/Project/ProjectForm","Add",new { SolutionId = solution.Id})"
                if-ajax="true"
                if-ajax-method="get"
                if-ajax-insertion-mode="replace"
@@ -37,7 +37,7 @@
             </a>
 
             <a class="btn btn btn-danger"
-               href="@Url.Page("/Publisher/PublishSolutionForm",new { SolutionId= solution.Id})"
+           href="@Url.Page("/Project/Publisher/PublishSolutionForm",new { SolutionId= solution.Id})"
                if-ajax="true"
                if-ajax-method="get"
                if-ajax-insertion-mode="replace"
@@ -58,7 +58,7 @@
                     &nbsp;&nbsp;<b>Project</b> - <label sl-data-label-solution="@solution.SolutionName" sl-data-label="project">@project.Name</label>
                     &nbsp;
                     <a class="btn btn-primary"
-                       href="@Url.Page("/ProjectForm","Update",new { Id = project.Id})"
+           href="@Url.Page("/Project/ProjectForm","Update",new { Id = project.Id})"
                        if-ajax="true"
                        if-ajax-method="get"
                        if-ajax-mode="replace"
@@ -70,7 +70,7 @@
 
                     &nbsp;
                     <a class="btn btn-success"
-                       href="@Url.Page("/Process/ProcessForm","Add",new { ProjectId = project.Id})"
+           href="@Url.Page("/Project/Process/ProcessForm","Add",new { ProjectId = project.Id})"
                        if-ajax="true"
                        if-ajax-method="get"
                        if-ajax-insertion-mode="replace"
@@ -83,7 +83,7 @@
 
 
                     <a class="btn btn btn-danger"
-                       href="@Url.Page("/Publisher/PublishProjectForm",new { ProjectId= project.Id})"
+                       href="@Url.Page("/Project/Publisher/PublishProjectForm",new { ProjectId= project.Id})"
                        if-ajax="true"
                        if-ajax-method="get"
                        if-ajax-insertion-mode="replace"
@@ -102,7 +102,7 @@
                             &nbsp;&nbsp;&nbsp;&nbsp;<b>Process</b> - <label sl-data-label-solution="@solution.SolutionName" sl-data-label-project="@project.Name" sl-data-label="process">@process.Name</label>
                             &nbsp;
                             <a class="btn btn-primary"
-                               href="@Url.Page("/Process/ProcessForm", "Update", new { Id = process.Id })"
+                               href="@Url.Page("/Project/Process/ProcessForm", "Update", new { Id = process.Id })"
                                if-ajax="true"
                                if-ajax-method="get"
                                if-ajax-mode="replace"
@@ -115,7 +115,7 @@
                             &nbsp;
 
                             <a class="btn btn btn-danger"
-                               href="@Url.Page("/Publisher/PublishProcessForm", new { ProcessId = process.Id })"
+                               href="@Url.Page("/Project/Publisher/PublishProcessForm", new { ProcessId = process.Id })"
                                if-ajax="true"
                                if-ajax-method="get"
                                if-ajax-insertion-mode="replace"
@@ -125,7 +125,7 @@
                             </a>
 
                             <a class="btn btn-success"
-                               href="@Url.Page("/Publisher/PublishForm", "List", new { ProcessId = process.Id })"
+                               href="@Url.Page("/Project/Publisher/PublishForm", "List", new { ProcessId = process.Id })"
                                if-ajax="true"
                                if-ajax-method="get"
                                if-ajax-insertion-mode="replace"
@@ -159,7 +159,7 @@
                             &nbsp;
 
                             <a class="btn btn btn-danger"
-                               href="@Url.Page("/Publisher/PublishPageForm", new { PageId = ifpage.Id })"
+                               href="@Url.Page("/Project/Publisher/PublishPageForm", new { PageId = ifpage.Id })"
                                if-ajax="true"
                                if-ajax-method="get"
                                if-ajax-insertion-mode="replace"
@@ -169,7 +169,7 @@
                             </a>
 
                             <a class="btn btn-success"
-                               href="@Url.Page("/Publisher/PublishForm", "List", new { PageId = ifpage.Id })"
+                               href="@Url.Page("/Project/Publisher/PublishForm", "List", new { PageId = ifpage.Id })"
                                if-ajax="true"
                                if-ajax-method="get"
                                if-ajax-insertion-mode="replace"

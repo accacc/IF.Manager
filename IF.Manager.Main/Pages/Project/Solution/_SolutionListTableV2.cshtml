@@ -16,7 +16,7 @@
             <label for="@solution.Id@solution.SolutionName" sl-data-label="solution"><span><b>Solution - </b></span>@solution.SolutionName</label>
             
             <a class="btn btn-primary"
-               href="@Url.Page("/Solution/SolutionForm","Update",new { Id = solution.Id})"
+               href="@Url.Page("/Project/Solution/SolutionForm","Update",new { Id = solution.Id})"
                if-ajax="true"
                if-ajax-method="get"
                if-ajax-mode="replace"
@@ -28,7 +28,7 @@
 
             
             <a class="btn btn-success"
-               href="@Url.Page("/ProjectForm","Add",new { SolutionId = solution.Id})"
+               href="@Url.Page("/Project/ProjectForm","Add",new { SolutionId = solution.Id})"
                if-ajax="true"
                if-ajax-method="get"
                if-ajax-insertion-mode="replace"
@@ -40,7 +40,7 @@
             </a>
 
             <a class="btn btn btn-danger"
-               href="@Url.Page("/Publisher/PublishSolutionForm",new { SolutionId= solution.Id})"
+               href="@Url.Page("/Project/Publisher/PublishSolutionForm",new { SolutionId= solution.Id})"
                if-ajax="true"
                if-ajax-method="get"
                if-ajax-insertion-mode="replace"
