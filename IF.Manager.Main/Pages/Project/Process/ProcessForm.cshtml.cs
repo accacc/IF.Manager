@@ -1,4 +1,5 @@
 using IF.Manager.Contracts.Dto;
+using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 
 using Microsoft.AspNetCore.Mvc;
@@ -40,12 +41,12 @@ namespace IF.Manager.Project.Pages
             await this.projectService.AddProcess(this.Form);
 
 
-            var list = await this.projectService.GetProcessList();
+            var list = await this.projectService.GetSolutionList();
 
             return new PartialViewResult
             {
-                ViewName = "_ProcessListTable",
-                ViewData = new ViewDataDictionary<List<ProcessDto>>(ViewData, list)
+                ViewName = "~/Pages/Project/Solution/_SolutionListTable.cshtml",
+                ViewData = new ViewDataDictionary<List<IFSolution>>(ViewData, list)
             };
         }
 
@@ -55,12 +56,12 @@ namespace IF.Manager.Project.Pages
             await this.projectService.UpdateProcess(this.Form);
 
 
-            var list = await this.projectService.GetProcessList();
+            var list = await this.projectService.GetSolutionList();
 
             return new PartialViewResult
             {
-                ViewName = "_ProcessListTable",
-                ViewData = new ViewDataDictionary<List<ProcessDto>>(ViewData, list)
+                ViewName = "~/Pages/Project/Solution/_SolutionListTable.cshtml",
+                ViewData = new ViewDataDictionary<List<IFSolution>>(ViewData, list)
             };
         }
     }

@@ -32,17 +32,14 @@
                         </div>
                     </div>
 
-                    @*<div class="row">
-                            <div class="col-md-12">
-                                &nbsp;
-                            </div>
-                        </div>*@
+                
 
-            <div id="e_@item.Name" class="row collapse">                
+            <div id="e_@item.Name" class="row collapse">  
+                
                 <div class="col-md-12">
 
                     <a class="btn btn-primary"
-                       href="@Url.Page("/Form","Update", new { Id = item.Id })"
+                       href="@Url.Page("/Entity/Form","Update", new { Id = item.Id })"
                        if-ajax="true"
                        if-ajax-method="get"
                        if-ajax-insertion-mode="replace"
@@ -53,7 +50,7 @@
                     </a>
 
                     <a class="btn btn-primary"
-                       href="@Url.Page("/Properties/Form", new { EntityId = item.Id })"
+                       href="@Url.Page("/Entity/Properties/Form", new { EntityId = item.Id })"
                        if-ajax="true"
                        if-ajax-method="get"
                        if-ajax-insertion-mode="replace"
@@ -62,8 +59,9 @@
                        id="PropertyDesignerButton">
                         Property Designer
                     </a>
+
                     <a class="btn btn-primary"
-                       href="@Url.Page("/Relations/Form", new { EntityId = item.Id })"
+                       href="@Url.Page("/Entity/Relations/Form", new { EntityId = item.Id })"
                        if-ajax="true"
                        if-ajax-method="get"
                        if-ajax-insertion-mode="replace"
@@ -77,7 +75,7 @@
                     <br />
 
                     <a class="btn btn-primary"
-                       href="@Url.Page("/BasicGenerator/Form", new { EntityId = item.Id })"
+                       href="@Url.Page("/Entity/BasicGenerator/Form", new { EntityId = item.Id })"
                        if-ajax="true"
                        if-ajax-method="get"
                        if-ajax-insertion-mode="replace"
@@ -88,10 +86,12 @@
 
                     <br />
                     <p><b>Properties</b></p>
+
                     @foreach (var property in item.Properties)
                     {
                         <label sl-data-label="properties">@property.Name</label><br />
                     }
+
                     <p><b>Relations</b></p>
 
                     @foreach (var relation in item.Relations)
@@ -100,7 +100,9 @@
                         <label>@relation.RelatedEntityName</label><br />
 
                     }
+
                     <p><b>Reverse Relations</b></p>
+
                     @foreach (var relation in item.ReverseRelations)
                     {
 

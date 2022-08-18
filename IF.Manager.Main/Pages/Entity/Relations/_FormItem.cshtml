@@ -72,7 +72,7 @@
         debugger;
         $.ajax({
             type: 'GET',
-            url: '@Url.Page("/Relations/Form", "PrimaryKeyDropDownPropertyPartial")',
+            url: '@Url.Page("/Entity/Relations/Form", "PrimaryKeyDropDownPropertyPartial")',
             data: { IFEntityId: valueSelected, Index:'@index'},
             success: function (data) {
                 debugger;
