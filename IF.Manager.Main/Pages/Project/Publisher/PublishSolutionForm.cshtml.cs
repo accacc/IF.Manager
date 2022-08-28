@@ -1,4 +1,5 @@
 using IF.Manager.Contracts.Dto;
+using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -53,12 +54,12 @@ namespace IF.Manager.Project.Pages
                 throw;
             }
 
-            var list = await this.entityService.GetEntityListGrouped();
+            var solutionList = await this.projectService.GetSolutionList();
 
             return new PartialViewResult
             {
-                ViewName = "_EntityListTable",
-                ViewData = new ViewDataDictionary<List<List<EntityDto>>>(ViewData, list)
+                ViewName = "../Solution/_SolutionListTable",
+                ViewData = new ViewDataDictionary<List<IFSolution>>(ViewData, solutionList)
             };
         }
 
