@@ -16,7 +16,7 @@
     <div id="row">
 
         <a class="btn btn-primary"
-           href="@Url.Page("/Filter/QueryFilterForm",new {QueryId = Model.QueryId })"
+           href="@Url.Page("/Query/Filter/QueryFilterForm",new {QueryId = Model.QueryId })"
            if-ajax="true"
            if-ajax-method="get"
            if-ajax-mode="replace"
@@ -28,7 +28,7 @@
         -
 
         <a class="btn btn-primary"
-           href="@Url.Page("/Filter/QueryFilterForm",new {QueryId = Model.QueryId })"
+           href="@Url.Page("/Query/Filter/QueryFilterForm",new {QueryId = Model.QueryId })"
            if-ajax="true"
            if-ajax-method="get"
            if-ajax-mode="replace"
@@ -39,7 +39,7 @@
         </a>
         -
         <a class="btn btn-primary"
-           href="@Url.Page("/Filter/QueryFilterForm","Show",new {QueryId = Model.QueryId })"
+           href="@Url.Page("/Query/Filter/QueryFilterForm","Show",new {QueryId = Model.QueryId })"
            if-ajax="true"
            if-ajax-method="get"
            if-ajax-mode="replace"

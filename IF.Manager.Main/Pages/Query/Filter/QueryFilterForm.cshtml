@@ -58,7 +58,7 @@
         <div class="col-md-6">
 
             <a class="btn btn-primary"
-               href="@Url.Page("/Filter/QueryFilterForm","EmptyFormItemPartial",new { Id = Model.Form.QueryId })"
+               href="@Url.Page("/Query/Filter/QueryFilterForm","EmptyFormItemPartial",new { Id = Model.Form.QueryId })"
                if-ajax="true"
                if-ajax-method="get"
                if-ajax-insertion-mode="after"
@@ -68,7 +68,7 @@
         </div>
         <div class="col-md-6">
             <button type="submit" class="btn btn-primary"
-                    if-ajax-action="@Url.Page("/Filter/QueryFilterForm",new { Id = Model.Form.QueryId })"
+                    if-ajax-action="@Url.Page("/Query/Filter/QueryFilterForm",new { Id = Model.Form.QueryId })"
                     if-ajax-form-submit="true"
                     if-ajax-method="post"
                     if-ajax-close-modal-on-success="true"

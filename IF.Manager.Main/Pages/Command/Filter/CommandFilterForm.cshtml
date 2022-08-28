@@ -53,7 +53,7 @@
         <div class="col-md-6">
 
             <a class="btn btn-primary"
-               href="@Url.Page("/Filter/CommandFilterForm","EmptyFormItemPartial",new { Id = Model.CommandId })"
+               href="@Url.Page("/Command/Filter/CommandFilterForm","EmptyFormItemPartial",new { Id = Model.CommandId })"
                if-ajax="true"
                if-ajax-method="get"
                if-ajax-insertion-mode="after"
@@ -63,7 +63,7 @@
         </div>
         <div class="col-md-6">
             <button type="submit" class="btn btn-primary"
-                    if-ajax-action="@Url.Page("/Filter/CommandFilterForm",new { Id = Model.CommandId })"
+                    if-ajax-action="@Url.Page("/Command/Filter/CommandFilterForm",new { Id = Model.CommandId })"
                     if-ajax-form-submit="true"
                     if-ajax-method="post"
                     if-ajax-close-modal-on-success="true"

@@ -42,7 +42,7 @@
                 </td>
                 <td>
                     <a class="btn btn-primary"
-                       href="@Url.Page("/CommandForm","Update",new { Id = item.Id})"
+                       href="@Url.Page("/Command/CommandForm","Update",new { Id = item.Id})"
                        if-ajax="true"
                        if-ajax-method="get"
                        if-ajax-mode="replace"
@@ -55,7 +55,7 @@
                 <td>
 
                     <a class="btn btn-primary"
-                       href="@Url.Page("/Filter/CommandFilterForm",new { Id = item.Id })"
+                       href="@Url.Page("/Command/Filter/CommandFilterForm",new { Id = item.Id })"
                        if-ajax="true"
                        if-ajax-method="get"
                        if-ajax-insertion-mode="replace"
@@ -69,7 +69,7 @@
                     <td>
 
                         <a class="btn btn-primary"
-                           href="@Url.Page("/Multi/CommandMultiForm", new { Id = item.Id })"
+                           href="@Url.Page("/Command/Multi/CommandMultiForm", new { Id = item.Id })"
                            if-ajax="true"
                            if-ajax-method="get"
                            if-ajax-insertion-mode="replace"
@@ -81,7 +81,7 @@
 
                     <td>
                         <a class="btn btn-primary"
-                           href="@Url.Page("/CommandListIndex", "CommandTreeList", new { Id = item.Id })"
+                           href="@Url.Page("/Command/CommandListIndex", "CommandTreeList", new { Id = item.Id })"
                            if-ajax="true"
                            if-ajax-method="get"
                            if-ajax-insertion-mode="replace"
