@@ -18,7 +18,7 @@ namespace IF.Manager.Service.CodeGen.Rules.Filters
         EFFilterRule rules;
         public FilterRuleEngine(FilterContext context)
         {
-            this.context = context;
+            this.context = context; 
 
             rules = new EqualRule();
             rules.SetNext(new NotEqualRule())
@@ -31,13 +31,10 @@ namespace IF.Manager.Service.CodeGen.Rules.Filters
                 .SetNext(new NullRule())
                 .SetNext(new NotNullRule())
                 .SetNext(new NotEqualRule())
-                .SetNext(new StringContainsRule())
-
-            ;
+                .SetNext(new StringContainsRule());            
         }
 
-        public StringBuilder GetrulesQuery(List<QueryFilterTreeDto> queryFilterItems, StringBuilder builder)
-
+        public StringBuilder RunQueryRules(List<QueryFilterTreeDto> queryFilterItems, StringBuilder builder)
         {
 
             for (int i = 0; i < queryFilterItems.Count; i++)
@@ -103,7 +100,8 @@ namespace IF.Manager.Service.CodeGen.Rules.Filters
                 {
                     this.context.FilterBuilder.Append($"(");
 
-                    builder = GetrulesQuery(queryFilterItem.Childs.ToList(), builder);
+                    builder = RunQueryRules(queryFilterItem.Childs.ToList(), builder);
+
                     builder.Append(")");
 
                     //builder.Append(queryFilterItem.ConditionOperator.ToString() + " ");
@@ -122,7 +120,7 @@ namespace IF.Manager.Service.CodeGen.Rules.Filters
 
             this.context.FilterBuilder = new StringBuilder();
 
-            this.GetrulesQuery(this.context.FilterItems, this.context.FilterBuilder);
+            this.RunQueryRules(this.context.FilterItems, this.context.FilterBuilder);
 
         }
 

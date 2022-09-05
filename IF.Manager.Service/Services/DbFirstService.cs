@@ -77,7 +77,7 @@ namespace IF.Manager.Service.Services
             if (generateOptions.SelectOperation)
             {
                 await GenerateQuery(processId, entity, name + "Get", QueryGetType.Single);
-                await GenerateQuery(processId, entity, name + "List", QueryGetType.Single);
+                await GenerateQuery(processId, entity, name + "List", QueryGetType.List);
             }
 
             if(generateOptions.InsertOperation)

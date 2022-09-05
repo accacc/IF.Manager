@@ -7,7 +7,9 @@ using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
 using IF.Manager.Service.CodeGen;
 using IF.Persistence.EF;
+
 using Microsoft.EntityFrameworkCore;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,21 +32,19 @@ namespace IF.Manager.Service.Services
 
             try
             {
-                var list = await this.GetQuery<IFQueryFilterItem>().Include(f=>f.EntityProperty).Select
-
-               (map =>
+                var list = await this.GetQuery<IFQueryFilterItem>().Include(f => f.EntityProperty).Select(x =>
                 new QueryFilterTreeDto
                 {
 
-                    ConditionOperator = map.ConditionOperator,
-                    Id = map.Id,
-                    ParentId = map.ParentId,
-                    FilterOperator = map.FilterOperator,
-                    IsNullCheck = map.IsNullCheck,
-                    EntityPropertyId = map.EntityPropertyId,
-                    Value = map.Value,
-                    QueryId = map.QueryId,
-                    PropertyName = map.EntityProperty.Name
+                    ConditionOperator = x.ConditionOperator,
+                    Id = x.Id,
+                    ParentId = x.ParentId,
+                    FilterOperator = x.FilterOperator,
+                    IsNullCheck = x.IsNullCheck,
+                    EntityPropertyId = x.EntityPropertyId,
+                    Value = x.Value,
+                    QueryId = x.QueryId,
+                    PropertyName = x.EntityProperty.Name
 
                 }).ToListAsync();
 
@@ -91,6 +91,7 @@ namespace IF.Manager.Service.Services
             .SingleOrDefaultAsync(k => k.Id == form.Id);
 
                 if (entity == null) { throw new BusinessException(" No such entity exists"); }
+
                 string name = ObjectNamerHelper.AddAsLastWord(form.Name, "DataQuery");
                 entity.Name = name;
                 entity.Description = form.Description;
@@ -119,12 +120,12 @@ namespace IF.Manager.Service.Services
                 Name = x.Name,
                 Description = x.Description,
                 ModelId = x.ModelId,
-                ProcessId = x.ProcessId,                
+                ProcessId = x.ProcessId,
                 QueryGetType = x.QueryGetType,
                 PageSize = x.PageSize,
                 PageNumber = x.PageNumber,
                 IsQueryOverride = x.IsQueryOverride
-                
+
             }).SingleOrDefaultAsync(k => k.Id == id);
 
             if (entity == null) { throw new BusinessException("Query : No such entity exists"); }
@@ -150,12 +151,12 @@ namespace IF.Manager.Service.Services
         {
             var query = await this.GetQuery<IFQuery>(q => q.Id == queryId).SingleOrDefaultAsync();
 
-            var data = await this.GetQuery<IFModelProperty>(x => x.ModelId == query.ModelId).Include(p=>p.EntityProperty).ToListAsync();
+            var data = await this.GetQuery<IFModelProperty>(x => x.ModelId == query.ModelId).Include(p => p.EntityProperty).ToListAsync();
 
             return data;
         }
 
-        public async Task<QueryFilterDto> GetQueryFilterItems(int queryId,int? ParentId)
+        public async Task<QueryFilterDto> GetQueryFilterItems(int queryId, int? ParentId)
         {
             QueryFilterDto filter = new QueryFilterDto();
             filter.QueryId = queryId;
@@ -178,8 +179,8 @@ namespace IF.Manager.Service.Services
                     PageParameterId = i.IFPageParameterId,
                     Id = i.Id,
                     IsNullCheck = i.IsNullCheck
-                    
-                    
+
+
 
                 }).ToListAsync();
 
@@ -195,12 +196,11 @@ namespace IF.Manager.Service.Services
 
         public async Task UpdatQueryFilters(QueryFilterDto form)
         {
-            var dtos = form.Items;
+            var queryFilterFormItems = form.Items;
 
             try
             {
-                var entity = await this.GetQuery<IFQuery>()
-               .SingleOrDefaultAsync(q => q.Id == form.QueryId);
+                var entity = await this.GetQuery<IFQuery>().SingleOrDefaultAsync(q => q.Id == form.QueryId);
 
                 if (entity == null) { throw new BusinessException(" No such entity exists"); }
 
@@ -209,33 +209,33 @@ namespace IF.Manager.Service.Services
 
                 for (int i = 0; i < queryFilterItems.Count; i++)
                 {
-                    if (!dtos.Any(d => d.Id == queryFilterItems.ElementAt(i).Id))
+                    if (!queryFilterFormItems.Any(d => d.Id == queryFilterItems.ElementAt(i).Id))
                     {
                         this.Delete(queryFilterItems.ElementAt(i));
                     }
                 }
 
 
-                foreach (var dto in dtos)
+                foreach (var queryFilterForm in queryFilterFormItems)
                 {
 
-                    if (dto.Id <= 0)
+                    if (queryFilterForm.Id <= 0)
                     {
                         IFQueryFilterItem filter = new IFQueryFilterItem();
-                        
-                        if (dto.FormModelPropertyId.HasValue)
+
+                        if (queryFilterForm.FormModelPropertyId.HasValue)
                         {
-                            filter.FormModelPropertyId = dto.FormModelPropertyId;
+                            filter.FormModelPropertyId = queryFilterForm.FormModelPropertyId;
                             filter.Value = null;
                         }
-                        else if (dto.PageParameterId.HasValue)
+                        else if (queryFilterForm.PageParameterId.HasValue)
                         {
-                            filter.IFPageParameterId = dto.PageParameterId;
+                            filter.IFPageParameterId = queryFilterForm.PageParameterId;
                             filter.Value = null;
                         }
-                        else if(dto.Value!=null)
+                        else if (queryFilterForm.Value != null)
                         {
-                            filter.Value = dto.Value;
+                            filter.Value = queryFilterForm.Value;
                         }
                         else
                         {
@@ -246,30 +246,30 @@ namespace IF.Manager.Service.Services
 
                         filter.QueryId = form.QueryId;
                         filter.ConditionOperator = form.ConditionOperator;
-                        filter.EntityPropertyId = dto.EntityPropertyId;
-                        filter.FilterOperator = dto.FilterOperator;
-                        filter.IsNullCheck = dto.IsNullCheck;
+                        filter.EntityPropertyId = queryFilterForm.EntityPropertyId;
+                        filter.FilterOperator = queryFilterForm.FilterOperator;
+                        filter.IsNullCheck = queryFilterForm.IsNullCheck;
                         filter.ParentId = form.ParentId;
 
                         this.Add(filter);
                     }
                     else
                     {
-                        var filter = await this.GetQuery<IFQueryFilterItem>(p => p.Id == dto.Id).SingleOrDefaultAsync();
+                        var filter = await this.GetQuery<IFQueryFilterItem>(p => p.Id == queryFilterForm.Id).SingleOrDefaultAsync();
 
                         if (filter.FormModelPropertyId.HasValue)
                         {
-                            filter.FormModelPropertyId = dto.FormModelPropertyId;
+                            filter.FormModelPropertyId = queryFilterForm.FormModelPropertyId;
                             filter.Value = "";
                         }
-                        else if (dto.PageParameterId.HasValue)
+                        else if (queryFilterForm.PageParameterId.HasValue)
                         {
-                            filter.IFPageParameterId = dto.PageParameterId;
+                            filter.IFPageParameterId = queryFilterForm.PageParameterId;
                             filter.Value = "";
                         }
-                        else if (dto.Value != null)
+                        else if (queryFilterForm.Value != null)
                         {
-                            filter.Value = dto.Value;
+                            filter.Value = queryFilterForm.Value;
                         }
                         else
                         {
@@ -279,9 +279,9 @@ namespace IF.Manager.Service.Services
                         }
                         filter.QueryId = form.QueryId;
                         filter.ConditionOperator = form.ConditionOperator;
-                        filter.EntityPropertyId = dto.EntityPropertyId;
-                        filter.FilterOperator = dto.FilterOperator;
-                        filter.IsNullCheck = dto.IsNullCheck;
+                        filter.EntityPropertyId = queryFilterForm.EntityPropertyId;
+                        filter.FilterOperator = queryFilterForm.FilterOperator;
+                        filter.IsNullCheck = queryFilterForm.IsNullCheck;
                         filter.ParentId = form.ParentId;
                         this.Update(filter);
                     }
@@ -310,7 +310,7 @@ namespace IF.Manager.Service.Services
 
                 for (int i = 0; i < entity.QueryOrders.Count; i++)
                 {
-                    if (!dtos.Any(d=>d.Id == entity.QueryOrders.ElementAt(i).Id))
+                    if (!dtos.Any(d => d.Id == entity.QueryOrders.ElementAt(i).Id))
                     {
                         this.Delete(entity.QueryOrders.ElementAt(i));
                     }
@@ -351,7 +351,7 @@ namespace IF.Manager.Service.Services
             return this.GetQuery<IFQueryOrder>(o => o.QueryId == id).ToListAsync();
         }
 
-        public async Task<List<IFPageParameter>> GetPageParametersFromQuery(int queryId,PageParameterType objectType)
+        public async Task<List<IFPageParameter>> GetPageParametersFromQuery(int queryId, PageParameterType objectType)
         {
             var query = await this.GetQuery<IFQuery>().Include(q => q.Process.Pages).SingleOrDefaultAsync();
             var parameters = await this.GetQuery<IFPageParameter>(p => p.ObjectId == queryId && p.ObjectType == objectType).ToListAsync();
