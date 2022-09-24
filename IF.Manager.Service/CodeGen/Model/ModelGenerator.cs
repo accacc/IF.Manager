@@ -1,4 +1,5 @@
 ﻿using IF.CodeGeneration.Core;
+using IF.Core.Data;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Service.CodeGen;
@@ -39,6 +40,12 @@ namespace IF.Manager.Service.Model
 
             modelClass.Usings.Add("System");
             modelClass.Usings.Add("System.Collections.Generic");
+
+            if(this.model.Entity.Properties.Any(p=>p.IsMultiLanguage))
+            {
+
+                modelClass.InheritedInterfaces.Add($"I{this.model.Entity.Name}Language");
+            }
 
             modelClass.Build(entityTree.Childs);
 

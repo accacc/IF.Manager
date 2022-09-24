@@ -6,11 +6,11 @@ using IF.Manager.Contracts.Model;
 using IF.Persistence.EF.Audit;
 namespace IF.Manager.Service.CodeGen.EF
 {
-    public class AuditClass : CSClass
+    public class AuditEntityClass : EntityBaseClass
     {
 
-        public EntityDto EntityMetaData { get; set; }
-        public AuditClass(EntityDto entity, IFProject project)
+        
+        public AuditEntityClass(EntityDto entity, IFProject project):base(entity)
         {
             this.EntityMetaData = entity;
             this.NameSpace = SolutionHelper.GetCoreBaseNamespace(project);
@@ -24,27 +24,10 @@ namespace IF.Manager.Service.CodeGen.EF
             this.Usings.Add(SolutionHelper.GetCoreNamespace(project));
         }
 
-        public void Build()
+        public override void Build()
         {
-            foreach (var entityProperty in this.EntityMetaData.Properties)
-            {
+            GenerateProperties();
 
-                bool IsNullable = entityProperty.IsNullable;
-
-                if (entityProperty.Type == "string")
-                {
-                    IsNullable = false;
-                }
-
-
-                var classProperty = new CSProperty("public", entityProperty.Name, IsNullable);
-
-                classProperty.PropertyTypeString = entityProperty.Type;               
-
-                this.Properties.Add(classProperty);             
-            }
-
-           
             var LogTypeColumnNameProperty = new CSProperty("public", ShadowAuditing.LogTypeColumnName, false);
             LogTypeColumnNameProperty.PropertyTypeString = "int";
             this.Properties.Add(LogTypeColumnNameProperty);
@@ -85,5 +68,7 @@ namespace IF.Manager.Service.CodeGen.EF
             this.Properties.Add(ModifiedByColumnNameProperty);
 
         }
+
+       
     }
 }

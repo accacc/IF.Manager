@@ -2,6 +2,7 @@
 using IF.CodeGeneration.Language.CSharp;
 using IF.Core.Audit;
 using IF.Core.Data;
+using IF.Core.Localization;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
@@ -82,7 +83,7 @@ namespace IF.Manager.Service
                         entityClass.InheritedInterfaces.Add(nameof(IShadowAuditableEntity));
                         entityClass.Usings.Add("System.ComponentModel.DataAnnotations.Schema");
 
-                        AuditClass auditClass = new AuditClass(entity, project);
+                        AuditEntityClass auditClass = new AuditEntityClass(entity, project);
                         auditClass.Build();
 
 
@@ -111,6 +112,28 @@ namespace IF.Manager.Service
                         break;
                     default:
                         break;
+                }
+
+
+                if(entity.Properties.Any(e=>e.IsMultiLanguage))
+                {
+                    LanguageEntityClass languageEntityClass = new LanguageEntityClass(entity, project);
+                    languageEntityClass.Build();
+
+                    CSInterface languageDataInterface = new CSInterface();
+                    languageDataInterface.Name = $"I{entity.Name}Language";
+                    languageDataInterface.InheritedInterfaces.Add(nameof(ILanguageData));
+
+                    var ObjectIdProperty = new CSProperty("", "ObjectId", false);
+                    ObjectIdProperty.PropertyTypeString = "int";
+                    languageDataInterface.Properties.Add(ObjectIdProperty);
+
+
+
+                    var LanguageIdProperty = new CSProperty("", "LanguageId", false);
+                    LanguageIdProperty.PropertyTypeString = "int";
+                    languageDataInterface.Properties.Add(LanguageIdProperty);
+
                 }
 
                 entityClass.Name = entity.Name;
