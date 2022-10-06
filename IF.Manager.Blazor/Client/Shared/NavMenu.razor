@@ -1,0 +1,41 @@
+﻿<MudPaper Width="250px" Class="d-inline-flex py-3" Elevation="0">
+    <MudNavMenu Class="mud-width-full" Dense="true" Margin="Margin.Dense">
+        <MudText Typo="Typo.h6" Class="px-4">IF.Manager</MudText>
+        <MudDivider Class="my-2" />
+        <MudNavLink Href="/home">Dashboard</MudNavLink>
+        <MudNavGroup Title="Entity Manager" Expanded="false">
+            <MudNavLink Href="/entity/index">Entities</MudNavLink>
+            <MudNavLink Href="/blank">Db First</MudNavLink>
+            <MudNavLink Href="/blank">Entity Groups</MudNavLink>
+        </MudNavGroup>
+        <MudNavGroup Title="Class Manager" Expanded="false">
+            <MudNavLink Href="/blank">Class Designer</MudNavLink>
+            <MudNavLink Href="/blank">Json Designer</MudNavLink>
+            <MudNavLink Href="/blank">Mapper Designer</MudNavLink>
+        </MudNavGroup>
+        <MudNavGroup Title="Process Manager" Expanded="false">
+            <MudNavLink Href="/blank">Models</MudNavLink>
+            <MudNavLink Href="/blank">Queries</MudNavLink>
+            <MudNavLink Href="/blank">Commands</MudNavLink>
+        </MudNavGroup>
+        <MudNavGroup Title="Project Manager" Expanded="false">
+            <MudNavLink Href="/">Solutions</MudNavLink>
+        </MudNavGroup>
+        <MudNavGroup Title="Page Manager" Expanded="false">
+            <MudNavLink Href="/blank">Pages</MudNavLink>
+            <MudNavLink Href="/blank">Grids</MudNavLink>
+            <MudNavLink Href="/blank">Actions</MudNavLink>
+            <MudNavLink Href="/blank">Forms</MudNavLink>
+            <MudNavLink Href="/blank">List Views</MudNavLink>
+            <MudNavLink Href="/blank">Menu</MudNavLink>
+            <MudNavLink Href="/blank">Navigation</MudNavLink>
+            <MudNavLink Href="/blank">Panel</MudNavLink>
+        </MudNavGroup>
+        <MudNavLink Href="/settings" Icon="@Icons.Filled.AdminPanelSettings">Settings</MudNavLink>
+        <MudNavLink Icon="@Icons.Filled.Logout">Logout</MudNavLink>
+    </MudNavMenu>
+</MudPaper>
+
+@code {
+
+}
