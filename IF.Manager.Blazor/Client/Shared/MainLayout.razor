@@ -1,0 +1,81 @@
+﻿@inherits LayoutComponentBase
+
+<PageTitle>IF.Manager</PageTitle>
+
+<MudLayout>
+    <MudAppBar Style="background-color:white">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Info" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"></MudIconButton>
+        <MudText Color="Color.Dark" style="margin-left:20px">IF.Manager</MudText>
+    </MudAppBar>
+    <MudDrawer @bind-Open="@_drawerOpen">
+        <NavMenu />
+    </MudDrawer>
+    <MudMainContent>
+        <MudContainer Style="margin-top:40px" MaxWidth="MaxWidth.ExtraLarge">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+@code
+{
+    bool _drawerOpen = false;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+    private MudTheme ArbimedMainTheme = new MudTheme()
+        {
+            Palette = new Palette()
+            {
+                Primary = new MudBlazor.Utilities.MudColor("0074C8"),
+                Secondary = new MudBlazor.Utilities.MudColor("F68C2D"),
+            },
+            Typography = new Typography()
+            {
+                Default = new Default()
+                {
+                    //FontFamily = new[] { "Calibri", "Helvetica", "Arial", "sans-serif" },
+                    //FontSize = "0.50em"
+                },
+                Body1 = new Body1()
+                {
+                    //FontSize = "0.50em"
+                },
+                Body2 = new Body2()
+                {
+                    //FontSize = "0.50em"
+                },
+                Button = new Button()
+                {
+                    //FontSize = "0.90em"
+                },
+                Subtitle1 = new Subtitle1()
+                {
+                    //FontSize = "0.90em"
+                },
+                Caption = new Caption()
+                {
+                    //FontSize = "0.90em"
+                },
+                Overline = new Overline()
+                {
+                    //FontSize = "0.90em"
+                },
+                H1 = new H1()
+                {
+                    //FontSize = "0.90em"
+                },
+
+            },
+
+        };
+
+
+}

@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\IF.Manager.Service\IF.Manager.Service.csproj" />
+    <ProjectReference Include="..\Client\IF.Manager.Blazor.Client.csproj" />
+    <ProjectReference Include="..\Shared\IF.Manager.Blazor.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="IF.Core">
+      <HintPath>..\..\..\IF.Security\packages\InFramework\IF.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.Persistence">
+      <HintPath>..\..\packages\InFramework\IF.Persistence.dll</HintPath>
+    </Reference>
+    <Reference Include="IF.Persistence.EF">
+      <HintPath>..\..\packages\InFramework\IF.Persistence.EF.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+
+</Project>
