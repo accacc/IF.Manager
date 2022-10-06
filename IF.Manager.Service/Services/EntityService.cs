@@ -717,6 +717,17 @@ namespace IF.Manager.Service
             return entity;
         }
 
+        //public async Task<IFEntity> GetEntitiesWithModels()
+        //{
+        //    var entity = await this.GetQuery<IFEntity>()
+        //        .Include(e => e.mo)
+        //   .ToList();
+
+        //    if (entity == null) { throw new BusinessException("Entity : No such entity exists"); }
+
+        //    return entity;
+        //}
+
         public async Task<List<IFEntity>> GetShadowAuditEntityList()
         {
             var entities = await this.GetQuery<IFEntity>().Include(e => e.Properties)

@@ -1,9 +1,7 @@
 ﻿using IF.CodeGeneration.Language.CSharp;
 using IF.Manager.Contracts.Dto;
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace IF.Manager.Service.CodeGen.EF
 {
@@ -18,9 +16,17 @@ namespace IF.Manager.Service.CodeGen.EF
         }
 
         public abstract void Build();
+
+
         public void GenerateProperties()
         {
-            foreach (var entityProperty in this.EntityMetaData.Properties)
+            this.GenerateProperties(this.EntityMetaData.Properties);
+        }
+       
+
+        public void GenerateProperties(List<EntityPropertyDto> entityProperties)
+        {
+            foreach (var entityProperty in entityProperties)
             {
 
                 bool IsNullable = entityProperty.IsNullable;

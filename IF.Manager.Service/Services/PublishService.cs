@@ -1,6 +1,5 @@
 ﻿using IF.CodeGeneration.Core;
 using IF.CodeGeneration.Language.CSharp;
-using IF.CodeGeneration.Language.CSharp;
 using IF.Core.Data;
 using IF.Core.Navigation;
 using IF.Manager.Contracts.Dto;
@@ -8,7 +7,6 @@ using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Persistence.EF;
 using IF.Manager.Service.CodeGen.CodeTemplates;
-using IF.Manager.Service.Enum;
 using IF.Manager.Service.Web.Page;
 using IF.Manager.Service.Web.Page.Form;
 using IF.Manager.Service.Web.Page.ListView;
@@ -17,8 +15,6 @@ using IF.Manager.Service.WebApi;
 using IF.Persistence.EF;
 
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 
 using Newtonsoft.Json;
@@ -163,7 +159,7 @@ namespace IF.Manager.Service.Services
 
             var entityList = await this.entityService.GetEntityList();
 
-            DbContextGenerator dbContextGenerator = new DbContextGenerator(entityService, fileSystem);
+            DbContextGenerator dbContextGenerator = new DbContextGenerator(fileSystem);
             dbContextGenerator.Generate(entityList, project);
 
             ProgramClassWebApi program = new ProgramClassWebApi(project);
@@ -187,9 +183,6 @@ namespace IF.Manager.Service.Services
             //coreDllGenerator.GenerateCoreBaseDll(solutionName, DirectoryHelper.GetTempGeneratedDirectoryName());
 
             var files = Directory.GetFiles(DirectoryHelper.GetTempGeneratedDirectoryName(), "*.cs", SearchOption.AllDirectories).Where(s => s.EndsWith(".cs") || s.EndsWith(".cs")).ToArray();
-
-
-
 
             string targetPath = DirectoryHelper.GetNewCoreProjectDirectory(project);
             string fileName = string.Empty;

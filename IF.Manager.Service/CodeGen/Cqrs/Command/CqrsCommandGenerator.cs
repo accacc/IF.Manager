@@ -1,18 +1,14 @@
 ﻿using IF.CodeGeneration.Core;
-using IF.CodeGeneration.Language.CSharp;
-using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Contracts.Services;
 using IF.Manager.Service.CodeGen.Cqrs;
 using IF.Manager.Service.CodeGen.Model;
-using IF.Manager.Service.EF;
 using IF.Manager.Service.Model;
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace IF.Manager.Service
@@ -22,8 +18,9 @@ namespace IF.Manager.Service
         private readonly IEntityService entityService;
         private readonly IClassService classService;
         private readonly FileSystemCodeFormatProvider fileSystem;
-        string generatedBasePath;
         IFProcess process;
+        string generatedBasePath;
+      
 
         public CqrsCommandGenerator(IEntityService entityService, IClassService classService, IFProcess process)
         {
@@ -153,77 +150,5 @@ namespace IF.Manager.Service
                     throw new ApplicationException("unknow command type");
             }
         }
-
-        //private void GenerateDeleteCqrsHandlerClass(IFCommand command, IFProcess process, ModelClassTreeDto entityTree)
-        //{
-        //   // throw new NotImplementedException();
-        //}
-
-        //private void GenerateUpdateCqrsHandlerClass(IFCommand command, IFProcess process, ModelClassTreeDto entityTree)
-        //{
-
-        //    string nameSpace = SolutionHelper.GetProcessNamaspace(process);
-
-        //    CSClass commandHandlerClass = GetCommandHandlerClass(command, process, nameSpace);
-
-        //    EFUpdateCommandMethod method = new EFUpdateCommandMethod($"ExecuteCommand", entityTree, command);
-
-        //    commandHandlerClass.Methods.Add(method.Build());
-
-        //    fileSystem.FormatCode(commandHandlerClass.GenerateCode(), "cs");
-
-        //}
-
-        //private static CSClass GetCommandHandlerClass(IFCommand command, IFProcess process, string nameSpace)
-        //{
-        //    string commandName = $"{command.Name}";
-        //    CSClass commandHandlerClass = new CSClass();
-        //    //if (command.IsAfterExecuteOverride || command.IsBeforeExecuteOverride) commandHandlerClass.IsPartial = true;
-        //    commandHandlerClass.Name = $"{commandName}CommandHandler";
-        //    commandHandlerClass.NameSpace = nameSpace + ".Commands.Cqrs";
-        //    commandHandlerClass.Usings.Add("IF.Core.Data");
-        //    commandHandlerClass.Usings.Add("IF.Core.Exception");
-        //    commandHandlerClass.Usings.Add("Microsoft.EntityFrameworkCore");
-        //    commandHandlerClass.Usings.Add("System.Threading.Tasks");
-        //    commandHandlerClass.Usings.Add("IF.Core.Persistence");
-        //    commandHandlerClass.Usings.Add($"{SolutionHelper.GetCoreNamespace(command.Process.Project)}");
-
-
-        //    commandHandlerClass.InheritedInterfaces.Add($"ICommandHandlerAsync<{commandName}>");
-
-        //    var repositoryProperty = new CSProperty("private", "repository", false);
-        //    repositoryProperty.PropertyTypeString = $"IRepository";
-        //    repositoryProperty.IsReadOnly = true;
-        //    commandHandlerClass.Properties.Add(repositoryProperty);
-
-        //    var dispatcher = new CSProperty("private", "dispatcher", false);
-        //    dispatcher.PropertyTypeString = $"IDispatcher";
-        //    dispatcher.IsReadOnly = true;
-        //    commandHandlerClass.Properties.Add(dispatcher);
-
-
-
-        //    CSMethod constructorMethod = new CSMethod(commandHandlerClass.Name, "", "public");
-        //    constructorMethod.Parameters.Add(new CsMethodParameter() { Name = "repository", Type = "IRepository" });
-        //    constructorMethod.Parameters.Add(new CsMethodParameter() { Name = "dispatcher", Type = "IDispatcher" });
-        //    StringBuilder methodBody = new StringBuilder();
-        //    methodBody.AppendLine("this.repository = repository;");
-        //    methodBody.AppendLine("this.dispatcher = dispatcher;");
-        //    methodBody.AppendLine();
-        //    constructorMethod.Body = methodBody.ToString();
-        //    commandHandlerClass.Methods.Add(constructorMethod);
-
-        //    CSMethod handleMethod = new CSMethod("HandleAsync", "void", "public");
-        //    handleMethod.IsAsync = true;
-        //    handleMethod.Parameters.Add(new CsMethodParameter() { Name = "command", Type = $"{commandName}" });
-        //    handleMethod.Body += $"await this.ExecuteCommand(command);" + Environment.NewLine;
-
-        //    commandHandlerClass.Methods.Add(handleMethod);
-        //    return commandHandlerClass;
-        //}
-
-       
     }
-
-
 }

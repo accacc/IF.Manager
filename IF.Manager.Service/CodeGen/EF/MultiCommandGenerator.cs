@@ -19,8 +19,6 @@ namespace IF.Manager.Service.CodeGen.EF
         public MultiCommandGenerator(string name, IFCommand parentCommand)
         {
             this.parentCommand = parentCommand;
-
-
             this.method = new CSMethod(name, "void", "public");
             this.method.IsAsync = true;
         }
@@ -91,6 +89,7 @@ namespace IF.Manager.Service.CodeGen.EF
                 {
                     DispatchForeignKeyToNextCommands(childCommand, nextCommands, parentCommand, methodBodyBuilder, level);
                 }
+
                 i++;
             }
 
@@ -118,10 +117,6 @@ namespace IF.Manager.Service.CodeGen.EF
 
             if (currentCommand.Model.Entity.Relations.Any())
             {
-
-
-
-
                 foreach (var nextCommand in nextCommands)
                 {
 
@@ -131,9 +126,7 @@ namespace IF.Manager.Service.CodeGen.EF
                     }
                     else
                     {
-
                         var relation = currentCommand.Model.Entity.Relations.SingleOrDefault(r => r.RelationId == nextCommand.Model.EntityId);
-
 
                         if (relation != null)
                         {
@@ -225,20 +218,11 @@ namespace IF.Manager.Service.CodeGen.EF
                             methodBody.AppendLine();
                         }
 
-
-                        //if (nextCommand.Childrens.Any())
-                        //{
-                        //   // ForeignKeyDispatchNextCommands(currentCommand, nextCommand.Childrens.ToList(),parentCommand, methodBody);
-                        //}
                     }
 
                 }
 
             }
-
-
-
-
         }
 
     }

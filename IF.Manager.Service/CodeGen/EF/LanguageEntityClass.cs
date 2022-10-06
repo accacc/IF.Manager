@@ -1,14 +1,10 @@
 ﻿using IF.CodeGeneration.Language.CSharp;
-using IF.Core.Audit;
 using IF.Core.Data;
 using IF.Core.Localization;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
-using IF.Persistence.EF.Audit;
 
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace IF.Manager.Service.CodeGen.EF
 {
@@ -33,7 +29,9 @@ namespace IF.Manager.Service.CodeGen.EF
 
         public override void Build()
         {
-            this.GenerateProperties();
+            var langugeProperties = this.EntityMetaData.Properties.Where(p => p.IsMultiLanguage).ToList();
+
+            this.GenerateProperties(langugeProperties);
 
             var ObjectIdProperty = new CSProperty("public", "ObjectId", false);
             ObjectIdProperty.PropertyTypeString = "int";

@@ -192,6 +192,7 @@ namespace IF.Manager.Service
         public static string GetNewPageDirectory(IFPageControlMap pageControl)
         {
             var pagePath = pageControl.GetPagePath();
+
             var page = (IFPage)pageControl.IFPageControl;
 
             string path = pagePath;

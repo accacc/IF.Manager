@@ -15,22 +15,19 @@ using System.Text;
 
 namespace IF.Manager.Service
 {
-    class DbContextGenerator
+    public class DbContextGenerator
     {
 
-        private readonly IEntityService entityService;
         private readonly FileSystemCodeFormatProvider fileSystem;
 
-        public DbContextGenerator(IEntityService entityService, FileSystemCodeFormatProvider fileSystem)
+        public DbContextGenerator(FileSystemCodeFormatProvider fileSystem)
         {
-            this.entityService = entityService;
             this.fileSystem = fileSystem;
         }
 
         public void Generate(List<EntityDto> entityList, IFProject project)
         {
             string solutionName = project.Solution.SolutionName;
-
 
             if (entityList.Any(e => e.AuditType == Enum.IFAuditType.Bulk))
             {
@@ -120,19 +117,22 @@ namespace IF.Manager.Service
                     LanguageEntityClass languageEntityClass = new LanguageEntityClass(entity, project);
                     languageEntityClass.Build();
 
+                    this.fileSystem.FormatCode(languageEntityClass.GenerateCode(), "cs", "", "");
+
                     CSInterface languageDataInterface = new CSInterface();
                     languageDataInterface.Name = $"I{entity.Name}Language";
                     languageDataInterface.InheritedInterfaces.Add(nameof(ILanguageData));
+                    languageDataInterface.Usings.Add("IF.Core.Localization");
 
                     var ObjectIdProperty = new CSProperty("", "ObjectId", false);
                     ObjectIdProperty.PropertyTypeString = "int";
                     languageDataInterface.Properties.Add(ObjectIdProperty);
 
-
-
                     var LanguageIdProperty = new CSProperty("", "LanguageId", false);
                     LanguageIdProperty.PropertyTypeString = "int";
                     languageDataInterface.Properties.Add(LanguageIdProperty);
+
+                    this.fileSystem.FormatCode(languageDataInterface.GenerateCode(), "cs", "", "");
 
                 }
 
