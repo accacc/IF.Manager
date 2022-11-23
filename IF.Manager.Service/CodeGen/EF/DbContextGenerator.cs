@@ -19,10 +19,11 @@ namespace IF.Manager.Service
     {
 
         private readonly FileSystemCodeFormatProvider fileSystem;
-
-        public DbContextGenerator(FileSystemCodeFormatProvider fileSystem)
+        private readonly IEntityService entityService;
+        public DbContextGenerator(FileSystemCodeFormatProvider fileSystem,IEntityService entityService)
         {
             this.fileSystem = fileSystem;
+            this.entityService = entityService;
         }
 
         public void Generate(List<EntityDto> entityList, IFProject project)
@@ -112,29 +113,38 @@ namespace IF.Manager.Service
                 }
 
 
-                if(entity.Properties.Any(e=>e.IsMultiLanguage))
+
+                if (entity.Properties.Any(e => e.IsMultiLanguage))
                 {
-                    LanguageEntityClass languageEntityClass = new LanguageEntityClass(entity, project);
-                    languageEntityClass.Build();
+                    //var models = this.entityService.GetModelsByEntity(entity.Id);
 
-                    this.fileSystem.FormatCode(languageEntityClass.GenerateCode(), "cs", "", "");
 
-                    CSInterface languageDataInterface = new CSInterface();
-                    languageDataInterface.Name = $"I{entity.Name}Language";
-                    languageDataInterface.InheritedInterfaces.Add(nameof(ILanguageData));
-                    languageDataInterface.Usings.Add("IF.Core.Localization");
+                    //LanguageEntityClass languageEntityClass = new LanguageEntityClass(entity, project);
 
-                    var ObjectIdProperty = new CSProperty("", "ObjectId", false);
-                    ObjectIdProperty.PropertyTypeString = "int";
-                    languageDataInterface.Properties.Add(ObjectIdProperty);
+                    //languageEntityClass.Build();
 
-                    var LanguageIdProperty = new CSProperty("", "LanguageId", false);
-                    LanguageIdProperty.PropertyTypeString = "int";
-                    languageDataInterface.Properties.Add(LanguageIdProperty);
+                    //this.fileSystem.FormatCode(languageEntityClass.GenerateCode(), "cs", "", "");
 
-                    this.fileSystem.FormatCode(languageDataInterface.GenerateCode(), "cs", "", "");
+                    //CSInterface languageDataInterface = new CSInterface();
+                    //languageDataInterface.Name = $"I{model.Entity.Name}Language";
+                    //languageDataInterface.InheritedInterfaces.Add(nameof(ILanguageData));
+                    //languageDataInterface.Usings.Add("IF.Core.Localization");
+
+
+                    //var langugeProperties = model.Entity.Properties.Where(p => p.IsMultiLanguage).ToList();
+
+
+                    //foreach (var languageProperty in langugeProperties)
+                    //{
+                    //    var languageClassProperty = new CSProperty("", languageProperty.Name, false);
+                    //    languageClassProperty.PropertyTypeString = languageProperty.Type;
+                    //    languageDataInterface.Properties.Add(languageClassProperty);
+                    //}
+
+                    //this.fileSystem.FormatCode(languageDataInterface.GenerateCode(), "cs", "", "");
 
                 }
+                
 
                 entityClass.Name = entity.Name;
                 entityClass.NameSpace = $"{solutionName}.Core";

@@ -14,20 +14,20 @@ namespace IF.Manager.Contracts.Dto
         }
 
 
-        public static bool IsModelProperty(ModelClassTreeDto childEntityTree, IFModel model)
+        public static bool IsModelProperty(bool IsRelation,int entityPropertyId, IEnumerable<IFModelProperty> modelProperties)
         {
             bool IsModelProperty = false;
 
-            if (childEntityTree.IsRelation)
+            if (IsRelation)
             {
-                if (model.Properties.Any(p => p.EntityId == childEntityTree.Id))
+                if (modelProperties.Any(p => p.EntityId == entityPropertyId))
                 {
                     IsModelProperty = true;
                 }
             }
             else
             {
-                var property = model.Properties.SingleOrDefault(p => p.EntityPropertyId == childEntityTree.Id);
+                var property = modelProperties.SingleOrDefault(p => p.EntityPropertyId == entityPropertyId);
 
                 if (property != null)
                 {

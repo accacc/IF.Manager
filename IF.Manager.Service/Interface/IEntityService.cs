@@ -17,7 +17,6 @@ namespace IF.Manager.Contracts.Services
         Task<List<IFEntity>> GetShadowAuditEntityList();
 
         Task<List<List<EntityDto>>> GetEntityListGrouped();
-        //Task<List<EntityDto>> GetEntityListWithProperties();
         Task AddEntity(EntityDto form);
         Task UpdateEntity(EntityDto dto);
         Task<List<EntityPropertyDto>> GetEntityPropertyList(int entityId);
@@ -38,8 +37,6 @@ namespace IF.Manager.Contracts.Services
         Task<List<EntityGroupDto>> GetEntityGroupList();
 
         Task<bool> EntityIsExistByName(string name);
-
-
-
+        Task<List<IFModel>> GetModelsByEntity(int Id);
     }
 }

@@ -24,10 +24,6 @@ namespace IF.Manager.Contracts.Model
 
         public int RelationId { get; set; }
 
-        //public EntityRelationDirectionType From { get; set; }
-
-        //public EntityRelationDirectionType To { get; set; }
-
         public EntityRelationType Type { get; set; }
 
         public IFEntity Entity { get; set; }

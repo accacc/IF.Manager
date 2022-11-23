@@ -11,7 +11,6 @@ namespace IF.Manager.Service.CodeGen.EF
     public  class LanguageEntityClass: EntityBaseClass
     {
 
-        public EntityDto EntityMetaData { get; set; }
         public LanguageEntityClass(EntityDto entity, IFProject project):base(entity)
         {
             this.EntityMetaData = entity;

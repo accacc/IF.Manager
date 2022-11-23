@@ -16,14 +16,9 @@ namespace IF.Manager.Contracts.Model
 
         public int EntityPropertyId { get; set; }
 
-        //public int IFEntityId { get; set; }
-
         public int ModelId { get; set; }
 
         public IFEntityProperty EntityProperty { get; set; }
-
-        //public IFEntity IFEntity { get; set; }
-
 
         public IFModel Model { get; set; }
     }

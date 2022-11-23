@@ -118,7 +118,7 @@ namespace IF.Manager.Service
 
             foreach (var childTree in this.entityTree.Childs)
             {
-                bool IsModelProperty = ModelClassTreeDto.IsModelProperty(childTree, query.Model);
+                bool IsModelProperty = ModelClassTreeDto.IsModelProperty(childTree.IsRelation,childTree.Id, query.Model.Properties);
 
                 if (!IsModelProperty) continue;
 
@@ -139,7 +139,7 @@ namespace IF.Manager.Service
 
                     foreach (var childProperty in childTree.Childs)
                     {
-                        IsModelProperty = ModelClassTreeDto.IsModelProperty(childProperty, query.Model);
+                        IsModelProperty = ModelClassTreeDto.IsModelProperty(childTree.IsRelation,childProperty.Id, query.Model.Properties);
 
                         if (!IsModelProperty) continue;
 
@@ -194,7 +194,7 @@ namespace IF.Manager.Service
             foreach (var relation in relations)
             {
 
-                bool IsModelProperty = ModelClassTreeDto.IsModelProperty(relation, query.Model);
+                bool IsModelProperty = ModelClassTreeDto.IsModelProperty(relation.IsRelation,relation.Id, query.Model.Properties);
 
                 if (!IsModelProperty) continue;
 

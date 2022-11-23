@@ -28,7 +28,7 @@ namespace IF.Manager.Service
 
             foreach (var childEntityTree in entityTree)
             {
-                bool IsModelProperty = ModelClassTreeDto.IsModelProperty(childEntityTree, model);
+                bool IsModelProperty = ModelClassTreeDto.IsModelProperty(childEntityTree.IsRelation, childEntityTree.Id, model.Properties);
 
                 if (IsModelProperty)
                 {

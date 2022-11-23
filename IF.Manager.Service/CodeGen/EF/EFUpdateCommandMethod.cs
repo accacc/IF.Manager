@@ -52,7 +52,7 @@ namespace IF.Manager.Service.EF
             {
                 if (property.IsRelation) continue;
 
-                bool IsModelProperty = ModelClassTreeDto.IsModelProperty(property, command.Model);
+                bool IsModelProperty = ModelClassTreeDto.IsModelProperty(property.IsRelation,property.Id, command.Model.Properties);
 
                 if (!IsModelProperty) continue;
 

@@ -13,6 +13,7 @@ namespace IF.Manager.Contracts.Model
             this.Properties = new List<IFEntityProperty>();
             this.ReverseRelations = new List<IFEntityRelation>();
             this.ModelProperties = new List<IFModelProperty>();
+            this.Models = new List<IFModel>();
             this.QueryFilterItems = new List<IFQueryFilterItem>();
             this.CommandFilterItems = new List<IFCommandFilterItem>();
         }
@@ -28,8 +29,6 @@ namespace IF.Manager.Contracts.Model
 
         public int? GroupId { get; set; }
 
-        //public bool IsAudited { get; set; }
-
         public IFAuditType AuditType { get; set; }
 
         public IFEntityGroup Group { get; set; }
@@ -42,6 +41,8 @@ namespace IF.Manager.Contracts.Model
         public ICollection<IFEntityRelation> ReverseRelations { get; set; }
 
         public ICollection<IFModelProperty> ModelProperties { get; set; }
+        public ICollection<IFModel> Models { get; set; }
+
         public ICollection<IFQueryFilterItem> QueryFilterItems { get; set; }
 
         public ICollection<IFCommandFilterItem> CommandFilterItems { get; set; }

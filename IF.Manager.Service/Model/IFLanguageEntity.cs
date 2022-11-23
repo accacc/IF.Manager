@@ -13,9 +13,5 @@ namespace IF.Manager.Contracts.Model
         public int Id { get; set; }
 
         public int EntityPropertyId { get; set; }
-        
-
-
-
     }
 }

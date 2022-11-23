@@ -19,21 +19,13 @@ namespace IF.Manager.Contracts.Model
 
         public int CommandId { get; set; }
 
-        //public int EntityId { get; set; }
-
         public int EntityPropertyId { get; set; }
-
-        //public IFEntity Entity { get; set; }
 
         public IFEntityProperty EntityProperty { get; set; }
 
         public IFCommand Command { get; set; }
 
-        //public int FormModelId { get; set; }
-
         public int? FormModelPropertyId { get; set; }
-
-        //public IFFormModel FormModel { get; set; }
 
     }
 }

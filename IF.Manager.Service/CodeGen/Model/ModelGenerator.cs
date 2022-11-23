@@ -1,9 +1,14 @@
 ﻿using IF.CodeGeneration.Core;
+using IF.CodeGeneration.Language.CSharp;
 using IF.Core.Data;
+using IF.Core.Localization;
 using IF.Manager.Contracts.Dto;
 using IF.Manager.Contracts.Model;
 using IF.Manager.Service.CodeGen;
+using IF.Manager.Service.CodeGen.EF;
 using IF.Manager.Service.CodeGen.Interface;
+
+using Microsoft.Build.Evaluation;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -32,36 +37,36 @@ namespace IF.Manager.Service.Model
 
         public void Generate(string path)
         {
-            List<ModelClass> alls = new List<ModelClass>();
+            List<ModelClass> allModelClasses = new List<ModelClass>();
 
             string name = ObjectNamerHelper.AddAsLastWord(model.Name, "DataModel");
 
-            ModelClass modelClass = new ModelClass(nameSpace, name, model);
+            ModelClass mainModelClass = new ModelClass(nameSpace, name, model);
 
-            modelClass.Usings.Add("System");
-            modelClass.Usings.Add("System.Collections.Generic");
+            mainModelClass.Usings.Add("System");
+            mainModelClass.Usings.Add("System.Collections.Generic");
 
-            if(this.model.Entity.Properties.Any(p=>p.IsMultiLanguage))
+            if(this.model.Entity.Properties.Any(p=>p.IsMultiLanguage) && this.model.Queries.Any())
             {
 
-                modelClass.InheritedInterfaces.Add($"I{this.model.Entity.Name}Language");
+                mainModelClass.InheritedInterfaces.Add($"I{this.model.Entity.Name}Language");      
             }
 
-            modelClass.Build(entityTree.Childs);
+            mainModelClass.Build(entityTree.Childs);
 
-            alls.Add(modelClass);
+            allModelClasses.Add(mainModelClass);
 
             var relations = entityTree.Childs.Where(c => c.IsRelation).ToList();
 
             if (relations.Any())
             {
-                GenerateRelatedModels(relations, alls, model, nameSpace);
+                GenerateRelatedModels(relations, allModelClasses, model, nameSpace);
 
             }
 
             StringBuilder builder = new StringBuilder();
 
-            foreach (var cls in alls)
+            foreach (var cls in allModelClasses)
             {
                 builder.AppendLine(cls.GenerateCode().Template);
 
@@ -72,7 +77,7 @@ namespace IF.Manager.Service.Model
         {
             foreach (var relation in relations)
             {
-                bool IsModelProperty = ModelClassTreeDto.IsModelProperty(relation, model);
+                bool IsModelProperty = ModelClassTreeDto.IsModelProperty(relation.IsRelation,relation.Id, model.Properties);
 
                 if (!IsModelProperty) continue;
 
