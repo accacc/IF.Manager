@@ -754,7 +754,11 @@ namespace IF.Manager.Service
 
         public async Task<List<IFModel>> GetModelsByEntity(int Id)
         {
-            var models = await this.GetQuery<IFModel>(e=>e.EntityId == Id).ToListAsync();
+            var models = await this.GetQuery<IFModel>(e=>e.EntityId == Id)
+                .Include(e => e.Properties)
+                .Include(e => e.Queries)
+                .Where(e=>e.Queries.Any())
+                .ToListAsync();
             return models;
         }
     }

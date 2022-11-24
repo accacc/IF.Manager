@@ -12,6 +12,7 @@ using IF.Persistence.EF.Audit;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace IF.Manager.Service
 {
@@ -26,7 +27,7 @@ namespace IF.Manager.Service
             this.entityService = entityService;
         }
 
-        public void Generate(List<EntityDto> entityList, IFProject project)
+        public async Task Generate(List<EntityDto> entityList, IFProject project)
         {
             string solutionName = project.Solution.SolutionName;
 
@@ -116,32 +117,33 @@ namespace IF.Manager.Service
 
                 if (entity.Properties.Any(e => e.IsMultiLanguage))
                 {
-                    //var models = this.entityService.GetModelsByEntity(entity.Id);
+                    var models = await this.entityService.GetModelsByEntity(entity.Id);
 
 
-                    //LanguageEntityClass languageEntityClass = new LanguageEntityClass(entity, project);
+                    LanguageEntityClass languageEntityClass = new LanguageEntityClass(entity, project);
 
-                    //languageEntityClass.Build();
+                    languageEntityClass.Build();                
 
-                    //this.fileSystem.FormatCode(languageEntityClass.GenerateCode(), "cs", "", "");
-
-                    //CSInterface languageDataInterface = new CSInterface();
-                    //languageDataInterface.Name = $"I{model.Entity.Name}Language";
-                    //languageDataInterface.InheritedInterfaces.Add(nameof(ILanguageData));
-                    //languageDataInterface.Usings.Add("IF.Core.Localization");
+                    var langugeProperties = entity.Properties.Where(p => p.IsMultiLanguage).ToList();
 
 
-                    //var langugeProperties = model.Entity.Properties.Where(p => p.IsMultiLanguage).ToList();
+                    foreach (var languageProperty in langugeProperties)
+                    {
+                        CSInterface languageDataInterface = new CSInterface();
+                        languageDataInterface.Name = $"I{entity.Name}{languageProperty.Name}Language";
+                        languageDataInterface.InheritedInterfaces.Add(nameof(ILanguageData));
+                        languageDataInterface.Usings.Add("IF.Core.Localization");
 
+                        var languageClassProperty = new CSProperty("", languageProperty.Name, false);
+                        languageClassProperty.PropertyTypeString = languageProperty.Type;
+                        languageDataInterface.Properties.Add(languageClassProperty);
 
-                    //foreach (var languageProperty in langugeProperties)
-                    //{
-                    //    var languageClassProperty = new CSProperty("", languageProperty.Name, false);
-                    //    languageClassProperty.PropertyTypeString = languageProperty.Type;
-                    //    languageDataInterface.Properties.Add(languageClassProperty);
-                    //}
+                        languageEntityClass.InheritedInterfaces.Add(languageDataInterface.Name);
 
-                    //this.fileSystem.FormatCode(languageDataInterface.GenerateCode(), "cs", "", "");
+                        this.fileSystem.FormatCode(languageDataInterface.GenerateCode(), "cs", "", "");
+                    }
+
+                    this.fileSystem.FormatCode(languageEntityClass.GenerateCode(), "cs", "", "");
 
                 }
                 

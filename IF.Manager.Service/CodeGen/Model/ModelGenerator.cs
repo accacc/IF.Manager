@@ -48,8 +48,12 @@ namespace IF.Manager.Service.Model
 
             if(this.model.Entity.Properties.Any(p=>p.IsMultiLanguage) && this.model.Queries.Any())
             {
+                foreach (var property in model.Entity.Properties.Where(p => p.IsMultiLanguage).ToList())
+                {
+                    mainModelClass.InheritedInterfaces.Add($"I{this.model.Entity.Name}{property.Name}Language");
+                }
 
-                mainModelClass.InheritedInterfaces.Add($"I{this.model.Entity.Name}Language");      
+                   
             }
 
             mainModelClass.Build(entityTree.Childs);

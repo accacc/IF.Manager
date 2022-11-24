@@ -18,7 +18,7 @@ namespace IF.Manager.Service.CodeGen.EF
             this.Name = $"{this.EntityMetaData.Name}Language";
             this.BaseClass = nameof(Entity);
             this.InheritedInterfaces.Add(nameof(ILanguageEntity));
-            this.InheritedInterfaces.Add($"I{entity.Name}Language");
+           // this.InheritedInterfaces.Add($"I{entity.Name}Language");
             this.Usings.Add("System.ComponentModel.DataAnnotations");
             this.Usings.Add("IF.Core.Data");
             this.Usings.Add("System");
@@ -31,6 +31,10 @@ namespace IF.Manager.Service.CodeGen.EF
             var langugeProperties = this.EntityMetaData.Properties.Where(p => p.IsMultiLanguage).ToList();
 
             this.GenerateProperties(langugeProperties);
+
+            var IdProperty = new CSProperty("public", "Id", false);
+            IdProperty.PropertyTypeString = "int";
+            this.Properties.Add(IdProperty);
 
             var ObjectIdProperty = new CSProperty("public", "ObjectId", false);
             ObjectIdProperty.PropertyTypeString = "int";

@@ -160,7 +160,7 @@ namespace IF.Manager.Service.Services
             var entityList = await this.entityService.GetEntityList();
 
             DbContextGenerator dbContextGenerator = new DbContextGenerator(fileSystem,entityService);
-            dbContextGenerator.Generate(entityList, project);
+            await dbContextGenerator.Generate(entityList, project);
 
          
 
