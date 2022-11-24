@@ -1,0 +1,32 @@
+﻿@typeparam T
+
+
+<MudExpansionPanels MultiExpansion="true" Elevation="4" Style="border:2px solid grey">
+
+
+
+
+
+
+    @foreach (var item in Items)
+    {
+        <MudExpansionPanel>
+
+            <TitleContent>
+                @Title(item)
+            </TitleContent>
+            <ChildContent>
+                @Data(item)
+            </ChildContent>
+
+        </MudExpansionPanel>
+    }
+
+
+
+
+
+
+</MudExpansionPanels>
+
+

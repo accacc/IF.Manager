@@ -17,7 +17,7 @@
     </MudMainContent>
 </MudLayout>
 
-<MudThemeProvider />
+<MudThemeProvider Theme="IFManagerMainTheme" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
@@ -30,12 +30,13 @@
         _drawerOpen = !_drawerOpen;
     }
 
-    private MudTheme ArbimedMainTheme = new MudTheme()
+    private MudTheme IFManagerMainTheme = new MudTheme()
         {
             Palette = new Palette()
             {
                 Primary = new MudBlazor.Utilities.MudColor("0074C8"),
                 Secondary = new MudBlazor.Utilities.MudColor("F68C2D"),
+                Success = new MudBlazor.Utilities.MudColor("6fae16"),
             },
             Typography = new Typography()
             {

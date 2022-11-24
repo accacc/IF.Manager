@@ -1,7 +1,27 @@
 ﻿@page "/entity/index"
 
-<h3>EntityManagerIndex</h3>
+<MudButton Class="my-5" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Success">Add</MudButton>
+<MudDivider></MudDivider>
 
-@code {
 
-}
+
+
+
+
+<IFExpansionList Items="@EntityList">
+
+    <Title>
+        @context.GroupName
+    </Title>
+    <Data>
+        @context.Name
+
+    </Data>
+</IFExpansionList>
+
+    
+
+
+
+
+

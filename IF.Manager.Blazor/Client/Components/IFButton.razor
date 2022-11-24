@@ -1,0 +1,14 @@
+﻿<MudButton Variant="@Variant" Color="@Color">@ButtonName</MudButton>
+
+@code {
+    [Parameter]
+    public string ButtonName { get; set; }
+
+    [Parameter]
+    public Color Color { get; set; }
+
+    [Parameter]
+    public Variant Variant { get; set; }
+
+
+}
